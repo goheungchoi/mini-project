@@ -1,0 +1,26 @@
+{
+  "dependencies": [
+    "assimp",
+    "fmt",
+    "directxtk",
+    "stduuid"
+  ],
+  "overrides": [
+    {
+      "name": "assimp",
+      "version": "5.4.3"
+    },
+    {
+      "name": "fmt",
+      "version": "11.0.2"
+    },
+    {
+      "name": "directxtk",
+      "version": "2024-10-28"
+    },
+    {
+      "name": "stduuid",
+      "version": "1.2.3"
+    }
+  ]
+}
