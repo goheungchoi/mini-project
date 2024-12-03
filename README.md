@@ -7,4 +7,17 @@
 
 ## DOTO List
 - WindowManager
+- Timer
 - Engine
+- WinMain
+- Resource Types: Material, Mesh, Shader, Texture
+- ThreadPool
+- ResourceManager: Texture, Shader, Mesh, Material
+- Renderer
+- PhysX
+- GameFramework
+	- Components
+		- SceneComponent
+		- MeshComponent
+- Animation
+- Animation Blending
