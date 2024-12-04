@@ -1,1 +1,1 @@
-#include "GameFramework/Components/SkeletalMeshComponent.h"
+#include "GameFramework/Components/SkeletalComponent.h"
