@@ -25,4 +25,6 @@ class Renderer : public IRenderer
 	bool DestroyPipeline() override;
 	bool CreateComputeEffect() override;
 	bool DestoryComputeEffect() override;
+private:
+
 };
