@@ -1,8 +1,9 @@
 ﻿#pragma once
 
-class IRenderer {
- public:
-  virtual bool Init_Win32(void* hInstance, void* hwnd) = 0;
+class IRenderer
+{
+public:
+  virtual bool Init_Win32(void *hInstance, void *hwnd) = 0;
 
   virtual bool Cleanup() = 0;
 
@@ -20,7 +21,7 @@ class IRenderer {
 
   virtual void BindResource() = 0;
 
-	// 렌더러 안에서 D3D11 리소스 생성과 파괴
+  // 렌더러 안에서 D3D11 리소스 생성과 파괴
   virtual bool CreateMesh() = 0;
   virtual bool DestroyMesh() = 0;
 
