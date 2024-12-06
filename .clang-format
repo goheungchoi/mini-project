@@ -2,4 +2,5 @@
 # Use Google code formatting rules.
 Language: Cpp
 BasedOnStyle: Google
+IndentWidth: 2
 ...
