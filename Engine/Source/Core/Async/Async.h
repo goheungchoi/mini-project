@@ -4,8 +4,6 @@
 
 #include "Core/Common.h"
 
-// TODO: Goheung Choi
-
 namespace async
 {
 
@@ -25,6 +23,8 @@ public:
 template <typename... Ts>
 class MultiFuture
 {
+  std::tuple<Future<Ts>...> _futures;
+
 public:
   void WaitAny()
   {
@@ -45,17 +45,24 @@ public:
 
 class Task
 {
+  std::string _taskname;
+
   std::atomic<bool> _state;
 
   std::function<void()> _taskContainer;
 
-	std::any _retVal;
+  std::any _retVal;
 
 public:
   Task() noexcept;
+  Task(const std::string&) noexcept;
+  Task(std::string&&) noexcept;
 
-  Task(Task &&other) noexcept;
-  Task &operator=(Task &&other) noexcept;
+	Task(const Task& other);
+  Task& operator=(const Task& other);
+
+  Task(Task&& other) noexcept;
+  Task& operator=(Task&& other) noexcept;
 
   template <typename Ret>
   Future<Ret> GetFuture()
@@ -67,14 +74,45 @@ public:
     return _state;
   }
 
-  template <typename Ret, typename... Args>
-  static Task CreateTask(std::function<Ret(Args...)> callable)
+	void Reset()
   {
+    _state = false;
+    _taskContainer = nullptr;
+    _retVal.reset();
+	}
+
+	void Notify()
+  {
+    _state = true;
+	}
+
+  template <typename Ret>
+  static Task CreateTask(const std::string& taskName, std::function<Ret()>&& callable)
+  {
+    Task task;
+    task._taskContainer = [callable]() -> void { 
+			_retVal = callable(); 
+		};
+    return task;
   }
 
-  template <typename Ret, std::invocable Func, typename... Args>
-  static Task CreateTask(Func f, Args... args)
+	template <>
+  static Task CreateTask<void>(const std::string& taskName, std::function<void()>&& callable)
   {
+    Task task;
+    task._taskContainer = [callable]() -> void { callable(); };
+    return task;
+	}
+
+  template <typename Ret, std::invocable Func, typename... Args>
+  static Task CreateTask(const std::string& taskName, Func f, Args&&... args)
+  {
+    auto funcWithArgs = [f, ]
+
+    Task task;
+    task._taskContainer = [f]() -> void {
+
+    };
   }
 };
 
@@ -83,13 +121,20 @@ class TaskGroup
 public:
 };
 
-template <typename Ret, typename... Args>
-Future<Ret> SubmitTask(std::function<Ret(Args...)> &&callable)
+void Submit(Task task);
+
+template <typename Ret>
+Future<Ret> SubmitTask(std::function<Ret()>&& callable)
 {
 }
 
 template <typename Ret, std::invocable Func, typename... Args>
 Future<Ret> SubmitTask(Func f, Args... args)
+{
+}
+
+template <typename Ret>
+void DispatchTask(std::function<Ret()>&& callable)
 {
 }
 
