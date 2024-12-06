@@ -2,5 +2,7 @@
 # Use Google code formatting rules.
 Language: Cpp
 BasedOnStyle: Google
+UseTab: Always
 IndentWidth: 2
+TabWidth: 2
 ...

@@ -40,6 +40,8 @@ class Task {
   std::atomic<bool> _state;
 
 	std::function<void()> _taskContainer;
+
+	std::any _retVal;
  public:
   Task() noexcept;
 
@@ -49,7 +51,14 @@ class Task {
 	bool IsReady() { return _state; }
 
 	template<typename Ret, typename... Args>
-  static Task CreateTask(std::function<Ret(Args...)> callable);
+	static Task CreateTask(std::function<Ret(Args...)> callable) {
+
+	}
+
+	template<typename Ret, std::invocable Func, typename... Args>
+	static Task CreateTask(Func f, Args... args) {
+		
+	}
 };
 
 class TaskGroup {
