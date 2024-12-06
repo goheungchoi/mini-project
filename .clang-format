@@ -2,6 +2,9 @@
 # Use Google code formatting rules.
 Language: Cpp
 BasedOnStyle: Microsoft
+AlwaysBreakTemplateDeclarations: Yes
+PointerAlignment: Left
+ReferenceAlignment: Left
 IndentWidth: 2
 TabWidth: 2
 ...
