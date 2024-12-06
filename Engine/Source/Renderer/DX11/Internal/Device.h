@@ -10,7 +10,7 @@ public:
   ~Device() = default;
 
 public:
-  void CreateDevice()
+  void CreateDevice(HWND* hwnd)
   {
     UINT deviceFlags = 0;
 #ifdef _DEBUG
@@ -19,14 +19,15 @@ public:
     const D3D_FEATURE_LEVEL featurelevel = D3D_FEATURE_LEVEL_11_1;
     HR_T(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, deviceFlags, &featurelevel, 1, D3D11_SDK_VERSION,
                            device.GetAddressOf(), nullptr, deviceContext.GetAddressOf()));
+   // DXGI_SWAP_CHAIN_DESC desc = CreateSwapChainDesc()
   }
-  
+
   ID3D11Device *GetDevice()
   {
     return device.Get();
   }
 
-  ID3D11DeviceContext *GetContext()
+  ID3D11DeviceContext *GetDeviceContext()
   {
     return deviceContext.Get();
   }
@@ -34,4 +35,5 @@ public:
 private:
   ComPtr<ID3D11Device> device;
   ComPtr<ID3D11DeviceContext> deviceContext;
+  ComPtr<IDXGISwapChain> swapChain;
 };
