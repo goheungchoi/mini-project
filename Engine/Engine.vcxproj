@@ -173,6 +173,7 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
+    <ClCompile Include="TextureResourcePool.cpp" />
     <ClInclude Include="Include\Engine\Engine.h" />
     <ClInclude Include="Include\GameFramework\Components\MaterialComponent.h" />
     <ClInclude Include="Include\GameFramework\Components\MeshComponent.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Include\GameFramework\GameObject\GameObject.h" />
     <ClInclude Include="Include\GameFramework\World\World.h" />
     <ClCompile Include="Source\Core\Async\Async.cpp" />
+    <ClInclude Include="ResourcePool.h" />
     <ClInclude Include="Source\Core\Async\Async.h" />
     <ClInclude Include="Source\Core\Common.h" />
     <ClInclude Include="Source\Core\Handle\Handle.h" />

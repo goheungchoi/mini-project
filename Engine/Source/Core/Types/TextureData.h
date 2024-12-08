@@ -2,10 +2,14 @@
 
 #include "Core/Common.h"
 
-enum class TextureType {
-
-};
+#include "dxgiformat.h"
 
 struct TextureData {
+
+
+
+  DXGI_FORMAT format;
+
+
 
 };

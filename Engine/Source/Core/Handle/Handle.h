@@ -2,8 +2,7 @@
 
 #include "Core/Common.h"
 
-union Handle {
- public:
+struct Handle {
   static constexpr size_t kNumIndexBits{32};
   static constexpr size_t kNumVersionBits{16};
   static constexpr size_t kNumDescBits{16};
@@ -15,15 +14,16 @@ union Handle {
 
   static constexpr uint64_t kInvalidHandle{kUInt64Max};
 
- private:
-  uint64_t _value;
+	union {
+    uint64_t _value;
 
- public:
-  struct {
-    uint64_t index : kNumIndexBits;
-    uint64_t version : kNumVersionBits;
-    uint64_t desc : kNumDescBits;
-  };
+		struct
+    {
+      uint64_t index : kNumIndexBits;
+      uint64_t version : kNumVersionBits;
+      uint64_t desc : kNumDescBits;
+    };
+	};
 
   Handle() : _value{kInvalidHandle} {}
   Handle(uint64_t value) : _value{value} {}

@@ -2,8 +2,10 @@
 
 #include "Core/Common.h"
 
+#include <Core/Handle/ResourceHandle.h>
+
 struct ModelData {
-  std::vector<Handle> meshes;
-  std::vector<Handle, Handle> materials;
-  std::unordered_map<Handle, Handle> textures;
+  std::vector<MeshHandle> meshes;
+  std::unordered_map<MeshHandle, MaterialHandle> materials;
+  std::unordered_map<MeshHandle, TextureHandle> textures;
 };

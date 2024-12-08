@@ -4,7 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 # Filter
-*.filters
+Client/*.filters
+Engine/*.filters
 
 # User-specific files
 *.rsuser
