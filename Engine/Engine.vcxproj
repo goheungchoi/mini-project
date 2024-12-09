@@ -222,5 +222,7 @@
 		<ClInclude Include="Source\ResourceManager\Common.h" />
 		<ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
 		<ClInclude Include="Source\ResourceManager\ResourceManager.h" />
+		<ClInclude Include="Source\ResourceManager\ResourcePool\ResourcePool.h" />
+		<ClCompile Include="Source\ResourceManager\ResourcePool\TextureResourcePool.cpp" />
 	</ItemGroup>
 </Project>
