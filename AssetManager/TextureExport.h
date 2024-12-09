@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nvtt/nvtt.h>
+#include "nvtt/nvtt.h"
 
 #include <string>
 #include <vector>
@@ -14,9 +14,9 @@ enum class ColorSpace
 struct ImageData
 {
   bool isNormalMap{false};
-  bool isCubeMap{false}; // TODO: Support cube map
 
   ColorSpace colorSpace;
+  nvtt::TextureType textureType;
   nvtt::PixelType valueType;
   nvtt::AlphaMode alphaMode;
 
@@ -34,6 +34,7 @@ struct CompressionOptions
   // Mipmap settings
   bool enableGammaCorrect;
   bool enablePremultipliedAlphaBlending;
+  bool enableAlphaDithering;
   bool enableMipmap;
   int maxMipmapCount; // if the value < 0 or > max, set to max
   size_t minMipmapSize;

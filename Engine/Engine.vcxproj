@@ -191,7 +191,6 @@
 		<ClInclude Include="Source\Core\Types\MaterialData.h" />
 		<ClInclude Include="Source\Core\Types\MeshData.h" />
 		<ClInclude Include="Source\Core\Types\ModelData.h" />
-		<ClInclude Include="Source\Core\Types\NodeData.h" />
 		<ClInclude Include="Source\Core\Types\ShaderData.h" />
 		<ClInclude Include="Source\Core\Types\TextureData.h" />
 		<ClCompile Include="Source\Core\UUID\UUID.cpp" />

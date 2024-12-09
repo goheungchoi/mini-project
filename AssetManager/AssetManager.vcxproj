@@ -71,12 +71,18 @@
       <PreprocessorDefinitions>ASSET_DIR=R"($(SolutionDir)Asset)";RESOURCE_DIR=R"($(SolutionDir)Library\Resource)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(ProjectDir)lib\nvtt30205.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PreprocessorDefinitions>ASSET_DIR=R"($(SolutionDir)Asset)";RESOURCE_DIR=R"($(SolutionDir)Library\Resource)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(ProjectDir)lib\nvtt30205.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
@@ -120,6 +126,9 @@
     <ResourceCompile Include="AssetManager.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="nvtt\nvtt.h" />
+    <ClInclude Include="nvtt\nvtt_lowlevel.h" />
+    <ClInclude Include="nvtt\nvtt_wrapper.h" />
     <ClInclude Include="TextureExport.h" />
     <QtMoc Include="TextureImportDialog.h" />
     <ClInclude Include="UUID.h" />

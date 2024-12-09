@@ -28,5 +28,6 @@ private slots:
   void onOKButtonClicked();
 
 private:
+  bool readTextureFile();
   bool generateResourceFile();
 };

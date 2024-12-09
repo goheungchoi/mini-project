@@ -1,7 +1,6 @@
 {
   "dependencies": [
     "stduuid",
-    "nvtt",
     "stb"
   ]
 }

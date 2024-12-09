@@ -24,7 +24,7 @@
      <x>9</x>
      <y>9</y>
      <width>581</width>
-     <height>481</height>
+     <height>484</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -180,7 +180,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="imageTypeLabel">
             <property name="minimumSize">
              <size>
               <width>120</width>
@@ -225,19 +225,19 @@
              </font>
             </property>
             <property name="text">
-             <string>Dimension:</string>
+             <string>Size:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="dimensionValueLabel">
+           <widget class="QLabel" name="sizeValueLabel">
             <property name="font">
              <font>
               <family>Arial</family>
              </font>
             </property>
             <property name="text">
-             <string>{ 0, 0, 0 }</string>
+             <string>[ 0, 0 ]</string>
             </property>
            </widget>
           </item>
@@ -289,7 +289,7 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>160</height>
+        <height>180</height>
        </size>
       </property>
       <property name="font">
@@ -306,7 +306,7 @@
          <x>9</x>
          <y>19</y>
          <width>561</width>
-         <height>131</height>
+         <height>153</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="mipmapOptionsVerticalLayout">
@@ -431,7 +431,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QLabel" name="label_6">
+           <widget class="QLabel" name="premultipliedAlphaLlabel">
             <property name="minimumSize">
              <size>
               <width>120</width>
@@ -468,6 +468,40 @@
             </property>
             <property name="checked">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QLabel" name="alphaDitheringLabel">
+            <property name="text">
+             <string>Alpha Dithering (Dithered Transparency)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line_5">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="alphaDitheringCheckBox">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
