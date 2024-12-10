@@ -20,10 +20,13 @@ public:
 #ifdef _DEBUG
     deviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif // _DEBUG
-    const D3D_FEATURE_LEVEL featurelevel = D3D_FEATURE_LEVEL_11_1;
+    const D3D_FEATURE_LEVEL featurelevel[] = {
+        D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
+        D3D_FEATURE_LEVEL_9_3,  D3D_FEATURE_LEVEL_9_2,  D3D_FEATURE_LEVEL_9_1,
+    };
     // create device and immediate Context
     HR_T(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr,
-                           deviceFlags, &featurelevel, 1, D3D11_SDK_VERSION,
+                           deviceFlags, featurelevel, 1, D3D11_SDK_VERSION,
                            _device.GetAddressOf(), nullptr,
                            _immediateContext.GetAddressOf()));
   }

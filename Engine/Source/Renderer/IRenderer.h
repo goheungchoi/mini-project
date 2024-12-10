@@ -3,7 +3,7 @@
 class IRenderer
 {
 public:
-  virtual bool Init_Win32(UINT width, UINT height, void* hInstance,
+  virtual bool Init_Win32(int width, int height, void* hInstance,
                           void* hwnd) = 0;
 
   virtual bool Cleanup() = 0;

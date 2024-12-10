@@ -14,7 +14,7 @@ public:
   SwapChain& operator=(SwapChain&&) = delete;
 
 public:
-  void CreateSwapChain(UINT width, UINT height)
+  void CreateSwapChain(HWND* hwnd,ID3D11Device* device,UINT width, UINT height)
   {
     UINT deviceFlags = 0;
 #ifdef _DEBUG
@@ -28,8 +28,8 @@ public:
     HR_T(CreateDXGIFactory(__uuidof(IDXGIFactory),
                            (void**)factory.GetAddressOf()));
     // create swapchain
-    HR_T(factory->CreateSwapChain(device.Get(), &desc,
-                                  swapChain.GetAddressOf()));
+    HR_T(factory->CreateSwapChain(device, &desc,
+                                  _swapChain.GetAddressOf()));
   }
   IDXGISwapChain* GetSwapChain() { return _swapChain.Get(); }
 

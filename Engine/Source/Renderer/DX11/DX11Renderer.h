@@ -13,8 +13,7 @@ public:
   DX11Renderer() = default;
   virtual ~DX11Renderer();
   // IRenderer을(를) 통해 상속됨
-  bool Init_Win32(UINT width, UINT height, void* hInstance,
-                  void* hwnd) override;
+  bool Init_Win32(int width, int height, void* hInstance, void* hwnd) override;
   bool Cleanup() override;
   void ResizeScreen(unsigned int width, unsigned int height) override;
   void BeginFrame() override;
