@@ -216,6 +216,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShaderModule.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Buffer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Image.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\SwapChain.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Types.h" />
 		<ClInclude Include="Source\Renderer\IRenderer.h" />
 		<ClInclude Include="Source\ResourceManager\Common.h" />
