@@ -1,10 +1,19 @@
 #include "DX11Renderer.h"
+#include "Internal/DebugLayer.h"
 #include "Internal/Device.h"
-bool DX11Renderer::Init_Win32(int width, int height,void *hInstance, void *hwnd)
+#include "Internal/SwapChain.h"
+DX11Renderer::~DX11Renderer() {}
+bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
+                              void* hwnd)
 {
-  HWND *pHwnd = reinterpret_cast<HWND *>(hwnd);
-  pDevice->CreateDevice(pHwnd);
-  return false;
+  HWND* pHwnd = reinterpret_cast<HWND*>(hwnd);
+  _device->CreateDevice(pHwnd);
+  _swapChain->CreateSwapChain(pHwnd, _device->GetDevice(), width, height);
+#ifdef _DEBUG
+  _debugLayer->CreateDebugLayer(_device->GetDevice());
+#endif // _DEBUG
+
+  return true;
 }
 
 bool DX11Renderer::Cleanup()
@@ -12,33 +21,19 @@ bool DX11Renderer::Cleanup()
   return false;
 }
 
-void DX11Renderer::ResizeScreen(unsigned int width, unsigned int height)
-{
-}
+void DX11Renderer::ResizeScreen(unsigned int width, unsigned int height) {}
 
-void DX11Renderer::BeginFrame()
-{
-}
+void DX11Renderer::BeginFrame() {}
 
-void DX11Renderer::BeginDraw()
-{
-}
+void DX11Renderer::BeginDraw() {}
 
-void DX11Renderer::EndDraw()
-{
-}
+void DX11Renderer::EndDraw() {}
 
-void DX11Renderer::EndFrame()
-{
-}
+void DX11Renderer::EndFrame() {}
 
-void DX11Renderer::BindPipeline()
-{
-}
+void DX11Renderer::BindPipeline() {}
 
-void DX11Renderer::BindResource()
-{
-}
+void DX11Renderer::BindResource() {}
 
 bool DX11Renderer::CreateMesh()
 {

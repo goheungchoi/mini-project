@@ -2,6 +2,10 @@
 #include "../IRenderer.h"
 
 class Device;
+class SwapChain;
+#ifdef _DEBUG
+class DebugLayer;
+#endif // _DEBUG
 
 class DX11Renderer : public IRenderer
 {
@@ -9,7 +13,7 @@ public:
   DX11Renderer() = default;
   virtual ~DX11Renderer();
   // IRenderer을(를) 통해 상속됨
-  bool Init_Win32(int width, int height, void *hInstance, void *hwnd) override;
+  bool Init_Win32(int width, int height, void* hInstance, void* hwnd) override;
   bool Cleanup() override;
   void ResizeScreen(unsigned int width, unsigned int height) override;
   void BeginFrame() override;
@@ -30,5 +34,9 @@ public:
   bool DestoryComputeEffect() override;
 
 private:
-  Device *pDevice = nullptr;
+  Device* _device = nullptr;
+  SwapChain* _swapChain = nullptr;
+#ifdef _DEBUG
+  DebugLayer* _debugLayer = nullptr;
+#endif // _DEBUG
 };
