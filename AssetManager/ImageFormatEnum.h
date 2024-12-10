@@ -18,11 +18,9 @@ enum class ImageFormat
 	BC1,
 	R8_UINT,
 	R8G8_UINT,
-	R8G8B8_UINT,
 	R8G8B8A8_UINT,
 	R16_FLOAT,
 	R16G16_FLOAT,
-	R16G16B16_FLOAT,
 	R16G16B16A16_FLOAT,
   R32_FLOAT,
   R32G32_FLOAT,
@@ -56,11 +54,9 @@ constexpr std::tuple<const char*, const char*, int, const char*> imageFormatDeta
     /*  9 */ {"BC1", "RGB", 4, "DXT1: no alpha"},
     /* 10 */ {"8", "R", 8, "unsigned"},
     /* 11 */ {"8.8", "RG", 16, "unsigned"},
-    /* 12 */ {"8.8.8", "RGB", 24, "unsigned"},
     /* 13 */ {"8.8.8.8", "RGBA", 32, "unsigned"},
     /* 14 */ {"16f", "R", 16, "floating-point"},
     /* 15 */ {"16fx2", "RG", 32, "floating-point"},
-    /* 16 */ {"16fx3", "RGB", 32, "floating-point"},
     /* 17 */ {"16fx4", "RGBA", 64, "floating-point"},
     /* 18 */ {"32f", "R", 32, "floating-point"},
     /* 19 */ {"32fx2", "RG", 64, "floating-point"},
@@ -79,4 +75,128 @@ inline std::string ImageFormatIndexToString(int index)
   auto [format, values, numBits, description] = imageFormatDetails[index];
   return std::format("{:8} {:>8} {:>3} bpp | {}", format, values, numBits,
                      description);
+}
+
+inline int GetNumChannels(ImageFormat format) {
+  switch (format)
+  {
+  case ImageFormat::BC4u:
+  case ImageFormat::R8_UINT:
+  case ImageFormat::R16_FLOAT:
+  case ImageFormat::R32_FLOAT:
+    return 1;
+
+  case ImageFormat::BC5u:
+  case ImageFormat::R8G8_UINT:
+  case ImageFormat::R16G16_FLOAT:
+  case ImageFormat::R32G32_FLOAT:
+    return 2;
+
+  case ImageFormat::BC6S:
+  case ImageFormat::BC6U:
+  case ImageFormat::BC1:
+  case ImageFormat::R32G32B32_FLOAT:
+    return 3;
+
+  case ImageFormat::BC7:
+  case ImageFormat::BC3:
+  case ImageFormat::BC3n:
+  case ImageFormat::BC2:
+  case ImageFormat::BC1a:
+  case ImageFormat::R8G8B8A8_UINT:
+  case ImageFormat::R16G16B16A16_FLOAT:
+  case ImageFormat::R32G326A32_FLOAT:
+    return 4;
+
+  default:
+    return 0;
+  }
+}
+
+inline bool IsUncompressedFormat(ImageFormat format) {
+  switch (format)
+  {
+  case ImageFormat::BC7:
+  case ImageFormat::BC6S:
+  case ImageFormat::BC6U:
+  case ImageFormat::BC5u:
+  case ImageFormat::BC4u:
+  case ImageFormat::BC3:
+  case ImageFormat::BC3n:
+  case ImageFormat::BC2:
+  case ImageFormat::BC1a:
+  case ImageFormat::BC1:
+    return false;
+  case ImageFormat::R8_UINT:
+  case ImageFormat::R8G8_UINT:
+  case ImageFormat::R8G8B8A8_UINT:
+  case ImageFormat::R16_FLOAT:
+  case ImageFormat::R16G16_FLOAT:
+  case ImageFormat::R16G16B16A16_FLOAT:
+  case ImageFormat::R32_FLOAT:
+  case ImageFormat::R32G32_FLOAT:
+  case ImageFormat::R32G32B32_FLOAT:
+  case ImageFormat::R32G326A32_FLOAT:
+    return true;
+  }
+	return true;
+}
+
+inline bool IsHDR(ImageFormat format) {
+  switch (format)
+  {
+  case ImageFormat::BC7:
+  case ImageFormat::BC6S:
+  case ImageFormat::BC6U:
+  case ImageFormat::BC5u:
+  case ImageFormat::BC4u:
+  case ImageFormat::BC3:
+  case ImageFormat::BC3n:
+  case ImageFormat::BC2:
+  case ImageFormat::BC1a:
+  case ImageFormat::BC1:
+  case ImageFormat::R8_UINT:
+  case ImageFormat::R8G8_UINT:
+  case ImageFormat::R8G8B8A8_UINT:
+    return false;
+  case ImageFormat::R16_FLOAT:
+  case ImageFormat::R16G16_FLOAT:
+  case ImageFormat::R16G16B16A16_FLOAT:
+  case ImageFormat::R32_FLOAT:
+  case ImageFormat::R32G32_FLOAT:
+  case ImageFormat::R32G32B32_FLOAT:
+  case ImageFormat::R32G326A32_FLOAT:
+    return true;
+  }
+  return false;
+}
+
+inline bool Is16Bits(ImageFormat format) {
+  switch (format)
+  {
+  case ImageFormat::BC7:
+  case ImageFormat::BC6S:
+  case ImageFormat::BC6U:
+  case ImageFormat::BC5u:
+  case ImageFormat::BC4u:
+  case ImageFormat::BC3:
+  case ImageFormat::BC3n:
+  case ImageFormat::BC2:
+  case ImageFormat::BC1a:
+  case ImageFormat::BC1:
+  case ImageFormat::R8_UINT:
+  case ImageFormat::R8G8_UINT:
+  case ImageFormat::R8G8B8A8_UINT:
+    return false;
+  case ImageFormat::R16_FLOAT:
+  case ImageFormat::R16G16_FLOAT:
+  case ImageFormat::R16G16B16A16_FLOAT:
+    return true;
+  case ImageFormat::R32_FLOAT:
+  case ImageFormat::R32G32_FLOAT:
+  case ImageFormat::R32G32B32_FLOAT:
+  case ImageFormat::R32G326A32_FLOAT:
+    return false;
+  }
+  return false;
 }

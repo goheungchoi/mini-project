@@ -19,19 +19,14 @@ struct ImageData
   bool isCubeMap;
 
   ColorSpace colorSpace;
-  ImageFormat imageFormat;
-  nvtt::PixelType valueType;
   nvtt::AlphaMode alphaMode;
-
-  // Supported only when isCubeMap is true
-  nvtt::CubeLayout cubeLayout;
 };
 
-struct CompressionOptions
+struct TextureExportOptions
 {
   // TODO: Adjust format based on the channel.
   // Or, recommended settings.
-  nvtt::Format format;
+  ImageFormat format;
   nvtt::Quality quality;
 
   // Mipmap settings
@@ -43,10 +38,14 @@ struct CompressionOptions
   size_t minMipmapSize;
   nvtt::MipmapFilter mipmapFilter;
 
+	// Supported only when isCubeMap is false
+  bool convertToCubeMap;
+  nvtt::CubeLayout cubeLayout;
+
   // Use GPU
   bool useGPU{true};
 };
 
 
-bool compress(const std::string& texturePath, const std::string& exportPath,
-              const ImageData& data, const CompressionOptions& options);
+bool textureExport(const std::string& texturePath, const std::string& exportPath,
+              const ImageData& data, const TextureExportOptions& options);
