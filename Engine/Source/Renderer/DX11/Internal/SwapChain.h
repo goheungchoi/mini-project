@@ -34,5 +34,5 @@ public:
   IDXGISwapChain* GetSwapChain() { return _swapChain.Get(); }
 
 private:
-  ComPtr<IDXGISwapChain> _swapChain;
+  ComPtr<IDXGISwapChain> _swapChain = nullptr;
 };

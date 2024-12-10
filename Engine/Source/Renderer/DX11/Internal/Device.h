@@ -31,6 +31,6 @@ public:
   ID3D11DeviceContext* GetImmContext() { return _immediateContext.Get(); }
 
 private:
-  ComPtr<ID3D11Device> _device;
-  ComPtr<ID3D11DeviceContext> _immediateContext;
+  ComPtr<ID3D11Device> _device = nullptr;
+  ComPtr<ID3D11DeviceContext> _immediateContext = nullptr;
 };
