@@ -1,12 +1,19 @@
 #include "DX11Renderer.h"
 #include "Internal/Device.h"
+#include "Internal/SwapChain.h"
+#include "Internal/DebugLayer.h"
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(UINT width, UINT height, void* hInstance,
                               void* hwnd)
 {
   HWND* pHwnd = reinterpret_cast<HWND*>(hwnd);
-  pDevice->CreateDevice(pHwnd,width,height);
-  return false;
+  _device->CreateDevice(pHwnd);
+  _swapChain->CreateSwapChain(width, height);
+#ifdef _DEBUG
+  _debugLayer->CreateDebugLayer(_device->GetDevice());
+#endif // _DEBUG
+
+  return true;
 }
 
 bool DX11Renderer::Cleanup()
