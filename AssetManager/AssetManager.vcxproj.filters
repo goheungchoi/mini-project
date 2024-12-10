@@ -55,6 +55,12 @@
     <ClCompile Include="TextureExport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="nv_dds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="texture_formats.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UUID.h">
@@ -70,6 +76,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="nvtt\nvtt_wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageFormatEnum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nv_dds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_formats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

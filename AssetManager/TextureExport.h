@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "ImageFormatEnum.h"
+
 enum class ColorSpace
 {
 	kSRGB,
@@ -13,10 +15,11 @@ enum class ColorSpace
 
 struct ImageData
 {
-  bool isNormalMap{false};
+  bool isNormalMap;
+  bool isCubeMap;
 
   ColorSpace colorSpace;
-  nvtt::TextureType textureType;
+  ImageFormat imageFormat;
   nvtt::PixelType valueType;
   nvtt::AlphaMode alphaMode;
 

@@ -2,6 +2,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include <nv_dds.h>
 #include <nvtt/nvtt.h>
 
 #include <format>
@@ -15,6 +16,8 @@
 #include <fstream>
 #include <vector>
 namespace fs = std::filesystem;
+
+#include "ImageFormatEnum.h"
 
 [[nodiscard]]
 static std::vector<char> read_file(const fs::path& filepath)
@@ -61,45 +64,19 @@ static std::vector<char> read_file(const fs::path& filepath)
   return result;
 }
 
-static QString ImageFormatToString(const char* format, const char* values, int numBits,
-                            const char* explanation)
-{
-  return QString::fromStdString(std::format(
-      "{:8} {:>8} {:>3} bpp | {}", format, values, numBits, explanation));
-}
-
-static QStringList imageFormats{
-    /*  0 */ ImageFormatToString("BC7", "RGBA", 8, "explicit alpha"),
-    /*  1 */ ImageFormatToString("BC6S", "HDR RGB", 8, "signed, no alpha"),
-    /*  2 */ ImageFormatToString("BC6U", "HDR RGB", 8, "unsigned, no alpha"),
-    /*  3 */ ImageFormatToString("BC5u", "RG", 8, "normal map"),
-    /*  4 */ ImageFormatToString("BC4u", "R", 4, "grayscale"),
-    /*  5 */ ImageFormatToString("BC3", "RGBA", 8, "DXT5: interpolated alpha"),
-    /*  6 */ ImageFormatToString("BC3n", "Normal", 8, "DXT5n: (x,y)->(1,y,0,x)"),
-    /*  7 */ ImageFormatToString("BC2", "RGBA", 8, "DXT3: explicit alpha"),
-    /*  8 */ ImageFormatToString("BC1a", "RGBA", 4, "DXT1a: 1 bit alpha"),
-    /*  9 */ ImageFormatToString("BC1", "RGB", 4, "DXT1: no alpha"),
-    /* 10 */ ImageFormatToString("8", "R", 8, "unsigned"),
-    /* 11 */ ImageFormatToString("8.8", "RG", 16, "unsigned"),
-    /* 12 */ ImageFormatToString("8.8.8", "RGB", 24, "unsigned"),
-    /* 13 */ ImageFormatToString("8.8.8.8", "RGBA", 32, "unsigned"),
-    /* 14 */ ImageFormatToString("16f", "R", 16, "floating-point"),
-    /* 15 */ ImageFormatToString("16fx2", "RG", 32, "floating-point"),
-    /* 16 */ ImageFormatToString("16fx3", "RGB", 32, "floating-point"),
-    /* 17 */ ImageFormatToString("16fx4", "RGBA", 64, "floating-point"),
-    /* 18 */ ImageFormatToString("32f", "R", 32, "floating-point"),
-    /* 19 */ ImageFormatToString("32fx2", "RG", 64, "floating-point"),
-    /* 20 */ ImageFormatToString("32fx3", "RGB", 64, "floating-point"),
-    /* 21 */ ImageFormatToString("32fx4", "RGBA", 128, "floating-point"),
-};
-
 TextureImportDialog::TextureImportDialog(const QString& texturePath, QWidget* parent)
     : QDialog(parent), _texturePath(texturePath)
 {
 	ui.setupUi(this);
 
 	// Set up format combo box
-  ui.formatComboBox->addItems(imageFormats);
+  QStringList imageFormatList;
+  for (int i = 0; i < eoti(ImageFormat::kNumFormats); ++i)
+  {
+    imageFormatList.append(QString::fromStdString(ImageFormatIndexToString(i)));
+	}
+
+  ui.formatComboBox->addItems(imageFormatList);
 
 	// Set up texture types
   ui.textureTypeComboBox->addItems({"2D Texture", "Cube Map"});
@@ -121,8 +98,12 @@ TextureImportDialog::TextureImportDialog(const QString& texturePath, QWidget* pa
   connect(ui.okPushButton, &QPushButton::clicked, this,
           &TextureImportDialog::onOKButtonClicked);
 
-	// Init
-  readTextureFile();
+	// If the texture file is not supported format,
+	// close the dialog
+  if (!readTextureFile())
+  {
+    this->reject();
+	}
 }
 
 TextureImportDialog::~TextureImportDialog() {
@@ -167,92 +148,99 @@ bool TextureImportDialog::readTextureFile()
 
 	if (isInputDDS)
   {
-    QMessageBox::critical(this, "Error",
-                          "DDS file format is not supported.");
-	}
+    /*QMessageBox::critical(this, "Error",
+                          "DDS file format is not supported.");*/
 
-	// Get the texture information 
-	int width, height, channels, ok;
-  ok = stbi_info(filename.c_str(), &width, &height, &channels);
-  if (!ok)
-  {
-    QMessageBox::critical(this, "Error", "Invalid image file!");
-	}
 
-	const bool isHdr = stbi_is_hdr(filename.c_str());
-  const bool is16bits = stbi_is_16_bit(filename.c_str());
-  if (isHdr)
-  {
-    if (channels == 1)
-    {
-      if (is16bits)
-        ui.formatComboBox->setCurrentIndex(14);
-      else
-        ui.formatComboBox->setCurrentIndex(18);
-		}
-    else if (channels == 2)
-    {
-      if (is16bits)
-        ui.formatComboBox->setCurrentIndex(15);
-      else
-        ui.formatComboBox->setCurrentIndex(19);
-		}
-    else if (channels == 3)
-    {
-      if (is16bits)
-        ui.formatComboBox->setCurrentIndex(16);
-      else
-        ui.formatComboBox->setCurrentIndex(20);
-		}
-    else if (channels == 4)
-    {
-      if (is16bits)
-        ui.formatComboBox->setCurrentIndex(17);
-      else
-        ui.formatComboBox->setCurrentIndex(21);
-		}
+
+    return false;
   }
   else
   {
+    // Get the texture information
+    int width, height, channels, ok;
+    ok = stbi_info(filename.c_str(), &width, &height, &channels);
+    if (!ok)
+    {
+      QMessageBox::critical(this, "Error", "Invalid image file!");
+      return false;
+    }
+
+    const bool isHdr = stbi_is_hdr(filename.c_str());
+    const bool is16bits = stbi_is_16_bit(filename.c_str());
+    if (isHdr)
+    {
+      if (channels == 1)
+      {
+        if (is16bits)
+          ui.formatComboBox->setCurrentIndex(14);
+        else
+          ui.formatComboBox->setCurrentIndex(18);
+      }
+      else if (channels == 2)
+      {
+        if (is16bits)
+          ui.formatComboBox->setCurrentIndex(15);
+        else
+          ui.formatComboBox->setCurrentIndex(19);
+      }
+      else if (channels == 3)
+      {
+        if (is16bits)
+          ui.formatComboBox->setCurrentIndex(16);
+        else
+          ui.formatComboBox->setCurrentIndex(20);
+      }
+      else if (channels == 4)
+      {
+        if (is16bits)
+          ui.formatComboBox->setCurrentIndex(17);
+        else
+          ui.formatComboBox->setCurrentIndex(21);
+      }
+    }
+    else
+    {
+      if (channels == 1)
+      {
+        ui.formatComboBox->setCurrentIndex(10);
+      }
+      else if (channels == 2)
+      {
+        ui.formatComboBox->setCurrentIndex(11);
+      }
+      else if (channels == 3)
+      {
+        ui.formatComboBox->setCurrentIndex(12);
+      }
+      else if (channels == 4)
+      {
+        ui.formatComboBox->setCurrentIndex(13);
+      }
+    }
+
     if (channels == 1)
     {
-        ui.formatComboBox->setCurrentIndex(10);
+      ui.imageTypeComboBox->setCurrentIndex(1);
     }
     else if (channels == 2)
     {
-        ui.formatComboBox->setCurrentIndex(11);
+      ui.imageTypeComboBox->setCurrentIndex(2);
     }
     else if (channels == 3)
     {
-        ui.formatComboBox->setCurrentIndex(12);
+      ui.imageTypeComboBox->setCurrentIndex(0);
     }
     else if (channels == 4)
     {
-        ui.formatComboBox->setCurrentIndex(13);
+      ui.imageTypeComboBox->setCurrentIndex(0);
     }
+
+    ui.sizeValueLabel->setText(
+        QString::fromStdString(std::format("[ {}, {} ]", width, height)));
+
+    return true;
 	}
-
-	if (channels == 1)
-  {
-    ui.imageTypeComboBox->setCurrentIndex(1);
-  }
-  else if (channels == 2)
-  {
-    ui.imageTypeComboBox->setCurrentIndex(2);
-  }
-  else if (channels == 3)
-  {
-    ui.imageTypeComboBox->setCurrentIndex(0);
-  }
-  else if (channels == 4)
-  {
-    ui.imageTypeComboBox->setCurrentIndex(0);
-  }
-
-  ui.sizeValueLabel->setText(
-      QString::fromStdString(std::format("[ {}, {} ]", width, height)));
-
-  return false;
 }
 
 bool TextureImportDialog::generateResourceFile()
@@ -262,12 +250,9 @@ bool TextureImportDialog::generateResourceFile()
 
 
   ImageData data{};
-
+  data.isNormalMap = ui.imageTypeComboBox->currentIndex() == 3;
   int formatIndex = ui.formatComboBox->currentIndex();
-  if (formatIndex == 0)	// BC7
-  {
   
-	}
 
 	CompressionOptions options{};
 

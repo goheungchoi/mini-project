@@ -113,8 +113,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="nv_dds.cpp" />
     <ClCompile Include="TextureExport.cpp" />
     <ClCompile Include="TextureImportDialog.cpp" />
+    <ClCompile Include="texture_formats.cpp" />
     <ClCompile Include="UUID.cpp" />
     <QtRcc Include="AssetManager.qrc" />
     <QtUic Include="AssetManager.ui" />
@@ -126,11 +128,14 @@
     <ResourceCompile Include="AssetManager.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ImageFormatEnum.h" />
     <ClInclude Include="nvtt\nvtt.h" />
     <ClInclude Include="nvtt\nvtt_lowlevel.h" />
     <ClInclude Include="nvtt\nvtt_wrapper.h" />
+    <ClInclude Include="nv_dds.h" />
     <ClInclude Include="TextureExport.h" />
     <QtMoc Include="TextureImportDialog.h" />
+    <ClInclude Include="texture_formats.h" />
     <ClInclude Include="UUID.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

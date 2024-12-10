@@ -144,26 +144,13 @@ bool compress(const std::string& texturePath, const std::string& exportPath,
     return false;
   }
 
-  const bool isInputDDS =
-      (input.size() >= 4 && input[0] == 'D' && input[1] == 'D' &&
-       input[2] == 'S' && input[3] == ' ');
-
-  nvtt::Surface image;
-  nvtt::SurfaceSet images;
-
-  nvtt::TextureType textureType{nvtt::TextureType_2D};
-
-  if ((options.maxMipmapCount > 1) && isInputDDS)
+  if (data.isCubeMap)
   {
-    if (images.loadDDSFromMemory(input.data(), input.size()))
-    {
-      textureType = images.GetTextureType();
+    nvtt::CubeSurface;
+	
+	}
 
-      image = images.GetSurface(0, 0, SNorm);
-    }
-  }
-
-  if (image.isNull())
+  /*if (image.isNull())
   {
     if (!image.loadFromMemory(input.data(), input.size(), nullptr, SNorm))
     {
@@ -171,12 +158,12 @@ bool compress(const std::string& texturePath, const std::string& exportPath,
       return false;
     }
     textureType = image.type();
-  }
+  }*/
 
-  nvtt::AlphaMode alphaMode = image.alphaMode();
+  /*nvtt::AlphaMode alphaMode = image.alphaMode();
   if (options.format == nvtt::Format_BC6U ||
       options.format == nvtt::Format_BC6S)
-    alphaMode = nvtt::AlphaMode_None;
+    alphaMode = nvtt::AlphaMode_None;*/
 	
 
 
