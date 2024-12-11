@@ -14,7 +14,7 @@ public:
   SwapChain& operator=(SwapChain&&) = delete;
 
 public:
-  void CreateSwapChain(HWND* hwnd,ID3D11Device* device,UINT width, UINT height)
+  void Init(HWND* hwnd, ID3D11Device* device, UINT width, UINT height)
   {
     UINT deviceFlags = 0;
 #ifdef _DEBUG

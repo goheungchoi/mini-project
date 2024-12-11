@@ -7,10 +7,21 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
 {
   HWND* pHwnd = reinterpret_cast<HWND*>(hwnd);
-  _device->CreateDevice();
-  _swapChain->CreateSwapChain(pHwnd, _device->GetDevice(), width, height);
+  _device = new Device;
+  _swapChain = new SwapChain;
+  _debugLayer = new DebugLayer;
+  _device->Init();
+  _swapChain->Init(pHwnd, _device->GetDevice(), width, height);
 #ifdef _DEBUG
-  _debugLayer->CreateDebugLayer(_device->GetDevice());
+  _debugLayer->Init(_device->GetDevice());
+  // Enable breaking on errors
+  _debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+
+  // Optionally, you can also enable breaking on warnings or other severities
+  //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, true);
+
+  // After debugging, you can disable specific breakpoints
+  //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, false);
 #endif // _DEBUG
 
   return true;
@@ -47,7 +58,12 @@ bool DX11Renderer::DestroyMesh()
 
 bool DX11Renderer::CreateTexture()
 {
-  return false;
+  
+  delete _device;
+  delete _swapChain;
+  delete _debugLayer;
+  
+  return true;
 }
 
 bool DX11Renderer::DestroyTexture()

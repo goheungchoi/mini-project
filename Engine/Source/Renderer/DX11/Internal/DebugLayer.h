@@ -15,7 +15,7 @@ public:
   DebugLayer& operator=(DebugLayer&&) = delete;
 
 public:
-  void CreateDebugLayer(ID3D11Device* pDevice)
+  void Init(ID3D11Device* pDevice)
   {
     HR_T(pDevice->QueryInterface(
         __uuidof(ID3D11Debug),

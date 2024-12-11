@@ -14,7 +14,7 @@ public:
   Device& operator=(Device&&) = delete;
 
 public:
-  void CreateDevice()
+  void Init()
   {
     UINT deviceFlags = 0;
 #ifdef _DEBUG
