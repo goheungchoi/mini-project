@@ -1,6 +1,6 @@
 #pragma once
 #include "Common.h"
-#include <stdexcept>
+
 using namespace Microsoft::WRL;
 D3D11_BUFFER_DESC CreateBufferDesc(UINT byteWidth, D3D11_USAGE usage, UINT bindFlag)
 {

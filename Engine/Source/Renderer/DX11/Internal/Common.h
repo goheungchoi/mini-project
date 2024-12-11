@@ -3,6 +3,7 @@
 #include <d3d11.h>
 //use comptr
 #include <wrl.h>
+#include <stdexcept>
 
 class com_exception : public std::exception
 {
