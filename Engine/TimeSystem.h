@@ -14,7 +14,7 @@ public:
   // 일시정지
   void Start(); // 일시 정지 해제 시 호출
   void Stop();  // 일시 정지 시 호출
-
+  //test
   void SetTimeScale(float timeScale) { _timeScale = timeScale; }
   float GetTimeScale() const { return _timeScale; }
 
