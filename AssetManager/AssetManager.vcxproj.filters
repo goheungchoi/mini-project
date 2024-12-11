@@ -21,6 +21,15 @@
       <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
       <Extensions>ts</Extensions>
     </Filter>
+    <Filter Include="Texture Exporter">
+      <UniqueIdentifier>{8a40e666-07c9-45dd-a3d9-29fd4fbd485c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External">
+      <UniqueIdentifier>{2c90ed1c-d48e-4228-99c9-7e12ce1a3b59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialogs">
+      <UniqueIdentifier>{c8507a83-4cb3-44d2-b927-1b1d718c7f79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AssetManager.qrc">
@@ -49,53 +58,53 @@
     <ClCompile Include="UUID.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextureImportDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TextureExport.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Texture Exporter</Filter>
     </ClCompile>
     <ClCompile Include="nv_dds.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>External</Filter>
     </ClCompile>
     <ClCompile Include="texture_formats.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>External</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureImportDialog.cpp">
+      <Filter>Dialogs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UUID.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextureExport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="nvtt\nvtt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="nvtt\nvtt_lowlevel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="nvtt\nvtt_wrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ImageFormatEnum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TextureExport.h">
+      <Filter>Texture Exporter</Filter>
+    </ClInclude>
+    <ClInclude Include="nvtt\nvtt_wrapper.h">
+      <Filter>External</Filter>
+    </ClInclude>
+    <ClInclude Include="nvtt\nvtt_lowlevel.h">
+      <Filter>External</Filter>
+    </ClInclude>
+    <ClInclude Include="nvtt\nvtt.h">
+      <Filter>External</Filter>
+    </ClInclude>
     <ClInclude Include="nv_dds.h">
-      <Filter>Header Files</Filter>
+      <Filter>External</Filter>
     </ClInclude>
     <ClInclude Include="texture_formats.h">
-      <Filter>Header Files</Filter>
+      <Filter>External</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="TextureImportDialog.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="TextureImportDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="TextureImportDialog.h">
+      <Filter>Dialogs</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>
