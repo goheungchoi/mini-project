@@ -317,7 +317,9 @@ bool TextureImportDialog::generateResourceFile()
       ui.premultipliedAlphaBlendingCheckBox->isChecked();
   options.enableAlphaDithering = ui.alphaDitheringCheckBox->isChecked();
   options.enableMipmap = ui.maxMipmapCountSpinBox->value() != 1;
-  options.maxMipmapCount = ui.maxMipmapCountSpinBox->value();
+  options.maxMipmapCount = ui.maxMipmapCountSpinBox->value() == 0
+                               ? (std::numeric_limits<int>::max)()
+                               : ui.maxMipmapCountSpinBox->value();
   options.minMipmapSize = ui.minMipmapSizeSpinBox->value();
 	if (ui.filterTypeComboBox->currentText() == "Box")
   {
