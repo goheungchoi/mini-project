@@ -1,5 +1,5 @@
 #include "TimeSystem.h"
-#include <Windows.h>
+#include <windows.h>
 
 double TimeSystem::_secondsPerCount = 0;
 double TimeSystem::_deltaTime = -1.0;

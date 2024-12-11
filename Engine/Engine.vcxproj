@@ -188,6 +188,8 @@
 		<ClInclude Include="Source\Core\Handle\ResourceHandle.h" />
 		<ClCompile Include="Source\Core\Math\MathUtils.cpp" />
 		<ClInclude Include="Source\Core\Math\MathUtils.h" />
+		<ClCompile Include="Source\Core\Time\TimeSystem.cpp" />
+		<ClInclude Include="Source\Core\Time\TimeSystem.h" />
 		<ClInclude Include="Source\Core\Types\MaterialData.h" />
 		<ClInclude Include="Source\Core\Types\MeshData.h" />
 		<ClInclude Include="Source\Core\Types\ModelData.h" />
@@ -196,6 +198,8 @@
 		<ClCompile Include="Source\Core\UUID\UUID.cpp" />
 		<ClInclude Include="Source\Core\UUID\UUID.h" />
 		<ClCompile Include="Source\Engine\Engine.cpp" />
+		<ClCompile Include="Source\Engine\GameEngine.cpp" />
+		<ClInclude Include="Source\Engine\GameEngine.h" />
 		<ClCompile Include="Source\FactoryManager\FactoryManager.cpp" />
 		<ClInclude Include="Source\FactoryManager\FactoryManager.h" />
 		<ClCompile Include="Source\GameFramework\Components\MaterialComponent.cpp" />
@@ -227,8 +231,6 @@
 		<ClInclude Include="Source\ResourceManager\ResourceManager.h" />
 		<ClInclude Include="Source\ResourceManager\ResourcePool\ResourcePool.h" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\TextureResourcePool.cpp" />
-		<ClCompile Include="TimeSystem.cpp" />
-		<ClInclude Include="TimeSystem.h" />
 		<None Include="vcpkg_installed\x64-windows\vcpkg\info\assimp_5.4.3_x64-windows.list" />
 		<None Include="vcpkg_installed\x64-windows\vcpkg\info\directxmath_2024-10-15_x64-windows.list" />
 		<None Include="vcpkg_installed\x64-windows\vcpkg\info\directxtk_2024-10-28_x64-windows.list" />

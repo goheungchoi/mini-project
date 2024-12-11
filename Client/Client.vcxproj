@@ -164,6 +164,9 @@
 	<ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 	<ItemGroup>
+		<ClCompile Include="Application\GameApp\GameApp.cpp" />
+		<ClInclude Include="Application\GameApp\GameApp.h" />
 		<ClCompile Include="Application\WinMain.cpp" />
+		<ClCompile Include="GameApp.cpp" />
 	</ItemGroup>
 </Project>
