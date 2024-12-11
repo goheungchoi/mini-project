@@ -1,25 +1,26 @@
 #include "TimeSystem.h"
 #include <Windows.h>
 
-TimeSystem::TimeSystem()
-    : _secondsPerCount{0}, _deltaTime{-1.0}, _baseTime{0}, _pausedTime{0},
-      _stopTime{0}, _prevTime{0}, _currTime{0}, _timeScale{1.0f},
-      _isStopped{false}
+double TimeSystem::_secondsPerCount = 0;
+double TimeSystem::_deltaTime = -1.0;
+int64_t TimeSystem::_baseTime = 0;
+int64_t TimeSystem::_pausedTime = 0;
+int64_t TimeSystem::_stopTime = 0;
+int64_t TimeSystem::_prevTime = 0;
+int64_t TimeSystem::_currTime = 0;
+float TimeSystem::_timeScale = 1.0f;
+bool TimeSystem::_isStopped = false;
+
+void TimeSystem::Initialize()
 {
   __int64 countsPerSec;
   QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSec);
   _secondsPerCount = 1.0 / (double)countsPerSec;
-
-  if (m_Instance == nullptr)
-  {
-    m_Instance = this;
-  }
 }
 
 void TimeSystem::Reset()
 {
   int64_t currTime;
-
   QueryPerformanceCounter((LARGE_INTEGER*)&currTime);
 
   _baseTime = currTime;
@@ -78,7 +79,7 @@ void TimeSystem::Stop()
   }
 }
 
-float TimeSystem::TotalTime() const
+float TimeSystem::TotalTime()
 {
   if (_isStopped)
   {
