@@ -14,7 +14,7 @@ public:
   Device& operator=(Device&&) = delete;
 
 public:
-  void CreateDevice(HWND* hwnd)
+  void CreateDevice()
   {
     UINT deviceFlags = 0;
 #ifdef _DEBUG
@@ -30,6 +30,30 @@ public:
                            _device.GetAddressOf(), nullptr,
                            _immediateContext.GetAddressOf()));
   }
+
+  ComPtr<ID3D11Buffer> CreateConstantBuffer(const void* data, UINT size) const
+  {
+    D3D11_SUBRESOURCE_DATA bufferData{};
+    bufferData.pSysMem = data;
+
+    ComPtr<ID3D11Buffer> buffer;
+    const D3D11_SUBRESOURCE_DATA* bufferDataPtr = data ? &bufferData : nullptr;
+    D3D11_BUFFER_DESC desc;
+    desc =
+        CreateBufferDesc(size, D3D11_USAGE_DEFAULT, D3D11_BIND_CONSTANT_BUFFER);
+    HR_T(_device->CreateBuffer(&desc, bufferDataPtr, buffer.GetAddressOf()));
+    return buffer;
+  }
+
+  template <typename T>
+  ComPtr<ID3D11Buffer> CreateConstantBuffer(const T* data = nullptr) const
+  {
+    static_assert(sizeof(T) % 16 == 0,
+                  "must be 16-byte aligned for constant buffer creation.");
+    return CreateConstantBuffer(data, sizeof(T));
+  }
+
+public:
   ID3D11Device* GetDevice() { return _device.Get(); }
   ID3D11DeviceContext* GetImmContext() { return _immediateContext.Get(); }
 

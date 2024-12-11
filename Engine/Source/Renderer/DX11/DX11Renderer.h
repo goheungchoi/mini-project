@@ -1,6 +1,5 @@
 #pragma once
 #include "../IRenderer.h"
-
 class Device;
 class SwapChain;
 #ifdef _DEBUG
@@ -12,6 +11,8 @@ class DX11Renderer : public IRenderer
 public:
   DX11Renderer() = default;
   virtual ~DX11Renderer();
+
+public:
   // IRenderer을(를) 통해 상속됨
   bool Init_Win32(int width, int height, void* hInstance, void* hwnd) override;
   bool Cleanup() override;
@@ -32,6 +33,7 @@ public:
   bool DestroyPipeline() override;
   bool CreateComputeEffect() override;
   bool DestoryComputeEffect() override;
+
 
 private:
   Device* _device = nullptr;

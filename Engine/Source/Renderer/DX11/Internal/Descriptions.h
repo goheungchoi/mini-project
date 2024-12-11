@@ -1,6 +1,15 @@
 #pragma once
 #include "Common.h"
 #include <stdexcept>
+using namespace Microsoft::WRL;
+D3D11_BUFFER_DESC CreateBufferDesc(UINT byteWidth, D3D11_USAGE usage, UINT bindFlag)
+{
+  D3D11_BUFFER_DESC desc{};
+  desc.ByteWidth = byteWidth;
+  desc.Usage = usage;
+  desc.BindFlags = bindFlag;
+  return desc;
+}
 
 DXGI_SWAP_CHAIN_DESC CreateSwapChainDesc(UINT width, UINT height, DXGI_FORMAT format, DXGI_USAGE usage,
                                          UINT bufferCount, UINT sampleDescCount, UINT sampleQuality, HWND outputWindow,

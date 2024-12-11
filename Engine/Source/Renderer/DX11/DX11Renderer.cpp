@@ -7,7 +7,7 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
 {
   HWND* pHwnd = reinterpret_cast<HWND*>(hwnd);
-  _device->CreateDevice(pHwnd);
+  _device->CreateDevice();
   _swapChain->CreateSwapChain(pHwnd, _device->GetDevice(), width, height);
 #ifdef _DEBUG
   _debugLayer->CreateDebugLayer(_device->GetDevice());
