@@ -23,9 +23,9 @@ class UUIDRandomGenerator {
   uuids::uuid GenerateUUID() { return gen(); }
 };
 
-UUID::UUID(const uint8_t* data) { memcpy(byte, data, kNumBytes); }
+xUUID::xUUID(const uint8_t* data) { memcpy(byte, data, kNumBytes); }
 
-UUID::UUID(const std::string& str) {
+xUUID::xUUID(const std::string& str) {
   auto id = uuids::uuid::from_string(str);
   if (id) {
     std::span sp{id->as_bytes()};
@@ -35,12 +35,12 @@ UUID::UUID(const std::string& str) {
   }
 }
 
-bool UUID::IsNil() {
+bool xUUID::IsNil() {
   return uuids::uuid(byte).is_nil();
   
 }
 
-std::string UUID::ToString(bool separated /* = false */) {
+std::string xUUID::ToString(bool separated /* = false */) {
   std::span sp(byte);
   std::string s{uuids::to_string(uuids::uuid(sp))};
   if (!separated) {
@@ -50,21 +50,21 @@ std::string UUID::ToString(bool separated /* = false */) {
   return s;
 }
 
-bool UUID::operator==(const UUID& other) const { return false; }
+bool xUUID::operator==(const xUUID& other) const { return false; }
 
-bool UUID::IsValidUUIDString(const std::string& uuid) {
+bool xUUID::IsValidUUIDString(const std::string& uuid) {
   return uuids::uuid::is_valid_uuid(uuid);
 }
 
-UUID GenerateRandomUUID() {
+xUUID GenerateRandomUUID() {
   static UUIDRandomGenerator random_generator{};
   const uuids::uuid id = random_generator.GenerateUUID();
-  return UUID(reinterpret_cast<const uint8_t*>(id.as_bytes().data()));
+  return xUUID(reinterpret_cast<const uint8_t*>(id.as_bytes().data()));
 }
 
-UUID GenerateUUIDFromName(const std::string& name) {
+xUUID GenerateUUIDFromName(const std::string& name) {
   static uuids::uuid_name_generator gen(
       uuids::uuid::from_string("47183823-2574-4bfd-b411-99ed177d3e43").value());
   const uuids::uuid id = gen(name);
-  return UUID(reinterpret_cast<const unsigned char*>(id.as_bytes().data()));
+  return xUUID(reinterpret_cast<const unsigned char*>(id.as_bytes().data()));
 }

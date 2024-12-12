@@ -13,7 +13,7 @@ class ResourcePool
 
   std::queue<std::size_t> _emptySlotQueue;
 
-  std::unordered_map<UUID, uint32_t> _uuidMap;
+  std::unordered_map<xUUID, uint32_t> _uuidMap;
 
 private:
   std::vector<uint32_t> _refCounts;
@@ -22,7 +22,7 @@ private:
 public:
   Handle Load(const char* path, void* pUser)
   {
-    UUID uuid = GenerateUUIDFromName(path);
+    xUUID uuid = GenerateUUIDFromName(path);
 
     if (auto it = _uuidMap.find(uuid); it == _uuidMap.end())
     {
@@ -148,7 +148,7 @@ private:
     _refCounts[handle.index]--;
   }
 
-  bool LoadImpl(Handle& handle, UUID uuid, void* pUser)
+  bool LoadImpl(Handle& handle, xUUID uuid, void* pUser)
   {
     return false;
   }
@@ -169,7 +169,7 @@ private:
 };
 
 template <>
-bool ResourcePool<TextureData>::LoadImpl(Handle& handle, UUID uuid, void* pUser);
+bool ResourcePool<TextureData>::LoadImpl(Handle& handle, xUUID uuid, void* pUser);
 
 template <>
 bool ResourcePool<TextureData>::UnloadImpl(Handle& handle);

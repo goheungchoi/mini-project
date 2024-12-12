@@ -2,26 +2,26 @@
 
 #include "Core/Common.h"
 
-struct UUID {
+struct xUUID {
   static constexpr size_t kNumBytes{16};
   uint8_t byte[kNumBytes];
 
-	UUID() : byte{} {}
-  UUID(const uint8_t* data);
-  UUID(const std::string& str);
+	xUUID() : byte{} {}
+  xUUID(const uint8_t* data);
+  xUUID(const std::string& str);
 
 	bool IsNil();
   std::string ToString(bool separated = false);
 
-	bool operator==(const UUID& other) const;
+	bool operator==(const xUUID& other) const;
 
 	static bool IsValidUUIDString(const std::string& uuid);
 };
 
 namespace std {
 template <>
-struct hash<UUID> {
-  std::size_t operator()(const UUID& uuid) const noexcept {
+struct hash<xUUID> {
+  std::size_t operator()(const xUUID& uuid) const noexcept {
     std::size_t hash = 2166136261u;  // FNV-1a 32-bit hash offset
     for (int i = 0; i < 16; ++i) {
       hash ^= uuid.byte[i];
@@ -32,5 +32,5 @@ struct hash<UUID> {
 };
 }  // namespace std
 
-UUID GenerateRandomUUID();
-UUID GenerateUUIDFromName(const std::string& name);
+xUUID GenerateRandomUUID();
+xUUID GenerateUUIDFromName(const std::string& name);
