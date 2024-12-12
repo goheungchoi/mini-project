@@ -4,7 +4,8 @@
 //use comptr
 #include <wrl.h>
 #include <stdexcept>
-
+#include <vector>
+#include <unordered_map>
 class com_exception : public std::exception
 {
 public:

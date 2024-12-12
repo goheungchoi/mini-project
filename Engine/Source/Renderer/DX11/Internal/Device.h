@@ -30,7 +30,7 @@ public:
                            _device.GetAddressOf(), nullptr,
                            _immediateContext.GetAddressOf()));
   }
-
+  
   ComPtr<ID3D11Buffer> CreateConstantBuffer(const void* data, UINT size) const
   {
     D3D11_SUBRESOURCE_DATA bufferData{};
@@ -51,6 +51,25 @@ public:
     static_assert(sizeof(T) % 16 == 0,
                   "must be 16-byte aligned for constant buffer creation.");
     return CreateConstantBuffer(data, sizeof(T));
+  }
+
+  /*
+   *data -> vector::data()
+   *size -> sizeof(struct)*vector::size()
+   *buffer Type -> index,vertex
+   */
+  ComPtr<ID3D11Buffer> CreateDataBuffer(const void* data, UINT size,
+                                        D3D11_BIND_FLAG bufferType) const
+  {
+    D3D11_SUBRESOURCE_DATA bufferData{};
+    bufferData.pSysMem = data;
+
+    ComPtr<ID3D11Buffer> buffer;
+    const D3D11_SUBRESOURCE_DATA* bufferDataPtr = data ? &bufferData : nullptr;
+    D3D11_BUFFER_DESC desc;
+    desc = CreateBufferDesc(size, D3D11_USAGE_DEFAULT, bufferType);
+    HR_T(_device->CreateBuffer(&desc, bufferDataPtr, buffer.GetAddressOf()));
+    return buffer;
   }
 
 public:

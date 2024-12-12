@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Core/Handle/ResourceHandle.h"
 
 class IRenderer
 {
@@ -23,7 +24,7 @@ public:
   virtual void BindResource() = 0;
 
   // 렌더러 안에서 D3D11 리소스 생성과 파괴
-  virtual bool CreateMesh() = 0;
+  virtual bool CreateMesh(MeshHandle handle) = 0;
   virtual bool DestroyMesh() = 0;
 
   virtual bool CreateTexture() = 0;

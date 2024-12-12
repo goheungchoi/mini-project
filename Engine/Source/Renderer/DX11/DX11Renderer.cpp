@@ -1,7 +1,11 @@
 #include "DX11Renderer.h"
 #include "Internal/DebugLayer.h"
 #include "Internal/Device.h"
+#include "Internal/RenderFrameworks/Pipeline.h"
+#include "Internal/Resources/Buffer.h"
 #include "Internal/SwapChain.h"
+#include "ResourceManager/ResourceManager.h"
+
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
@@ -46,24 +50,50 @@ void DX11Renderer::BindPipeline() {}
 
 void DX11Renderer::BindResource() {}
 
-bool DX11Renderer::CreateMesh()
+bool DX11Renderer::CreateMesh(MeshHandle handle)
 {
+  auto iter = _meshMap.find(handle);
+
+  if (iter==_meshMap.end())
+  {
+    MeshBuffer* meshBuffer = new MeshBuffer;
+
+    MeshData meshData = AccessMeshData(handle);
+
+    uint32_t size = sizeof(Vertex) * meshData.vertices.size();
+    meshBuffer->vertexBuffer = _device->CreateDataBuffer(
+        meshData.vertices.data(), size, D3D11_BIND_VERTEX_BUFFER);
+
+    size = sizeof(UINT) * meshData.indices.size();
+    meshBuffer->indexBuffer = _device->CreateDataBuffer(
+        meshData.indices.data(), size, D3D11_BIND_INDEX_BUFFER);
+
+    meshBuffer->nIndices = meshData.indices.size();
+    meshBuffer->stride = 0;
+    meshBuffer->offset = sizeof(Vertex);
+    _meshMap.insert({handle, meshBuffer});
+  }
   
-  return false;
+  return true;
 }
 
 bool DX11Renderer::DestroyMesh()
 {
+  // delete mesh
+  for (auto& mesh : _meshMap)
+  {
+    delete mesh.second;
+  }
   return false;
 }
 
 bool DX11Renderer::CreateTexture()
 {
-  
+
   delete _device;
   delete _swapChain;
   delete _debugLayer;
-  
+
   return true;
 }
 
@@ -84,7 +114,8 @@ bool DX11Renderer::DestroyShaderModule()
 
 bool DX11Renderer::CreatePipeline()
 {
-  return false;
+
+  return true;
 }
 
 bool DX11Renderer::DestroyPipeline()

@@ -1,10 +1,13 @@
 #pragma once
 #include "../IRenderer.h"
+#include "Core/Common.h"
 class Device;
 class SwapChain;
 #ifdef _DEBUG
 class DebugLayer;
 #endif // _DEBUG
+class PipelineState;
+struct MeshBuffer;
 
 class DX11Renderer : public IRenderer
 {
@@ -23,7 +26,7 @@ public:
   void EndFrame() override;
   void BindPipeline() override;
   void BindResource() override;
-  bool CreateMesh() override;
+  bool CreateMesh(MeshHandle handle) override;
   bool DestroyMesh() override;
   bool CreateTexture() override;
   bool DestroyTexture() override;
@@ -41,4 +44,8 @@ private:
 #ifdef _DEBUG
   DebugLayer* _debugLayer = nullptr;
 #endif // _DEBUG
+
+private: 
+  //std::unordered_map<std::string, std::pair<PipelineState*, MeshBuffer*>> _pipelineMeshMap;
+  std::unordered_map<MeshHandle, MeshBuffer*> _meshMap;
 };

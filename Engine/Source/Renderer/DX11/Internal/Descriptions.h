@@ -29,3 +29,8 @@ DXGI_SWAP_CHAIN_DESC CreateSwapChainDesc(UINT width, UINT height, DXGI_FORMAT fo
   desc.OutputWindow = outputWindow;
   return desc;
 }
+///D3D11_APPEND_ALIGNED_ELEMENT
+std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayouDesc()
+{
+  
+}
