@@ -1,8 +1,27 @@
 #include "GameApp.h"
+#include "../../Engine/Source/WindowManager/WindowManager.h"
 
 void GameApp::Initialize()
 {
+  // 윈도우 생성
+  _hwnd = WindowManager::CreateWinApp();
+
   Super::Initialize();
+
+}
+
+void GameApp::Execute()
+{
+
+  Super::Execute();
+
+}
+
+void GameApp::Shutdown()
+{
+  Super::Shutdown();
+  
+  // 윈도우 파괴
 
 }
 

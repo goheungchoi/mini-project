@@ -12,6 +12,8 @@ public:
 
 public:
   virtual void Initialize() override;
+  virtual void Execute() override;
+  virtual void Shutdown() override;
 
 protected:
   virtual void FixedUpdate(float deltaTime) override;

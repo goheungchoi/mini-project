@@ -23,6 +23,6 @@ private:
   // Main Loop
   void Run();
 
-private:
+protected:
   HWND _hwnd{};
 };
