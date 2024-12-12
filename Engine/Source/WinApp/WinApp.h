@@ -8,12 +8,10 @@ public:
   ~WinApp() = default;
 
 public:
+  HWND GetHWND() { return _hwnd; }
+  void App_CreateWindow(int width, int height);
 
-	
 protected:
   HINSTANCE		_hInstance{};
   HWND			_hwnd{};
-
-  // Test
-  const wchar_t* _className;
 };
