@@ -13,16 +13,16 @@ class ResourcePool
 
   std::queue<std::size_t> _emptySlotQueue;
 
-  std::unordered_map<UUID, u32> _uuidMap;
+  std::unordered_map<UUID, uint32_t> _uuidMap;
 
 private:
-  std::vector<u32> _refCounts;
+  std::vector<uint32_t> _refCounts;
   std::vector<TableEntry> _table;
 
 public:
   Handle Load(const char* path, void* pUser)
   {
-    UUID uuid = GenerateUUID_v5(path);
+    UUID uuid = GenerateUUIDFromName(path);
 
     if (auto it = _uuidMap.find(uuid); it == _uuidMap.end())
     {
@@ -41,7 +41,7 @@ public:
     else
     {
       // Duplicate the handle
-      u32 index = it->second;
+      uint32_t index = it->second;
       return DuplicateHandle(_table[index].first);
     }
 
@@ -65,7 +65,7 @@ public:
 
   bool IsValidHandle(const Handle& handle) const
   {
-    if (handle == Handle::INVALID_HANDLE || handle.index < _table.size())
+    if (handle == Handle::kInvalidHandle || handle.index < _table.size())
       return false;
     // To be valid, the version and description has to be the same
     const Handle& valid = _table[handle.index].first;
@@ -102,7 +102,7 @@ private:
   Handle& ClaimHandle()
   {
     // TODO: Can be optimized with a mem queue.
-    u64 i = 0;
+    uint64_t i = 0;
     for (; i < _table.size(); ++i)
     {
       // Find the next empty spot
@@ -116,7 +116,7 @@ private:
         }
         else
         {
-          u64 version = curr.version + 1;
+          uint64_t version = curr.version + 1;
           if (version > Handle::MAX_VERSION)
           {
             version = Handle::MIN_VERSION;
@@ -144,7 +144,7 @@ private:
     if (!IsValidHandle(handle))
       throw std::exception("invalid handle!");
 
-    handle = Handle::INVALID_HANDLE;
+    handle = Handle::kInvalidHandle;
     _refCounts[handle.index]--;
   }
 
