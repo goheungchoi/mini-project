@@ -29,8 +29,66 @@ DXGI_SWAP_CHAIN_DESC CreateSwapChainDesc(UINT width, UINT height, DXGI_FORMAT fo
   desc.OutputWindow = outputWindow;
   return desc;
 }
-///D3D11_APPEND_ALIGNED_ELEMENT
-std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayouDesc()
+
+std::vector <D3D11_INPUT_ELEMENT_DESC> CreateInputLayouDesc(std::vector<uint8_t>& vsData, size_t& vsSize)
 {
-  
+  Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pReflector;
+  D3DReflect(vsData.data(), vsSize, IID_ID3D11ShaderReflection,
+             (void**)pReflector.GetAddressOf());
+
+  D3D11_SHADER_DESC shaderDesc;
+  pReflector->GetDesc(&shaderDesc);
+
+  std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
+  inputLayoutDesc.reserve(shaderDesc.InputParameters);
+
+  for (size_t i = 0; i < shaderDesc.InputParameters; i++)
+  {
+    D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
+    pReflector->GetInputParameterDesc(static_cast<UINT>(i), &paramDesc);
+
+    // 우리가 inputlayout 만들때 해준 semantic이랑 정해주던거
+    D3D11_INPUT_ELEMENT_DESC elemDesc{
+        .SemanticName = paramDesc.SemanticName,
+        .SemanticIndex = paramDesc.SemanticIndex,
+        .InputSlot = 0,
+        .AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT,
+        .InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
+        .InstanceDataStepRate = 0};
+    if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+    {
+      if (paramDesc.Mask == 1)
+        elemDesc.Format = DXGI_FORMAT_R32_FLOAT;
+      else if (paramDesc.Mask <= 3)
+        elemDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+      else if (paramDesc.Mask <= 7)
+        elemDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+      else if (paramDesc.Mask <= 15)
+        elemDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    }
+    else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+    {
+      if (paramDesc.Mask == 1)
+        elemDesc.Format = DXGI_FORMAT_R32_UINT;
+      else if (paramDesc.Mask <= 3)
+        elemDesc.Format = DXGI_FORMAT_R32G32_UINT;
+      else if (paramDesc.Mask <= 7)
+        elemDesc.Format = DXGI_FORMAT_R32G32B32_UINT;
+      else if (paramDesc.Mask <= 15)
+        elemDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT;
+    }
+    else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+    {
+      if (paramDesc.Mask == 1)
+        elemDesc.Format = DXGI_FORMAT_R32_SINT;
+      else if (paramDesc.Mask <= 3)
+        elemDesc.Format = DXGI_FORMAT_R32G32_SINT;
+      else if (paramDesc.Mask <= 7)
+        elemDesc.Format = DXGI_FORMAT_R32G32B32_SINT;
+      else if (paramDesc.Mask <= 15)
+        elemDesc.Format = DXGI_FORMAT_R32G32B32A32_SINT;
+    }
+    inputLayoutDesc.push_back(elemDesc);
+  }
+  return inputLayoutDesc;
 }
