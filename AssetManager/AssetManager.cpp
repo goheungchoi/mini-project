@@ -88,7 +88,8 @@ void AssetManager::onImportButtonClicked() {
 
 		QString extension = QFileInfo(filePath).suffix().toLower();
 
-		if (extension == "jpg" || extension == "png" || extension == "dds")
+		if (extension == "jpg" || extension == "jpeg" || extension == "png" ||
+        extension == "dds" || extension == "hdr" || extension == "dds")
     {
       TextureImportDialog textureDialog(filePath, this);
       textureDialog.exec();
