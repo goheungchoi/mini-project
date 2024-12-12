@@ -21,8 +21,8 @@
 #include <concepts>
 #include <any>
 
-#include <fmt/core.h>
-#include <fmt/format.h>
+//#include <fmt/core.h>
+//#include <fmt/format.h>
 
 constexpr uint64_t kUInt64Max{(std::numeric_limits<uint64_t>::max)()};
 
