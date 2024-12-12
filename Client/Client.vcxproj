@@ -130,7 +130,7 @@
 			<GenerateDebugInformation>true</GenerateDebugInformation>
 		</Link>
 		<PreBuildEvent>
-			<Command>generate-filters.exe -E vcpkg.json vcpkg-configuration.json</Command>
+			<Command>generate-filters.exe -E vcpkg.json vcpkg-configuration.json vcpkg_installed</Command>
 		</PreBuildEvent>
 	</ItemDefinitionGroup>
 	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -152,7 +152,7 @@
 			<GenerateDebugInformation>true</GenerateDebugInformation>
 		</Link>
 		<PreBuildEvent>
-			<Command>generate-filters.exe -E vcpkg.json vcpkg-configuration.json</Command>
+			<Command>generate-filters.exe -E vcpkg.json vcpkg-configuration.json vcpkg_installed</Command>
 		</PreBuildEvent>
 	</ItemDefinitionGroup>
 	<ItemGroup>
