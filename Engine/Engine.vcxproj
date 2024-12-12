@@ -234,5 +234,10 @@
 		<ClInclude Include="Source\ResourceManager\ResourcePool\ResourcePool.h" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\ShaderResourcePool.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\TextureResourcePool.cpp" />
+		<ClCompile Include="Source\WinApp\WinApp.cpp" />
+		<ClInclude Include="Source\WinApp\WinApp.h" />
+		<ClCompile Include="Source\WindowManager\WindowManager.cpp" />
+		<ClInclude Include="Source\WindowManager\WindowManager.h" />
+		<ClCompile Include="WinApp.cpp" />
 	</ItemGroup>
 </Project>

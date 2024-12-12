@@ -24,5 +24,5 @@ private:
   void Run();
 
 private:
-  HWND _hwnd;
+  HWND _hwnd{};
 };

@@ -47,6 +47,7 @@ void GameEngine::Run()
     }
     else
     {
+      TimeSystem::Update();
       Update(TimeSystem::GetDeltaTime());
       Render();
     }
