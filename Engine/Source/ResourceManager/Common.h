@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Handle/Handle.h"
+#include "Core/Handle/ResourceHandle.h
 
 #include "Core/Types/ShaderData.h"
 #include "Core/Types/MeshData.h"
