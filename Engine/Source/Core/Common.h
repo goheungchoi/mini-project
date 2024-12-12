@@ -4,6 +4,7 @@
 #define NOMINMAX
 #include <Windows.h>
 
+#include <iostream>
 #include <memory>
 #include <optional>
 #include <string>
