@@ -30,7 +30,7 @@ public:
   virtual bool CreateTexture() = 0;
   virtual bool DestroyTexture() = 0;
 
-  virtual bool CreateShaderModule() = 0;
+  virtual bool CreateShaderModule(ShaderHandle shaderHandle) = 0;
   virtual bool DestroyShaderModule() = 0;
 
   virtual bool CreatePipeline() = 0;

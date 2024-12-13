@@ -30,7 +30,7 @@ public:
   bool DestroyMesh() override;
   bool CreateTexture() override;
   bool DestroyTexture() override;
-  bool CreateShaderModule() override;
+  bool CreateShaderModule(ShaderHandle shaderHandle) override;
   bool DestroyShaderModule() override;
   bool CreatePipeline() override;
   bool DestroyPipeline() override;

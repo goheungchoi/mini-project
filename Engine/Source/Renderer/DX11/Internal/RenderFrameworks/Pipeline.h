@@ -1,6 +1,9 @@
 #pragma once
 #include "../Common.h"
+#include "../Descriptions.h"
 using namespace Microsoft::WRL;
+
+//우선은 각 pipe line에 하나의 쉐이더만 사용해보자...
 class PipelineState
 {
 public:
@@ -12,17 +15,11 @@ public:
   {
     _topology = topology;
   }
-  void SetInputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& desc)
-  {
-    
-  }
 
 public:
   ComPtr<ID3D11RasterizerState> _rasterizeState = nullptr;
   ComPtr<ID3D11DepthStencilState> _depthStencilState = nullptr;
-  ComPtr<ID3D11VertexShader> _vertexShader = nullptr;
-  ComPtr<ID3D11PixelShader> _pixelShader = nullptr;
-  ComPtr<ID3D11InputLayout> _pinputLayout = nullptr;
+  ComPtr<ID3D11BlendState> _blendState = nullptr;
   D3D_PRIMITIVE_TOPOLOGY _topology;
   
 };

@@ -52,7 +52,7 @@ void DX11Renderer::BindResource() {}
 
 bool DX11Renderer::CreateMesh(MeshHandle handle)
 {
-  /*auto iter = _meshMap.find(handle);
+  auto iter = _meshMap.find(handle);
 
   if (iter==_meshMap.end())
   {
@@ -72,7 +72,7 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
     meshBuffer->stride = 0;
     meshBuffer->offset = sizeof(Vertex);
     _meshMap.insert({handle, meshBuffer});
-  }*/
+  }
   
   return true;
 }
@@ -102,8 +102,10 @@ bool DX11Renderer::DestroyTexture()
   return false;
 }
 
-bool DX11Renderer::CreateShaderModule()
+bool DX11Renderer::CreateShaderModule(ShaderHandle shaderHandle)
 {
+  ShaderData data = AccessShaderData(shaderHandle);
+
   return false;
 }
 
