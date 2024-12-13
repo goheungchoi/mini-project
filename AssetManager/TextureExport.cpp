@@ -3,6 +3,7 @@
 #include <Windows.h>
 
 #include "stb_image.h"
+#define NV_DDS_UTILITY_VALUES
 #include "nv_dds.h"
 #include "dxgiformat.h"
 
@@ -641,26 +642,96 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
 				// TODO: Save the cubemap
         const bool isHdr = IsHDR(options.format);
         const bool is16Bits = Is16Bits(options.format);
+
+				const size_t elemSize = !isHdr ? 1 : is16Bits ? 2 : 4;
+
         nv_dds::Image dds;
         dds.allocate(mipmapCount, 1, faceCount);
-        size_t linearSize = mip0Width * mip0Height * sizeof(float) * 4;
+        size_t linearSize = mip0Width * mip0Height * requiredChannels;
+
+				size_t originalSize = mip0Width * mip0Height * 4;
         
 				for (int f = 0; f < faceCount; ++f)
         {
           nvtt::Surface& tmp = cube.face(f);
-          std::vector<float> pixels(linearSize);
-          for (size_t y = 0; y < mip0Height; ++y)
+
+					if (!isHdr)
           {
-            for (size_t x = 0; x < mip0Width; ++x)
+            std::vector<uint8_t> pixels(linearSize);
+            for (size_t y = 0; y < mip0Height; ++y)
             {
-              size_t currPixelIndex = y * mip0Width + x;
-              pixels[currPixelIndex << 2 + 0] = tmp.channel(0)[currPixelIndex];
-              pixels[currPixelIndex << 2 + 1] = tmp.channel(1)[currPixelIndex];
-              pixels[currPixelIndex << 2 + 2] = tmp.channel(2)[currPixelIndex];
-              pixels[currPixelIndex << 2 + 3] = tmp.channel(3)[currPixelIndex];
-						}
+              for (size_t x = 0; x < mip0Width; ++x)
+              {
+                size_t currPixelIndex = y * mip0Width + x;
+                pixels[currPixelIndex + 0] =
+                    tmp.channel(0)[currPixelIndex] / (tmp.channel(
+                        0)[currPixelIndex] + 1.f);
+                if (requiredChannels > 1)
+                  pixels[currPixelIndex + 1] =
+                      tmp.channel(1)[currPixelIndex] /
+                      (tmp.channel(1)[currPixelIndex] + 1.f);
+                if (requiredChannels > 2)
+                  pixels[currPixelIndex + 2] =
+                      tmp.channel(2)[currPixelIndex] /
+                      (tmp.channel(2)[currPixelIndex] + 1.f);
+                if (requiredChannels > 3)
+                  pixels[currPixelIndex + 3] =
+                      tmp.channel(3)[currPixelIndex] /
+                      (tmp.channel(3)[currPixelIndex] + 1.f);
+              }
+            }
+            // TODO: Convert the original pixels into desired pixels
+            dds.subresource(0, 0, f).create(linearSize * elemSize,
+                                            pixels.data());
           }
-          dds.subresource(0, 0, f).create(linearSize, pixels.data());
+          else
+          {
+            if (is16Bits)
+            {
+              std::vector<uint16_t> pixels(linearSize);
+              for (size_t y = 0; y < mip0Height; ++y)
+              {
+                for (size_t x = 0; x < mip0Width; ++x)
+                {
+                  size_t currPixelIndex = y * mip0Width + x;
+                  memcpy(&pixels[currPixelIndex + 0], &tmp.channel(0)[currPixelIndex], 2);
+                  if (requiredChannels > 1)
+                    memcpy(&pixels[currPixelIndex + 1],
+                           &tmp.channel(1)[currPixelIndex], 2);
+                  if (requiredChannels > 2)
+                    memcpy(&pixels[currPixelIndex + 2],
+                           &tmp.channel(2)[currPixelIndex], 2);
+                  if (requiredChannels > 3)
+                    memcpy(&pixels[currPixelIndex + 3],
+                           &tmp.channel(3)[currPixelIndex], 2);
+                }
+              }
+              // TODO: Convert the original pixels into desired pixels
+              dds.subresource(0, 0, f).create(linearSize * elemSize,
+                                              pixels.data());
+						}
+            else
+            {
+              std::vector<float> pixels(linearSize);
+              for (size_t y = 0; y < mip0Height; ++y)
+              {
+                for (size_t x = 0; x < mip0Width; ++x)
+                {
+                  size_t currPixelIndex = y * mip0Width + x;
+                  pixels[currPixelIndex + 0] = tmp.channel(0)[currPixelIndex];
+                  if (requiredChannels > 1)
+                    pixels[currPixelIndex + 1] = tmp.channel(1)[currPixelIndex];
+                  if (requiredChannels > 2)
+                    pixels[currPixelIndex + 2] = tmp.channel(2)[currPixelIndex];
+                  if (requiredChannels > 3)
+                    pixels[currPixelIndex + 3] = tmp.channel(3)[currPixelIndex];
+                }
+              }
+              // TODO: Convert the original pixels into desired pixels
+              dds.subresource(0, 0, f).create(linearSize * elemSize,
+                                              pixels.data());
+						}
+					}
 				}
 				
         // Output images.
@@ -679,28 +750,110 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
             {
               cube.face(f).buildNextMipmap(options.mipmapFilter, 1);
             }
-          }
 
-					nvtt::Surface& tmp = cube.face(f);
-          size_t linearSize = tmp.width() * tmp.height() * sizeof(float) * 4;
+						nvtt::Surface& tmp = cube.face(f);
+            size_t mipHeight = tmp.height();
+            size_t mipWidth = tmp.width();
 
-          std::vector<float> pixels(linearSize);
-          for (size_t y = 0; y < tmp.height(); ++y)
-          {
-            for (size_t x = 0; x < tmp.width(); ++x)
+						size_t linearSize = mipWidth * mipHeight * requiredChannels;
+
+            size_t originalSize = mipWidth * mipHeight * 4;
+
+            if (!isHdr)
             {
-              size_t currPixelIndex = y * tmp.width() + x;
-              pixels[currPixelIndex << 2 + 0] = tmp.channel(0)[currPixelIndex];
-              pixels[currPixelIndex << 2 + 1] = tmp.channel(1)[currPixelIndex];
-              pixels[currPixelIndex << 2 + 2] = tmp.channel(2)[currPixelIndex];
-              pixels[currPixelIndex << 2 + 3] = tmp.channel(3)[currPixelIndex];
+              std::vector<uint8_t> pixels(linearSize);
+              for (size_t y = 0; y < mipHeight; ++y)
+              {
+                for (size_t x = 0; x < mipWidth; ++x)
+                {
+                  size_t currPixelIndex = y * mipWidth + x;
+                  pixels[currPixelIndex + 0] =
+                      tmp.channel(0)[currPixelIndex] /
+                      (tmp.channel(0)[currPixelIndex] + 1.f);
+                  if (requiredChannels > 1)
+                    pixels[currPixelIndex + 1] =
+                        tmp.channel(1)[currPixelIndex] /
+                        (tmp.channel(1)[currPixelIndex] + 1.f);
+                  if (requiredChannels > 2)
+                    pixels[currPixelIndex + 2] =
+                        tmp.channel(2)[currPixelIndex] /
+                        (tmp.channel(2)[currPixelIndex] + 1.f);
+                  if (requiredChannels > 3)
+                    pixels[currPixelIndex + 3] =
+                        tmp.channel(3)[currPixelIndex] /
+                        (tmp.channel(3)[currPixelIndex] + 1.f);
+                }
+              }
+              // TODO: Convert the original pixels into desired pixels
+              dds.subresource(m, 0, f).create(linearSize * elemSize,
+                                              pixels.data());
+            }
+            else
+            {
+              if (is16Bits)
+              {
+                std::vector<uint16_t> pixels(linearSize);
+                for (size_t y = 0; y < mipHeight; ++y)
+                {
+                  for (size_t x = 0; x < mipWidth; ++x)
+                  {
+                    size_t currPixelIndex = y * mipWidth + x;
+                    memcpy(&pixels[currPixelIndex + 0],
+                           &tmp.channel(0)[currPixelIndex], 2);
+                    if (requiredChannels > 1)
+                      memcpy(&pixels[currPixelIndex + 1],
+                             &tmp.channel(1)[currPixelIndex], 2);
+                    if (requiredChannels > 2)
+                      memcpy(&pixels[currPixelIndex + 2],
+                             &tmp.channel(2)[currPixelIndex], 2);
+                    if (requiredChannels > 3)
+                      memcpy(&pixels[currPixelIndex + 3],
+                             &tmp.channel(3)[currPixelIndex], 2);
+                  }
+                }
+                // TODO: Convert the original pixels into desired pixels
+                dds.subresource(m, 0, f).create(linearSize * elemSize,
+                                                pixels.data());
+              }
+              else
+              {
+                std::vector<float> pixels(linearSize);
+                for (size_t y = 0; y < mipHeight; ++y)
+                {
+                  for (size_t x = 0; x < mipWidth; ++x)
+                  {
+                    size_t currPixelIndex = y * mipWidth + x;
+                    pixels[currPixelIndex + 0] = tmp.channel(0)[currPixelIndex];
+                    if (requiredChannels > 1)
+                      pixels[currPixelIndex + 1] =
+                          tmp.channel(1)[currPixelIndex];
+                    if (requiredChannels > 2)
+                      pixels[currPixelIndex + 2] =
+                          tmp.channel(2)[currPixelIndex];
+                    if (requiredChannels > 3)
+                      pixels[currPixelIndex + 3] =
+                          tmp.channel(3)[currPixelIndex];
+                  }
+                }
+                // TODO: Convert the original pixels into desired pixels
+                dds.subresource(m, 0, f).create(linearSize * elemSize, pixels.data());
+              }
             }
           }
-          dds.subresource(0, 0, f).create(linearSize, pixels.data());
         }
 
-				
+				dds.mip0Width = mip0Width;
+        dds.mip0Height = mip0Height;
+        dds.mip0Depth = 1;
+        dds.cubemapFaceFlags = nv_dds::DDSCAPS2_CUBEMAP_ALL_FACES;
+        dds.dxgiFormat =
+            todx(options.format, data.colorSpace == ColorSpace::kSRGB);
+        dds.alphaMode = data.alphaMode == nvtt::AlphaMode_None
+                            ? nv_dds::DDS_ALPHA_MODE_OPAQUE
+                            : nv_dds::DDS_ALPHA_MODE_STRAIGHT;
+        dds.isNormal = data.isNormalMap;
 
+				dds.writeToFile(exportPath.c_str(), {.useDx10HeaderIfPossible = true});
 
         return true;
       }
