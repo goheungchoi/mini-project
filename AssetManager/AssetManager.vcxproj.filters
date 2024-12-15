@@ -30,6 +30,9 @@
     <Filter Include="Dialogs">
       <UniqueIdentifier>{c8507a83-4cb3-44d2-b927-1b1d718c7f79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model Exporter">
+      <UniqueIdentifier>{784f27a9-c4f8-4190-afef-de26b98da70b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AssetManager.qrc">
@@ -70,6 +73,12 @@
     <ClCompile Include="TextureImportDialog.cpp">
       <Filter>Dialogs</Filter>
     </ClCompile>
+    <ClCompile Include="QtModelImportDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelExport.cpp">
+      <Filter>Model Exporter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UUID.h">
@@ -96,15 +105,24 @@
     <ClInclude Include="texture_formats.h">
       <Filter>External</Filter>
     </ClInclude>
+    <ClInclude Include="ModelExport.h">
+      <Filter>Model Exporter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="TextureImportDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="QtModelImportDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="TextureImportDialog.h">
       <Filter>Dialogs</Filter>
+    </QtMoc>
+    <QtMoc Include="QtModelImportDialog.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

@@ -113,7 +113,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ModelExport.cpp" />
     <ClCompile Include="nv_dds.cpp" />
+    <ClCompile Include="QtModelImportDialog.cpp" />
     <ClCompile Include="TextureExport.cpp" />
     <ClCompile Include="TextureImportDialog.cpp" />
     <ClCompile Include="texture_formats.cpp" />
@@ -124,15 +126,18 @@
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="main.cpp" />
     <None Include="AssetManager.ico" />
+    <QtUic Include="QtModelImportDialog.ui" />
     <QtUic Include="TextureImportDialog.ui" />
     <ResourceCompile Include="AssetManager.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImageFormatEnum.h" />
+    <ClInclude Include="ModelExport.h" />
     <ClInclude Include="nvtt\nvtt.h" />
     <ClInclude Include="nvtt\nvtt_lowlevel.h" />
     <ClInclude Include="nvtt\nvtt_wrapper.h" />
     <ClInclude Include="nv_dds.h" />
+    <QtMoc Include="QtModelImportDialog.h" />
     <ClInclude Include="TextureExport.h" />
     <QtMoc Include="TextureImportDialog.h" />
     <ClInclude Include="texture_formats.h" />

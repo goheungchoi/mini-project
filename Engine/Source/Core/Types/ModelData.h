@@ -4,8 +4,23 @@
 
 #include <Core/Handle/ResourceHandle.h>
 
+struct ModelNode
+{
+  std::string name;
+	// Matrix transformation;
+
+  uint32_t parent;
+  uint32_t firstChild;
+  uint32_t nextSibling;
+  uint32_t level;
+	
+	std::vector<MeshHandle> meshes;
+};
+
 struct ModelData {
+  uint32_t rootNode;
+  std::vector<ModelNode> nodes;
   std::vector<MeshHandle> meshes;
-  std::unordered_map<MeshHandle, MaterialHandle> materials;
-  std::unordered_map<MeshHandle, TextureHandle> textures;
+  std::vector<MaterialHandle> materials;
+  std::vector<TextureHandle> textures;
 };

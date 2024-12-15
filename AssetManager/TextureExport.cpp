@@ -663,19 +663,19 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
               for (size_t x = 0; x < mip0Width; ++x)
               {
                 size_t currPixelIndex = y * mip0Width + x;
-                pixels[currPixelIndex + 0] =
-                    tmp.channel(0)[currPixelIndex] / (tmp.channel(
-                        0)[currPixelIndex] + 1.f);
+                pixels[currPixelIndex * requiredChannels + 0] =
+                    tmp.channel(0)[currPixelIndex] /
+                    (tmp.channel(0)[currPixelIndex] + 1.f);
                 if (requiredChannels > 1)
-                  pixels[currPixelIndex + 1] =
+                  pixels[currPixelIndex * requiredChannels + 1] =
                       tmp.channel(1)[currPixelIndex] /
                       (tmp.channel(1)[currPixelIndex] + 1.f);
                 if (requiredChannels > 2)
-                  pixels[currPixelIndex + 2] =
+                  pixels[currPixelIndex * requiredChannels + 2] =
                       tmp.channel(2)[currPixelIndex] /
                       (tmp.channel(2)[currPixelIndex] + 1.f);
                 if (requiredChannels > 3)
-                  pixels[currPixelIndex + 3] =
+                  pixels[currPixelIndex * requiredChannels + 3] =
                       tmp.channel(3)[currPixelIndex] /
                       (tmp.channel(3)[currPixelIndex] + 1.f);
               }
@@ -694,15 +694,16 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
                 for (size_t x = 0; x < mip0Width; ++x)
                 {
                   size_t currPixelIndex = y * mip0Width + x;
-                  memcpy(&pixels[currPixelIndex + 0], &tmp.channel(0)[currPixelIndex], 2);
+                  memcpy(&pixels[currPixelIndex * requiredChannels + 0],
+                         &tmp.channel(0)[currPixelIndex], 2);
                   if (requiredChannels > 1)
-                    memcpy(&pixels[currPixelIndex + 1],
+                    memcpy(&pixels[currPixelIndex * requiredChannels + 1],
                            &tmp.channel(1)[currPixelIndex], 2);
                   if (requiredChannels > 2)
-                    memcpy(&pixels[currPixelIndex + 2],
+                    memcpy(&pixels[currPixelIndex * requiredChannels + 2],
                            &tmp.channel(2)[currPixelIndex], 2);
                   if (requiredChannels > 3)
-                    memcpy(&pixels[currPixelIndex + 3],
+                    memcpy(&pixels[currPixelIndex * requiredChannels + 3],
                            &tmp.channel(3)[currPixelIndex], 2);
                 }
               }
@@ -718,13 +719,17 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
                 for (size_t x = 0; x < mip0Width; ++x)
                 {
                   size_t currPixelIndex = y * mip0Width + x;
-                  pixels[currPixelIndex + 0] = tmp.channel(0)[currPixelIndex];
+                  pixels[currPixelIndex * requiredChannels + 0] =
+                      tmp.channel(0)[currPixelIndex];
                   if (requiredChannels > 1)
-                    pixels[currPixelIndex + 1] = tmp.channel(1)[currPixelIndex];
+                    pixels[currPixelIndex * requiredChannels + 1] =
+                        tmp.channel(1)[currPixelIndex];
                   if (requiredChannels > 2)
-                    pixels[currPixelIndex + 2] = tmp.channel(2)[currPixelIndex];
+                    pixels[currPixelIndex * requiredChannels + 2] =
+                        tmp.channel(2)[currPixelIndex];
                   if (requiredChannels > 3)
-                    pixels[currPixelIndex + 3] = tmp.channel(3)[currPixelIndex];
+                    pixels[currPixelIndex * requiredChannels + 3] =
+                        tmp.channel(3)[currPixelIndex];
                 }
               }
               // TODO: Convert the original pixels into desired pixels
@@ -737,21 +742,50 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
         // Output images.
         for (int f = 0; f < faceCount; f++)
         {
+          if (f > 0)
+            image = cube.face(f);
+
           for (int m = 1; m < mipmapCount; m++)
           {
+            if (data.colorSpace == ColorSpace::kSRGB)
+            {
+              if (isHdr)
+              {
+                image.toLinear(2.2);
+              }
+              else
+              {
+                surface.toLinearFromSrgb();
+              }
+						}
+            if (alphaMode)
+            {
+              image.premultiplyAlpha();
+						}
+
+
             if (options.mipmapFilter == nvtt::MipmapFilter_Kaiser)
             {
               float params[2] = {1.0f /*kaiserStretch*/,
                                   4.0f /*kaiserAlpha*/};
-              cube.face(f).buildNextMipmap(nvtt::MipmapFilter_Kaiser,
+              image.buildNextMipmap(nvtt::MipmapFilter_Kaiser,
                                     3 /*kaiserWidth*/, params, 1);
             }
             else
             {
-              cube.face(f).buildNextMipmap(options.mipmapFilter, 1);
+              image.buildNextMipmap(options.mipmapFilter, 1);
             }
 
-						nvtt::Surface& tmp = cube.face(f);
+						if (alphaMode)
+            {
+							image.demultiplyAlpha();
+            }
+            if (data.colorSpace == ColorSpace::kSRGB)
+            {
+              image.toSrgb();
+						}
+
+						nvtt::Surface& tmp = image;
             size_t mipHeight = tmp.height();
             size_t mipWidth = tmp.width();
 
@@ -767,19 +801,19 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
                 for (size_t x = 0; x < mipWidth; ++x)
                 {
                   size_t currPixelIndex = y * mipWidth + x;
-                  pixels[currPixelIndex + 0] =
+                  pixels[currPixelIndex * requiredChannels + 0] =
                       tmp.channel(0)[currPixelIndex] /
                       (tmp.channel(0)[currPixelIndex] + 1.f);
                   if (requiredChannels > 1)
-                    pixels[currPixelIndex + 1] =
+                    pixels[currPixelIndex * requiredChannels + 1] =
                         tmp.channel(1)[currPixelIndex] /
                         (tmp.channel(1)[currPixelIndex] + 1.f);
                   if (requiredChannels > 2)
-                    pixels[currPixelIndex + 2] =
+                    pixels[currPixelIndex * requiredChannels + 2] =
                         tmp.channel(2)[currPixelIndex] /
                         (tmp.channel(2)[currPixelIndex] + 1.f);
                   if (requiredChannels > 3)
-                    pixels[currPixelIndex + 3] =
+                    pixels[currPixelIndex * requiredChannels + 3] =
                         tmp.channel(3)[currPixelIndex] /
                         (tmp.channel(3)[currPixelIndex] + 1.f);
                 }
@@ -798,16 +832,16 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
                   for (size_t x = 0; x < mipWidth; ++x)
                   {
                     size_t currPixelIndex = y * mipWidth + x;
-                    memcpy(&pixels[currPixelIndex + 0],
+                    memcpy(&pixels[currPixelIndex * requiredChannels + 0],
                            &tmp.channel(0)[currPixelIndex], 2);
                     if (requiredChannels > 1)
-                      memcpy(&pixels[currPixelIndex + 1],
+                      memcpy(&pixels[currPixelIndex * requiredChannels + 1],
                              &tmp.channel(1)[currPixelIndex], 2);
                     if (requiredChannels > 2)
-                      memcpy(&pixels[currPixelIndex + 2],
+                      memcpy(&pixels[currPixelIndex * requiredChannels + 2],
                              &tmp.channel(2)[currPixelIndex], 2);
                     if (requiredChannels > 3)
-                      memcpy(&pixels[currPixelIndex + 3],
+                      memcpy(&pixels[currPixelIndex * requiredChannels + 3],
                              &tmp.channel(3)[currPixelIndex], 2);
                   }
                 }
@@ -823,15 +857,16 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
                   for (size_t x = 0; x < mipWidth; ++x)
                   {
                     size_t currPixelIndex = y * mipWidth + x;
-                    pixels[currPixelIndex + 0] = tmp.channel(0)[currPixelIndex];
+                    pixels[currPixelIndex * requiredChannels + 0] =
+                        tmp.channel(0)[currPixelIndex];
                     if (requiredChannels > 1)
-                      pixels[currPixelIndex + 1] =
+                      pixels[currPixelIndex * requiredChannels + 1] =
                           tmp.channel(1)[currPixelIndex];
                     if (requiredChannels > 2)
-                      pixels[currPixelIndex + 2] =
+                      pixels[currPixelIndex * requiredChannels + 2] =
                           tmp.channel(2)[currPixelIndex];
                     if (requiredChannels > 3)
-                      pixels[currPixelIndex + 3] =
+                      pixels[currPixelIndex * requiredChannels + 3] =
                           tmp.channel(3)[currPixelIndex];
                   }
                 }
