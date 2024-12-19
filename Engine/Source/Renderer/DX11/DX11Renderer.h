@@ -37,6 +37,7 @@ public:
   bool CreateComputeEffect() override;
   bool DestoryComputeEffect() override;
 
+public:
 
 private:
   Device* _device = nullptr;
@@ -48,4 +49,5 @@ private:
 private: 
   //std::unordered_map<std::string, std::pair<PipelineState*, MeshBuffer*>> _pipelineMeshMap;
   std::unordered_map<MeshHandle, MeshBuffer*> _meshMap;
+  std::unordered_map<>
 };

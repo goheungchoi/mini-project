@@ -10,3 +10,11 @@ struct Texture
   UINT width, height;
   UINT levels;
 };
+
+struct Material
+{
+  Texture albedoTexture;
+  Texture normalTexture;
+  Texture emissiveTexture;
+  //Texture 
+};

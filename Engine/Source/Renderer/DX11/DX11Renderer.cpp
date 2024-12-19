@@ -31,8 +31,15 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   return true;
 }
 
+//종료 직전에 콜해주기
 bool DX11Renderer::Cleanup()
 {
+  DestroyMesh();
+  DestroyPipeline();
+  DestroyTexture();
+  delete _device;
+  delete _swapChain;
+  delete _debugLayer;
   return false;
 }
 
@@ -46,20 +53,30 @@ void DX11Renderer::EndDraw() {}
 
 void DX11Renderer::EndFrame() {}
 
-void DX11Renderer::BindPipeline() {}
+void DX11Renderer::BindPipeline() 
+{
 
-void DX11Renderer::BindResource() {}
+}
+
+void DX11Renderer::BindResource() 
+{
+
+}
 
 bool DX11Renderer::CreateMesh(MeshHandle handle)
 {
   auto iter = _meshMap.find(handle);
-
+  
   if (iter==_meshMap.end())
   {
     MeshBuffer* meshBuffer = new MeshBuffer;
 
     MeshData meshData = AccessMeshData(handle);
-
+    //material
+    {
+      MaterialData matData = AccessMaterialData(meshData.material);
+      
+    }
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
     meshBuffer->vertexBuffer = _device->CreateDataBuffer(
         meshData.vertices.data(), size, D3D11_BIND_VERTEX_BUFFER);
@@ -89,10 +106,6 @@ bool DX11Renderer::DestroyMesh()
 
 bool DX11Renderer::CreateTexture()
 {
-
-  delete _device;
-  delete _swapChain;
-  delete _debugLayer;
 
   return true;
 }
