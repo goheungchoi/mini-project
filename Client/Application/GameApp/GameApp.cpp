@@ -4,7 +4,7 @@
 void GameApp::Initialize()
 {
   // 윈도우 생성
-  _hwnd = WindowManager::GetInstance()->CreateWinApp();
+  _hwnd = WindowManager::GetInstance()->CreateWinApp(1920, 1080, L"MiniProject");
 
   Super::Initialize();
 

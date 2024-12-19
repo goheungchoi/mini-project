@@ -39,3 +39,25 @@ HWND WindowManager::CreateWinApp(int width, int height,
 
   return newWinApp->GetHWND();
 }
+
+bool WindowManager::DeleteWinApp()
+{
+  return false;
+}
+
+//LRESULT WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam,
+//                               LPARAM lParam)
+//{
+//  // 창에 대한 Window 객체를 가져옵니다.
+//  WinApp* pWinApp =
+//      reinterpret_cast<WinApp*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+//
+//  if (pWinApp)
+//  {
+//    // 해당 창에 맞는 메시지 처리
+//    return pWinApp->HandleMessage(hWnd, message, wParam, lParam);
+//  }
+//
+//  // 기본 처리
+//  return DefWindowProc(hWnd, message, wParam, lParam);
+//}
