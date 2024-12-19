@@ -14,17 +14,26 @@ namespace fs = std::filesystem;
 #include "UUID.h"
 
 AssetManager::AssetManager(QWidget* parent)
-    : QWidget(parent), assetDir(ASSET_DIR), resourceDir(RESOURCE_DIR)
+    : QWidget(parent)
 {
   ui.setupUi(this);
   setFixedSize({800, 600});
 
+	if (!SetDirectories())
+  {
+    QMessageBox::warning(this, "Project Path Error",
+                         QString("Project path is can't be located:")
+                             .append(fs::current_path().c_str()));
+    return;
+	}
+
 	assetFilesModel = new QFileSystemModel();
-  assetFilesModel->setRootPath(ASSET_DIR);
+  assetFilesModel->setRootPath(assetDir.absolutePath());
 
 	// Set up the asset directory tree view
 	ui.assetTreeView->setModel(assetFilesModel);
-  ui.assetTreeView->setRootIndex(assetFilesModel->index(ASSET_DIR));
+  ui.assetTreeView->setRootIndex(
+      assetFilesModel->index(assetDir.absolutePath()));
   ui.assetTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
 
 	// Set up the resource details model
@@ -47,7 +56,30 @@ AssetManager::~AssetManager() {
   delete assetFilesModel;
 }
 
-void AssetManager::loadResourceDetails(const QString& filePath) {
+bool AssetManager::SetDirectories()
+{
+  fs::path cwd = fs::current_path();
+
+	if (fs::exists(cwd / "Asset") && fs::exists(cwd / "Library")) {
+    assetDir = fs::absolute(cwd / "Asset");
+    resourceDir = fs::absolute(cwd / "Library" / "Resource");
+    return true;
+	}
+	else {
+    cwd /= "..";
+    if (fs::exists(cwd / "Asset") && fs::exists(cwd / "Library")) {
+      fs::current_path(cwd);
+      assetDir = fs::absolute(cwd / "Asset");
+      resourceDir = fs::absolute(cwd / "Library" / "Resource");
+      return true;
+		}
+	}
+
+	return false;
+}
+
+void AssetManager::loadResourceDetails(const QString& filePath)
+{
   QFile file(filePath);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
   {
@@ -88,7 +120,8 @@ void AssetManager::onImportButtonClicked() {
 
 		QString extension = QFileInfo(filePath).suffix().toLower();
 
-		if (extension == "jpg" || extension == "png" || extension == "dds")
+		if (extension == "jpg" || extension == "jpeg" || extension == "png" ||
+        extension == "dds" || extension == "hdr")
     {
       TextureImportDialog textureDialog(filePath, this);
       textureDialog.exec();
@@ -122,17 +155,17 @@ void AssetManager::onAssetSelected(const QModelIndex& index) {
 
 	UUID uuid = GenerateUUIDFromName(relativePath.toStdString());
 
-	fs::path resourceDir(RESOURCE_DIR);
-  resourceDir /= uuid.ToString().substr(0, 2);
+	fs::path resDir(resourceDir.filesystemPath());
+  resDir /= uuid.ToString().substr(0, 2);
 
 	QString message;
-	if (fs::exists(resourceDir))
+  if (fs::exists(resDir))
   {
-    fs::path resourcePath(resourceDir);
-    resourcePath /= uuid.ToString();
-    if (fs::exists(resourcePath))
+    fs::path resourcePath(resDir);
+    resDir /= uuid.ToString();
+    if (fs::exists(resDir))
     {
-      fs::path resourceInfoPath(resourcePath);
+      fs::path resourceInfoPath(resDir);
       resourceInfoPath /= ".info";
       if (fs::exists(resourceInfoPath))
       {

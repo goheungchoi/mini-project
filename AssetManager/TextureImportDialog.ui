@@ -703,6 +703,9 @@
         </item>
         <item>
          <widget class="QGroupBox" name="cubeMapGroupBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>

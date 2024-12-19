@@ -39,5 +39,5 @@ struct TextureData {
 	uint32_t mipLevels;
   uint32_t arrayLayers;	// Cube map has 6 layers
 
-	std::vector<uint8_t> data;
+	std::vector<uint8_t> ddsData;
 };

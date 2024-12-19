@@ -19,6 +19,8 @@ private:
   QDir assetDir;
   QDir resourceDir;
 
+	bool SetDirectories();
+
   QFileSystemModel* assetFilesModel;
   QStandardItemModel* resourceDetailsModel;
 

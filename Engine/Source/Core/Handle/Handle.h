@@ -51,3 +51,16 @@ struct Handle {
 
   inline operator uint64_t() const { return _value; }
 };
+
+namespace std
+{
+template <>
+struct hash<Handle>
+{
+  std::size_t operator()(const Handle& meshHandle) const noexcept
+  {
+    return meshHandle._value;
+  }
+};
+}
+

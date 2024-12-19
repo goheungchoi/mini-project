@@ -128,3 +128,79 @@ struct AudioHandle : public Handle
     SetHandleResourceType(this, ResourceType::kAudio);
   }
 };
+
+
+namespace std
+{
+template <>
+struct hash<ShaderHandle>
+{
+  std::size_t operator()(const ShaderHandle& meshHandle) const noexcept
+  {
+    return meshHandle._value;
+  }
+};
+
+template <>
+struct hash<MeshHandle>
+{
+  std::size_t operator()(const MeshHandle& meshHandle) const noexcept
+  {
+    return meshHandle._value;
+  }
+};
+
+template <>
+struct hash<MaterialHandle>
+{
+  std::size_t operator()(const MaterialHandle& meshHandle) const noexcept
+  {
+    return meshHandle._value;
+  }
+};
+
+template <>
+struct hash<TextureHandle>
+{
+  std::size_t operator()(const TextureHandle& meshHandle) const noexcept
+  {
+    return meshHandle._value;
+  }
+};
+
+template <>
+struct hash<ModelHandle>
+{
+  std::size_t operator()(const ModelHandle& meshHandle) const noexcept
+  {
+    return meshHandle._value;
+  }
+};
+
+template <>
+struct hash<AnimationHandle>
+{
+  std::size_t operator()(const AnimationHandle& meshHandle) const noexcept
+  {
+    return meshHandle._value;
+  }
+};
+
+template <>
+struct hash<AnimatorHandle>
+{
+  std::size_t operator()(const AnimatorHandle& meshHandle) const noexcept
+  {
+    return meshHandle._value;
+  }
+};
+
+template <>
+struct hash<AudioHandle>
+{
+  std::size_t operator()(const AudioHandle& meshHandle) const noexcept
+  {
+    return meshHandle._value;
+  }
+};
+} // namespace std
