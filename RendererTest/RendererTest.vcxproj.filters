@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<ItemGroup>
+		<Filter Include="Application\GameApp">
+			<UniqueIdentifier>{E71983FC-CBDD-494A-BA7A-8A0C74A6ACCA}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Application">
+			<UniqueIdentifier>{497DFD7A-173F-4145-B439-DD8351AA163C}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="Application\GameApp\GameApp.h">
+			<Filter>Application\GameApp</Filter>
+		</ClInclude>
+		<ClCompile Include="Application\WinMain.cpp">
+			<Filter>Application</Filter>
+		</ClCompile>
+		<ClCompile Include="Application\GameApp\GameApp.cpp">
+			<Filter>Application\GameApp</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>

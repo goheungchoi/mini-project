@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestRenderThread", "TestRen
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetManager", "AssetManager\AssetManager.vcxproj", "{0D914B36-F7B8-4020-ADC6-82CB46E2E88A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RendererTest", "RendererTest\RendererTest.vcxproj", "{0365267F-2B64-4AA9-82B9-04360FC0EC5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{0D914B36-F7B8-4020-ADC6-82CB46E2E88A}.Release|x64.Build.0 = Release|x64
 		{0D914B36-F7B8-4020-ADC6-82CB46E2E88A}.Release|x86.ActiveCfg = Release|x64
 		{0D914B36-F7B8-4020-ADC6-82CB46E2E88A}.Release|x86.Build.0 = Release|x64
+		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Debug|x64.ActiveCfg = Debug|x64
+		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Debug|x64.Build.0 = Debug|x64
+		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Debug|x86.ActiveCfg = Debug|Win32
+		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Debug|x86.Build.0 = Debug|Win32
+		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Release|x64.ActiveCfg = Release|x64
+		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Release|x64.Build.0 = Release|x64
+		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Release|x86.ActiveCfg = Release|Win32
+		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
