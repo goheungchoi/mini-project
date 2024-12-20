@@ -1,7 +1,8 @@
 {
   "dependencies": [
-    "stduuid",
     "assimp",
-    "stb"
+    "stb",
+    "stduuid",
+    "flatbuffers"
   ]
 }

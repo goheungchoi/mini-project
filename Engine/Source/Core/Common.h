@@ -11,6 +11,7 @@
 #include <string_view>
 #include <vector>
 #include <queue>
+#include <stack>
 #include <span>
 #include <array>
 #include <set>

@@ -6,23 +6,24 @@
 
 enum class TextureType : uint8_t
 {
-  UNKNOWN = 0x00,
-  DIFFUSE,
-  SPECULAR,
-  AMBIENT,
-  EMISSIVE,
-  HEIGHT,
-  SHININESS,
-  OPACITY,
+  kUnknown = 0x00,
+  kDiffuse,
+  kSpecular,
+  kAmbient,
+	kEmissive,
+  kHeight,
+  kShininess,
+  kOpacity,
+  kDisplacement,
 
-  ALBEDO,
-  NORMAL,
-  METALIC,
-  ROUGHNESS,
-  METALIC_ROUGHNESS,
-  AMBIENT_OCCLUSION,
+  kAlbedo,
+	kNormal,
+  kMetalic,
+  kRoughness,
+  kMetalicRoughness,
+  kAmbientOcclusion,
 
-  INVALID_TYPE = 0xFF
+  kInvalidType = 0xFF
 };
 
 struct TextureData {

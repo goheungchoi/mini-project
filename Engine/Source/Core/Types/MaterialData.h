@@ -9,9 +9,7 @@
 enum class MaterialPassType {
 	kUnknown,
 	kOpacity,
-	kTransparent,
-	kLight,
-	kShadow
+	kTransparent
 };
 
 enum class AlphaMode

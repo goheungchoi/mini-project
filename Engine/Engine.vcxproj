@@ -71,14 +71,14 @@
 	</ImportGroup>
 	<PropertyGroup Label="UserMacros" />
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-		<IncludePath>$(ProjectDir)Include;$(ProjectDir)Source;$(IncludePath)</IncludePath>
+		<IncludePath>$(ProjectDir)Include;$(ProjectDir)Source;$(ProjectDir)External;$(IncludePath)</IncludePath>
 		<LibraryPath>$(ProjectDir)Library;$(LibraryPath)</LibraryPath>
-		<SourcePath>$(ProjectDir)Source;$(SourcePath)</SourcePath>
+		<SourcePath>$(ProjectDir)Source;$(ProjectDir)External;$(SourcePath)</SourcePath>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-		<IncludePath>$(ProjectDir)Include;$(ProjectDir)Source;$(IncludePath)</IncludePath>
+		<IncludePath>$(ProjectDir)Include;$(ProjectDir)Source;$(ProjectDir)External;$(IncludePath)</IncludePath>
 		<LibraryPath>$(ProjectDir)Library;$(LibraryPath)</LibraryPath>
-		<SourcePath>$(ProjectDir)Source;$(SourcePath)</SourcePath>
+		<SourcePath>$(ProjectDir)Source;$(ProjectDir)External;$(SourcePath)</SourcePath>
 	</PropertyGroup>
 	<PropertyGroup Label="Vcpkg">
 		<VcpkgEnableManifest>true</VcpkgEnableManifest>
@@ -173,6 +173,10 @@
 	<ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 	<ItemGroup>
+		<ClCompile Include="External\nvpro\nv_dds.cpp" />
+		<ClInclude Include="External\nvpro\nv_dds.h" />
+		<ClCompile Include="External\nvpro\texture_formats.cpp" />
+		<ClInclude Include="External\nvpro\texture_formats.h" />
 		<ClInclude Include="Include\Engine\Engine.h" />
 		<ClInclude Include="Include\GameFramework\Components\MaterialComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\MeshComponent.h" />
@@ -190,6 +194,7 @@
 		<ClInclude Include="Source\Core\Math\MathUtils.h" />
 		<ClCompile Include="Source\Core\Time\TimeSystem.cpp" />
 		<ClInclude Include="Source\Core\Time\TimeSystem.h" />
+		<ClInclude Include="Source\Core\Types\LightData.h" />
 		<ClInclude Include="Source\Core\Types\MaterialData.h" />
 		<ClInclude Include="Source\Core\Types\MeshData.h" />
 		<ClInclude Include="Source\Core\Types\ModelData.h" />

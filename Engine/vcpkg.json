@@ -4,7 +4,8 @@
     "fmt",
     "directxtk",
 		"stduuid",
-		"taskflow"
+		"taskflow",
+		"physx"
   ],
   "overrides": [
     {
