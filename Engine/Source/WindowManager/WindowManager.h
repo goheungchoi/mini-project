@@ -1,5 +1,5 @@
 #pragma once
-#include "../Core/Common.h"
+#include "Core/Common.h"
 
 class WinApp;
 class WindowManager

@@ -16,5 +16,5 @@ struct Material
   Texture albedoTexture;
   Texture normalTexture;
   Texture emissiveTexture;
-  //Texture 
+  Texture MetallicRoughnessTexture;
 };

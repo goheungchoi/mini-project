@@ -6,8 +6,8 @@ class SwapChain;
 #ifdef _DEBUG
 class DebugLayer;
 #endif // _DEBUG
-class PipelineState;
-struct MeshBuffer;
+struct ResourceStorage;
+
 
 class DX11Renderer : public IRenderer
 {
@@ -36,18 +36,16 @@ public:
   bool DestroyPipeline() override;
   bool CreateComputeEffect() override;
   bool DestoryComputeEffect() override;
-
+  
 public:
+ 
 
 private:
+  
   Device* _device = nullptr;
   SwapChain* _swapChain = nullptr;
 #ifdef _DEBUG
   DebugLayer* _debugLayer = nullptr;
 #endif // _DEBUG
-
-private: 
-  //std::unordered_map<std::string, std::pair<PipelineState*, MeshBuffer*>> _pipelineMeshMap;
-  std::unordered_map<MeshHandle, MeshBuffer*> _meshMap;
-  //std::unordered_map<>
+  ResourceStorage* _storage = nullptr;
 };

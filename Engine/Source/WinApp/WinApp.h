@@ -1,5 +1,5 @@
 #pragma once
-#include "../Core/Common.h"
+#include "Core/Common.h"
 
 // MyRegisterClass() 에 들어감
 class WindowClass

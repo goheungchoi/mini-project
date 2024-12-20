@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../Engine/Source/Engine/GameEngine.h"
-
+#include "../../Engine/Source/Renderer/DX11/DX11Renderer.h"
 class GameApp : public GameEngine
 {
 	using Super = GameEngine;
@@ -20,4 +20,6 @@ protected:
   virtual void Update(float deltaTime) override;
   virtual void Render() override;
 
+private:
+  DX11Renderer _renderer;
 };
