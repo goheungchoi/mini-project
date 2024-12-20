@@ -190,6 +190,7 @@
 		<ClInclude Include="Include\Core\Math\MathUtils.h" />
 		<ClCompile Include="Include\Core\Time\TimeSystem.cpp" />
 		<ClInclude Include="Include\Core\Time\TimeSystem.h" />
+		<ClInclude Include="Include\Core\Types\LightData.h" />
 		<ClInclude Include="Include\Core\Types\MaterialData.h" />
 		<ClInclude Include="Include\Core\Types\MeshData.h" />
 		<ClInclude Include="Include\Core\Types\ModelData.h" />
