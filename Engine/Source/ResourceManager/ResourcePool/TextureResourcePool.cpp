@@ -2,11 +2,16 @@
 
 #include "nvpro/nv_dds.h"
 
+#include "Utils.h"
+
 template <>
-bool ResourcePool<TextureData>::LoadImpl(Handle& handle, xUUID uuid,
-                                         void* pUser)
+Handle ResourcePool<TextureData>::LoadImpl(xUUID uuid, void* pUser)
 {
-  return false;
+  TextureData data;
+
+	// TODO:
+
+  return Handle{};
 }
 
 template <>

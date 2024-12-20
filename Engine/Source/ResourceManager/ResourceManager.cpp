@@ -3,7 +3,6 @@
 // TODO: Goheung Choi
 #include "ResourcePool/ResourcePool.h"
 
-
 struct __ResourceManagerPrivate__
 {
   ResourcePool<TextureData> texturePool;
@@ -12,6 +11,8 @@ struct __ResourceManagerPrivate__
   ResourcePool<MaterialData> materialPool;
   ResourcePool<ModelData> modelPool;
 };
+
+const fs::path kResourceDir{GetResourceDirectory()};
 
 static __ResourceManagerPrivate__& _m() {
   static __ResourceManagerPrivate__ _resourceManagerPrivate;

@@ -245,6 +245,7 @@
 		<ClInclude Include="Source\ResourceManager\ResourcePool\ResourcePool.h" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\ShaderResourcePool.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\TextureResourcePool.cpp" />
+		<ClInclude Include="Source\ResourceManager\ResourcePool\Utils.h" />
 		<ClCompile Include="Source\WinApp\WinApp.cpp" />
 		<ClInclude Include="Source\WinApp\WinApp.h" />
 		<ClCompile Include="Source\WindowManager\WindowManager.cpp" />

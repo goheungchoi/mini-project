@@ -12,7 +12,9 @@ struct Handle {
 
   static constexpr uint64_t kMaxIndex{(1ULL << kNumIndexBits) - 2U};
 
-  static constexpr uint64_t kInvalidHandle{kUInt64Max};
+	static constexpr uint64_t kInvalidValue{kUInt64Max};
+
+  static const Handle kInvalidHandle;
 
 	union {
     uint64_t _value;
@@ -25,11 +27,11 @@ struct Handle {
     };
 	};
 
-  Handle() : _value{kInvalidHandle} {}
-  Handle(uint64_t value) : _value{value} {}
-  Handle(uint32_t index, uint16_t version)
+  Handle() : _value{kInvalidValue} {}
+  explicit Handle(uint64_t value) : _value{value} {}
+  explicit Handle(uint32_t index, uint16_t version)
       : index{index}, version{version}, desc{} {}
-  Handle(uint32_t index, uint16_t version, uint16_t desc)
+  explicit Handle(uint32_t index, uint16_t version, uint16_t desc)
       : index{index}, version{version}, desc{desc} {}
 
 	Handle(const Handle&) = default;
@@ -37,23 +39,25 @@ struct Handle {
 
   Handle(Handle&& other) noexcept {
     _value = other._value;
-    other._value = kInvalidHandle;
+    other._value = kInvalidValue;
   }
   Handle& operator=(Handle&& other) noexcept {
     _value = other._value;
-    other._value = kInvalidHandle;
+    other._value = kInvalidValue;
     return *this;
   }
 
-	bool IsInvalid() { return _value == kInvalidHandle; }
+	bool IsInvalid() const { return _value == kInvalidValue; }
 
   void SetDesc(uint16_t description) { desc = description; }
 
-  inline bool operator==(Handle other) { return _value == other._value; }
-  inline bool operator==(uint64_t value) { return _value == value; }
+  inline bool operator==(Handle other) const { return _value == other._value; }
+  inline bool operator==(uint64_t value) const { return _value == value; }
 	
-	inline operator uint64_t() const { return _value; }
+	inline explicit operator uint64_t() const { return _value; }
 };
+
+inline const Handle Handle::kInvalidHandle{};
 
 namespace std
 {
@@ -96,7 +100,7 @@ public:
     if (_table[i].second.has_value())
       return Handle::kInvalidHandle;
 
-		Handle& curr = _table[i].first;
+		Handle& curr{_table[i].first};
 		if (curr == Handle::kInvalidHandle)
 		{
 			curr.index = i;
@@ -194,7 +198,7 @@ public:
 	}
 
 	inline 
-	std::optional<T>& operator[](const Handle& handle) {
+	std::optional<T>& operator[](const Handle& handle) const {
     if (!IsValidHandle(handle))
       return _sentinel;
 
