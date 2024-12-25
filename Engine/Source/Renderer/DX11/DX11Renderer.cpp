@@ -5,6 +5,7 @@
 #include "Internal/Resources/Buffer.h"
 #include "Internal/SwapChain.h"
 #include "ResourceManager/ResourceManager.h"
+#include "Internal/ResourceStorage.h"
 
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
@@ -14,6 +15,7 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   _device = new Device;
   _swapChain = new SwapChain;
   _debugLayer = new DebugLayer;
+  _storage = new ResourceStorage;
   _device->Init();
   _swapChain->Init(pHwnd, _device->GetDevice(), width, height);
 #ifdef _DEBUG
@@ -27,12 +29,24 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   // After debugging, you can disable specific breakpoints
   //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, false);
 #endif // _DEBUG
-
+  //기본적인 default pipeline 세팅.
+  //1. input assember
+  _device->GetImmContext()->IASetPrimitiveTopology(
+      D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  //_device->GetImmContext()->
   return true;
 }
 
+//종료 직전에 콜해주기
 bool DX11Renderer::Cleanup()
 {
+  DestroyMesh();
+  DestroyPipeline();
+  DestroyTexture();
+  delete _device;
+  delete _swapChain;
+  delete _debugLayer;
+  delete _storage;
   return false;
 }
 
@@ -46,20 +60,30 @@ void DX11Renderer::EndDraw() {}
 
 void DX11Renderer::EndFrame() {}
 
-void DX11Renderer::BindPipeline() {}
+void DX11Renderer::BindPipeline() 
+{
 
-void DX11Renderer::BindResource() {}
+}
+
+void DX11Renderer::BindResource() 
+{
+
+}
 
 bool DX11Renderer::CreateMesh(MeshHandle handle)
 {
-  auto iter = _meshMap.find(handle);
-
-  if (iter==_meshMap.end())
+  auto iter = _storage->meshMap.find(handle);
+  
+  if (iter == _storage->meshMap.end())
   {
     MeshBuffer* meshBuffer = new MeshBuffer;
 
     MeshData meshData = AccessMeshData(handle);
-
+    //material
+    {
+      MaterialData matData = AccessMaterialData(meshData.material);
+      
+    }
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
     meshBuffer->vertexBuffer = _device->CreateDataBuffer(
         meshData.vertices.data(), size, D3D11_BIND_VERTEX_BUFFER);
@@ -71,7 +95,7 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
     meshBuffer->nIndices = meshData.indices.size();
     meshBuffer->stride = 0;
     meshBuffer->offset = sizeof(Vertex);
-    _meshMap.insert({handle, meshBuffer});
+    _storage->meshMap.insert({handle, meshBuffer});
   }
   
   return true;
@@ -80,7 +104,7 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
 bool DX11Renderer::DestroyMesh()
 {
   // delete mesh
-  for (auto& mesh : _meshMap)
+  for (auto& mesh : _storage->meshMap)
   {
     delete mesh.second;
   }
@@ -89,11 +113,7 @@ bool DX11Renderer::DestroyMesh()
 
 bool DX11Renderer::CreateTexture()
 {
-
-  delete _device;
-  delete _swapChain;
-  delete _debugLayer;
-
+  
   return true;
 }
 
@@ -116,7 +136,7 @@ bool DX11Renderer::DestroyShaderModule()
 
 bool DX11Renderer::CreatePipeline()
 {
-
+  
   return true;
 }
 

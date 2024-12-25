@@ -1,9 +1,8 @@
 {
   "dependencies": [
-    "stduuid",
     "assimp",
-    "nlohmann-json",
     "stb",
+    "stduuid",
     "flatbuffers"
   ]
 }

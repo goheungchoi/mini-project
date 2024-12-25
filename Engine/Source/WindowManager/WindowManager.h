@@ -1,5 +1,5 @@
 #pragma once
-#include "../Core/Common.h"
+#include "Core/Common.h"
 
 class WinApp;
 class WindowManager
@@ -11,9 +11,14 @@ private:
 
   public:
   static WindowManager* GetInstance();
+
     HWND CreateWinApp(int width = 1920, int height = 1080,
                       const wchar_t* className = L"WinClass",
                            HINSTANCE hInstance = GetModuleHandle(NULL));
+  bool DeleteWinApp();
+
+  //LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam,
+  //                         LPARAM lParam);
 
 private:
   static WindowManager* m_pInstance;

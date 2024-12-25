@@ -71,14 +71,18 @@
 	</ImportGroup>
 	<PropertyGroup Label="UserMacros" />
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-		<IncludePath>$(ProjectDir)Include;$(ProjectDir)Source;$(IncludePath)</IncludePath>
+		<IncludePath>$(ProjectDir)Include;$(ProjectDir)Source;$(ProjectDir)External;$(IncludePath)</IncludePath>
 		<LibraryPath>$(ProjectDir)Library;$(LibraryPath)</LibraryPath>
-		<SourcePath>$(ProjectDir)Source;$(SourcePath)</SourcePath>
+		<SourcePath>$(ProjectDir)Source;$(ProjectDir)External;$(SourcePath)</SourcePath>
+		<ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
+		<PublicIncludeDirectories>$(ProjectDir)Include</PublicIncludeDirectories>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-		<IncludePath>$(ProjectDir)Include;$(ProjectDir)Source;$(IncludePath)</IncludePath>
+		<IncludePath>$(ProjectDir)Include;$(ProjectDir)Source;$(ProjectDir)External;$(IncludePath)</IncludePath>
 		<LibraryPath>$(ProjectDir)Library;$(LibraryPath)</LibraryPath>
-		<SourcePath>$(ProjectDir)Source;$(SourcePath)</SourcePath>
+		<SourcePath>$(ProjectDir)Source;$(ProjectDir)External;$(SourcePath)</SourcePath>
+		<ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
+		<PublicIncludeDirectories>$(ProjectDir)Include</PublicIncludeDirectories>
 	</PropertyGroup>
 	<PropertyGroup Label="Vcpkg">
 		<VcpkgEnableManifest>true</VcpkgEnableManifest>
@@ -173,6 +177,29 @@
 	<ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 	<ItemGroup>
+		<ClCompile Include="External\nvpro\nv_dds.cpp" />
+		<ClInclude Include="External\nvpro\nv_dds.h" />
+		<ClCompile Include="External\nvpro\texture_formats.cpp" />
+		<ClInclude Include="External\nvpro\texture_formats.h" />
+		<ClCompile Include="Include\Core\Async\Async.cpp" />
+		<ClInclude Include="Include\Core\Async\Async.h" />
+		<ClInclude Include="Include\Core\Common.h" />
+		<ClInclude Include="Include\Core\Handle\Handle.h" />
+		<ClInclude Include="Include\Core\Handle\ResourceHandle.h" />
+		<ClCompile Include="Include\Core\Math\MathUtils.cpp" />
+		<ClInclude Include="Include\Core\Math\MathUtils.h" />
+		<ClCompile Include="Include\Core\Time\TimeSystem.cpp" />
+		<ClInclude Include="Include\Core\Time\TimeSystem.h" />
+		<ClInclude Include="Include\Core\Types\LightData.h" />
+		<ClInclude Include="Include\Core\Types\MaterialData.h" />
+		<ClInclude Include="Include\Core\Types\MeshData.h" />
+		<ClInclude Include="Include\Core\Types\ModelData.h" />
+		<ClInclude Include="Include\Core\Types\ShaderData.h" />
+		<ClInclude Include="Include\Core\Types\TextureData.h" />
+		<ClCompile Include="Include\Core\UUID\UUID.cpp" />
+		<ClInclude Include="Include\Core\UUID\UUID.h" />
+		<ClCompile Include="Include\Core\Utils\ShaderCompiler.cpp" />
+		<ClInclude Include="Include\Core\Utils\ShaderCompiler.h" />
 		<ClInclude Include="Include\Engine\Engine.h" />
 		<ClInclude Include="Include\GameFramework\Components\MaterialComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\MeshComponent.h" />
@@ -181,24 +208,6 @@
 		<ClInclude Include="Include\GameFramework\Components\TerrainComponent.h" />
 		<ClInclude Include="Include\GameFramework\GameObject\GameObject.h" />
 		<ClInclude Include="Include\GameFramework\World\World.h" />
-		<ClCompile Include="Source\Core\Async\Async.cpp" />
-		<ClInclude Include="Source\Core\Async\Async.h" />
-		<ClInclude Include="Source\Core\Common.h" />
-		<ClInclude Include="Source\Core\Handle\Handle.h" />
-		<ClInclude Include="Source\Core\Handle\ResourceHandle.h" />
-		<ClCompile Include="Source\Core\Math\MathUtils.cpp" />
-		<ClInclude Include="Source\Core\Math\MathUtils.h" />
-		<ClCompile Include="Source\Core\Time\TimeSystem.cpp" />
-		<ClInclude Include="Source\Core\Time\TimeSystem.h" />
-		<ClInclude Include="Source\Core\Types\MaterialData.h" />
-		<ClInclude Include="Source\Core\Types\MeshData.h" />
-		<ClInclude Include="Source\Core\Types\ModelData.h" />
-		<ClInclude Include="Source\Core\Types\ShaderData.h" />
-		<ClInclude Include="Source\Core\Types\TextureData.h" />
-		<ClCompile Include="Source\Core\UUID\UUID.cpp" />
-		<ClInclude Include="Source\Core\UUID\UUID.h" />
-		<ClCompile Include="Source\Core\Utils\ShaderCompiler.cpp" />
-		<ClInclude Include="Source\Core\Utils\ShaderCompiler.h" />
 		<ClCompile Include="Source\Engine\Engine.cpp" />
 		<ClCompile Include="Source\Engine\GameEngine.cpp" />
 		<ClInclude Include="Source\Engine\GameEngine.h" />
@@ -223,8 +232,10 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\Pipeline.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\RenderPass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShaderModule.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\ResourceStorage.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Buffer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Image.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Sampler.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\SwapChain.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Types.h" />
 		<ClInclude Include="Source\Renderer\IRenderer.h" />
@@ -234,6 +245,7 @@
 		<ClInclude Include="Source\ResourceManager\ResourcePool\ResourcePool.h" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\ShaderResourcePool.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\TextureResourcePool.cpp" />
+		<ClInclude Include="Source\ResourceManager\ResourcePool\Utils.h" />
 		<ClCompile Include="Source\WinApp\WinApp.cpp" />
 		<ClInclude Include="Source\WinApp\WinApp.h" />
 		<ClCompile Include="Source\WindowManager\WindowManager.cpp" />

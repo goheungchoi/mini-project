@@ -96,16 +96,9 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayouDesc(
   return inputLayoutDesc;
 }
 
-struct Texture2DDesc
-{
-  D3D11_TEXTURE2D_DESC desc;
-  D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-};
-
-Texture2DDesc CreateTexture2DDesc(UINT width, UINT height,
+D3D11_TEXTURE2D_DESC CreateTexture2DDesc(UINT width, UINT height,
                                          DXGI_FORMAT format, UINT levels)
 {
-  Texture2DDesc pair;
   D3D11_TEXTURE2D_DESC desc = {};
   desc.Width = width;
   desc.Height = height;
@@ -121,14 +114,5 @@ Texture2DDesc CreateTexture2DDesc(UINT width, UINT height,
     desc.BindFlags |= D3D11_BIND_RENDER_TARGET;
     desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
   }
-  pair.desc = desc;
-
-  D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-  srvDesc.Format = desc.Format;
-  srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-  srvDesc.TextureCube.MostDetailedMip = 0;
-  srvDesc.TextureCube.MipLevels = -1;
-  pair.srvDesc = srvDesc;
-
-  return pair;
+  return desc;
 }
