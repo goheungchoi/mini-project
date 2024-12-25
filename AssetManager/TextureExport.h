@@ -34,7 +34,7 @@ struct TextureExportOptions
   bool enablePremultipliedAlphaBlending;
   bool enableAlphaDithering;
   bool enableMipmap;
-  int maxMipmapCount; // if the value < 0 or > max, set to max
+  int maxMipmapCount; // if the value =< 0 or > max, set to max
   size_t minMipmapSize;
   nvtt::MipmapFilter mipmapFilter;
 
@@ -47,5 +47,11 @@ struct TextureExportOptions
 };
 
 
-bool textureExport(const std::string& texturePath, const std::string& exportPath,
+bool exportTextureFromMemory(const std::vector<char>& input,
+                             const std::string& exportPath,
+                             const ImageData& data,
+                             const TextureExportOptions& options);
+
+bool exportTextureFromFile(const std::string& texturePath, const std::string& exportPath,
               const ImageData& data, const TextureExportOptions& options);
+

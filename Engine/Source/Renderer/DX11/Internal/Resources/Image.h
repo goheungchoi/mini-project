@@ -2,7 +2,7 @@
 #include "../Common.h"
 using namespace Microsoft::WRL;
 
-struct Texture
+struct TextureModel
 {
   ComPtr<ID3D11Texture2D> texture;
   ComPtr<ID3D11ShaderResourceView> srv;

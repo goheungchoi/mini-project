@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClInclude Include="ImageFormatEnum.h" />
     <ClInclude Include="ModelExport.h" />
+    <ClInclude Include="model_generated.h" />
     <ClInclude Include="nvtt\nvtt.h" />
     <ClInclude Include="nvtt\nvtt_lowlevel.h" />
     <ClInclude Include="nvtt\nvtt_wrapper.h" />

@@ -6,13 +6,13 @@
 
 //#include <directxmath/DirectXMath.h>
 
-enum class MaterialPassType {
-	kUnknown,
-	kOpacity,
-	kTransparent,
-	kLight,
-	kShadow
-};
+//enum class MaterialPassType {
+//	kUnknown,
+//	kOpacity,
+//	kTransparent,
+//	kLight,
+//	kShadow
+//};
 
 enum class AlphaMode
 {
@@ -22,7 +22,7 @@ enum class AlphaMode
 };
 
 struct MaterialData {
-  MaterialPassType passType;
+  // MaterialPassType passType;
   std::string name;
 
 	Color albedoFactor;
