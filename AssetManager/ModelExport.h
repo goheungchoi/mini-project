@@ -27,6 +27,12 @@ enum class ModelFileFormat
 
 class ModelExporter
 {
+	// TODO: Animation export
+
+	// TODO: Skeleton extraction
+
+	// TODO: Mesh AABB
+
 	// Type definitions to store the model data
   enum AlphaMode : int16_t
   {
