@@ -530,15 +530,83 @@ void ModelExporter::ExportModelTexture(Texture& texture)
   }
   else if (texture.type == aiTextureType_UNKNOWN)
   {
+    data.isNormalMap = false;
+    data.isCubeMap = false;
+
+    data.colorSpace = ColorSpace::kLinear;
+    data.alphaMode = nvtt::AlphaMode_None;
+
+    options.format = ImageFormat::BC5u;
+    options.quality = nvtt::Quality_Normal;
+
+    options.enableGammaCorrect = false;
+    options.enablePremultipliedAlphaBlending = false;
+    options.enableAlphaDithering = false;
+    options.enableMipmap = true;
+    options.maxMipmapCount = 0;
+    options.minMipmapSize = 1;
+    options.mipmapFilter = nvtt::MipmapFilter_Box;
+    options.useGPU = true;
   }
   else if (texture.type == aiTextureType_NORMAL_CAMERA)
   {
+    data.isNormalMap = true;
+    data.isCubeMap = false;
+
+    data.colorSpace = ColorSpace::kLinear;
+    data.alphaMode = nvtt::AlphaMode_None;
+
+    options.format = ImageFormat::BC5u;
+    options.quality = nvtt::Quality_Normal;
+
+    options.enableGammaCorrect = false;
+    options.enablePremultipliedAlphaBlending = false;
+    options.enableAlphaDithering = false;
+    options.enableMipmap = true;
+    options.maxMipmapCount = 0;
+    options.minMipmapSize = 1;
+    options.mipmapFilter = nvtt::MipmapFilter_Box;
+    options.useGPU = true;
   }
   else if (texture.type == aiTextureType_AMBIENT_OCCLUSION)
   {
+    data.isNormalMap = false;
+    data.isCubeMap = false;
+
+    data.colorSpace = ColorSpace::kLinear;
+    data.alphaMode = nvtt::AlphaMode_None;
+
+    options.format = ImageFormat::BC4u;
+    options.quality = nvtt::Quality_Normal;
+
+    options.enableGammaCorrect = false;
+    options.enablePremultipliedAlphaBlending = false;
+    options.enableAlphaDithering = false;
+    options.enableMipmap = true;
+    options.maxMipmapCount = 0;
+    options.minMipmapSize = 1;
+    options.mipmapFilter = nvtt::MipmapFilter_Box;
+    options.useGPU = true;
   }
   else if (texture.type == aiTextureType_EMISSION_COLOR)
   {
+    data.isNormalMap = false;
+    data.isCubeMap = false;
+
+    data.colorSpace = ColorSpace::kSRGB;
+    data.alphaMode = nvtt::AlphaMode_None;
+
+    options.format = ImageFormat::BC7;
+    options.quality = nvtt::Quality_Normal;
+
+    options.enableGammaCorrect = true;
+    options.enablePremultipliedAlphaBlending = false;
+    options.enableAlphaDithering = false;
+    options.enableMipmap = true;
+    options.maxMipmapCount = 0;
+    options.minMipmapSize = 1;
+    options.mipmapFilter = nvtt::MipmapFilter_Box;
+    options.useGPU = true;
   }
 
 	// Get the export path from the texture path

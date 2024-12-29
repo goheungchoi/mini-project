@@ -129,7 +129,7 @@ void AssetManager::onImportButtonClicked() {
       textureDialog.exec();
     }
     else if (extension == "obj" || extension == "fbx" || extension == "gltf" ||
-             extension == "glm")
+             extension == "glm" || extension == "gltf2")
     {
       ModelFileFormat fileformat;
       if (extension == "obj")
