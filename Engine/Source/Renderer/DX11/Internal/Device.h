@@ -30,7 +30,7 @@ public:
                            _device.GetAddressOf(), nullptr,
                            _immediateContext.GetAddressOf()));
   }
-  
+
   ComPtr<ID3D11Buffer> CreateConstantBuffer(const void* data, UINT size) const
   {
     D3D11_SUBRESOURCE_DATA bufferData{};
@@ -70,6 +70,16 @@ public:
     desc = CreateBufferDesc(size, D3D11_USAGE_DEFAULT, bufferType);
     HR_T(_device->CreateBuffer(&desc, bufferDataPtr, buffer.GetAddressOf()));
     return buffer;
+  }
+
+  ComPtr<ID3D11InputLayout> CreateInputLayout(
+      const std::vector<D3D11_INPUT_ELEMENT_DESC> descs,
+      const std::vector<uint8_t>& vsdata)
+  {
+    ComPtr<ID3D11InputLayout> layout;
+    _device->CreateInputLayout(descs.data(), static_cast<UINT>(descs.size()),
+                               vsdata.data(), vsdata.size(),layout.GetAddressOf());
+    return layout;
   }
 
 public:

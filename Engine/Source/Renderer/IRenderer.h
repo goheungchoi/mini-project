@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "Core/Handle/ResourceHandle.h"
-#include "DX11/Internal/RenderFrameworks/Pipeline.h"
 class IRenderer
 {
 public:

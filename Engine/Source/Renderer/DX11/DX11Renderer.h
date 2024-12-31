@@ -1,6 +1,7 @@
 #pragma once
 #include "../IRenderer.h"
 #include "Core/Common.h"
+
 class Device;
 class SwapChain;
 #ifdef _DEBUG

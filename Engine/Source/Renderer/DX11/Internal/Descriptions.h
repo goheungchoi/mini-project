@@ -32,8 +32,8 @@ DXGI_SWAP_CHAIN_DESC CreateSwapChainDesc(
   return desc;
 }
 
-std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayouDesc(
-    std::vector<uint8_t>& vsData, size_t& vsSize)
+std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayoutDesc(
+    const std::vector<uint8_t>& vsData, const size_t& vsSize)
 {
   Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pReflector;
   D3DReflect(vsData.data(), vsSize, IID_ID3D11ShaderReflection,
