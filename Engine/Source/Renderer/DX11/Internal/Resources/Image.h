@@ -13,8 +13,9 @@ struct TextureModel
 
 struct Material
 {
-  Texture albedoTexture;
-  Texture normalTexture;
-  Texture emissiveTexture;
-  Texture MetallicRoughnessTexture;
+  TextureModel albedoTexture;
+  TextureModel normalTexture;
+  TextureModel emissiveTexture;
+  TextureModel MetallicRoughnessTexture;
 };
+

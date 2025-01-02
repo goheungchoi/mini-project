@@ -2,13 +2,13 @@
 #include "../IRenderer.h"
 #include "Core/Common.h"
 
-class Device;
-class SwapChain;
 #ifdef _DEBUG
 class DebugLayer;
 #endif // _DEBUG
+class Device;
+class SwapChain;
 struct ResourceStorage;
-
+class PipeLine;
 
 class DX11Renderer : public IRenderer
 {
@@ -37,16 +37,17 @@ public:
   bool DestroyPipeline() override;
   bool CreateComputeEffect() override;
   bool DestoryComputeEffect() override;
-  
-public:
- 
 
 private:
-  
+  void Init3D(int width, int height);
+
+public:
+private:
   Device* _device = nullptr;
   SwapChain* _swapChain = nullptr;
 #ifdef _DEBUG
   DebugLayer* _debugLayer = nullptr;
 #endif // _DEBUG
   ResourceStorage* _storage = nullptr;
+  PipeLine* _pso = nullptr;
 };

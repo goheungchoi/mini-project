@@ -6,7 +6,7 @@ void GameApp::Initialize()
   _hwnd = WindowManager::GetInstance()->CreateWinApp(1920, 1080, L"MiniProject");
 
   Super::Initialize();
-  
+  _renderer.Init_Win32(1920, 1080, nullptr, &_hwnd);
   
 }
 
@@ -19,10 +19,11 @@ void GameApp::Execute()
 
 void GameApp::Shutdown()
 {
+  _renderer.Cleanup();
   Super::Shutdown();
   
   // À©µµ¿ì ÆÄ±«
-
+  
 }
 
 void GameApp::FixedUpdate(float deltaTime)

@@ -97,22 +97,39 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayoutDesc(
 }
 
 D3D11_TEXTURE2D_DESC CreateTexture2DDesc(UINT width, UINT height,
-                                         DXGI_FORMAT format, UINT levels)
+                                         DXGI_FORMAT format, UINT miplevels,
+                                         UINT bindFlag)
 {
   D3D11_TEXTURE2D_DESC desc = {};
   desc.Width = width;
   desc.Height = height;
-  desc.MipLevels = levels;
+  desc.MipLevels = miplevels;
   desc.ArraySize = 1;
   desc.Format = format;
   desc.SampleDesc.Count = 1;
+  desc.SampleDesc.Quality = 0;
   desc.Usage = D3D11_USAGE_DEFAULT;
-  desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
+  desc.BindFlags = bindFlag;
+  desc.CPUAccessFlags = 0;
+  desc.MiscFlags = 0;
 
-  if (levels == 0)
+  if (miplevels == 0)
   {
-    desc.BindFlags |= D3D11_BIND_RENDER_TARGET;
     desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
   }
+  return desc;
+}
+
+D3D11_DEPTH_STENCIL_DESC CreateDepthStencilDesc(BOOL depthEnable,
+                                                D3D11_DEPTH_WRITE_MASK mask,
+                                                D3D11_COMPARISON_FUNC func,
+                                                BOOL stencilEnable)
+{
+  D3D11_DEPTH_STENCIL_DESC desc;
+  ZeroMemory(&desc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+  desc.DepthEnable = depthEnable;
+  desc.DepthWriteMask = mask;
+  desc.DepthFunc = func; // 가까운물체만 렌더
+  desc.StencilEnable = stencilEnable;
   return desc;
 }

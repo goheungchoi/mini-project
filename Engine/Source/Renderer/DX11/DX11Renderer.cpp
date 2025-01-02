@@ -3,6 +3,7 @@
 #include "Internal/Device.h"
 #include "Internal/ResourceStorage.h"
 #include "Internal/Resources/Buffer.h"
+#include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
 #include "ResourceManager/ResourceManager.h"
 
@@ -21,17 +22,17 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   _debugLayer->Init(_device->GetDevice());
   // Enable breaking on errors
   _debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
-
+  _pso = new PipeLine(_device, _swapChain,width,height);
   // Optionally, you can also enable breaking on warnings or other severities
   //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, true);
 
   // After debugging, you can disable specific breakpoints
   //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, false);
 #endif // _DEBUG
-  // 기본적인 default pipeline 세팅.
-  // 1. input assember
 
-  //_device->GetImmContext()->
+  // 기타 3d관련 초기화
+  Init3D(width, height);
+
   return true;
 }
 
@@ -41,10 +42,12 @@ bool DX11Renderer::Cleanup()
   DestroyMesh();
   DestroyPipeline();
   DestroyTexture();
-  delete _device;
-  delete _swapChain;
-  delete _debugLayer;
-  delete _storage;
+  DestroyShaderModule();
+  SAFE_RELEASE(_pso);
+  SAFE_RELEASE(_device);
+  SAFE_RELEASE(_debugLayer);
+  SAFE_RELEASE(_swapChain);
+  SAFE_RELEASE(_storage);
   return false;
 }
 
@@ -190,4 +193,10 @@ bool DX11Renderer::CreateComputeEffect()
 bool DX11Renderer::DestoryComputeEffect()
 {
   return false;
+}
+
+void DX11Renderer::Init3D(int width, int height)
+{
+  
+  
 }
