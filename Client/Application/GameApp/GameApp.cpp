@@ -22,7 +22,6 @@ void GameApp::Shutdown()
   Super::Shutdown();
   
   // À©µµ¿ì ÆÄ±«
-
 }
 
 void GameApp::FixedUpdate(float deltaTime)
