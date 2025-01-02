@@ -21,9 +21,6 @@ void GameApp::Shutdown()
 {
   _renderer.Cleanup();
   Super::Shutdown();
-  
-  // À©µµ¿ì ÆÄ±«
-  
 }
 
 void GameApp::FixedUpdate(float deltaTime)
