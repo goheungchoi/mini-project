@@ -36,6 +36,13 @@ void GameApp::Update(float deltaTime)
 
 }
 
-void GameApp::Render() {}
+void GameApp::Render()
+{
+  _renderer.BeginFrame();
+  _renderer.BeginDraw();
+  _renderer.BindPipeline();
+  _renderer.EndDraw();
+  _renderer.BeginFrame();
+}
 
 

@@ -119,6 +119,28 @@ D3D11_TEXTURE2D_DESC CreateTexture2DDesc(UINT width, UINT height,
   }
   return desc;
 }
+D3D11_RASTERIZER_DESC CreateRaterizerDesc(
+    D3D11_FILL_MODE fillMode, // 채우기 모드
+    D3D11_CULL_MODE cullMode, // 컬링 모드
+    BOOL isCounterclockwise, INT DepthBias, FLOAT DepthBiasClamp,
+    FLOAT SlopeScaledDepthBias, BOOL depthClipEnable, BOOL scissorEnable,
+    BOOL multisampleEnable, BOOL antialiasedLineEnable)
+
+{
+  D3D11_RASTERIZER_DESC desc;
+  ZeroMemory(&desc, sizeof(D3D11_RASTERIZER_DESC));
+  desc.FillMode = fillMode;
+  desc.CullMode = cullMode;
+  desc.FrontCounterClockwise = isCounterclockwise;
+  desc.DepthBias = DepthBias;
+  desc.DepthBiasClamp = DepthBiasClamp;
+  desc.SlopeScaledDepthBias = SlopeScaledDepthBias;
+  desc.DepthClipEnable = depthClipEnable;
+  desc.ScissorEnable = scissorEnable;
+  desc.MultisampleEnable = multisampleEnable;
+  desc.AntialiasedLineEnable = antialiasedLineEnable;
+  return desc;
+}
 
 D3D11_DEPTH_STENCIL_DESC CreateDepthStencilDesc(BOOL depthEnable,
                                                 D3D11_DEPTH_WRITE_MASK mask,
@@ -132,4 +154,20 @@ D3D11_DEPTH_STENCIL_DESC CreateDepthStencilDesc(BOOL depthEnable,
   desc.DepthFunc = func; // 가까운물체만 렌더
   desc.StencilEnable = stencilEnable;
   return desc;
+}
+
+D3D11_RENDER_TARGET_BLEND_DESC CreateRTBlendDesc(BOOL blendEnable)
+{
+  D3D11_RENDER_TARGET_BLEND_DESC rtBlendDesc = {};
+  rtBlendDesc.BlendEnable = blendEnable;        // 블렌딩 활성화
+  rtBlendDesc.BlendOp = D3D11_BLEND_OP_ADD; // 블렌드 연산: 더하기
+  rtBlendDesc.SrcBlend = D3D11_BLEND_SRC_ALPHA; // 소스 블렌드: 소스의 알파
+  rtBlendDesc.DestBlend =
+      D3D11_BLEND_INV_SRC_ALPHA; // 대상 블렌드: 소스 알파의 반전
+  rtBlendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD; // 알파 블렌드 연산: 더하기
+  rtBlendDesc.SrcBlendAlpha = D3D11_BLEND_ONE;   // 소스 알파 블렌드: 1
+  rtBlendDesc.DestBlendAlpha = D3D11_BLEND_ZERO; // 대상 알파 블렌드: 0
+  rtBlendDesc.RenderTargetWriteMask =
+      D3D11_COLOR_WRITE_ENABLE_ALL; // 모든 색상 채널에 쓰기 가능
+  return rtBlendDesc;
 }

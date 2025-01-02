@@ -17,7 +17,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance,
                     _In_ PWSTR pCmdLine, 
 										_In_ int nCmdShow)
 {
-  _CrtSetBreakAlloc(237);
+  //_CrtSetBreakAlloc(237);
 #ifdef _DEBUG
   _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif

@@ -30,8 +30,6 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, false);
 #endif // _DEBUG
 
-  // 기타 3d관련 초기화
-  Init3D(width, height);
 
   return true;
 }
@@ -53,7 +51,9 @@ bool DX11Renderer::Cleanup()
 
 void DX11Renderer::ResizeScreen(unsigned int width, unsigned int height) {}
 
-void DX11Renderer::BeginFrame() {}
+void DX11Renderer::BeginFrame()
+{
+}
 
 void DX11Renderer::BeginDraw() {}
 
@@ -193,10 +193,4 @@ bool DX11Renderer::CreateComputeEffect()
 bool DX11Renderer::DestoryComputeEffect()
 {
   return false;
-}
-
-void DX11Renderer::Init3D(int width, int height)
-{
-  
-  
 }

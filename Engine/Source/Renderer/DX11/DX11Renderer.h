@@ -13,7 +13,7 @@ class PipeLine;
 class DX11Renderer : public IRenderer
 {
 public:
-  DX11Renderer() = default;
+  DX11Renderer(){};
   virtual ~DX11Renderer();
 
 public:
@@ -38,10 +38,9 @@ public:
   bool CreateComputeEffect() override;
   bool DestoryComputeEffect() override;
 
-private:
-  void Init3D(int width, int height);
-
 public:
+private:
+
 private:
   Device* _device = nullptr;
   SwapChain* _swapChain = nullptr;
@@ -50,4 +49,5 @@ private:
 #endif // _DEBUG
   ResourceStorage* _storage = nullptr;
   PipeLine* _pso = nullptr;
+  
 };
