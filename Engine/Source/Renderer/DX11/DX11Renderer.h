@@ -1,15 +1,13 @@
 #pragma once
 #include "../IRenderer.h"
-#include "Core/Common.h"
-
+struct ResourceStorage;
 #ifdef _DEBUG
 class DebugLayer;
 #endif // _DEBUG
 class Device;
 class SwapChain;
-struct ResourceStorage;
 class PipeLine;
-
+class RenderPassManager;
 class DX11Renderer : public IRenderer
 {
 public:
@@ -22,9 +20,10 @@ public:
   bool Cleanup() override;
   void ResizeScreen(unsigned int width, unsigned int height) override;
   void BeginFrame() override;
-  void BeginDraw() override;
+  void BeginDraw(MeshHandle handle, Matrix world) override;
   void EndDraw() override;
   void EndFrame() override;
+  void AddRenderPass(MeshHandle handle, RenderPassType type) override;
   void BindPipeline() override;
   void BindResource() override;
   bool CreateMesh(MeshHandle handle) override;
@@ -49,5 +48,6 @@ private:
 #endif // _DEBUG
   ResourceStorage* _storage = nullptr;
   PipeLine* _pso = nullptr;
+  RenderPassManager* _passMgr = nullptr;
   
 };

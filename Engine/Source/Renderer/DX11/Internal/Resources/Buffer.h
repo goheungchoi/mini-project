@@ -1,5 +1,6 @@
 #pragma
 #include "../Common.h"
+#include "../Types.h"
 using namespace Microsoft::WRL;
 
 struct MeshBuffer
@@ -9,4 +10,5 @@ struct MeshBuffer
   UINT stride;
   UINT offset;
   UINT nIndices;
+  RenderPassFlags flags;
 };

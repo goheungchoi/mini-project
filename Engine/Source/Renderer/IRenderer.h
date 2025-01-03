@@ -1,5 +1,8 @@
 ﻿#pragma once
+#include "directxtk/SimpleMath.h"
+#include "DX11/Internal/Types.h"
 #include "Core/Handle/ResourceHandle.h"
+using namespace DirectX::SimpleMath;
 class IRenderer
 {
 public:
@@ -12,11 +15,18 @@ public:
 
   virtual void BeginFrame() = 0;
 
-  virtual void BeginDraw() = 0;
+  virtual void BeginDraw(MeshHandle handle, Matrix world) = 0;
 
   virtual void EndDraw() = 0;
 
   virtual void EndFrame() = 0;
+
+  /*
+  * you can add more than one
+  * Param1 : own meshHandle 
+  * Parma2 : RenderPassType::...
+  */
+  virtual void AddRenderPass(MeshHandle handle, RenderPassType type) = 0;
 
   virtual void BindPipeline() = 0;
 

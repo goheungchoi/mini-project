@@ -5,6 +5,7 @@
 #include "Internal/Resources/Buffer.h"
 #include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
+#include "Internal/RenderFrameworks/RenderPass.h"
 #include "ResourceManager/ResourceManager.h"
 
 DX11Renderer::~DX11Renderer() {}
@@ -22,14 +23,14 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   _debugLayer->Init(_device->GetDevice());
   // Enable breaking on errors
   _debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
-  _pso = new PipeLine(_device, _swapChain,width,height);
+  _pso = new PipeLine(_device, _swapChain, width, height);
+  _passMgr = new RenderPassManager(_device);
   // Optionally, you can also enable breaking on warnings or other severities
   //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, true);
 
   // After debugging, you can disable specific breakpoints
   //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, false);
 #endif // _DEBUG
-
 
   return true;
 }
@@ -41,6 +42,7 @@ bool DX11Renderer::Cleanup()
   DestroyPipeline();
   DestroyTexture();
   DestroyShaderModule();
+  SAFE_RELEASE(_passMgr);
   SAFE_RELEASE(_pso);
   SAFE_RELEASE(_device);
   SAFE_RELEASE(_debugLayer);
@@ -53,15 +55,30 @@ void DX11Renderer::ResizeScreen(unsigned int width, unsigned int height) {}
 
 void DX11Renderer::BeginFrame()
 {
+  _pso->ClearBackBuffer(_device);
 }
 
-void DX11Renderer::BeginDraw() {}
+void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world) {
+  
+}
 
 void DX11Renderer::EndDraw() {}
 
-void DX11Renderer::EndFrame() {}
+void DX11Renderer::EndFrame()
+{
+  _swapChain->GetSwapChain()->Present(0, 0);
+}
 
-void DX11Renderer::BindPipeline() {}
+void DX11Renderer::AddRenderPass(MeshHandle handle,RenderPassType type)
+{
+  auto buffer = _storage->meshMap.find(handle);
+  buffer->second->flags |= type;
+}
+
+void DX11Renderer::BindPipeline()
+{
+  
+}
 
 void DX11Renderer::BindResource() {}
 
@@ -152,13 +169,8 @@ bool DX11Renderer::CreateShaderModule(ShaderHandle shaderHandle)
           data.data.data(), data.data.size(), nullptr, &ps));
       _storage->pixelShaderMap[shaderHandle] = ps;
     }
+    break;
   }
-  //..추가적인 쉐이더 처리
-  default: {
-    //..shader type이 없을때
-    return false;
-  }
-  break;
   }
 
   return true;
