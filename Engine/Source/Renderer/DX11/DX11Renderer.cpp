@@ -58,7 +58,8 @@ void DX11Renderer::BeginFrame()
   _pso->ClearBackBuffer(_device);
 }
 
-void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world) {
+void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
+{
   
 }
 
