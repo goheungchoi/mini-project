@@ -30,6 +30,7 @@ struct TextureData {
   TextureType type;
 	
 	bool isSRGB;
+  bool isNormal;
   bool isCubeMap;
 
   DXGI_FORMAT format;

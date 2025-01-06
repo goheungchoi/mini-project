@@ -39,7 +39,6 @@ public:
 
   void Unload(Handle& handle)
   {
-
     // Release the handle
     _handleTable.ReleaseHandle(handle);
   }
@@ -74,6 +73,10 @@ private:
 
 template <>
 Handle ResourcePool<TextureData>::LoadImpl(xUUID uuid, void* pUser);
+template <>
+Handle ResourcePool<ShaderData>::LoadImpl(xUUID uuid, void* pUser);
+template <>
+Handle ResourcePool<MeshData>::LoadImpl(xUUID uuid, void* pUser);
 
 template <>
 bool ResourcePool<TextureData>::UnloadImpl(Handle& handle);

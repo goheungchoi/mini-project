@@ -2,7 +2,7 @@
 
 #include "Handle.h"
 
-enum class ResourceType : uint8_t
+enum class ResourceType : uint16_t
 {
   kUnknown,
   kShader,
@@ -17,17 +17,24 @@ enum class ResourceType : uint8_t
 
 inline void SetHandleResourceType(Handle* handle, ResourceType type)
 {
-  handle->SetDesc(static_cast<size_t>(type) << 8);
+  handle->SetDesc(static_cast<uint16_t>(type));
+}
+
+inline uint16_t GetResourceDescription(ResourceType type) {
+  return static_cast<uint16_t>(type);
 }
 
 inline ResourceType GetHandleResourceType(const Handle* handle)
 {
-  return static_cast<ResourceType>((uint8_t)(handle->desc >> 8));
+  return static_cast<ResourceType>(handle->desc);
 }
 
 struct ShaderHandle : public Handle
 {
-  ShaderHandle() : Handle{} {}
+  ShaderHandle() : Handle{}
+  {
+    SetHandleResourceType(this, ResourceType::kShader);
+	}
   ShaderHandle(Handle& handle) : Handle(handle)
   {
     if (ResourceType::kShader != GetHandleResourceType(this))
@@ -35,19 +42,22 @@ struct ShaderHandle : public Handle
       throw std::exception("Handle's resource type mismatch!");
 		}
 	}
-  ShaderHandle(uint64_t value) : Handle{value}
-  {
-    SetHandleResourceType(this, ResourceType::kShader);
-  }
-  ShaderHandle(uint32_t index, uint16_t version) : Handle{index, version}
-  {
-    SetHandleResourceType(this, ResourceType::kShader);
-  }
+  //ShaderHandle(uint64_t value) : Handle{value}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kShader);
+  //}
+  //ShaderHandle(uint32_t index, uint16_t version) : Handle{index, version}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kShader);
+  //}
 };
 
 struct MeshHandle : public Handle
 {
-  MeshHandle() : Handle{} {}
+  MeshHandle() : Handle{}
+  {
+    SetHandleResourceType(this, ResourceType::kMesh);
+  }
   MeshHandle(Handle& handle) : Handle(handle)
   {
     if (ResourceType::kMesh != GetHandleResourceType(this))
@@ -55,19 +65,22 @@ struct MeshHandle : public Handle
       throw std::exception("Handle's resource type mismatch!");
     }
   }
-  MeshHandle(uint64_t value) : Handle{value}
-  {
-    SetHandleResourceType(this, ResourceType::kMesh);
-  }
-  MeshHandle(uint32_t index, uint16_t version) : Handle{index, version}
-  {
-    SetHandleResourceType(this, ResourceType::kMesh);
-  }
+  //MeshHandle(uint64_t value) : Handle{value}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kMesh);
+  //}
+  //MeshHandle(uint32_t index, uint16_t version) : Handle{index, version}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kMesh);
+  //}
 };
 
 struct MaterialHandle : public Handle
 {
-  MaterialHandle() : Handle{} {}
+  MaterialHandle() : Handle{}
+  {
+    SetHandleResourceType(this, ResourceType::kMaterial);
+  }
   MaterialHandle(Handle& handle) : Handle(handle)
   {
     if (ResourceType::kMaterial != GetHandleResourceType(this))
@@ -75,19 +88,22 @@ struct MaterialHandle : public Handle
       throw std::exception("Handle's resource type mismatch!");
     }
   }
-  MaterialHandle(uint64_t value) : Handle{value}
-  {
-    SetHandleResourceType(this, ResourceType::kMaterial);
-  }
-  MaterialHandle(uint32_t index, uint16_t version) : Handle{index, version}
-  {
-    SetHandleResourceType(this, ResourceType::kMaterial);
-  }
+  //MaterialHandle(uint64_t value) : Handle{value}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kMaterial);
+  //}
+  //MaterialHandle(uint32_t index, uint16_t version) : Handle{index, version}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kMaterial);
+  //}
 };
 
 struct TextureHandle : public Handle
 {
-  TextureHandle() : Handle{} {}
+  TextureHandle() : Handle{}
+  {
+    SetHandleResourceType(this, ResourceType::kTexture);
+  }
   TextureHandle(Handle& handle) : Handle(handle)
   {
     if (ResourceType::kTexture != GetHandleResourceType(this))
@@ -95,19 +111,22 @@ struct TextureHandle : public Handle
       throw std::exception("Handle's resource type mismatch!");
     }
   }
-  TextureHandle(uint64_t value) : Handle{value}
-  {
-    SetHandleResourceType(this, ResourceType::kTexture);
-  }
-  TextureHandle(uint32_t index, uint16_t version) : Handle{index, version}
-  {
-    SetHandleResourceType(this, ResourceType::kTexture);
-  }
+  //TextureHandle(uint64_t value) : Handle{value}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kTexture);
+  //}
+  //TextureHandle(uint32_t index, uint16_t version) : Handle{index, version}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kTexture);
+  //}
 };
 
 struct ModelHandle : public Handle
 {
-  ModelHandle() : Handle{} {}
+  ModelHandle() : Handle{}
+  {
+    SetHandleResourceType(this, ResourceType::kModel);
+  }
   ModelHandle(Handle& handle) : Handle(handle)
   {
     if (ResourceType::kModel != GetHandleResourceType(this))
@@ -115,19 +134,22 @@ struct ModelHandle : public Handle
       throw std::exception("Handle's resource type mismatch!");
     }
   }
-  ModelHandle(uint64_t value) : Handle{value}
-  {
-    SetHandleResourceType(this, ResourceType::kModel);
-  }
-  ModelHandle(uint32_t index, uint16_t version) : Handle{index, version}
-  {
-    SetHandleResourceType(this, ResourceType::kModel);
-  }
+  //ModelHandle(uint64_t value) : Handle{value}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kModel);
+  //}
+  //ModelHandle(uint32_t index, uint16_t version) : Handle{index, version}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kModel);
+  //}
 };
 
 struct AnimationHandle : public Handle
 {
-  AnimationHandle() : Handle{} {}
+  AnimationHandle() : Handle{}
+  {
+    SetHandleResourceType(this, ResourceType::kAnimation);
+  }
   AnimationHandle(Handle& handle) : Handle(handle)
   {
     if (ResourceType::kAnimation != GetHandleResourceType(this))
@@ -135,19 +157,22 @@ struct AnimationHandle : public Handle
       throw std::exception("Handle's resource type mismatch!");
     }
   }
-  AnimationHandle(uint64_t value) : Handle{value}
-  {
-    SetHandleResourceType(this, ResourceType::kAnimation);
-  }
-  AnimationHandle(uint32_t index, uint16_t version) : Handle{index, version}
-  {
-    SetHandleResourceType(this, ResourceType::kAnimation);
-  }
+  //AnimationHandle(uint64_t value) : Handle{value}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kAnimation);
+  //}
+  //AnimationHandle(uint32_t index, uint16_t version) : Handle{index, version}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kAnimation);
+  //}
 };
 
 struct AnimatorHandle : public Handle
 {
-  AnimatorHandle() : Handle{} {}
+  AnimatorHandle() : Handle{}
+  {
+    SetHandleResourceType(this, ResourceType::kAnimator);
+  }
   AnimatorHandle(Handle& handle) : Handle(handle)
   {
     if (ResourceType::kAnimator != GetHandleResourceType(this))
@@ -155,19 +180,22 @@ struct AnimatorHandle : public Handle
       throw std::exception("Handle's resource type mismatch!");
     }
   }
-  AnimatorHandle(uint64_t value) : Handle{value}
-  {
-    SetHandleResourceType(this, ResourceType::kAnimator);
-  }
-  AnimatorHandle(uint32_t index, uint16_t version) : Handle{index, version}
-  {
-    SetHandleResourceType(this, ResourceType::kAnimator);
-  }
+  //AnimatorHandle(uint64_t value) : Handle{value}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kAnimator);
+  //}
+  //AnimatorHandle(uint32_t index, uint16_t version) : Handle{index, version}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kAnimator);
+  //}
 };
 
 struct AudioHandle : public Handle
 {
-  AudioHandle() : Handle{} {}
+  AudioHandle() : Handle{}
+  {
+    SetHandleResourceType(this, ResourceType::kAudio);
+  }
   AudioHandle(Handle& handle) : Handle(handle)
   {
     if (ResourceType::kAudio != GetHandleResourceType(this))
@@ -175,14 +203,14 @@ struct AudioHandle : public Handle
       throw std::exception("Handle's resource type mismatch!");
     }
   }
-  AudioHandle(uint64_t value) : Handle{value}
-  {
-    SetHandleResourceType(this, ResourceType::kAudio);
-  }
-  AudioHandle(uint32_t index, uint16_t version) : Handle{index, version}
-  {
-    SetHandleResourceType(this, ResourceType::kAudio);
-  }
+  //AudioHandle(uint64_t value) : Handle{value}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kAudio);
+  //}
+  //AudioHandle(uint32_t index, uint16_t version) : Handle{index, version}
+  //{
+  //  SetHandleResourceType(this, ResourceType::kAudio);
+  //}
 };
 
 

@@ -198,6 +198,8 @@
 		<ClInclude Include="Include\Core\Types\TextureData.h" />
 		<ClCompile Include="Include\Core\UUID\UUID.cpp" />
 		<ClInclude Include="Include\Core\UUID\UUID.h" />
+		<ClCompile Include="Include\Core\Utils\IOUtils.cpp" />
+		<ClInclude Include="Include\Core\Utils\IOUtils.h" />
 		<ClCompile Include="Include\Core\Utils\ShaderCompiler.cpp" />
 		<ClInclude Include="Include\Core\Utils\ShaderCompiler.h" />
 		<ClInclude Include="Include\Engine\Engine.h" />
@@ -242,6 +244,7 @@
 		<ClInclude Include="Source\ResourceManager\Common.h" />
 		<ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
 		<ClInclude Include="Source\ResourceManager\ResourceManager.h" />
+		<ClCompile Include="Source\ResourceManager\ResourcePool\MeshResourcePool.cpp" />
 		<ClInclude Include="Source\ResourceManager\ResourcePool\ResourcePool.h" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\ShaderResourcePool.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\TextureResourcePool.cpp" />
