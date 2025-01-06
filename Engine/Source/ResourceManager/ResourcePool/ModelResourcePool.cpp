@@ -100,7 +100,8 @@ static void ProcessGeoNode(ModelData& model,
   model.nodes.emplace_back(std::move(node));
 }
 
-Handle LoadImpl(xUUID uuid, void* pUser)
+template<>
+Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser)
 {
   Pools* pools = (Pools*)pUser;
   ::texturePool = pools->texturePool;
@@ -123,6 +124,7 @@ Handle LoadImpl(xUUID uuid, void* pUser)
     ProcessGeoNode(model, geoNode, geoModel);
 	}
 
-  return Handle::kInvalidHandle;
+  return _handleTable.ClaimHandle(std::move(model),
+																	(uint16_t)ResourceType::kModel);
 }
 

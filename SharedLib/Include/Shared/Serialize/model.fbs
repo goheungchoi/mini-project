@@ -47,6 +47,8 @@ table Material {
   doubleSided: bool;
 }
 
+root_type Material;
+
 table Vertex {
   position: Vec4;
   normal: Vec3;
@@ -65,6 +67,8 @@ table Mesh {
   
   material: string;   // Path to the material
 }
+
+root_type Mesh;
 
 table GeometryNode {
   name: string;

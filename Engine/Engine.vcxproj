@@ -250,6 +250,7 @@
 		<ClInclude Include="Source\ResourceManager\Common.h" />
 		<ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
 		<ClInclude Include="Source\ResourceManager\ResourceManager.h" />
+		<ClCompile Include="Source\ResourceManager\ResourcePool\MaterialResourcePool.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\MeshResourcePool.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\ModelResourcePool.cpp" />
 		<ClInclude Include="Source\ResourceManager\ResourcePool\ResourcePool.h" />

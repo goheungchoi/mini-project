@@ -17,19 +17,7 @@ static __ResourceManagerPrivate__& _m() {
   return _resourceManagerPrivate;
 }
 
-static TextureHandle __LoadTexture__(const std::string& path, TextureType type) {
-  Handle textureHandle = _m().texturePool.Load(path.c_str(), &type);
-  if (_m().texturePool.IsValidHandle(textureHandle))
-  {
-    return TextureHandle(textureHandle);
-	}
-	return TextureHandle();
-}
-static const TextureData& __AccessTextureData__(TextureHandle handle) {
-  return TextureData();
-}
-static void __UnloadTexture__(TextureHandle& handle) {
-}
+
 
 static ShaderHandle __LoadShader__(const std::string& path, ShaderType type) {
   return ShaderHandle();
@@ -40,27 +28,53 @@ static const ShaderData& __AccessShaderData__(ShaderHandle handle) {
 static void __UnloadShader__(ShaderHandle handle) {
 }
 
-static MeshHandle __LoadMesh__(const std::string& path) {
-  return MeshHandle();
+static TextureHandle __LoadTexture__(const std::string& path, TextureType type)
+{
+  Handle textureHandle = _m().texturePool.Load(path.c_str(), &type);
+  if (_m().texturePool.IsValidHandle(textureHandle))
+  {
+    return textureHandle;
+  }
+  return TextureHandle();
 }
-static const MeshData& __AccessMeshData__(MeshHandle handle) {
-  return MeshData();
+static const TextureData& __AccessTextureData__(TextureHandle handle)
+{
+  return _m().texturePool.AccessResourceData(handle);
 }
-static void __UnloadMesh__(MeshHandle handle) {
+static void __UnloadTexture__(TextureHandle& handle) {
+  _m().texturePool.Unload(handle, nullptr);
 }
 
 static MaterialHandle __LoadMaterial__(const std::string& path) {
-	// TODO:
-	// Load the material data
-
-	// Load textures used in the material
-
+  Handle matHandle = _m().materialPool.Load(path.c_str(), &_m().texturePool);
+  if (_m().materialPool.IsValidHandle(matHandle))
+  {
+    return matHandle;
+  }
   return MaterialHandle();
 }
 static const MaterialData& __AccessMaterialData__(MaterialHandle handle) {
-  return MaterialData();
+  return _m().materialPool.AccessResourceData(handle);
 }
 static void __UnloadMaterial__(MaterialHandle handle) {
+	// TODO;
+}
+
+static MeshHandle __LoadMesh__(const std::string& path)
+{
+  Handle meshHandle = _m().meshPool.Load(path.c_str(), &_m().materialPool);
+  if (_m().meshPool.IsValidHandle(meshHandle))
+  {
+    return meshHandle;
+	}
+  return MeshHandle();
+}
+static const MeshData& __AccessMeshData__(MeshHandle handle)
+{
+  return _m().meshPool.AccessResourceData(handle);
+}
+static void __UnloadMesh__(MeshHandle handle) {
+	// TODO:
 }
 
 static ModelHandle __LoadModel__(const std::string& path)
@@ -77,7 +91,7 @@ static ModelHandle __LoadModel__(const std::string& path)
 	}
   return ModelHandle();
 }
-static const ModelData& __AccessModelData(ModelHandle handle)
+static const ModelData& __AccessModelData__(ModelHandle handle)
 {
   return _m().modelPool.AccessResourceData(handle);
 }
@@ -95,24 +109,32 @@ static void __UnloadAll__() {
 
 
 const ResourceManager* GetResourceManager() { 
-	static ResourceManager _resourceManager
-  {
-    .LoadTexture = __LoadTexture__, .AccessTextureData = __AccessTextureData__,
-    .UnloadTexture = __UnloadTexture__,
+	static ResourceManager _resourceManager{
 
-    .LoadShader = __LoadShader__, .AccessShaderData = __AccessShaderData__,
-    .UnloadShader = __UnloadShader__,
+      .LoadShader = __LoadShader__,
+      .AccessShaderData = __AccessShaderData__,
+      .UnloadShader = __UnloadShader__,
 
-    .LoadMesh = __LoadMesh__, .AccessMeshData = __AccessMeshData__,
-    .UnloadMesh = __UnloadMesh__,
+      .LoadTexture = __LoadTexture__,
+      .AccessTextureData = __AccessTextureData__,
+      .UnloadTexture = __UnloadTexture__,
 
-    .LoadMaterial = __LoadMaterial__, .AccessMaterialData = __AccessMaterialData__,
-    .UnloadMaterial = __UnloadMaterial__,
+      .LoadMaterial = __LoadMaterial__,
+      .AccessMaterialData = __AccessMaterialData__,
+      .UnloadMaterial = __UnloadMaterial__,
 
-    .GetResourceType = __GetResourceType__, .IsValidHandle = __IsValidHandle__,
+      .LoadMesh = __LoadMesh__,
+      .AccessMeshData = __AccessMeshData__,
+      .UnloadMesh = __UnloadMesh__,
 
-    .UnloadAll = __UnloadAll__
-  };
+			.LoadModel = __LoadModel__,
+			.AccessModelData = __AccessModelData__,
+			.UnloadModel = __UnloadModel__,
+
+      .GetResourceType = __GetResourceType__,
+      .IsValidHandle = __IsValidHandle__,
+
+      .UnloadAll = __UnloadAll__};
 	
 	return &_resourceManager;
 }
