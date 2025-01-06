@@ -159,7 +159,7 @@ D3D11_DEPTH_STENCIL_DESC CreateDepthStencilDesc(BOOL depthEnable,
 D3D11_RENDER_TARGET_BLEND_DESC CreateRTBlendDesc(BOOL blendEnable)
 {
   D3D11_RENDER_TARGET_BLEND_DESC rtBlendDesc = {};
-  rtBlendDesc.BlendEnable = blendEnable;        // 블렌딩 활성화
+  rtBlendDesc.BlendEnable = blendEnable;    // 블렌딩 활성화
   rtBlendDesc.BlendOp = D3D11_BLEND_OP_ADD; // 블렌드 연산: 더하기
   rtBlendDesc.SrcBlend = D3D11_BLEND_SRC_ALPHA; // 소스 블렌드: 소스의 알파
   rtBlendDesc.DestBlend =
@@ -171,3 +171,21 @@ D3D11_RENDER_TARGET_BLEND_DESC CreateRTBlendDesc(BOOL blendEnable)
       D3D11_COLOR_WRITE_ENABLE_ALL; // 모든 색상 채널에 쓰기 가능
   return rtBlendDesc;
 }
+
+//D3D11_SAMPLER_DESC CreateSamplerDesc(
+//    D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE mode, UINT MaxAnisotropy,
+//    D3D11_COMPARISON_FUNC ComparisonFunc, FLOAT MinLOD = 0,
+//    FLOAT MaxLOD = D3D11_FLOAT32_MAX, FLOAT MipLODBias = 0)
+//{
+//  D3D11_SAMPLER_DESC sampleDesc = {};
+//  sampleDesc.AddressU = mode;
+//  sampleDesc.AddressV = mode;
+//  sampleDesc.AddressW = mode;
+//  sampleDesc.Filter = Filter;
+//  sampleDesc.MaxAnisotropy = MaxAnisotropy;
+//  sampleDesc.ComparisonFunc = ComparisonFunc;
+//  sampleDesc.MinLOD = MinLOD;
+//  sampleDesc.MaxLOD = MaxLOD;
+//  sampleDesc.MipLODBias = MipLODBias;
+//  return sampleDesc;
+//}

@@ -39,6 +39,7 @@ public:
     // alloc member
     _backBuffer = new BackBuffer;
 
+
     // 1. Output Merger Start
     _om = new OutputMerger;
     // main rendertarget.
@@ -91,6 +92,8 @@ public:
                             0.f, true, false, false, true);
     HR_T(device->GetDevice()->CreateRasterizerState(
         &rasterizerDesc, _rs->rasterizerState.GetAddressOf()));
+    device->GetImmContext()->RSSetState(_rs->rasterizerState.Get());
+    // Rasterizer End
   }
   ~PipeLine()
   {
@@ -105,13 +108,13 @@ public:
     device->GetImmContext()->ClearRenderTargetView(_backBuffer->mainRTV.Get(),
                                                    _clearColor);
   }
-  void SetBlendOnEnable(BOOL blendEnalbe, Device* device)
+  void SetBlendOnEnable(BOOL blendEnable, Device* device)
   {
     // blend state
     D3D11_BLEND_DESC blendDesc = {};
     blendDesc.AlphaToCoverageEnable = false; // 알파 투 커버리지 비활성화
     blendDesc.IndependentBlendEnable = false; // 독립적 블렌드 비활성화
-    D3D11_RENDER_TARGET_BLEND_DESC rtBlenddesc = CreateRTBlendDesc(blendEnalbe);
+    D3D11_RENDER_TARGET_BLEND_DESC rtBlenddesc = CreateRTBlendDesc(blendEnable);
     blendDesc.RenderTarget[0] = rtBlenddesc; // 첫번째 rt에 state 설정
     HR_T(device->GetDevice()->CreateBlendState(&blendDesc,
                                                _om->blentState.GetAddressOf()));

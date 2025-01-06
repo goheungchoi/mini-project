@@ -48,6 +48,5 @@ private:
   DebugLayer* _debugLayer = nullptr;
 #endif // _DEBUG
   ResourceStorage* _storage = nullptr;
-  PipeLine* _pso = nullptr;
   RenderPassManager* _passMgr = nullptr;
 };

@@ -22,8 +22,8 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   _debugLayer->Init(_device->GetDevice());
   // Enable breaking on errors
   _debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
-  _pso = new PipeLine(_device, _swapChain, width, height);
-  _passMgr = new RenderPassManager(_device);
+  _passMgr = new RenderPassManager(_device,_swapChain,width,height);
+  _passMgr->CreateSamplers();
   // Optionally, you can also enable breaking on warnings or other severities
   //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, true);
 
@@ -42,7 +42,6 @@ bool DX11Renderer::Cleanup()
   DestroyTexture();
   DestroyShaderModule();
   SAFE_RELEASE(_passMgr);
-  SAFE_RELEASE(_pso);
   SAFE_RELEASE(_device);
   SAFE_RELEASE(_debugLayer);
   SAFE_RELEASE(_swapChain);
@@ -54,7 +53,8 @@ void DX11Renderer::ResizeScreen(unsigned int width, unsigned int height) {}
 
 void DX11Renderer::BeginFrame(Matrix view, Matrix projection)
 {
-  _pso->ClearBackBuffer(_device);
+  _passMgr->SetCameraMatrix(view, projection);
+  _passMgr->ClearBackBuffer();
 }
 
 void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
@@ -216,12 +216,8 @@ bool DX11Renderer::DestroyShaderModule()
   _storage->pixelShaderMap.clear();
   return false;
 }
-// CreateShaderModule 먼저 실행 후 최초 한번만 실행.
 bool DX11Renderer::CreatePipeline()
 {
-  _device->GetImmContext()->IASetPrimitiveTopology(
-      D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
   return true;
 }
 

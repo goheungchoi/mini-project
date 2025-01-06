@@ -7,7 +7,6 @@
 using namespace Microsoft::WRL;
 using namespace DirectX::SimpleMath;
 
-
 namespace Constant
 {
 struct WVP
@@ -18,26 +17,6 @@ struct WVP
 };
 } // namespace Constant
 
-/*
-Current Frmae Buffer
-:stores information about the current frame's constant buffers
-
-*/
-class FrameBuffer
-{
-public:
-  ComPtr<ID3D11Buffer> _currWVP;
-
-public:
-  FrameBuffer(Device* device)
-  {
-    _currWVP = device->CreateConstantBuffer<Constant::WVP>();
-  }
-  ~FrameBuffer() = default;
-
-public:
-  
-};
 
 struct MeshBuffer
 {
