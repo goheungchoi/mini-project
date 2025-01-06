@@ -144,6 +144,11 @@
     <ClInclude Include="texture_formats.h" />
     <ClInclude Include="UUID.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharedLib\SharedLib.vcxproj">
+      <Project>{d67b80c2-6ba8-46ef-b896-0b6004a06416}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />

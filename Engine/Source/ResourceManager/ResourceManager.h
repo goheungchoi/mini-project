@@ -19,6 +19,10 @@ struct ResourceManager {
   const MaterialData& (*AccessMaterialData)(MaterialHandle handle);
   void (*UnloadMaterial)(MaterialHandle handle);
 
+	ModelHandle (*LoadModel)(const std::string& path);
+  const ModelData& (*AccessModelData)(ModelHandle handle);
+  void (*UnloadModel)(ModelHandle handle);
+
   ResourceType (*GetResourceType)(const Handle& handle);
   bool (*IsValidHandle)(const Handle& handle);
 

@@ -4,10 +4,7 @@
 
 #include "Core/Handle/ResourceHandle.h"
 
-// NOTE:
-#include "directxtk/SimpleMath.h"
-
-using namespace DirectX::SimpleMath;
+#include "Core/Math/MathUtils.h"
 
 struct Vertex
 {

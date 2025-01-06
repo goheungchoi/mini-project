@@ -9,18 +9,19 @@ struct ModelNode
   std::string name;
 	// Matrix transformation;
 
+  uint32_t level;
   uint32_t parent;
   uint32_t firstChild;
   uint32_t nextSibling;
-  uint32_t level;
 	
 	std::vector<MeshHandle> meshes;
 };
 
 struct ModelData {
-  uint32_t rootNode;
+  std::string name;
+
   std::vector<ModelNode> nodes;
-  std::vector<MeshHandle> meshes;
-  std::vector<MaterialHandle> materials;
-  std::vector<TextureHandle> textures;
+  std::unordered_set<MeshHandle> meshes;
+  std::unordered_set<MaterialHandle> materials;
+  std::unordered_set<TextureHandle> textures;
 };

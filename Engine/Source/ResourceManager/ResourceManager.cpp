@@ -5,14 +5,12 @@
 
 struct __ResourceManagerPrivate__
 {
-  ResourcePool<TextureData> texturePool;
   ResourcePool<ShaderData> shaderPool;
-  ResourcePool<MeshData> meshPool;
+  ResourcePool<TextureData> texturePool;
   ResourcePool<MaterialData> materialPool;
+  ResourcePool<MeshData> meshPool;
   ResourcePool<ModelData> modelPool;
 };
-
-const fs::path kResourceDir{GetResourceDirectory()};
 
 static __ResourceManagerPrivate__& _m() {
   static __ResourceManagerPrivate__ _resourceManagerPrivate;
@@ -20,12 +18,16 @@ static __ResourceManagerPrivate__& _m() {
 }
 
 static TextureHandle __LoadTexture__(const std::string& path, TextureType type) {
-  return TextureHandle();
+  Handle textureHandle = _m().texturePool.Load(path.c_str(), &type);
+  if (_m().texturePool.IsValidHandle(textureHandle))
+  {
+    return TextureHandle(textureHandle);
+	}
+	return TextureHandle();
 }
 static const TextureData& __AccessTextureData__(TextureHandle handle) {
   return TextureData();
 }
-
 static void __UnloadTexture__(TextureHandle& handle) {
 }
 
@@ -60,6 +62,27 @@ static const MaterialData& __AccessMaterialData__(MaterialHandle handle) {
 }
 static void __UnloadMaterial__(MaterialHandle handle) {
 }
+
+static ModelHandle __LoadModel__(const std::string& path)
+{
+  struct Pools {
+    ResourcePool<TextureData>* texturePool;
+    ResourcePool<MeshData>* meshPool;
+    ResourcePool<MaterialData>* materialPool;
+  } pool{&_m().texturePool, &_m().meshPool, &_m().materialPool};
+  Handle modelHandle = _m().modelPool.Load(path.c_str(), &pool);
+  if (_m().modelPool.IsValidHandle(modelHandle))
+  {
+    return modelHandle;
+	}
+  return ModelHandle();
+}
+static const ModelData& __AccessModelData(ModelHandle handle)
+{
+  return _m().modelPool.AccessResourceData(handle);
+}
+static void __UnloadModel__(ModelHandle handle) {}
+
 static ResourceType __GetResourceType__(const Handle& handle) {
 	return ResourceType::kUnknown;
 }

@@ -5,6 +5,7 @@
 #include "Core/Types/MeshData.h"
 #include "Core/Types/MaterialData.h"
 #include "Core/Types/ShaderData.h"
+#include "Core/Types/ModelData.h"
 
 #include "Utils.h"
 
@@ -16,7 +17,7 @@ class ResourcePool
 	HandleTable<T, GROW_SIZE> _handleTable;
 
 public:
-  Handle Load(const char* path, void* pUser)
+  Handle Load(const char* path, void* pReserved)
   {
     xUUID uuid = GenerateUUIDFromName(path);
 
@@ -24,7 +25,7 @@ public:
     if (auto it = _uuidMap.find(uuid); it == _uuidMap.end())
     {
       // Need to load a new resource
-      return LoadImpl(uuid, pUser);
+      return LoadImpl(uuid, pReserved);
     }
     else
     {
@@ -37,8 +38,13 @@ public:
     return Handle::kInvalidHandle;
   }
 
-  void Unload(Handle& handle)
+  void Unload(Handle& handle, void* pReserved)
   {
+    if (_handleTable.GetReferenceCount(handle) == 1)
+    {
+      UnloadImpl(handle);
+		}
+
     // Release the handle
     _handleTable.ReleaseHandle(handle);
   }
@@ -58,17 +64,12 @@ public:
   }
 
 private:
-
-
-  Handle LoadImpl(xUUID uuid, void* pUser)
+  Handle LoadImpl(xUUID uuid, void* pReserved)
   {
     return Handle::kInvalidHandle;
   }
 
-  bool UnloadImpl(Handle& handle)
-  {
-    return false;
-  }
+	void UnloadImpl(Handle& handle, void* pReserved) { return; }
 };
 
 template <>
@@ -77,6 +78,5 @@ template <>
 Handle ResourcePool<ShaderData>::LoadImpl(xUUID uuid, void* pUser);
 template <>
 Handle ResourcePool<MeshData>::LoadImpl(xUUID uuid, void* pUser);
-
 template <>
-bool ResourcePool<TextureData>::UnloadImpl(Handle& handle);
+Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser);

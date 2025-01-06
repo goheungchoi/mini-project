@@ -5,7 +5,8 @@
     "directxtk",
 		"stduuid",
 		"taskflow",
-		"physx"
+		"physx",
+    "flatbuffers"
   ],
   "overrides": [
     {

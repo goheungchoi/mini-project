@@ -177,6 +177,11 @@
 	<ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\SharedLib\SharedLib.vcxproj">
+			<Project>{d67b80c2-6ba8-46ef-b896-0b6004a06416}</Project>
+		</ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
 		<ClCompile Include="External\nvpro\nv_dds.cpp" />
 		<ClInclude Include="External\nvpro\nv_dds.h" />
 		<ClCompile Include="External\nvpro\texture_formats.cpp" />
@@ -246,6 +251,7 @@
 		<ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
 		<ClInclude Include="Source\ResourceManager\ResourceManager.h" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\MeshResourcePool.cpp" />
+		<ClCompile Include="Source\ResourceManager\ResourcePool\ModelResourcePool.cpp" />
 		<ClInclude Include="Source\ResourceManager\ResourcePool\ResourcePool.h" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\ShaderResourcePool.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\TextureResourcePool.cpp" />

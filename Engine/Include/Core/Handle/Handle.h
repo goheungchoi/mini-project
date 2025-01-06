@@ -194,16 +194,24 @@ public:
 	Handle operator[](uint32_t index) const {
     if (index >= _table.size())
       throw std::out_of_range("Descriptor index out of range!");
-    return Handle{index, _table[index].first};
+    return _table[index].first;
 	}
 
 	inline 
-	std::optional<T>& operator[](const Handle& handle) const {
+	const std::optional<T>& operator[](const Handle& handle) const {
     if (!IsValidHandle(handle))
       return _sentinel;
 
 		return _table[handle.index].second;
 	}
+
+	inline 
+	std::optional<T>& operator[](const Handle& handle) {
+    if (!IsValidHandle(handle))
+      return _sentinel;
+
+    return _table[handle.index].second;
+  }
 
 private:
 	void IncreaseCapacity() {

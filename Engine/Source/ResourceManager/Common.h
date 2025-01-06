@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Shared/Config/Config.h"
+
 #include "Core/Handle/Handle.h"
 #include "Core/Handle/ResourceHandle.h"
 

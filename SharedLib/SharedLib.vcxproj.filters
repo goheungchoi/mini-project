@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<ItemGroup>
+		<Filter Include="Source">
+			<UniqueIdentifier>{01BFDBA8-431D-46B1-BFFD-7DC07B984256}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Include">
+			<UniqueIdentifier>{1DA15D9E-D298-4BF9-BC71-65B6B09DD222}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Include\Shared\UUID">
+			<UniqueIdentifier>{CB48D93B-6E72-4250-90A4-8A78362C4BC4}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Include\Shared">
+			<UniqueIdentifier>{11F9483B-AD57-4B3F-B4A4-20F52B070675}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Source\UUID">
+			<UniqueIdentifier>{175AB5C8-DF3C-47C9-9841-3087A81A9941}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Source\Config">
+			<UniqueIdentifier>{D92F5FCB-448C-4400-A55A-1F777CB89B8C}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Include\Shared\Serialize">
+			<UniqueIdentifier>{772750A3-9B2E-4120-95B8-EE25EFC2D8E5}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Include\Shared\Config">
+			<UniqueIdentifier>{1B2C7C8E-B206-488C-AA95-AA32759D5B32}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="Source\Config\Config.cpp">
+			<Filter>Source\Config</Filter>
+		</ClCompile>
+		<None Include="Include\Shared\Serialize\model.fbs">
+			<Filter>Include\Shared\Serialize</Filter>
+		</None>
+		<ClCompile Include="Source\UUID\UUID.cpp">
+			<Filter>Source\UUID</Filter>
+		</ClCompile>
+		<ClInclude Include="Include\Shared\Serialize\model_generated.h">
+			<Filter>Include\Shared\Serialize</Filter>
+		</ClInclude>
+		<ClInclude Include="Include\Shared\UUID\UUID.h">
+			<Filter>Include\Shared\UUID</Filter>
+		</ClInclude>
+		<ClInclude Include="Include\Shared\Config\Config.h">
+			<Filter>Include\Shared\Config</Filter>
+		</ClInclude>
+	</ItemGroup>
+</Project>

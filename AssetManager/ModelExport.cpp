@@ -358,6 +358,7 @@ void ModelExporter::ProcessMaterialTexture(GeometryModel& geoModel,
 void ModelExporter::ExportGeometryModel(GeometryModel& geoModel) {
   flatbuffers::FlatBufferBuilder builder;
 
+	// Push back texture paths
 	std::vector<flatbuffers::Offset<flatbuffers::String>> texturePaths;
   texturePaths.reserve(geoModel.texturePathMap.size());
   for (auto& [path, texture] : geoModel.texturePathMap)
@@ -366,6 +367,7 @@ void ModelExporter::ExportGeometryModel(GeometryModel& geoModel) {
     ExportModelTexture(texture);
 	}
 
+	// Push back material paths
 	std::vector<flatbuffers::Offset<flatbuffers::String>> materialPaths;
   materialPaths.reserve(geoModel.materialPathMap.size());
 	for (auto& [path, material] : geoModel.materialPathMap)
@@ -374,6 +376,7 @@ void ModelExporter::ExportGeometryModel(GeometryModel& geoModel) {
     ExportModelMaterial(material);
 	}
 
+	// Push back mesh paths
 	std::vector<flatbuffers::Offset<flatbuffers::String>> meshPaths;
   meshPaths.reserve(geoModel.meshPathMap.size());
 	for (auto& [path, mesh] : geoModel.meshPathMap)
@@ -382,6 +385,7 @@ void ModelExporter::ExportGeometryModel(GeometryModel& geoModel) {
     ExportModelMesh(mesh);
 	}
 
+	// Start building geometry nodes
 	std::vector<flatbuffers::Offset<GameResource::GeometryNode>> nodesVector;
   nodesVector.reserve(geoModel.nodes.size());
   for (auto& node : geoModel.nodes)
