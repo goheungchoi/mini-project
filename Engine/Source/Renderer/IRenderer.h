@@ -3,6 +3,14 @@
 #include "DX11/Internal/Types.h"
 #include "directxtk/SimpleMath.h"
 using namespace DirectX::SimpleMath;
+/**
+ * @brief 
+ * 1. call AddRenderPass() per mesh at initialize
+ * 2. call BeginFrame() per frame 
+ * 3. call BeinDraw() per mesh every frame
+ * 4. call DrawMesh() per mesh every frame
+ * 5. call EndFrame() per frame
+ */
 class IRenderer
 {
 public:
@@ -12,35 +20,47 @@ public:
   virtual bool Cleanup() = 0;
 
   virtual void ResizeScreen(unsigned int width, unsigned int height) = 0;
-  /*
-   * call per frame
+  /**
+   * @brief call per frame
+   * @param view : camera view matrix after transpose
+   * @param projection : camera projection matrix after transpose
    */
-  virtual void BeginFrame() = 0;
-  /*
-   * call per mesh
+  virtual void BeginFrame(Matrix view, Matrix projection) = 0;
+  /**
+   * @brief call per mesh
+   * @param handle : mesh handle owned by mesh
+   * @param world : world matrix of mesh after transpose
    */
   virtual void BeginDraw(MeshHandle handle, Matrix world) = 0;
-  /*
-   * call per mesh
+  /**
+   * @brief call per mesh
+   * @param handle : mesh handle owned by mesh
    */
   virtual void DrawMesh(MeshHandle handle) = 0;
-  /*
-   * call per mesh
+  /**
+   * @brief still working on it....
    */
   virtual void EndDraw() = 0;
-  /*
-   * call per frame
+  /**
+   * @brief call per frame
    */
   virtual void EndFrame() = 0;
 
   /*
-   * you can add more than one
-   * call before begin draw
-   * don't call every loop
+   * @brief 
+     1. you can add more than one call before begin draw
+     2. Runs only the type of render path you added, for this mesh
+     3. don't call every loop
    * Param1 : own meshHandle
    * Parma2 : RenderPassType::...
    */
   virtual void AddRenderPass(MeshHandle handle, RenderPassType type) = 0;
+  /*
+   * @brief
+     1. you can delete meshes render pass type.
+   * Param1 : own meshHandle
+   * Parma2 : RenderPassType::...
+   */
   virtual void DeleteRenderPass(MeshHandle handle, RenderPassType type) = 0;
 
   virtual void BindPipeline() = 0;

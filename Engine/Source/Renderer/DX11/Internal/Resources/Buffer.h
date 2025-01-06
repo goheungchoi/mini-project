@@ -6,16 +6,7 @@
 
 using namespace Microsoft::WRL;
 using namespace DirectX::SimpleMath;
-struct MeshBuffer
-{
-  ComPtr<ID3D11Buffer> vertexBuffer;
-  ComPtr<ID3D11Buffer> indexBuffer;
-  UINT stride;
-  UINT offset;
-  UINT nIndices;
-  Matrix world;
-  RenderPassFlags flags;
-};
+
 
 namespace Constant
 {
@@ -34,7 +25,7 @@ Current Frmae Buffer
 */
 class FrameBuffer
 {
-private:
+public:
   ComPtr<ID3D11Buffer> _currWVP;
 
 public:
@@ -46,4 +37,15 @@ public:
 
 public:
   
+};
+
+struct MeshBuffer
+{
+  ComPtr<ID3D11Buffer> vertexBuffer;
+  ComPtr<ID3D11Buffer> indexBuffer;
+  UINT stride;
+  UINT offset;
+  UINT nIndices;
+  Matrix world;
+  RenderPassFlags flags;
 };

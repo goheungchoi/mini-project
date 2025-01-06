@@ -52,7 +52,7 @@ bool DX11Renderer::Cleanup()
 
 void DX11Renderer::ResizeScreen(unsigned int width, unsigned int height) {}
 
-void DX11Renderer::BeginFrame()
+void DX11Renderer::BeginFrame(Matrix view, Matrix projection)
 {
   _pso->ClearBackBuffer(_device);
 }
@@ -74,16 +74,14 @@ void DX11Renderer::DrawMesh(MeshHandle handle)
   {
     throw std::exception("buffer not registered");
   }
-   _passMgr->ClassfyPass(buffer->second);
+  _passMgr->ClassfyPass(buffer->second);
 }
 
-void DX11Renderer::EndDraw() 
-{
-  _passMgr->ProcessPass();
-}
+void DX11Renderer::EndDraw() {}
 
 void DX11Renderer::EndFrame()
 {
+  _passMgr->ProcessPass();
 
   _swapChain->GetSwapChain()->Present(0, 0);
 }
@@ -93,6 +91,10 @@ void DX11Renderer::AddRenderPass(MeshHandle handle, RenderPassType type)
   auto buffer = _storage->meshMap.find(handle);
   if (buffer != _storage->meshMap.end())
   {
+    if (buffer->second->flags & type)
+    {
+      return;
+    }
     buffer->second->flags |= type;
   }
 }
@@ -102,6 +104,10 @@ void DX11Renderer::DeleteRenderPass(MeshHandle handle, RenderPassType type)
   auto buffer = _storage->meshMap.find(handle);
   if (buffer != _storage->meshMap.end())
   {
+    if (!(buffer->second->flags & type))
+    {
+      return;
+    }
     buffer->second->flags &= ~type;
   }
 }
@@ -216,7 +222,6 @@ bool DX11Renderer::CreatePipeline()
   _device->GetImmContext()->IASetPrimitiveTopology(
       D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-  //_device->GetImmContext()->IASetInputLayout()
   return true;
 }
 
