@@ -1,13 +1,19 @@
 #pragma once
+#include "Core/Common.h"
 #include "../Common.h"
 #include "../Device.h"
 #include "../Types.h"
-#include "Core/Common.h"
-
+#include "../Resources/PipeLineState.h"
+#include "../Resources/Buffer.h"
 class RenderPassManager
 {
 private:
-  //renderer에서 생성한 deive 참조.
+  std::vector<MeshBuffer*> _transparentMeshes;
+  std::vector<MeshBuffer*> _shadowMesh;
+  std::vector<MeshBuffer*> _opaqueMesh;
+
+private:
+  // renderer에서 생성한 deive 참조.
   Device* _device = nullptr;
 
 public:
@@ -15,42 +21,27 @@ public:
   ~RenderPassManager() {}
 
 public:
-
-  // 활성화된 렌더 패스 처리
-  void ProcessRenderPass()
+  void ClassfyPass(MeshBuffer* buff)
   {
-    /*if (IsRenderPassActive(RenderPassType::Opaque))
+    if (buff->flags & RenderPassType::Opaque)
     {
-      SetOpaque();
+      _opaqueMesh.push_back(buff);
     }
-    if (IsRenderPassActive(RenderPassType::Transparent))
+    if (buff->flags & RenderPassType::Transparent)
     {
-      SetTransparent();
+      _transparentMeshes.push_back(buff);
     }
-    if (IsRenderPassActive(RenderPassType::Light))
+
+    if (buff->flags & RenderPassType::Shadow)
     {
-      SetLight();
+      _shadowMesh.push_back(buff);
     }
-    if (IsRenderPassActive(RenderPassType::Shadow))
+    if (buff->flags & RenderPassType::Light)
     {
-      SetShadow();
-    }*/
+    }
   }
-
-private:
-  void SetOpaque()
+  void ProcessPass() 
   {
-  }
-
-  void SetTransparent()
-  {
-  }
-
-  void SetLight()
-  {
-  }
-
-  void SetShadow()
-  {
+    
   }
 };
