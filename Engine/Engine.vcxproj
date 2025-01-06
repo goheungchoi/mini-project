@@ -231,12 +231,13 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\Objects\DeviceContext.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Objects\Swapchain.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ComputeEffect.h" />
-		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\Pipeline.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\RenderPass.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\Shader.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShaderModule.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\ResourceStorage.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Buffer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Image.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\PipeLineState.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Sampler.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\SwapChain.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Types.h" />

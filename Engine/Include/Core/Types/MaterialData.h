@@ -20,7 +20,7 @@ enum class AlphaMode
 };
 
 struct MaterialData {
-  MaterialPassType passType;
+  // MaterialPassType passType;
   std::string name;
 
 	Color albedoFactor;

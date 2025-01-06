@@ -33,6 +33,9 @@
     <Filter Include="Model Exporter">
       <UniqueIdentifier>{784f27a9-c4f8-4190-afef-de26b98da70b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{2b5b353c-d0a6-44c6-a466-9f41ce6e84e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AssetManager.qrc">
@@ -107,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="ModelExport.h">
       <Filter>Model Exporter</Filter>
+    </ClInclude>
+    <ClInclude Include="model_generated.h">
+      <Filter>Generated</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

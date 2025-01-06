@@ -2,6 +2,8 @@
 
 #include "TextureImportDialog.h"
 
+#include "ModelExport.h"
+
 #include <QMessageBox.h>
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -126,9 +128,26 @@ void AssetManager::onImportButtonClicked() {
       TextureImportDialog textureDialog(filePath, this);
       textureDialog.exec();
     }
-    else if (extension == "obj" || extension == "fbx" || extension == "gltf")
+    else if (extension == "obj" || extension == "fbx" || extension == "gltf" ||
+             extension == "glm" || extension == "gltf2")
     {
-    
+      ModelFileFormat fileformat;
+      if (extension == "obj")
+      {
+        fileformat = ModelFileFormat::kOBJ;
+      }
+      else if (extension == "gltf" || extension == "glm")
+      {
+        fileformat = ModelFileFormat::kGLTF;
+      }
+      else
+      {
+        fileformat = ModelFileFormat::kFBX;
+			}
+
+      ModelExporter exporter{assetDir.filesystemPath(),
+                             resourceDir.filesystemPath()};
+      exporter.ExportModel(filePath.toStdString().c_str(), fileformat);
 		}
     else
     {

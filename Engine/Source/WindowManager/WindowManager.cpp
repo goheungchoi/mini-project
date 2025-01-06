@@ -20,13 +20,6 @@ WindowManager::WindowManager()
 
 WindowManager::~WindowManager()
 {
-    if (!_winApps.empty())
-    {
-      for (auto& winapp : _winApps)
-      {
-        delete winapp;
-      }
-    }
 }
 
 HWND WindowManager::CreateWinApp(int width, int height,
@@ -42,7 +35,27 @@ HWND WindowManager::CreateWinApp(int width, int height,
 
 bool WindowManager::DeleteWinApp()
 {
-  return false;
+  if (!_winApps.empty())
+  {
+    for (auto& winapp : _winApps)
+    {
+      delete winapp;
+      winapp = nullptr;
+    }
+  }
+
+  return true;
+}
+
+bool WindowManager::DestroyWindowManager()
+{
+  if (m_pInstance)
+  {
+    delete m_pInstance;
+    m_pInstance = nullptr;
+  }
+
+  return true;
 }
 
 //LRESULT WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam,

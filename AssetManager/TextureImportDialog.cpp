@@ -364,7 +364,7 @@ bool TextureImportDialog::generateResourceFile()
   }
 	
 
-  return textureExport(_texturePath.toStdString(), exportPath.string(), data, options);
+  return exportTextureFromFile(_texturePath.toStdString(), exportPath.string(), data, options);
 }
 
 

@@ -1,0 +1,91 @@
+namespace GameResource;
+
+table TexCoord {
+  u: float;
+  v: float;
+}
+
+table Vec3 {
+  x: float;
+  y: float;
+  z: float;
+}
+
+table Vec4 {
+  x: float;
+  y: float;
+  z: float;
+  w: float;
+}
+
+enum AlphaMode : short {
+  kOpaque,
+  kMask,
+  kBlend
+}
+
+// Material definition
+table Material {
+  name: string;
+    
+  albedoFactor: Vec4;
+  albedoTexture: string;  // Path to the albedo texture
+
+  metallicFactor: float;
+  roughnessFactor: float;
+  metallicRoughnessTexture: string;
+
+  normalTexture: string;
+
+  occlusionTexture: string;
+
+  emissiveFactor: float;
+  emissiveTexture: string;
+
+  alphaMode: AlphaMode;
+  alphaCutoff: float;
+  doubleSided: bool;
+}
+
+table Vertex {
+  position: Vec4;
+  normal: Vec3;
+  tangent: Vec3;
+  bitangent: Vec3;
+  texcoord: TexCoord;
+  color: Vec4;
+}
+
+// Mesh definition
+table Mesh {
+  name: string;
+
+  vertices: [Vertex];    // Flat array of vertex positions
+  indices: [uint];    // Flat array of indices
+  
+  material: string;   // Path to the material
+}
+
+table GeometryNode {
+  name: string;
+
+  level: uint;
+  parent: uint;
+  firstChild: uint;
+  nextSibling: uint;
+
+  meshes: [string];   // Path to the meshes
+}
+
+// Model definition
+table GeometryModel {
+  name: string;
+
+  nodes: [GeometryNode];  // Geometry hierarchy
+  meshes: [string];       // Paths to meshes
+  materials: [string];    // Paths to materials
+  textures: [string];     // Paths to textures
+}
+
+// Define the root type
+root_type GeometryModel;

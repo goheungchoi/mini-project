@@ -36,3 +36,13 @@ inline void HR_T(HRESULT hr)
     throw com_exception(hr);
   }
 }
+
+template<typename T>
+void SAFE_RELEASE(T& p)
+{
+  if (p)
+  {
+    delete p;
+    p = nullptr;
+  }
+}

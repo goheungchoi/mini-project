@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include "Core/Time/TimeSystem.h"
+#include "../../Engine/Source/WindowManager/WindowManager.h"
 
 void GameEngine::Initialize()
 {
@@ -22,6 +23,10 @@ void GameEngine::Shutdown()
 {
   // NOTE: 엔진 종료 작업
   // e.g., 메모리 삭제, 싱글톤 셧다운 등...
+
+  // 윈도우 파괴
+  WindowManager::GetInstance()->DeleteWinApp();
+  WindowManager::GetInstance()->DestroyWindowManager();
 }
 
 void GameEngine::Run()

@@ -263,38 +263,28 @@ public:
   void endImage() override {}
 };
 
-bool textureExport(const std::string& texturePath, const std::string& exportPath,
-              const ImageData& data, const TextureExportOptions& options)
+bool exportTextureFromMemory(const std::vector<char>& input,
+                             const std::string& exportPath,
+                             const ImageData& data,
+                             const TextureExportOptions& options)
 {
-  if (!fs::exists(fs::path(texturePath)) ||
-      fs::is_directory(fs::path(texturePath)))
-  {
-    return false;
-  }
-
-  auto input = read_file(fs::path(texturePath));
-	if (input.empty())
-  {
-    return false;
-	}
-
   const bool isInputDDS =
       (input.size() >= 4 && input[0] == 'D' && input[1] == 'D' &&
        input[2] == 'S' && input[3] == ' ');
 
-	// DDS
-	if (isInputDDS)
+  // DDS
+  if (isInputDDS)
   {
     const bool alpha = (data.alphaMode != nvtt::AlphaMode_None);
     const bool normal = data.isNormalMap;
-		const nvtt::Format nvttFormat = tonv(options.format);
+    const nvtt::Format nvttFormat = tonv(options.format);
     const bool bc1n = (options.format == ImageFormat::BC1) && normal;
 
     bool dds10{true};
 
     // Conpression option
     nvtt::CompressionOptions compressionOptions;
-    compressionOptions.setFormat(nvttFormat );
+    compressionOptions.setFormat(nvttFormat);
 
     if (nvttFormat == nvtt::Format_BC2)
     {
@@ -334,8 +324,7 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
     }
 
     if (alpha && options.enableAlphaDithering &&
-        nvttFormat != nvtt::Format_BC2 &&
-        nvttFormat != nvtt::Format_BC1a)
+        nvttFormat != nvtt::Format_BC2 && nvttFormat != nvtt::Format_BC1a)
     {
       unsigned char bits = 8;
       compressionOptions.setPixelFormat(8, 8, 8, bits);
@@ -346,14 +335,13 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
 
     compressionOptions.setQuality(options.quality);
 
-		if (bc1n)
+    if (bc1n)
     {
       compressionOptions.setColorWeights(1.f, 1.f, 0);
     }
 
     // Automatically use dds10 if compressing to BC6 or BC7
-    if (nvttFormat == nvtt::Format_BC6U ||
-        nvttFormat == nvtt::Format_BC6S ||
+    if (nvttFormat == nvtt::Format_BC6U || nvttFormat == nvtt::Format_BC6S ||
         nvttFormat == nvtt::Format_BC7)
     {
       dds10 = true;
@@ -364,10 +352,10 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
     nvtt::Surface image;
     nvtt::SurfaceSet images;
 
-		bool multiInputImage{false};
+    bool multiInputImage{false};
     nvtt::TextureType textureType{nvtt::TextureType_2D};
 
-		if (options.maxMipmapCount > 1)
+    if (options.maxMipmapCount > 1)
     {
       if (images.loadDDSFromMemory(input.data(), input.size()))
       {
@@ -375,19 +363,19 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
         image = images.GetSurface(0, 0);
         multiInputImage =
             (images.GetMipmapCount() > 1 || images.GetFaceCount() > 1);
-			}
-		}
+      }
+    }
 
-		if (image.isNull())
+    if (image.isNull())
     {
       if (!image.loadFromMemory(input.data(), input.size(), nullptr))
       {
         return false;
       }
       textureType = image.type();
-		}
+    }
 
-		nvtt::AlphaMode alphaMode = data.alphaMode;
+    nvtt::AlphaMode alphaMode = data.alphaMode;
     image.setNormalMap(normal);
 
     if (nvttFormat == nvtt::Format_BC6U || nvttFormat == nvtt::Format_BC6S)
@@ -435,7 +423,7 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
 
     //// compress procedure
 
-		// We split apart batches before they get too large.
+    // We split apart batches before they get too large.
     // `batchSizeLimit` limits the total input file size in multi-file
     // batches. Batch compression is faster than compressing each file
     // one-by-one, because the GPU can compress all the files in parallel.
@@ -457,8 +445,8 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
     std::vector<std::unique_ptr<nvtt::Surface>> SurfaceList;
 
     if (!context.outputHeader(textureType, mip0Width, mip0Height, mip0Depth,
-                              mipmapCount, normal,
-                              compressionOptions, *outputOptions))
+                              mipmapCount, normal, compressionOptions,
+                              *outputOptions))
     {
       return false;
     }
@@ -474,7 +462,8 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
         images.GetSurface(f, 0, image);
 
       // To linear space.
-      if (!image.isNormalMap() && (mipmapCount > 1) && options.enableGammaCorrect)
+      if (!image.isNormalMap() && (mipmapCount > 1) &&
+          options.enableGammaCorrect)
       {
         image.toLinearFromSrgbUnclamped();
       }
@@ -550,51 +539,52 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
       }
     }
 
-		const bool compressedOK = context.compress(batchList, compressionOptions);
+    const bool compressedOK = context.compress(batchList, compressionOptions);
     if (!compressedOK)
     {
       return false;
     }
 
-		batchList.Clear();
+    batchList.Clear();
     SurfaceList.clear();
 
-		return true;
-	}
+    return true;
+  }
   else
   {
-		// Fetch data from the memory
+    // Fetch data from the memory
     int width, height, channels, ok;
     // Check if the file is a valid texture
-    ok = stbi_info_from_memory((uint8_t*)input.data(), input.size(), &width, &height, &channels);
+    ok = stbi_info_from_memory((uint8_t*)input.data(), input.size(), &width,
+                               &height, &channels);
     if (!ok)
     {
       return false;
     }
 
-		const int requiredChannels = GetNumChannels(options.format);
+    const int requiredChannels = GetNumChannels(options.format);
 
-		/*const bool hasAlpha = (channels == 4);
-		const bool isHdr =
+    /*const bool hasAlpha = (channels == 4);
+    const bool isHdr =
         stbi_is_hdr_from_memory((uint8_t*)input.data(), input.size());
     const bool is16bits =
         stbi_is_16_bit_from_memory((uint8_t*)input.data(), input.size());*/
 
-		nvtt::InputFormat inputFormat;
+    nvtt::InputFormat inputFormat;
 
-		// Uncompress -> Uncompress
-		if (IsUncompressedFormat(options.format))
+    // Uncompress -> Uncompress
+    if (IsUncompressedFormat(options.format))
     {
-			// cubemap conversion
+      // cubemap conversion
       if (options.convertToCubeMap)
       {
         nvtt::Surface surface;
         surface.loadFromMemory((void*)input.data(), input.size());
 
-				nvtt::CubeSurface cube;
+        nvtt::CubeSurface cube;
         cube.fold(surface, options.cubeLayout);
 
-				const bool alpha = (data.alphaMode != nvtt::AlphaMode_None);
+        const bool alpha = (data.alphaMode != nvtt::AlphaMode_None);
         const bool normal = data.isNormalMap;
 
         bool dds10{true};
@@ -604,9 +594,9 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
         bool multiInputImage{true};
         nvtt::TextureType textureType{nvtt::TextureType_2D};
 
-				image = cube.face(0);
+        image = cube.face(0);
 
-				textureType = image.type();
+        textureType = image.type();
 
         nvtt::AlphaMode alphaMode = data.alphaMode;
         image.setNormalMap(normal);
@@ -639,23 +629,23 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
         // mipmapCount can be 0 here if mip 0 was smaller than minMipSize.
         mipmapCount = (std::max)(1, mipmapCount);
 
-				// TODO: Save the cubemap
+        // TODO: Save the cubemap
         const bool isHdr = IsHDR(options.format);
         const bool is16Bits = Is16Bits(options.format);
 
-				const size_t elemSize = !isHdr ? 1 : is16Bits ? 2 : 4;
+        const size_t elemSize = !isHdr ? 1 : is16Bits ? 2 : 4;
 
         nv_dds::Image dds;
         dds.allocate(mipmapCount, 1, faceCount);
         size_t linearSize = mip0Width * mip0Height * requiredChannels;
 
-				size_t originalSize = mip0Width * mip0Height * 4;
-        
-				for (int f = 0; f < faceCount; ++f)
+        size_t originalSize = mip0Width * mip0Height * 4;
+
+        for (int f = 0; f < faceCount; ++f)
         {
           nvtt::Surface& tmp = cube.face(f);
 
-					if (!isHdr)
+          if (!isHdr)
           {
             std::vector<uint8_t> pixels(linearSize);
             for (size_t y = 0; y < mip0Height; ++y)
@@ -710,7 +700,7 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
               // TODO: Convert the original pixels into desired pixels
               dds.subresource(0, 0, f).create(linearSize * elemSize,
                                               pixels.data());
-						}
+            }
             else
             {
               std::vector<float> pixels(linearSize);
@@ -735,10 +725,10 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
               // TODO: Convert the original pixels into desired pixels
               dds.subresource(0, 0, f).create(linearSize * elemSize,
                                               pixels.data());
-						}
-					}
-				}
-				
+            }
+          }
+        }
+
         // Output images.
         for (int f = 0; f < faceCount; f++)
         {
@@ -757,17 +747,15 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
               {
                 surface.toLinearFromSrgb();
               }
-						}
+            }
             if (alphaMode)
             {
               image.premultiplyAlpha();
-						}
-
+            }
 
             if (options.mipmapFilter == nvtt::MipmapFilter_Kaiser)
             {
-              float params[2] = {1.0f /*kaiserStretch*/,
-                                  4.0f /*kaiserAlpha*/};
+              float params[2] = {1.0f /*kaiserStretch*/, 4.0f /*kaiserAlpha*/};
               image.buildNextMipmap(nvtt::MipmapFilter_Kaiser,
                                     3 /*kaiserWidth*/, params, 1);
             }
@@ -776,20 +764,20 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
               image.buildNextMipmap(options.mipmapFilter, 1);
             }
 
-						if (alphaMode)
+            if (alphaMode)
             {
-							image.demultiplyAlpha();
+              image.demultiplyAlpha();
             }
             if (data.colorSpace == ColorSpace::kSRGB)
             {
               image.toSrgb();
-						}
+            }
 
-						nvtt::Surface& tmp = image;
+            nvtt::Surface& tmp = image;
             size_t mipHeight = tmp.height();
             size_t mipWidth = tmp.width();
 
-						size_t linearSize = mipWidth * mipHeight * requiredChannels;
+            size_t linearSize = mipWidth * mipHeight * requiredChannels;
 
             size_t originalSize = mipWidth * mipHeight * 4;
 
@@ -871,13 +859,14 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
                   }
                 }
                 // TODO: Convert the original pixels into desired pixels
-                dds.subresource(m, 0, f).create(linearSize * elemSize, pixels.data());
+                dds.subresource(m, 0, f).create(linearSize * elemSize,
+                                                pixels.data());
               }
             }
           }
         }
 
-				dds.mip0Width = mip0Width;
+        dds.mip0Width = mip0Width;
         dds.mip0Height = mip0Height;
         dds.mip0Depth = 1;
         dds.cubemapFaceFlags = nv_dds::DDSCAPS2_CUBEMAP_ALL_FACES;
@@ -888,7 +877,7 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
                             : nv_dds::DDS_ALPHA_MODE_STRAIGHT;
         dds.isNormal = data.isNormalMap;
 
-				dds.writeToFile(exportPath.c_str(), {.useDx10HeaderIfPossible = true});
+        dds.writeToFile(exportPath.c_str(), {.useDx10HeaderIfPossible = true});
 
         return true;
       }
@@ -896,30 +885,31 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
       {
         void* image;
 
-				size_t dataByteSize{0};
-				if (IsHDR(options.format))
-				{
-					if (Is16Bits(options.format))
-					{
-						image = stbi_load_16_from_memory((uint8_t*)input.data(), input.size(),
-																						 &width, &height, &channels, requiredChannels);
-						dataByteSize = width * height * requiredChannels * 2;
-					}
-					else
-					{
-						image = stbi_loadf_from_memory((uint8_t*)input.data(), input.size(),
-																					 &width, &height, &channels,
-																					 requiredChannels);
-						dataByteSize = width * height * requiredChannels * 4;
-					}
-				}
-				else
-				{
-					image =
-							stbi_load_from_memory((uint8_t*)input.data(), input.size(), &width,
-																		&height, &channels, requiredChannels);
-					dataByteSize = width * height * requiredChannels;
-				}
+        size_t dataByteSize{0};
+        if (IsHDR(options.format))
+        {
+          if (Is16Bits(options.format))
+          {
+            image = stbi_load_16_from_memory((uint8_t*)input.data(),
+                                             input.size(), &width, &height,
+                                             &channels, requiredChannels);
+            dataByteSize = width * height * requiredChannels * 2;
+          }
+          else
+          {
+            image = stbi_loadf_from_memory((uint8_t*)input.data(), input.size(),
+                                           &width, &height, &channels,
+                                           requiredChannels);
+            dataByteSize = width * height * requiredChannels * 4;
+          }
+        }
+        else
+        {
+          image = stbi_load_from_memory((uint8_t*)input.data(), input.size(),
+                                        &width, &height, &channels,
+                                        requiredChannels);
+          dataByteSize = width * height * requiredChannels;
+        }
         nv_dds::Image dds;
         dds.allocate();
         dds.subresource().create(dataByteSize, image);
@@ -935,11 +925,11 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
 
         dds.writeToFile(exportPath.c_str(), {.useDx10HeaderIfPossible = true});
 
-				stbi_image_free(image);
+        stbi_image_free(image);
         return true;
-			}
-		}
-		// Uncompress -> Compress
+      }
+    }
+    // Uncompress -> Compress
     else
     {
       if (options.convertToCubeMap)
@@ -1186,8 +1176,7 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
         SurfaceList.clear();
 
         return true;
-			
-			}
+      }
       else
       {
         const bool alpha = (data.alphaMode != nvtt::AlphaMode_None);
@@ -1421,9 +1410,28 @@ bool textureExport(const std::string& texturePath, const std::string& exportPath
         SurfaceList.clear();
 
         return true;
-			}
+      }
     }
-	}
+  }
 
   return false;
+}
+
+bool exportTextureFromFile(const std::string& texturePath,
+                   const std::string& exportPath,
+              const ImageData& data, const TextureExportOptions& options)
+{
+  if (!fs::exists(fs::path(texturePath)) ||
+      fs::is_directory(fs::path(texturePath)))
+  {
+    return false;
+  }
+
+  auto input = read_file(fs::path(texturePath));
+	if (input.empty())
+  {
+    return false;
+	}
+
+  return exportTextureFromMemory(input, exportPath, data, options);
 }

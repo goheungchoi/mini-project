@@ -25,7 +25,7 @@ enum class ShaderType : uint8_t
   kMesh,
   kTask,
 
-  kInvalid = std::numeric_limits<uint8_t>::max()
+  kInvalid = (std::numeric_limits<uint8_t>::max)()
 };
 
 enum class ShaderDefineValueType : uint8_t

@@ -32,8 +32,8 @@ DXGI_SWAP_CHAIN_DESC CreateSwapChainDesc(
   return desc;
 }
 
-std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayouDesc(
-    std::vector<uint8_t>& vsData, size_t& vsSize)
+std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayoutDesc(
+    const std::vector<uint8_t>& vsData, const size_t& vsSize)
 {
   Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pReflector;
   D3DReflect(vsData.data(), vsSize, IID_ID3D11ShaderReflection,
@@ -97,22 +97,77 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayouDesc(
 }
 
 D3D11_TEXTURE2D_DESC CreateTexture2DDesc(UINT width, UINT height,
-                                         DXGI_FORMAT format, UINT levels)
+                                         DXGI_FORMAT format, UINT miplevels,
+                                         UINT bindFlag)
 {
   D3D11_TEXTURE2D_DESC desc = {};
   desc.Width = width;
   desc.Height = height;
-  desc.MipLevels = levels;
+  desc.MipLevels = miplevels;
   desc.ArraySize = 1;
   desc.Format = format;
   desc.SampleDesc.Count = 1;
+  desc.SampleDesc.Quality = 0;
   desc.Usage = D3D11_USAGE_DEFAULT;
-  desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
+  desc.BindFlags = bindFlag;
+  desc.CPUAccessFlags = 0;
+  desc.MiscFlags = 0;
 
-  if (levels == 0)
+  if (miplevels == 0)
   {
-    desc.BindFlags |= D3D11_BIND_RENDER_TARGET;
     desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
   }
   return desc;
+}
+D3D11_RASTERIZER_DESC CreateRaterizerDesc(
+    D3D11_FILL_MODE fillMode, // 채우기 모드
+    D3D11_CULL_MODE cullMode, // 컬링 모드
+    BOOL isCounterclockwise, INT DepthBias, FLOAT DepthBiasClamp,
+    FLOAT SlopeScaledDepthBias, BOOL depthClipEnable, BOOL scissorEnable,
+    BOOL multisampleEnable, BOOL antialiasedLineEnable)
+
+{
+  D3D11_RASTERIZER_DESC desc;
+  ZeroMemory(&desc, sizeof(D3D11_RASTERIZER_DESC));
+  desc.FillMode = fillMode;
+  desc.CullMode = cullMode;
+  desc.FrontCounterClockwise = isCounterclockwise;
+  desc.DepthBias = DepthBias;
+  desc.DepthBiasClamp = DepthBiasClamp;
+  desc.SlopeScaledDepthBias = SlopeScaledDepthBias;
+  desc.DepthClipEnable = depthClipEnable;
+  desc.ScissorEnable = scissorEnable;
+  desc.MultisampleEnable = multisampleEnable;
+  desc.AntialiasedLineEnable = antialiasedLineEnable;
+  return desc;
+}
+
+D3D11_DEPTH_STENCIL_DESC CreateDepthStencilDesc(BOOL depthEnable,
+                                                D3D11_DEPTH_WRITE_MASK mask,
+                                                D3D11_COMPARISON_FUNC func,
+                                                BOOL stencilEnable)
+{
+  D3D11_DEPTH_STENCIL_DESC desc;
+  ZeroMemory(&desc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+  desc.DepthEnable = depthEnable;
+  desc.DepthWriteMask = mask;
+  desc.DepthFunc = func; // 가까운물체만 렌더
+  desc.StencilEnable = stencilEnable;
+  return desc;
+}
+
+D3D11_RENDER_TARGET_BLEND_DESC CreateRTBlendDesc(BOOL blendEnable)
+{
+  D3D11_RENDER_TARGET_BLEND_DESC rtBlendDesc = {};
+  rtBlendDesc.BlendEnable = blendEnable;        // 블렌딩 활성화
+  rtBlendDesc.BlendOp = D3D11_BLEND_OP_ADD; // 블렌드 연산: 더하기
+  rtBlendDesc.SrcBlend = D3D11_BLEND_SRC_ALPHA; // 소스 블렌드: 소스의 알파
+  rtBlendDesc.DestBlend =
+      D3D11_BLEND_INV_SRC_ALPHA; // 대상 블렌드: 소스 알파의 반전
+  rtBlendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD; // 알파 블렌드 연산: 더하기
+  rtBlendDesc.SrcBlendAlpha = D3D11_BLEND_ONE;   // 소스 알파 블렌드: 1
+  rtBlendDesc.DestBlendAlpha = D3D11_BLEND_ZERO; // 대상 알파 블렌드: 0
+  rtBlendDesc.RenderTargetWriteMask =
+      D3D11_COLOR_WRITE_ENABLE_ALL; // 모든 색상 채널에 쓰기 가능
+  return rtBlendDesc;
 }

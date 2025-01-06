@@ -2,7 +2,7 @@
 #include "../Common.h"
 using namespace Microsoft::WRL;
 
-struct Texture
+struct TextureModel
 {
   ComPtr<ID3D11Texture2D> texture;
   ComPtr<ID3D11ShaderResourceView> srv;
@@ -13,8 +13,9 @@ struct Texture
 
 struct Material
 {
-  Texture albedoTexture;
-  Texture normalTexture;
-  Texture emissiveTexture;
-  Texture MetallicRoughnessTexture;
+  TextureModel albedoTexture;
+  TextureModel normalTexture;
+  TextureModel emissiveTexture;
+  TextureModel MetallicRoughnessTexture;
 };
+
