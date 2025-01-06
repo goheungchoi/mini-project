@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "directxtk/SimpleMath.h"
-#include "DX11/Internal/Types.h"
 #include "Core/Handle/ResourceHandle.h"
+#include "DX11/Internal/Types.h"
+#include "directxtk/SimpleMath.h"
 using namespace DirectX::SimpleMath;
 class IRenderer
 {
@@ -12,21 +12,36 @@ public:
   virtual bool Cleanup() = 0;
 
   virtual void ResizeScreen(unsigned int width, unsigned int height) = 0;
-
+  /*
+   * call per frame
+   */
   virtual void BeginFrame() = 0;
-
+  /*
+   * call per mesh
+   */
   virtual void BeginDraw(MeshHandle handle, Matrix world) = 0;
-
+  /*
+   * call per mesh
+   */
+  virtual void DrawMesh(MeshHandle handle) = 0;
+  /*
+   * call per mesh
+   */
   virtual void EndDraw() = 0;
-
+  /*
+   * call per frame
+   */
   virtual void EndFrame() = 0;
 
   /*
-  * you can add more than one
-  * Param1 : own meshHandle 
-  * Parma2 : RenderPassType::...
-  */
+   * you can add more than one
+   * call before begin draw
+   * don't call every loop
+   * Param1 : own meshHandle
+   * Parma2 : RenderPassType::...
+   */
   virtual void AddRenderPass(MeshHandle handle, RenderPassType type) = 0;
+  virtual void DeleteRenderPass(MeshHandle handle, RenderPassType type) = 0;
 
   virtual void BindPipeline() = 0;
 
@@ -47,5 +62,4 @@ public:
 
   virtual bool CreateComputeEffect() = 0;
   virtual bool DestoryComputeEffect() = 0;
-
 };

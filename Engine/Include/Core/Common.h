@@ -22,7 +22,7 @@
 #include <algorithm>
 #include <concepts>
 #include <any>
-
+#include <ranges>
 #include <filesystem>
 namespace fs = std::filesystem;
 

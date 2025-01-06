@@ -5,7 +5,7 @@
 #include "directxtk/SimpleMath.h"
 
 using namespace Microsoft::WRL;
-
+using namespace DirectX::SimpleMath;
 struct MeshBuffer
 {
   ComPtr<ID3D11Buffer> vertexBuffer;
@@ -13,6 +13,7 @@ struct MeshBuffer
   UINT stride;
   UINT offset;
   UINT nIndices;
+  Matrix world;
   RenderPassFlags flags;
 };
 

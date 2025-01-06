@@ -1,11 +1,10 @@
 #include "DX11Renderer.h"
 #include "Internal/DebugLayer.h"
 #include "Internal/Device.h"
+#include "Internal/RenderFrameworks/RenderPass.h"
 #include "Internal/ResourceStorage.h"
-#include "Internal/Resources/Buffer.h"
 #include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
-#include "Internal/RenderFrameworks/RenderPass.h"
 #include "ResourceManager/ResourceManager.h"
 
 DX11Renderer::~DX11Renderer() {}
@@ -60,26 +59,54 @@ void DX11Renderer::BeginFrame()
 
 void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
 {
-  
+  auto buffer = _storage->meshMap.find(handle);
+  if (buffer == _storage->meshMap.end())
+  {
+    throw std::exception("buffer not registered");
+  }
+  buffer->second->world = world;
 }
 
-void DX11Renderer::EndDraw() {}
+void DX11Renderer::DrawMesh(MeshHandle handle)
+{
+  auto buffer = _storage->meshMap.find(handle);
+  if (buffer == _storage->meshMap.end())
+  {
+    throw std::exception("buffer not registered");
+  }
+   _passMgr->ClassfyPass(buffer->second);
+}
+
+void DX11Renderer::EndDraw() 
+{
+  _passMgr->ProcessPass();
+}
 
 void DX11Renderer::EndFrame()
 {
+
   _swapChain->GetSwapChain()->Present(0, 0);
 }
 
-void DX11Renderer::AddRenderPass(MeshHandle handle,RenderPassType type)
+void DX11Renderer::AddRenderPass(MeshHandle handle, RenderPassType type)
 {
   auto buffer = _storage->meshMap.find(handle);
-  buffer->second->flags |= type;
+  if (buffer != _storage->meshMap.end())
+  {
+    buffer->second->flags |= type;
+  }
 }
 
-void DX11Renderer::BindPipeline()
+void DX11Renderer::DeleteRenderPass(MeshHandle handle, RenderPassType type)
 {
-  
+  auto buffer = _storage->meshMap.find(handle);
+  if (buffer != _storage->meshMap.end())
+  {
+    buffer->second->flags &= ~type;
+  }
 }
+
+void DX11Renderer::BindPipeline() {}
 
 void DX11Renderer::BindResource() {}
 
