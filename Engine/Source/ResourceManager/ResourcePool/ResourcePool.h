@@ -42,7 +42,7 @@ public:
   {
     if (_handleTable.GetReferenceCount(handle) == 1)
     {
-      UnloadImpl(handle);
+      UnloadImpl(handle, pReserved);
 		}
 
     // Release the handle
@@ -80,3 +80,14 @@ template <>
 Handle ResourcePool<MeshData>::LoadImpl(xUUID uuid, void* pUser);
 template <>
 Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser);
+
+
+// TODO;
+template <>
+void ResourcePool<TextureData>::UnloadImpl(Handle& uuid, void* pUser);
+template <>
+void ResourcePool<ShaderData>::UnloadImpl(Handle& uuid, void* pUser);
+template <>
+void ResourcePool<MeshData>::UnloadImpl(Handle& uuid, void* pUser);
+template <>
+void ResourcePool<ModelData>::UnloadImpl(Handle& uuid, void* pUser);

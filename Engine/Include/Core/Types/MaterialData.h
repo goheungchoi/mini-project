@@ -4,8 +4,6 @@
 
 #include "Core/UUID/UUID.h"
 
-//#include <directxmath/DirectXMath.h>
-
 enum class MaterialPassType {
 	kUnknown,
 	kOpacity,

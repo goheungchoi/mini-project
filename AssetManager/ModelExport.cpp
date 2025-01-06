@@ -2,6 +2,7 @@
 
 #include "UUID.h"
 
+// TODO: Skeletal mesh
 bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat)
 {
   _fullPath = path;
