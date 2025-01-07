@@ -20,6 +20,7 @@ namespace fs = std::filesystem;
 
 enum class ModelFileFormat
 {
+	kUnknown,
 	kFBX,
 	kOBJ,
 	kGLTF
@@ -157,7 +158,8 @@ public:
    * @param fileFormat 
    * @return 
    */
-  bool ExportModel(const char* path, ModelFileFormat fileFormat);
+  bool ExportModel(const char* path, ModelFileFormat fileFormat,
+                   bool preCalculateVertex = false, bool extractBones = false);
 
 private:
   void ProcessScene(const aiScene* scene);

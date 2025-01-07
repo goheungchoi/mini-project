@@ -1,6 +1,7 @@
 #include "AssetManager.h"
 
 #include "TextureImportDialog.h"
+#include "QtModelImportDialog.h"
 
 #include "ModelExport.h"
 
@@ -131,24 +132,8 @@ void AssetManager::onImportButtonClicked() {
     else if (extension == "obj" || extension == "fbx" || extension == "gltf" ||
              extension == "glm" || extension == "glb" || extension == "gltf2")
     {
-      ModelFileFormat fileformat;
-      if (extension == "obj")
-      {
-        fileformat = ModelFileFormat::kOBJ;
-      }
-      else if (extension == "gltf" || extension == "gltf2" || extension == "glm" ||
-               extension == "glb")
-      {
-        fileformat = ModelFileFormat::kGLTF;
-      }
-      else if (extension == "fbx")
-      {
-        fileformat = ModelFileFormat::kFBX;
-			}
-
-      ModelExporter exporter{assetDir.filesystemPath(),
-                             resourceDir.filesystemPath()};
-      exporter.ExportModel(filePath.toStdString().c_str(), fileformat);
+      QtModelImportDialog modelDialog(assetDir, resourceDir, filePath, this);
+      modelDialog.exec();
 		}
     else
     {

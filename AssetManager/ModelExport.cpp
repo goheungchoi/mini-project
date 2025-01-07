@@ -2,9 +2,10 @@
 
 #include "UUID.h"
 
-// TODO: AABB calculation
 // TODO: Skeletal mesh
-bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat)
+bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat,
+                                bool preCalculateVertex,
+                                bool extractBones)
 {
   _fullPath = path;
   _fullDirectory = _fullPath.parent_path();
