@@ -40,6 +40,14 @@ public:
     return Handle::kInvalidHandle;
   }
 
+	void DiscardDetailedData(Handle& handle, void* pReserved) {
+    DiscardDetailedDataImpl(handle, pReserved);
+	}
+
+	void RestoreDetailedData(Handle& handle, void* pReserved) {
+    RestoreDetailedDataImpl(handle, pReserved);
+	}
+
   void Unload(Handle& handle, void* pReserved)
   {
     if (_handleTable.GetReferenceCount(handle) == 1)
@@ -71,6 +79,10 @@ private:
     return Handle::kInvalidHandle;
   }
 
+	void DiscardDetailedDataImpl(Handle& handle, void* pReserved) {}
+
+	void RestoreDetailedDataImpl(Handle& handle, void* pReserved) {}
+
 	void UnloadImpl(Handle& handle, void* pReserved) { return; }
 };
 
@@ -95,3 +107,5 @@ Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser);
 //void ResourcePool<MeshData>::UnloadImpl(Handle& uuid, void* pUser);
 //template <>
 //void ResourcePool<ModelData>::UnloadImpl(Handle& uuid, void* pUser);
+
+// TODO: Restore and discard detailed data.
