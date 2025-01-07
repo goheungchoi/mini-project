@@ -107,13 +107,16 @@ static const ModelData& __AccessModelData__(ModelHandle handle)
 static void __UnloadModel__(ModelHandle handle) {}
 
 static ResourceType __GetResourceType__(const Handle& handle) {
+  // TODO:
 	return ResourceType::kUnknown;
 }
 static bool __IsValidHandle__(const Handle& handle) {
+	// TODO:
   return false;
 }
 
 static void __UnloadAll__() {
+  // TODO:
 }
 
 
