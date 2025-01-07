@@ -215,11 +215,11 @@
 		<ClInclude Include="Include\GameFramework\Components\TerrainComponent.h" />
 		<ClInclude Include="Include\GameFramework\GameObject\GameObject.h" />
 		<ClInclude Include="Include\GameFramework\World\World.h" />
-		<ClCompile Include="Source\Engine\Engine.cpp" />
-		<ClCompile Include="Source\Engine\GameEngine.cpp" />
-		<ClInclude Include="Source\Engine\GameEngine.h" />
 		<ClCompile Include="Source\FactoryManager\FactoryManager.cpp" />
 		<ClInclude Include="Source\FactoryManager\FactoryManager.h" />
+		<ClCompile Include="Source\GameEngine\Engine.cpp" />
+		<ClCompile Include="Source\GameEngine\GameEngine.cpp" />
+		<ClInclude Include="Source\GameEngine\GameEngine.h" />
 		<ClCompile Include="Source\GameFramework\Components\MaterialComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\MeshComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\SceneComponent.cpp" />
