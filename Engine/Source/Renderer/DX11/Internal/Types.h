@@ -9,5 +9,4 @@ enum RenderPassType : uint8_t
   Light = 1 << 2,       // 0000 0100
   Shadow = 1 << 3,      // 0000 1000
 };
-
 using RenderPassFlags = uint8_t;

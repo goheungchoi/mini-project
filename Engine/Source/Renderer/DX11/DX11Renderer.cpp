@@ -239,3 +239,8 @@ bool DX11Renderer::DestoryComputeEffect()
 {
   return false;
 }
+
+void DX11Renderer::CreateEngineShader()
+{
+  _passMgr->CreateMainShader();
+}

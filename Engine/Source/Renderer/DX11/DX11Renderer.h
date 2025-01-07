@@ -42,6 +42,8 @@ public:
 
 public:
 private:
+  void CreateEngineShader();
+
 private:
   Device* _device = nullptr;
   SwapChain* _swapChain = nullptr;

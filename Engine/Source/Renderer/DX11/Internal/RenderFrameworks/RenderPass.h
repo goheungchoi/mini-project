@@ -2,6 +2,7 @@
 #include "../Common.h"
 #include "../Device.h"
 #include "../Objects/Swapchain.h"
+#include "../RenderFrameworks/Shader.h"
 #include "../Resources/ConstantBuffer.h"
 #include "../Resources/PipeLineState.h"
 #include "../Resources/Sampler.h"
@@ -27,11 +28,14 @@ private:
   MeshConstantBuffer* _CB;
   FrameConstantBuffer* _frameCB;
   std::vector<Sampler*> _samplers;
+  std::unordered_map<std::string, VertexShader*> _vShaders;
+  std::unordered_map<std::string, PixelShader*> _pShaders;
 
 private:
   // renderer에서 생성한 deive 참조.
   Device* _device;
   PipeLine* _pso = nullptr;
+  ShaderCompiler* _compiler = nullptr;
   Renderer::Camera _camera;
   Vector4 _mainLightDir;
 
@@ -44,12 +48,15 @@ public:
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     _frameCB = new FrameConstantBuffer(device);
     _CB = new MeshConstantBuffer(device);
+    _compiler=new ShaderCompiler(device);
   }
   ~RenderPassManager()
   {
     std::ranges::for_each(_samplers, [](Sampler* sam) { SAFE_RELEASE(sam); });
+    SAFE_RELEASE(_compiler);
     SAFE_RELEASE(_CB);
     SAFE_RELEASE(_frameCB);
+
     SAFE_RELEASE(_pso);
   }
 
@@ -113,7 +120,12 @@ public:
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
   }
-
+  void CreateMainShader()
+  {
+    std::vector<D3D_SHADER_MACRO> macros;
+    macros.push_back({nullptr, nullptr});
+    _vShaders.insert({"NO_SKINNING", _compiler->CompileVertexShader(macros)});
+  }
   void CreateSamplers()
   {
     D3D11_SAMPLER_DESC sampleDesc = {};

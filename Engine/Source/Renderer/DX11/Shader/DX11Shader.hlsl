@@ -1,3 +1,4 @@
+
 SamplerState samLinear : register(s0);
 SamplerState samClamp : register(s1);
 SamplerState samAnisotropy : register(s2);
