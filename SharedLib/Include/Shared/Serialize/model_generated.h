@@ -27,6 +27,9 @@ struct Vec4Builder;
 struct Material;
 struct MaterialBuilder;
 
+struct AABB;
+struct AABBBuilder;
+
 struct Vertex;
 struct VertexBuilder;
 
@@ -461,6 +464,59 @@ inline ::flatbuffers::Offset<Material> CreateMaterialDirect(
       doubleSided);
 }
 
+struct AABB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef AABBBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_MIN = 4,
+    VT_MAX = 6
+  };
+  const GameResource::Vec3 *min() const {
+    return GetPointer<const GameResource::Vec3 *>(VT_MIN);
+  }
+  const GameResource::Vec3 *max() const {
+    return GetPointer<const GameResource::Vec3 *>(VT_MAX);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_MIN) &&
+           verifier.VerifyTable(min()) &&
+           VerifyOffset(verifier, VT_MAX) &&
+           verifier.VerifyTable(max()) &&
+           verifier.EndTable();
+  }
+};
+
+struct AABBBuilder {
+  typedef AABB Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_min(::flatbuffers::Offset<GameResource::Vec3> min) {
+    fbb_.AddOffset(AABB::VT_MIN, min);
+  }
+  void add_max(::flatbuffers::Offset<GameResource::Vec3> max) {
+    fbb_.AddOffset(AABB::VT_MAX, max);
+  }
+  explicit AABBBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<AABB> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<AABB>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<AABB> CreateAABB(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<GameResource::Vec3> min = 0,
+    ::flatbuffers::Offset<GameResource::Vec3> max = 0) {
+  AABBBuilder builder_(_fbb);
+  builder_.add_max(max);
+  builder_.add_min(min);
+  return builder_.Finish();
+}
+
 struct Vertex FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef VertexBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -562,12 +618,16 @@ struct Mesh FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef MeshBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_NAME = 4,
-    VT_VERTICES = 6,
-    VT_INDICES = 8,
-    VT_MATERIAL = 10
+    VT_AABB = 6,
+    VT_VERTICES = 8,
+    VT_INDICES = 10,
+    VT_MATERIAL = 12
   };
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  const GameResource::AABB *aabb() const {
+    return GetPointer<const GameResource::AABB *>(VT_AABB);
   }
   const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Vertex>> *vertices() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Vertex>> *>(VT_VERTICES);
@@ -582,6 +642,8 @@ struct Mesh FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
+           VerifyOffset(verifier, VT_AABB) &&
+           verifier.VerifyTable(aabb()) &&
            VerifyOffset(verifier, VT_VERTICES) &&
            verifier.VerifyVector(vertices()) &&
            verifier.VerifyVectorOfTables(vertices()) &&
@@ -599,6 +661,9 @@ struct MeshBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
     fbb_.AddOffset(Mesh::VT_NAME, name);
+  }
+  void add_aabb(::flatbuffers::Offset<GameResource::AABB> aabb) {
+    fbb_.AddOffset(Mesh::VT_AABB, aabb);
   }
   void add_vertices(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Vertex>>> vertices) {
     fbb_.AddOffset(Mesh::VT_VERTICES, vertices);
@@ -623,6 +688,7 @@ struct MeshBuilder {
 inline ::flatbuffers::Offset<Mesh> CreateMesh(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
+    ::flatbuffers::Offset<GameResource::AABB> aabb = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Vertex>>> vertices = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> indices = 0,
     ::flatbuffers::Offset<::flatbuffers::String> material = 0) {
@@ -630,6 +696,7 @@ inline ::flatbuffers::Offset<Mesh> CreateMesh(
   builder_.add_material(material);
   builder_.add_indices(indices);
   builder_.add_vertices(vertices);
+  builder_.add_aabb(aabb);
   builder_.add_name(name);
   return builder_.Finish();
 }
@@ -637,6 +704,7 @@ inline ::flatbuffers::Offset<Mesh> CreateMesh(
 inline ::flatbuffers::Offset<Mesh> CreateMeshDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *name = nullptr,
+    ::flatbuffers::Offset<GameResource::AABB> aabb = 0,
     const std::vector<::flatbuffers::Offset<GameResource::Vertex>> *vertices = nullptr,
     const std::vector<uint32_t> *indices = nullptr,
     const char *material = nullptr) {
@@ -647,6 +715,7 @@ inline ::flatbuffers::Offset<Mesh> CreateMeshDirect(
   return GameResource::CreateMesh(
       _fbb,
       name__,
+      aabb,
       vertices__,
       indices__,
       material__);

@@ -19,6 +19,14 @@ static ResourcePool<MaterialData>* materialPool;
 } // namespace
 
 static void ProcessMesh(MeshData& mesh, const GameResource::Mesh* geoMesh) {
+	// Get AABB
+  mesh.boundingBox.min = {geoMesh->aabb()->min()->x(),
+                          geoMesh->aabb()->min()->y(),
+                          geoMesh->aabb()->min()->z(), 1.f};
+  mesh.boundingBox.max = {geoMesh->aabb()->max()->x(),
+                          geoMesh->aabb()->max()->y(),
+                          geoMesh->aabb()->max()->z(), 1.f};
+	
 	// Get vertices
   const auto* flatVertices = geoMesh->vertices();
   if (flatVertices)

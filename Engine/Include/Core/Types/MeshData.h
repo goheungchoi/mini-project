@@ -19,6 +19,8 @@ struct Vertex
 using Index = uint32_t;
 
 struct MeshData {
+  MathUtils::AABB boundingBox;
+
   std::vector<Vertex> vertices;
   std::vector<Index> indices;
   uint32_t stride;

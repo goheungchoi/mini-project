@@ -47,6 +47,11 @@ table Material {
   doubleSided: bool;
 }
 
+table AABB {
+  min : Vec3;
+  max : Vec3;
+}
+
 table Vertex {
   position: Vec4;
   normal: Vec3;
@@ -60,6 +65,7 @@ table Vertex {
 table Mesh {
   name: string;
 
+  aabb: AABB;
   vertices: [Vertex];    // Flat array of vertex positions
   indices: [uint];    // Flat array of indices
   

@@ -32,6 +32,11 @@ class ModelExporter
 	// TODO: Skeleton extraction
 
 	// TODO: Mesh AABB
+  struct AABB
+  {
+    float min[3];
+    float max[3];
+	};
 
 	// Type definitions to store the model data
   enum AlphaMode : int16_t
@@ -93,6 +98,7 @@ class ModelExporter
     std::string path;
     std::string name;
 
+		AABB aabb;
 		std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 

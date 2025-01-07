@@ -2,6 +2,7 @@
 
 #include "UUID.h"
 
+// TODO: AABB calculation
 // TODO: Skeletal mesh
 bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat)
 {
@@ -16,7 +17,7 @@ bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat)
 
   uint32_t flags = aiProcess_Triangulate | aiProcess_ConvertToLeftHanded |
                    aiProcess_GenNormals | aiProcess_CalcTangentSpace |
-                   aiProcess_JoinIdenticalVertices;
+                   aiProcess_JoinIdenticalVertices | aiProcess_GenBoundingBoxes;
   if (fileFormat == ModelFileFormat::kFBX)
   {
     importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, 0);
@@ -115,6 +116,11 @@ void ModelExporter::ProcessMesh(GeometryModel& geoModel, GeometryNode& geoNode,
 	// Get name of the mesh
   geoMesh.name = mesh->mName.C_Str();
 
+	// Get the AABB
+  geoMesh.aabb = AABB{
+      .min = {mesh->mAABB.mMin.x, mesh->mAABB.mMin.y, mesh->mAABB.mMin.z},
+      .max = {mesh->mAABB.mMax.x, mesh->mAABB.mMax.y, mesh->mAABB.mMax.z}
+	};
 
 	// Get vertices and indices
   std::vector<Vertex> vertices(mesh->mNumVertices);
@@ -431,6 +437,12 @@ void ModelExporter::ExportModelMesh(Mesh& geoMesh)
 
 	auto name = builder.CreateString(geoMesh.name);
 
+	auto aabb_min = GameResource::CreateVec3(
+      builder, geoMesh.aabb.min[0], geoMesh.aabb.min[1], geoMesh.aabb.min[2]);
+  auto aabb_max = GameResource::CreateVec3(
+      builder, geoMesh.aabb.max[0], geoMesh.aabb.max[1], geoMesh.aabb.max[2]);
+  auto aabb = GameResource::CreateAABB(builder, aabb_min, aabb_max);
+
 	std::vector<flatbuffers::Offset<GameResource::Vertex>> verticesVector(
       geoMesh.vertices.size());
   for (size_t i = 0; i < geoMesh.vertices.size(); ++i)
@@ -459,7 +471,7 @@ void ModelExporter::ExportModelMesh(Mesh& geoMesh)
   auto material = builder.CreateString(geoMesh.materialPath);
 
 	auto mesh =
-      GameResource::CreateMesh(builder, name, vertices, indices, material);
+      GameResource::CreateMesh(builder, name, aabb, vertices, indices, material);
 
 	builder.Finish(mesh);
 
