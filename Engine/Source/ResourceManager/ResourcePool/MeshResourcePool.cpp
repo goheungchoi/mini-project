@@ -4,7 +4,19 @@
 #include <flatbuffers/flatbuffers.h>
 #include <fstream>
 
+namespace
+{
+struct Pools
+{
+  ResourcePool<TextureData>* texturePool;
+  ResourcePool<MaterialData>* materialPool;
+};
+
+static Pools* pools;
+
+static ResourcePool<TextureData>* texturePool;
 static ResourcePool<MaterialData>* materialPool;
+} // namespace
 
 static void ProcessMesh(MeshData& mesh, const GameResource::Mesh* geoMesh) {
 	// Get vertices
@@ -45,7 +57,8 @@ static void ProcessMesh(MeshData& mesh, const GameResource::Mesh* geoMesh) {
   }
 
 	// Load the material
-  Handle matHandle = ::materialPool->Load(geoMesh->material()->c_str(), nullptr);
+  Handle matHandle =
+      ::materialPool->Load(geoMesh->material()->c_str(), ::pools);
   if (::materialPool->IsValidHandle(matHandle))
   {
     mesh.material = matHandle;
@@ -55,7 +68,9 @@ static void ProcessMesh(MeshData& mesh, const GameResource::Mesh* geoMesh) {
 template<>
 Handle ResourcePool<MeshData>::LoadImpl(xUUID uuid, void* pUser)
 {
-  ::materialPool = (ResourcePool<MaterialData>*)pUser;
+  ::pools = (Pools*)pUser;
+  ::texturePool = pools->texturePool;
+  ::materialPool = pools->materialPool;
 
   fs::path path = GetResourcePath(uuid);
 

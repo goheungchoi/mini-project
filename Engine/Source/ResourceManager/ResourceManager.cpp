@@ -1,8 +1,10 @@
-#include "ResourceManager.h"
+#include "ResourceManager/ResourceManager.h"
 
 // TODO: Goheung Choi
 #include "ResourcePool/ResourcePool.h"
 
+namespace
+{
 struct __ResourceManagerPrivate__
 {
   ResourcePool<ShaderData> shaderPool;
@@ -12,12 +14,24 @@ struct __ResourceManagerPrivate__
   ResourcePool<ModelData> modelPool;
 };
 
-static __ResourceManagerPrivate__& _m() {
-  static __ResourceManagerPrivate__ _resourceManagerPrivate;
-  return _resourceManagerPrivate;
+struct Pools
+{
+  ResourcePool<TextureData>* texturePool;
+  ResourcePool<MaterialData>* materialPool;
+  ResourcePool<MeshData>* meshPool;
+};
 }
 
 
+static ::__ResourceManagerPrivate__& _m() {
+  static ::__ResourceManagerPrivate__ _resourceManagerPrivate;
+  return _resourceManagerPrivate;
+}
+
+static ::Pools& _pools() {
+  static ::Pools pools{&_m().texturePool, &_m().materialPool, &_m().meshPool};
+  return pools;
+}
 
 static ShaderHandle __LoadShader__(const std::string& path, ShaderType type) {
   return ShaderHandle();
@@ -46,7 +60,7 @@ static void __UnloadTexture__(TextureHandle& handle) {
 }
 
 static MaterialHandle __LoadMaterial__(const std::string& path) {
-  Handle matHandle = _m().materialPool.Load(path.c_str(), &_m().texturePool);
+  Handle matHandle = _m().materialPool.Load(path.c_str(), &_pools());
   if (_m().materialPool.IsValidHandle(matHandle))
   {
     return matHandle;
@@ -62,7 +76,7 @@ static void __UnloadMaterial__(MaterialHandle handle) {
 
 static MeshHandle __LoadMesh__(const std::string& path)
 {
-  Handle meshHandle = _m().meshPool.Load(path.c_str(), &_m().materialPool);
+  Handle meshHandle = _m().meshPool.Load(path.c_str(), &_pools());
   if (_m().meshPool.IsValidHandle(meshHandle))
   {
     return meshHandle;
@@ -79,12 +93,7 @@ static void __UnloadMesh__(MeshHandle handle) {
 
 static ModelHandle __LoadModel__(const std::string& path)
 {
-  struct Pools {
-    ResourcePool<TextureData>* texturePool;
-    ResourcePool<MeshData>* meshPool;
-    ResourcePool<MaterialData>* materialPool;
-  } pool{&_m().texturePool, &_m().meshPool, &_m().materialPool};
-  Handle modelHandle = _m().modelPool.Load(path.c_str(), &pool);
+  Handle modelHandle = _m().modelPool.Load(path.c_str(), &_pools());
   if (_m().modelPool.IsValidHandle(modelHandle))
   {
     return modelHandle;

@@ -129,18 +129,19 @@ void AssetManager::onImportButtonClicked() {
       textureDialog.exec();
     }
     else if (extension == "obj" || extension == "fbx" || extension == "gltf" ||
-             extension == "glm" || extension == "gltf2")
+             extension == "glm" || extension == "glb" || extension == "gltf2")
     {
       ModelFileFormat fileformat;
       if (extension == "obj")
       {
         fileformat = ModelFileFormat::kOBJ;
       }
-      else if (extension == "gltf" || extension == "glm")
+      else if (extension == "gltf" || extension == "gltf2" || extension == "glm" ||
+               extension == "glb")
       {
         fileformat = ModelFileFormat::kGLTF;
       }
-      else
+      else if (extension == "fbx")
       {
         fileformat = ModelFileFormat::kFBX;
 			}

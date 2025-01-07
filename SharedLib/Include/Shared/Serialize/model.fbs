@@ -47,8 +47,6 @@ table Material {
   doubleSided: bool;
 }
 
-root_type Material;
-
 table Vertex {
   position: Vec4;
   normal: Vec3;
@@ -68,15 +66,13 @@ table Mesh {
   material: string;   // Path to the material
 }
 
-root_type Mesh;
-
 table GeometryNode {
   name: string;
 
-  level: uint;
-  parent: uint;
-  firstChild: uint;
-  nextSibling: uint;
+  level: int;
+  parent: int;
+  firstChild: int;
+  nextSibling: int;
 
   meshes: [string];   // Path to the meshes
 }

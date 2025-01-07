@@ -15,8 +15,8 @@ namespace fs = std::filesystem;
 
 #include "dxgiformat.h"
 
-#include "model_generated.h"
-#include "flatbuffers/flatbuffers.h"
+#include "Shared/Serialize/model_generated.h"
+#include <flatbuffers/flatbuffers.h>
 
 enum class ModelFileFormat
 {

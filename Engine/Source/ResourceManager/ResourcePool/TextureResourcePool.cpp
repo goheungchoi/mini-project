@@ -22,8 +22,7 @@ Handle ResourcePool<TextureData>::LoadImpl(xUUID uuid, void* pUser)
   if (maybeError.has_value())
   {
     // TODO: Return a default texture!
-		// Throw an exception just for now
-    throw std::exception(("Loading texture failed: " + maybeError.value()).c_str());
+    // throw std::exception(("Loading texture failed: " + maybeError.value()).c_str());
     return Handle::kInvalidHandle;
   }
   else

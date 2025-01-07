@@ -84,6 +84,7 @@ class HandleTable
 	std::optional<T> _sentinel{std::nullopt};
 
 public:
+  HandleTable() { IncreaseCapacity(); }
 
 	/**
 	 * @brief Claim a handle
@@ -100,7 +101,8 @@ public:
     if (_table[i].second.has_value())
       return Handle::kInvalidHandle;
 
-		Handle& curr{_table[i].first};
+		// Create a new valid handle
+		Handle& curr = _table[i].first;
 		if (curr == Handle::kInvalidHandle)
 		{
 			curr.index = i;
@@ -116,6 +118,8 @@ public:
 			curr.version = version;
 		}
     curr.SetDesc(description);
+		// Store the object
+    _table[i].second = std::forward<T>(obj);
 
 		_refCounts[i] = 1;
 
@@ -180,7 +184,7 @@ public:
 	 */
 	bool IsValidHandle(const Handle& handle) const
   {
-    if (handle == Handle::kInvalidHandle || handle.index < _table.size())
+    if (handle == Handle::kInvalidHandle || handle.index >= _table.size())
       return false;
 
 		// To be valid, the version and description has to be the same

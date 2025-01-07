@@ -665,17 +665,17 @@ struct GeometryNode FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
-  uint32_t level() const {
-    return GetField<uint32_t>(VT_LEVEL, 0);
+  int32_t level() const {
+    return GetField<int32_t>(VT_LEVEL, 0);
   }
-  uint32_t parent() const {
-    return GetField<uint32_t>(VT_PARENT, 0);
+  int32_t parent() const {
+    return GetField<int32_t>(VT_PARENT, 0);
   }
-  uint32_t firstChild() const {
-    return GetField<uint32_t>(VT_FIRSTCHILD, 0);
+  int32_t firstChild() const {
+    return GetField<int32_t>(VT_FIRSTCHILD, 0);
   }
-  uint32_t nextSibling() const {
-    return GetField<uint32_t>(VT_NEXTSIBLING, 0);
+  int32_t nextSibling() const {
+    return GetField<int32_t>(VT_NEXTSIBLING, 0);
   }
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *meshes() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MESHES);
@@ -684,10 +684,10 @@ struct GeometryNode FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
-           VerifyField<uint32_t>(verifier, VT_LEVEL, 4) &&
-           VerifyField<uint32_t>(verifier, VT_PARENT, 4) &&
-           VerifyField<uint32_t>(verifier, VT_FIRSTCHILD, 4) &&
-           VerifyField<uint32_t>(verifier, VT_NEXTSIBLING, 4) &&
+           VerifyField<int32_t>(verifier, VT_LEVEL, 4) &&
+           VerifyField<int32_t>(verifier, VT_PARENT, 4) &&
+           VerifyField<int32_t>(verifier, VT_FIRSTCHILD, 4) &&
+           VerifyField<int32_t>(verifier, VT_NEXTSIBLING, 4) &&
            VerifyOffset(verifier, VT_MESHES) &&
            verifier.VerifyVector(meshes()) &&
            verifier.VerifyVectorOfStrings(meshes()) &&
@@ -702,17 +702,17 @@ struct GeometryNodeBuilder {
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
     fbb_.AddOffset(GeometryNode::VT_NAME, name);
   }
-  void add_level(uint32_t level) {
-    fbb_.AddElement<uint32_t>(GeometryNode::VT_LEVEL, level, 0);
+  void add_level(int32_t level) {
+    fbb_.AddElement<int32_t>(GeometryNode::VT_LEVEL, level, 0);
   }
-  void add_parent(uint32_t parent) {
-    fbb_.AddElement<uint32_t>(GeometryNode::VT_PARENT, parent, 0);
+  void add_parent(int32_t parent) {
+    fbb_.AddElement<int32_t>(GeometryNode::VT_PARENT, parent, 0);
   }
-  void add_firstChild(uint32_t firstChild) {
-    fbb_.AddElement<uint32_t>(GeometryNode::VT_FIRSTCHILD, firstChild, 0);
+  void add_firstChild(int32_t firstChild) {
+    fbb_.AddElement<int32_t>(GeometryNode::VT_FIRSTCHILD, firstChild, 0);
   }
-  void add_nextSibling(uint32_t nextSibling) {
-    fbb_.AddElement<uint32_t>(GeometryNode::VT_NEXTSIBLING, nextSibling, 0);
+  void add_nextSibling(int32_t nextSibling) {
+    fbb_.AddElement<int32_t>(GeometryNode::VT_NEXTSIBLING, nextSibling, 0);
   }
   void add_meshes(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> meshes) {
     fbb_.AddOffset(GeometryNode::VT_MESHES, meshes);
@@ -731,10 +731,10 @@ struct GeometryNodeBuilder {
 inline ::flatbuffers::Offset<GeometryNode> CreateGeometryNode(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
-    uint32_t level = 0,
-    uint32_t parent = 0,
-    uint32_t firstChild = 0,
-    uint32_t nextSibling = 0,
+    int32_t level = 0,
+    int32_t parent = 0,
+    int32_t firstChild = 0,
+    int32_t nextSibling = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> meshes = 0) {
   GeometryNodeBuilder builder_(_fbb);
   builder_.add_meshes(meshes);
@@ -749,10 +749,10 @@ inline ::flatbuffers::Offset<GeometryNode> CreateGeometryNode(
 inline ::flatbuffers::Offset<GeometryNode> CreateGeometryNodeDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *name = nullptr,
-    uint32_t level = 0,
-    uint32_t parent = 0,
-    uint32_t firstChild = 0,
-    uint32_t nextSibling = 0,
+    int32_t level = 0,
+    int32_t parent = 0,
+    int32_t firstChild = 0,
+    int32_t nextSibling = 0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *meshes = nullptr) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
   auto meshes__ = meshes ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*meshes) : 0;

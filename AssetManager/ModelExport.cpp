@@ -23,7 +23,7 @@ bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat)
   }
   else if (fileFormat == ModelFileFormat::kGLTF)
   {
-    flags = aiProcess_FlipUVs;
+    flags |= aiProcess_FlipUVs;
   }
 
   const aiScene* pScene = importer.ReadFile(path, flags);
@@ -262,11 +262,10 @@ void ModelExporter::ProcessMaterial(GeometryModel& geoModel,
   }
 
 	// Get normal texture
-  int normalTextureCount = material->GetTextureCount(aiTextureType_NORMAL_CAMERA);
+  int normalTextureCount = material->GetTextureCount(aiTextureType_NORMALS);
   if (normalTextureCount > 0)
   {
-    ProcessMaterialTexture(geoModel, geoMat, material,
-                           aiTextureType_NORMAL_CAMERA,
+    ProcessMaterialTexture(geoModel, geoMat, material, aiTextureType_NORMALS,
                            scene);
   }
 
@@ -335,7 +334,7 @@ void ModelExporter::ProcessMaterialTexture(GeometryModel& geoModel,
   {
     geoMat.metallicRoughnessTexture = texture.path;
   }
-  else if (type == aiTextureType_NORMAL_CAMERA)
+  else if (type == aiTextureType_NORMALS)
   {
     geoMat.normalTexture = texture.path;
   }
@@ -553,7 +552,7 @@ void ModelExporter::ExportModelTexture(Texture& texture)
     options.mipmapFilter = nvtt::MipmapFilter_Box;
     options.useGPU = true;
   }
-  else if (texture.type == aiTextureType_NORMAL_CAMERA)
+  else if (texture.type == aiTextureType_NORMALS)
   {
     data.isNormalMap = true;
     data.isCubeMap = false;

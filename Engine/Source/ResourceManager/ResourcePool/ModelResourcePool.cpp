@@ -13,6 +13,8 @@ struct Pools
   ResourcePool<MeshData>* meshPool;
 };
 
+static Pools* pools;
+
 static ResourcePool<TextureData>* texturePool;
 static ResourcePool<MaterialData>* materialPool;
 static ResourcePool<MeshData>* meshPool;
@@ -21,7 +23,7 @@ static ResourcePool<MeshData>* meshPool;
 static void ProcessGeoMesh(ModelData& model, ModelNode& node,
                            const flatbuffers::String* geoMesh)
 {
-  Handle meshHandle = ::meshPool->Load(geoMesh->c_str(), nullptr);
+  Handle meshHandle = ::meshPool->Load(geoMesh->c_str(), ::pools);
 
 	// Check if the mesh is successfully loaded
 	if (::meshPool->IsValidHandle(meshHandle))
@@ -103,7 +105,7 @@ static void ProcessGeoNode(ModelData& model,
 template<>
 Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser)
 {
-  Pools* pools = (Pools*)pUser;
+  ::pools = (Pools*)pUser;
   ::texturePool = pools->texturePool;
   ::materialPool = pools->materialPool;
   ::meshPool = pools->meshPool;
@@ -111,6 +113,12 @@ Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser)
   fs::path path = GetResourcePath(uuid);
 
   std::ifstream ifs(path, std::ios::binary);
+
+	if (!ifs.is_open())
+  {
+    throw std::exception("Failed to open a file.");
+	}
+
   std::vector<char> buffer((std::istreambuf_iterator<char>(ifs)),
                            std::istreambuf_iterator<char>());
 
