@@ -19,7 +19,8 @@ public:
   bool Init_Win32(int width, int height, void* hInstance, void* hwnd) override;
   bool Cleanup() override;
   void ResizeScreen(unsigned int width, unsigned int height) override;
-  void BeginFrame(Matrix view, Matrix projection) override;
+  void BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
+                  Vector4 mainLightDir) override;
   void BeginDraw(MeshHandle handle, Matrix world) override;
   void DrawMesh(MeshHandle handle) override;
   void EndDraw() override;

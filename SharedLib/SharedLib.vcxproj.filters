@@ -25,6 +25,9 @@
 		<Filter Include="Include\Shared\Config">
 			<UniqueIdentifier>{1B2C7C8E-B206-488C-AA95-AA32759D5B32}</UniqueIdentifier>
 		</Filter>
+		<Filter Include="SharedLib">
+			<UniqueIdentifier>{3D52814D-88C7-4F7B-8121-F7E2AE5D4868}</UniqueIdentifier>
+		</Filter>
 	</ItemGroup>
 	<ItemGroup>
 		<ClCompile Include="Source\Config\Config.cpp">

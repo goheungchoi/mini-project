@@ -22,10 +22,13 @@ public:
   virtual void ResizeScreen(unsigned int width, unsigned int height) = 0;
   /**
    * @brief call per frame
+   * @param cameraPos : camera position
    * @param view : camera view matrix after transpose
    * @param projection : camera projection matrix after transpose
+   * @param mainLightDir : main light direction
    */
-  virtual void BeginFrame(Matrix view, Matrix projection) = 0;
+  virtual void BeginFrame(Vector4 cameraPos, Matrix view,
+                          Matrix projection,Vector4 mainLightDir) = 0;
   /**
    * @brief call per mesh
    * @param handle : mesh handle owned by mesh
