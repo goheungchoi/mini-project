@@ -52,7 +52,7 @@ public:
     // main depth
     D3D11_TEXTURE2D_DESC depthTexdesc =
         CreateTexture2DDesc(width, height, DXGI_FORMAT_D24_UNORM_S8_UINT, 1,
-                            D3D11_BIND_DEPTH_STENCIL);
+                            D3D11_BIND_DEPTH_STENCIL,1);
     ComPtr<ID3D11Texture2D> pDepthTexture = nullptr;
     HR_T(device->GetDevice()->CreateTexture2D(&depthTexdesc, NULL,
                                               pDepthTexture.GetAddressOf()));
