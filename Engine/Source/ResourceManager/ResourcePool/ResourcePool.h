@@ -83,11 +83,11 @@ Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser);
 
 
 // TODO;
-template <>
-void ResourcePool<TextureData>::UnloadImpl(Handle& uuid, void* pUser);
-template <>
-void ResourcePool<ShaderData>::UnloadImpl(Handle& uuid, void* pUser);
-template <>
-void ResourcePool<MeshData>::UnloadImpl(Handle& uuid, void* pUser);
-template <>
-void ResourcePool<ModelData>::UnloadImpl(Handle& uuid, void* pUser);
+//template <>
+//void ResourcePool<TextureData>::UnloadImpl(Handle& uuid, void* pUser);
+//template <>
+//void ResourcePool<ShaderData>::UnloadImpl(Handle& uuid, void* pUser);
+//template <>
+//void ResourcePool<MeshData>::UnloadImpl(Handle& uuid, void* pUser);
+//template <>
+//void ResourcePool<ModelData>::UnloadImpl(Handle& uuid, void* pUser);
