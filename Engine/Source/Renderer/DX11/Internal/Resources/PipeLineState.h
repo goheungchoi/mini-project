@@ -108,6 +108,8 @@ public:
   {
     device->GetImmContext()->ClearRenderTargetView(_backBuffer->mainRTV.Get(),
                                                    _clearColor);
+    device->GetImmContext()->ClearDepthStencilView(_backBuffer->mainDSV.Get(),
+                                                   D3D11_CLEAR_DEPTH, 1.f, 0);
   }
   void SetBlendOnEnable(BOOL blendEnable, Device* device)
   {

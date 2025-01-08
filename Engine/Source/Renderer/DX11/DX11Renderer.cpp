@@ -83,6 +83,7 @@ void DX11Renderer::EndDraw() {}
 
 void DX11Renderer::EndFrame()
 {
+  _passMgr->FrameSet();
   _passMgr->ProcessPass();
 
   _swapChain->GetSwapChain()->Present(0, 0);
@@ -144,8 +145,8 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
         meshData.indices.data(), size, D3D11_BIND_INDEX_BUFFER);
 
     meshBuffer->nIndices = meshData.indices.size();
-    meshBuffer->stride = 0;
-    meshBuffer->offset = sizeof(Vertex);
+    meshBuffer->stride = sizeof(Vertex);
+    meshBuffer->offset = 0;
     _storage->meshMap.insert({handle, meshBuffer});
   }
 

@@ -47,8 +47,8 @@ struct VS_INPUT
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
     float3 biTangent : BINORMAL;
-    float2 uv : TEXCOORD0;
-    float3 color : COLOR;
+    float2 uv : TEXCOORD;
+    float4 color : COLOR;
 #ifdef SKINNING
     uint4 blendIndicies : BLENDINDICES;
     float4 blendWeights : BLENDWEIGHT;
@@ -62,7 +62,7 @@ struct PS_INPUT
     float3 worldNormal : NORMAL;
     float3 worldTangent : TANGENT;
     float3 worldBitangent : BINORMAL;
-    float2 uv : TEXCOORD0;
+    float2 uv : TEXCOORD;
     float4 worldPosition : WORLD;
 };
 
@@ -84,7 +84,7 @@ PS_INPUT vs_main(VS_INPUT input)
     output.worldNormal = normalize(mul(input.normal, (float3x3) matWolrd));
     output.worldTangent = normalize(mul(input.tangent, (float3x3) matWolrd));
     output.worldBitangent = normalize(mul(input.biTangent, (float3x3) matWolrd));
-    output.color = float4(input.color, 1);
+    output.color = input.color;
     output.uv = input.uv;
     return output;
 }
@@ -98,6 +98,7 @@ float4 ps_main(PS_INPUT input) :SV_TARGET
         albedo = input.color.rgb;
     }
     //gamma correction
+    return float4(albedo, 1.f);
     albedo = pow(albedo, 2.2);
     float metallic = texMetallicRoughness.Sample(samAnisotropy, input.uv).x;
     float roughness = texMetallicRoughness.Sample(samAnisotropy, input.uv).y;
@@ -106,9 +107,13 @@ float4 ps_main(PS_INPUT input) :SV_TARGET
     float4 normalTexture = texNormal.Sample(samAnisotropy, input.uv);
     if (length(normalTexture) > 0.f)
     {
+        float3 normalTexColor;
+        normalTexColor.xy = normalTexture.rg * 2.0 - 1.0; 
+        normalTexColor.z = sqrt(saturate(1.0 - dot(normalTexColor.xy, normalTexColor.xy))); 
+
         float3 tangent = normalize(input.worldTangent);
         float3 bitangent = normalize(input.worldBitangent);
-        float3 normalTexColor = (normalTexture.xyz * 2.0 - 1.0);
+
         float3x3 TBN = float3x3(tangent, bitangent, normal);
         normal = normalize(mul(normalTexColor, TBN));
     }

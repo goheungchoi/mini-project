@@ -114,11 +114,7 @@ public:
       // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함.
       _device->GetImmContext()->IASetInputLayout(
           _vShaders.find("No_Skinning")->second->layout.Get());
-      Constant::Frame frame = {.mainDirectionalLight = _mainLight,
-                               .cameraPosition = _camera.eye,
-                               .view = _camera.view,
-                               .projection = _camera.projection};
-      _frameCB->UpdateContantBuffer(frame);
+
       Constant::World world = {buffer->world};
       _CB->UpdateContantBuffer(world, CBType::World);
       _device->GetImmContext()->VSSetConstantBuffers(
@@ -133,6 +129,18 @@ public:
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
     _transparentMeshes.clear();
+  }
+  void FrameSet()
+  {
+    Constant::Frame frame = {.mainDirectionalLight = _mainLight,
+                             .cameraPosition = _camera.eye,
+                             .view = _camera.view,
+                             .projection = _camera.projection};
+    _frameCB->UpdateContantBuffer(frame);
+    _device->GetImmContext()->VSSetConstantBuffers(
+        0, 1, _frameCB->_constantBuffer.GetAddressOf());
+    _device->GetImmContext()->PSSetConstantBuffers(
+        0, 1, _frameCB->_constantBuffer.GetAddressOf());
   }
   void CreateMainShader()
   {
@@ -150,6 +158,7 @@ public:
   {
     D3D11_SAMPLER_DESC sampleDesc = {};
     // linear
+    ZeroMemory(&sampleDesc,sizeof(D3D11_SAMPLER_DESC));
     sampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
     sampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
     sampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -160,6 +169,7 @@ public:
     MakeSampler(sampleDesc, SamplerType::LINEAR_WRAP);
     // iblspecularBRDF
     // clamp
+    ZeroMemory(&sampleDesc,sizeof(D3D11_SAMPLER_DESC));
     sampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
     sampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -170,6 +180,7 @@ public:
     MakeSampler(sampleDesc, SamplerType::LINEAR_CLAMP);
     // default
     // anisotropy
+    ZeroMemory(&sampleDesc,sizeof(D3D11_SAMPLER_DESC));
     sampleDesc.Filter = D3D11_FILTER_ANISOTROPIC;
     sampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
     sampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -179,6 +190,7 @@ public:
     sampleDesc.MaxLOD = D3D11_FLOAT32_MAX;
     MakeSampler(sampleDesc, SamplerType::ANIMSOROPIC);
     // Comparison
+    ZeroMemory(&sampleDesc,sizeof(D3D11_SAMPLER_DESC));
     sampleDesc = {};
     sampleDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
     sampleDesc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;

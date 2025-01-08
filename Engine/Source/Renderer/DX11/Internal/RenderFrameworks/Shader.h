@@ -44,7 +44,7 @@ public:
     HR_T(_device->GetDevice()->CreateVertexShader(
         shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
         pShader->shader.GetAddressOf()));
-    auto inputLayoutDesc = CreateInputLayoutDesc(
+    std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc = CreateInputLayoutDesc(
         std::vector<uint8_t>((uint8_t*)shaderBlob->GetBufferPointer(),
                              (uint8_t*)shaderBlob->GetBufferPointer() +
                                  shaderBlob->GetBufferSize()),

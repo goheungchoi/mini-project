@@ -29,31 +29,20 @@ public:
 public:
   static Texture* CreateSRV(Device* device, TextureData data)
   {
-    
     Texture* pInstance = new Texture;
-    D3D11_TEXTURE2D_DESC desc = CreateTexture2DDesc(
-        data.width, data.height, data.format, data.mipLevels,
-        D3D11_BIND_SHADER_RESOURCE, data.arrayLayers);
-    D3D11_SUBRESOURCE_DATA initData{};
-    initData.pSysMem = data.ddsData.data();
-    initData.SysMemPitch =
-        data.width *
-        4; //* pInstance->CalculateSysMemPitch(data.width,data.format);
-    ComPtr<ID3D11Texture2D> texture;
 
-    //SWTODO : 작업하기~
-    /*DirectX::CreateDDSTextureFromMemory(device->GetDevice(),data.ddsData.data(),))
-    HR_T(device->GetDevice()->CreateTexture2D(&desc, &initData,
-                                              texture.GetAddressOf()));*/
-    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-    srvDesc.Format = data.format;
-    srvDesc.ViewDimension = data.isCubeMap ? D3D11_SRV_DIMENSION_TEXTURECUBE
-                                           : D3D11_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = data.mipLevels;
-    HR_T(device->GetDevice()->CreateShaderResourceView(
-        texture.Get(), &srvDesc, pInstance->_resource.GetAddressOf()));
+    // DirectXTex 라이브러리로 DDS 텍스처 생성
+    ComPtr<ID3D11Resource> textureResource;
+    HR_T(DirectX::CreateDDSTextureFromMemory(
+        device->GetDevice(),
+        data.ddsData.data(),                   // DDS 데이터 포인터
+        data.ddsData.size(),                   // DDS 데이터 크기
+        textureResource.GetAddressOf(),        // 생성된 리소스 반환
+        pInstance->_resource.GetAddressOf())); // 생성된 SRV 반환
+
     return pInstance;
   }
+
   ComPtr<ID3D11ShaderResourceView> GetResource() { return _resource; }
 
 private:
@@ -181,6 +170,4 @@ public:
         static_cast<UINT>(type), 1,
         _textures[static_cast<int>(type)]->GetResource().GetAddressOf());
   }
-
-
 };
