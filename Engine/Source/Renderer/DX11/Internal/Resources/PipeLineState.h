@@ -93,6 +93,7 @@ public:
     HR_T(device->GetDevice()->CreateRasterizerState(
         &rasterizerDesc, _rs->rasterizerState.GetAddressOf()));
     device->GetImmContext()->RSSetState(_rs->rasterizerState.Get());
+    device->GetImmContext()->RSSetViewports(1, &_rs->viewPort);
     // Rasterizer End
   }
   ~PipeLine()

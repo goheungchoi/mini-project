@@ -38,7 +38,7 @@ public:
 #endif
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
-    HR_T(D3DCompileFromFile(L"../../Shader/DX11Shader.hlsl", macros.data(),
+    HR_T(D3DCompileFromFile(L"../Engine/Source/Renderer/DX11/Shader/DX11Shader.hlsl", macros.data(),
                             D3D_COMPILE_STANDARD_FILE_INCLUDE, "vs_main",
                             "vs_5_0", shaderFlags, 0, &shaderBlob, &errorBlob));
     HR_T(_device->GetDevice()->CreateVertexShader(
@@ -54,12 +54,13 @@ public:
         inputLayoutDesc.data(), static_cast<UINT>(inputLayoutDesc.size()),
         shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
         pShader->layout.GetAddressOf()));
-    errorBlob->Release();
+
     shaderBlob->Release();
     return pShader;
   }
   PixelShader* CompilePixelShader(const std::vector<D3D_SHADER_MACRO>& macros)
   {
+    PixelShader* pShader = new PixelShader();
     DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the
@@ -73,5 +74,16 @@ public:
 #endif
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
+    HR_T(D3DCompileFromFile(
+        L"../Engine/Source/Renderer/DX11/Shader/DX11Shader.hlsl",
+        macros.data(), D3D_COMPILE_STANDARD_FILE_INCLUDE, "ps_main", "ps_5_0",
+        shaderFlags, 0, &shaderBlob, &errorBlob));
+    HR_T(_device->GetDevice()->CreatePixelShader(
+        shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
+        pShader->shader.GetAddressOf()));
+
+
+    shaderBlob->Release();
+    return pShader;
   }
 };

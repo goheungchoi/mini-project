@@ -20,7 +20,7 @@ public:
   bool Cleanup() override;
   void ResizeScreen(unsigned int width, unsigned int height) override;
   void BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
-                  Vector4 mainLightDir) override;
+                  Light::DirectionalLight mainLight) override;
   void BeginDraw(MeshHandle handle, Matrix world) override;
   void DrawMesh(MeshHandle handle) override;
   void EndDraw() override;

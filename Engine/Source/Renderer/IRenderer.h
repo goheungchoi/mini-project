@@ -27,8 +27,8 @@ public:
    * @param projection : camera projection matrix after transpose
    * @param mainLightDir : main light direction
    */
-  virtual void BeginFrame(Vector4 cameraPos, Matrix view,
-                          Matrix projection,Vector4 mainLightDir) = 0;
+  virtual void BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
+                          Light::DirectionalLight mainLight) = 0;
   /**
    * @brief call per mesh
    * @param handle : mesh handle owned by mesh

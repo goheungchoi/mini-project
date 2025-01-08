@@ -1,4 +1,4 @@
-#pragma
+#pragma once
 #include "../Common.h"
 #include "../Device.h"
 #include "../Types.h"
@@ -12,6 +12,7 @@ namespace Constant
 {
   struct Frame
   {
+    Light::DirectionalLight mainDirectionalLight;
     Vector4 cameraPosition;
     Matrix view;
     Matrix projection;

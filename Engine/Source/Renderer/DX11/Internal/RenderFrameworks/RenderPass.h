@@ -6,7 +6,6 @@
 #include "../Resources/ConstantBuffer.h"
 #include "../Resources/PipeLineState.h"
 #include "../Resources/Sampler.h"
-#include "../Types.h"
 #include "Core/Common.h"
 
 namespace Renderer
@@ -37,7 +36,7 @@ private:
   PipeLine* _pso = nullptr;
   ShaderCompiler* _compiler = nullptr;
   Renderer::Camera _camera;
-  Vector4 _mainLightDir;
+  Light::DirectionalLight _mainLight;
 
 public:
   RenderPassManager(Device* device, SwapChain* swapchain, int width, int height)
@@ -48,11 +47,19 @@ public:
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     _frameCB = new FrameConstantBuffer(device);
     _CB = new MeshConstantBuffer(device);
-    _compiler=new ShaderCompiler(device);
+    _compiler = new ShaderCompiler(device);
   }
   ~RenderPassManager()
   {
     std::ranges::for_each(_samplers, [](Sampler* sam) { SAFE_RELEASE(sam); });
+    for (auto& [key, value] : _vShaders)
+    {
+      SAFE_RELEASE(value);
+    }
+    for (auto& [key, value] : _pShaders)
+    {
+      SAFE_RELEASE(value);
+    }
     SAFE_RELEASE(_compiler);
     SAFE_RELEASE(_CB);
     SAFE_RELEASE(_frameCB);
@@ -68,23 +75,26 @@ public:
     _camera.projection = projection;
     _camera.eye = eye;
   }
-  void SetMainLightDir(Vector4 mainLightDir) { _mainLightDir = mainLightDir; }
+  void SetMainLightDir(Light::DirectionalLight mainLight)
+  {
+    _mainLight = mainLight;
+  }
   void ClassfyPass(MeshBuffer* buff)
   {
-    if (buff->flags & RenderPassType::Opaque)
+    if (buff->flags & RenderPassType::OpaquePass)
     {
       _opaqueMesh.push_back(buff);
     }
-    if (buff->flags & RenderPassType::Transparent)
+    if (buff->flags & RenderPassType::TransparentPass)
     {
       _transparentMeshes.push_back(buff);
     }
 
-    if (buff->flags & RenderPassType::Shadow)
+    if (buff->flags & RenderPassType::ShadowPass)
     {
       _shadowMesh.push_back(buff);
     }
-    if (buff->flags & RenderPassType::Light)
+    if (buff->flags & RenderPassType::LightPass)
     {
     }
   }
@@ -101,10 +111,11 @@ public:
           &(buffer->offset));
       _device->GetImmContext()->IASetIndexBuffer(buffer->indexBuffer.Get(),
                                                  DXGI_FORMAT_R32_UINT, 0);
-      // SWTODO : shader handle 물어보고
-      // 작업 끝나면 세팅해주기. ->각 메쉬별로들고있을건가?
-      // _device->GetImmContext()->IASetInputLayout()
-      Constant::Frame frame = {.cameraPosition = _camera.eye,
+      // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함.
+      _device->GetImmContext()->IASetInputLayout(
+          _vShaders.find("No_Skinning")->second->layout.Get());
+      Constant::Frame frame = {.mainDirectionalLight = _mainLight,
+                               .cameraPosition = _camera.eye,
                                .view = _camera.view,
                                .projection = _camera.projection};
       _frameCB->UpdateContantBuffer(frame);
@@ -114,17 +125,26 @@ public:
           1, 1,
           _CB->_constantBuffers[static_cast<UINT>(CBType::World)]
               .GetAddressOf());
-      //_device->GetImmContext()->VSSetShader();
-      //_device->GetImmContext()->PSSetShader();
+      _device->GetImmContext()->VSSetShader(
+          _vShaders.find("No_Skinning")->second->shader.Get(), nullptr, 0);
+      _device->GetImmContext()->PSSetShader(
+          _pShaders.find("Default")->second->shader.Get(), nullptr, 0);
       buffer->material->PSSetResourceViews(_device);
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
+    _transparentMeshes.clear();
   }
   void CreateMainShader()
   {
     std::vector<D3D_SHADER_MACRO> macros;
-    macros.push_back({nullptr, nullptr});
-    _vShaders.insert({"NO_SKINNING", _compiler->CompileVertexShader(macros)});
+    macros = {{nullptr, nullptr}};
+    _vShaders.insert({"No_Skinning", _compiler->CompileVertexShader(macros)});
+    macros.clear();
+    macros = {{"Skinning", "1"}, {nullptr, nullptr}};
+    _vShaders.insert({"Skinning", _compiler->CompileVertexShader(macros)});
+    macros.clear();
+    macros = {{nullptr, nullptr}};
+    _pShaders.insert({"Default", _compiler->CompilePixelShader(macros)});
   }
   void CreateSamplers()
   {
