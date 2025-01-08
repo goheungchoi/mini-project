@@ -1,5 +1,9 @@
 #include "ModelExport.h"
 
+#include <magic_enum/magic_enum.hpp>
+#include <nlohmann/json.hpp>
+using namespace nlohmann;
+
 #include "UUID.h"
 
 // TODO: .info
@@ -431,6 +435,9 @@ void ModelExporter::ExportGeometryModel(GeometryModel& geoModel) {
   std::ofstream ofs(exportPath, std::ios::binary);
   ofs.write((char*)builder.GetBufferPointer(), builder.GetSize());
   ofs.close();
+
+	// Generate the model info file
+  GenerateGeometryModelInfoFile(geoModel);
 }
 
 void ModelExporter::ExportModelMesh(Mesh& geoMesh)
@@ -482,6 +489,9 @@ void ModelExporter::ExportModelMesh(Mesh& geoMesh)
   std::ofstream ofs(exportPath, std::ios::binary);
   ofs.write((char*)builder.GetBufferPointer(), builder.GetSize());
   ofs.close();
+
+	// Generate the model mesh info file
+  GenerateModelMeshInfoFile(geoMesh);
 }
 
 void ModelExporter::ExportModelMaterial(Material& geoMat)
@@ -515,6 +525,9 @@ void ModelExporter::ExportModelMaterial(Material& geoMat)
   std::ofstream ofs(exportPath, std::ios::binary);
   ofs.write((char*)builder.GetBufferPointer(), builder.GetSize());
   ofs.close();
+
+	// Generate the model mesh info file
+  GenerateModelMaterialInfoFile(geoMat);
 }
 
 void ModelExporter::ExportModelTexture(Texture& texture)
@@ -639,7 +652,7 @@ void ModelExporter::ExportModelTexture(Texture& texture)
 
     std::vector<char> input(size);
     memcpy(input.data(), texture.embedded->pcData, size);
-    exportTextureFromMemory(input, exportPath, data, options);
+    exportTextureFromMemory(input, texture.path, exportPath, data, options);
   }
   else
   {
@@ -662,6 +675,123 @@ std::string ModelExporter::GetExportPath(std::string path)
   fs::path exportPath = resourceSubDir / strUUID;
 
 	return exportPath.string();
+}
+
+void ModelExporter::GenerateGeometryModelInfoFile(GeometryModel& geoModel) {
+  ordered_json j;
+
+	j["import_path"] = geoModel.path;
+  j["resource_type"] = "model";
+
+	ordered_json details;
+	details["name"] = geoModel.name;
+
+	std::vector<ordered_json> nodes;
+  nodes.reserve(geoModel.nodes.size());
+  for (const auto& node : geoModel.nodes)
+  {
+    ordered_json n;
+
+		n["name"] = node.name;
+    n["idx"] = node.myIndex;
+    n["level"] = node.level;
+    n["parent"] = node.parent;
+    n["first_child"] = node.firstChild;
+    n["next_sibling"] = node.nextSibling;
+    n["meshes"] = node.meshPaths;
+
+		nodes.push_back(n);
+	}
+  details["nodes"] = nodes;
+
+	std::vector<std::reference_wrapper<const std::string>> meshes;
+  meshes.reserve(geoModel.meshPathMap.size());
+	for (const auto& [path, mesh] : geoModel.meshPathMap)
+  {
+    meshes.push_back(std::ref(path));
+	}
+  details["meshes"] = meshes;
+
+	std::vector<std::reference_wrapper<const std::string>> materials;
+  materials.reserve(geoModel.materialPathMap.size());
+  for (const auto& [path, material] : geoModel.materialPathMap)
+  {
+    materials.push_back(std::ref(path));
+  }
+  details["materials"] = materials;
+
+	std::vector<std::reference_wrapper<const std::string>> textures;
+  textures.reserve(geoModel.texturePathMap.size());
+  for (const auto& [path, texture] : geoModel.texturePathMap)
+  {
+    textures.push_back(std::ref(path));
+  }
+  details["textures"] = textures;
+
+	j["details"] = details;
+
+	std::ofstream o(GetExportPath(geoModel.path) + ".info");
+  o << std::setw(4) << j << std::endl;
+}
+
+void ModelExporter::GenerateModelMeshInfoFile(Mesh& geoMesh)
+{
+  ordered_json j;
+
+  j["import_path"] = geoMesh.path;
+  j["resource_type"] = "model";
+
+	ordered_json details;
+  details["name"] = geoMesh.name;
+
+	details["bounding_box"] = {
+      {geoMesh.aabb.min[0], geoMesh.aabb.min[1], geoMesh.aabb.min[2]},
+      {geoMesh.aabb.max[0], geoMesh.aabb.max[1], geoMesh.aabb.max[2]}};
+
+	details["num_vertices"] = geoMesh.vertices.size();
+  details["num_indices"] = geoMesh.indices.size();
+
+	details["material"] = geoMesh.materialPath;
+
+	j["details"] = details;
+
+	std::ofstream o(GetExportPath(geoMesh.path) + ".info");
+  o << std::setw(4) << j << std::endl;
+}
+
+void ModelExporter::GenerateModelMaterialInfoFile(Material& geoMat)
+{
+  ordered_json j;
+
+  j["import_path"] = geoMat.path;
+  j["resource_type"] = "model";
+
+  ordered_json details;
+  details["name"] = geoMat.name;
+
+  details["albedo_factor"] = {{geoMat.albedoFactor[0], geoMat.albedoFactor[1],
+                               geoMat.albedoFactor[2], geoMat.albedoFactor[3]}};
+  details["albedo_texture"] = geoMat.albedoTexture;
+
+  details["metallic_factor"] = geoMat.metallicFactor;
+  details["roughness_factor"] = geoMat.roughnessFactor;
+  details["metallic_roughness_texture"] = geoMat.metallicRoughnessTexture;
+
+  details["normal_texture"] = geoMat.normalTexture;
+
+	details["occlusion_texture"] = geoMat.occlusionTexture;
+
+	details["emissive_factor"] = geoMat.emissiveFactor;
+  details["emissive_texture"] = geoMat.emissiveTexture;
+
+	details["alpha_mode"] = magic_enum::enum_name(geoMat.alphaMode);
+  details["alpha_cutoff"] = geoMat.alphaCutoff;
+  details["double_sided"] = geoMat.doubleSided;
+
+  j["details"] = details;
+
+  std::ofstream o(GetExportPath(geoMat.path) + ".info");
+  o << std::setw(4) << j << std::endl;
 }
 
 

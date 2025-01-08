@@ -1,0 +1,22 @@
+{
+    "import_path": "Models\\Ceberus\\Mesh.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Mesh",
+        "bounding_box": [
+            [
+                -19.99312400817871,
+                -47.20871353149414,
+                -130.2689666748047
+            ],
+            [
+                12.520315170288086,
+                18.77880096435547,
+                25.837120056152344
+            ]
+        ],
+        "num_vertices": 26971,
+        "num_indices": 100623,
+        "material": "Models\\Ceberus\\08 - Default.mat"
+    }
+}

@@ -1,6 +1,11 @@
 #include "TextureExport.h"
 
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+
+#include <magic_enum/magic_enum.hpp>
+#include <nlohmann/json.hpp>
+using namespace nlohmann;
 
 #include "stb_image.h"
 #define NV_DDS_UTILITY_VALUES
@@ -263,7 +268,58 @@ public:
   void endImage() override {}
 };
 
+namespace
+{
+enum class AlphaMode
+{
+	kOpaque,
+	kTransparent
+};
+
+struct TextureInfo
+{
+  bool isNormalMap;
+  bool isCubeMap;
+
+	ImageFormat format;
+  ColorSpace colorSpace;
+  AlphaMode alphaMode;
+
+	bool mipmap;
+  int mipmapCount;
+};
+
+}
+
+static void GenerateTextureInfoFile(const std::string& texturePath,
+                                    const std::string& exportPath,
+                                    const ::TextureInfo& info)
+{
+  ordered_json j;
+
+	j["import_path"] = texturePath;
+	j["resource_type"] = "texture";
+
+	ordered_json details;
+  details["is_normal"] = info.isNormalMap;
+  details["is_cube"] = info.isCubeMap;
+
+	details["color_space"] = magic_enum::enum_name(info.colorSpace);
+  details["alpha_mode"] = magic_enum::enum_name(info.alphaMode);
+
+	details["format"] = magic_enum::enum_name(
+      todx(info.format, info.colorSpace == ColorSpace::kSRGB));
+  details["mipmap"] = info.mipmap;
+  details["mipmapCount"] = info.mipmapCount;
+
+	j["details"] = details;
+
+	std::ofstream o(exportPath + ".info");
+  o << std::setw(4) << j << std::endl;
+}
+
 bool exportTextureFromMemory(const std::vector<char>& input,
+														 const std::string& texturePath,
                              const std::string& exportPath,
                              const ImageData& data,
                              const TextureExportOptions& options)
@@ -271,6 +327,11 @@ bool exportTextureFromMemory(const std::vector<char>& input,
   const bool isInputDDS =
       (input.size() >= 4 && input[0] == 'D' && input[1] == 'D' &&
        input[2] == 'S' && input[3] == ' ');
+
+	// If mipmap is <= 0, max mipmap count
+  const int maxMipmapCount = options.maxMipmapCount <= 0
+                           ? (std::numeric_limits<int>::max)()
+                           : options.maxMipmapCount;
 
   // DDS
   if (isInputDDS)
@@ -355,7 +416,7 @@ bool exportTextureFromMemory(const std::vector<char>& input,
     bool multiInputImage{false};
     nvtt::TextureType textureType{nvtt::TextureType_2D};
 
-    if (options.maxMipmapCount > 1)
+    if (maxMipmapCount > 1)
     {
       if (images.loadDDSFromMemory(input.data(), input.size()))
       {
@@ -390,7 +451,7 @@ bool exportTextureFromMemory(const std::vector<char>& input,
     const int mip0Depth = image.depth();
     // How many mipmaps, including the base mip, will we generate?
     int mipmapCount = 0;
-    while (mipmapCount < options.maxMipmapCount)
+    while (mipmapCount < maxMipmapCount)
     {
       // Look at the next mipmap's size. Does it satisfy our
       // constraints?
@@ -548,8 +609,24 @@ bool exportTextureFromMemory(const std::vector<char>& input,
     batchList.Clear();
     SurfaceList.clear();
 
+		// Generate the .info file
+    TextureInfo textureInfo{.isNormalMap = data.isNormalMap,
+                            .isCubeMap = data.isCubeMap,
+
+                            .format = options.format,
+                            .colorSpace = data.colorSpace,
+                            .alphaMode =
+                                options.enablePremultipliedAlphaBlending
+                                    ? ::AlphaMode::kTransparent
+                                    : ::AlphaMode::kOpaque,
+
+                            .mipmap = options.enableMipmap,
+                            .mipmapCount = mipmapCount};
+    GenerateTextureInfoFile(texturePath, exportPath, textureInfo);
+
     return true;
   }
+	// Non-DDS file formats
   else
   {
     // Fetch data from the memory
@@ -609,7 +686,7 @@ bool exportTextureFromMemory(const std::vector<char>& input,
         const int mip0Depth = image.depth();
         // How many mipmaps, including the base mip, will we generate?
         int mipmapCount = 0;
-        while (mipmapCount < options.maxMipmapCount)
+        while (mipmapCount < maxMipmapCount)
         {
           // Look at the next mipmap's size. Does it satisfy our
           // constraints?
@@ -879,8 +956,24 @@ bool exportTextureFromMemory(const std::vector<char>& input,
 
         dds.writeToFile(exportPath.c_str(), {.useDx10HeaderIfPossible = true});
 
+				// Generate the .info file
+        TextureInfo textureInfo{.isNormalMap = data.isNormalMap,
+                                .isCubeMap = data.isCubeMap,
+
+                                .format = options.format,
+                                .colorSpace = data.colorSpace,
+                                .alphaMode =
+                                    options.enablePremultipliedAlphaBlending
+                                        ? ::AlphaMode::kTransparent
+                                        : ::AlphaMode::kOpaque,
+
+                                .mipmap = options.enableMipmap,
+                                .mipmapCount = mipmapCount};
+        GenerateTextureInfoFile(texturePath, exportPath, textureInfo);
+
         return true;
       }
+			// No conversion to cube map
       else
       {
         void* image;
@@ -926,6 +1019,22 @@ bool exportTextureFromMemory(const std::vector<char>& input,
         dds.writeToFile(exportPath.c_str(), {.useDx10HeaderIfPossible = true});
 
         stbi_image_free(image);
+
+				// Generate the .info file
+        TextureInfo textureInfo{.isNormalMap = data.isNormalMap,
+                                .isCubeMap = data.isCubeMap,
+
+                                .format = options.format,
+                                .colorSpace = data.colorSpace,
+                                .alphaMode =
+                                    options.enablePremultipliedAlphaBlending
+                                        ? ::AlphaMode::kTransparent
+                                        : ::AlphaMode::kOpaque,
+
+                                .mipmap = false,
+                                .mipmapCount = 1};
+        GenerateTextureInfoFile(texturePath, exportPath, textureInfo);
+
         return true;
       }
     }
@@ -1038,7 +1147,7 @@ bool exportTextureFromMemory(const std::vector<char>& input,
         const int mip0Depth = image.depth();
         // How many mipmaps, including the base mip, will we generate?
         int mipmapCount = 0;
-        while (mipmapCount < options.maxMipmapCount)
+        while (mipmapCount < maxMipmapCount)
         {
           // Look at the next mipmap's size. Does it satisfy our
           // constraints?
@@ -1175,8 +1284,24 @@ bool exportTextureFromMemory(const std::vector<char>& input,
         batchList.Clear();
         SurfaceList.clear();
 
+				// Generate the .info file
+        TextureInfo textureInfo{.isNormalMap = data.isNormalMap,
+                                .isCubeMap = data.isCubeMap,
+
+                                .format = options.format,
+                                .colorSpace = data.colorSpace,
+                                .alphaMode =
+                                    options.enablePremultipliedAlphaBlending
+                                        ? ::AlphaMode::kTransparent
+                                        : ::AlphaMode::kOpaque,
+
+                                .mipmap = options.enableMipmap,
+                                .mipmapCount = mipmapCount};
+        GenerateTextureInfoFile(texturePath, exportPath, textureInfo);
+
         return true;
       }
+			// No conversion to cube map
       else
       {
         const bool alpha = (data.alphaMode != nvtt::AlphaMode_None);
@@ -1277,7 +1402,7 @@ bool exportTextureFromMemory(const std::vector<char>& input,
         const int mip0Depth = 1;
         // How many mipmaps, including the base mip, will we generate?
         int mipmapCount = 0;
-        while (mipmapCount < options.maxMipmapCount)
+        while (mipmapCount < maxMipmapCount)
         {
           // Look at the next mipmap's size. Does it satisfy our
           // constraints?
@@ -1409,6 +1534,21 @@ bool exportTextureFromMemory(const std::vector<char>& input,
         batchList.Clear();
         SurfaceList.clear();
 
+				// Generate the .info file
+        TextureInfo textureInfo{.isNormalMap = data.isNormalMap,
+                                .isCubeMap = data.isCubeMap,
+
+                                .format = options.format,
+                                .colorSpace = data.colorSpace,
+                                .alphaMode =
+                                    options.enablePremultipliedAlphaBlending
+                                        ? ::AlphaMode::kTransparent
+                                        : ::AlphaMode::kOpaque,
+
+                                .mipmap = options.enableMipmap,
+                                .mipmapCount = mipmapCount};
+        GenerateTextureInfoFile(texturePath, exportPath, textureInfo);
+
         return true;
       }
     }
@@ -1433,5 +1573,5 @@ bool exportTextureFromFile(const std::string& texturePath,
     return false;
 	}
 
-  return exportTextureFromMemory(input, exportPath, data, options);
+  return exportTextureFromMemory(input, texturePath, exportPath, data, options);
 }

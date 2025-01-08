@@ -1,0 +1,13 @@
+{
+    "import_path": "Models\\Ceberus\\*2",
+    "resource_type": "texture",
+    "details": {
+        "is_normal": true,
+        "is_cube": false,
+        "color_space": "kLinear",
+        "alpha_mode": "kOpaque",
+        "format": "DXGI_FORMAT_BC5_UNORM",
+        "mipmap": true,
+        "mipmapCount": 13
+    }
+}

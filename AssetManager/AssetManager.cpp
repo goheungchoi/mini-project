@@ -11,8 +11,14 @@
 #include <QFile>
 #include <QTableView>
 
+#include "Shared/Config/Config.h"
+
+#include <algorithm>
 #include <filesystem>
 namespace fs = std::filesystem;
+
+#include <nlohmann/json.hpp>
+using namespace nlohmann;
 
 #include "UUID.h"
 
@@ -53,6 +59,8 @@ AssetManager::AssetManager(QWidget* parent)
           &AssetManager::onAssetSelected);
   connect(ui.importPushButton, &QPushButton::clicked, this,
           &AssetManager::onImportButtonClicked);
+  connect(ui.excludePushButton, &QPushButton::clicked, this,
+          &AssetManager::onExcludeButtonClicked);
 }
 
 AssetManager::~AssetManager() {
@@ -109,8 +117,122 @@ void AssetManager::loadResourceDetails(const QString& filePath)
     QStandardItem* keyItem = new QStandardItem(key);
     QStandardItem* valueItem =
         new QStandardItem(jsonObject[key].toVariant().toString());
-    resourceDetailsModel->appendRow({keyItem, valueItem});
+    resourceDetailsModel->insertRow(0, {keyItem, valueItem});
   }
+}
+
+static std::string GetExportPath(std::string path)
+{
+  std::string strUUID = GenerateUUIDFromName(path).ToString();
+
+  fs::path resourceSubDir =
+      fs::absolute(ns::kResourceDir) / strUUID.substr(0, 2);
+
+  if (!fs::exists(resourceSubDir))
+  {
+    fs::create_directories(resourceSubDir);
+  }
+
+  fs::path exportPath = resourceSubDir / strUUID;
+
+  return exportPath.string();
+}
+
+bool AssetManager::excludeAssetFileFromResource(const QString& filePath) {
+  QString relativePath = assetDir.relativeFilePath(filePath);
+  ui.assetPathLabel->setText(relativePath);
+
+  fs::path fsRelativePath = relativePath.toStdString();
+  std::string strRelativePath = fsRelativePath.string();
+  std::replace(strRelativePath.begin(), strRelativePath.end(), '/', '\\');
+  UUID uuid = GenerateUUIDFromName(strRelativePath);
+
+  fs::path resDir(ns::kResourceDir);
+	fs::path infoDir(ns::kResourceDir);
+  resDir /= uuid.ToString().substr(0, 2);
+
+  json j;
+  if (fs::exists(resDir))
+  {
+    fs::path resourcePath(resDir);
+    resDir /= uuid.ToString();
+    if (fs::exists(resDir))
+    {
+      infoDir = resDir;
+      infoDir += ".info";
+      if (fs::exists(infoDir))
+      {
+        // Load the .info file
+        std::ifstream fs(infoDir);
+        j = json::parse(fs);
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else
+    {
+      return false;
+    }
+  }
+  else
+  {
+    return false;
+  }
+	
+  if (j["resource_type"] == "texture")
+  {
+    fs::remove(resDir);
+    fs::remove(infoDir);
+  }
+  else if (j["resource_type"] == "model")
+  {
+    json& details = j["details"];
+
+		// Remove meshes
+    for (const auto& mesh : details["meshes"])
+    {
+      fs::path exportPath = GetExportPath(mesh);
+      fs::remove(exportPath);
+
+			// Remove .info file
+      exportPath += ".info";
+      fs::remove(exportPath);
+    }
+
+		// Remove materials
+    for (const auto& material : details["materials"])
+    {
+      fs::path exportPath = GetExportPath(material);
+      fs::remove(exportPath);
+
+      // Remove .info file
+      exportPath += ".info";
+      fs::remove(exportPath);
+    }
+
+    // Remove textures
+    for (const auto& texture : details["textures"])
+    {
+      fs::path exportPath = GetExportPath(texture);
+      fs::remove(exportPath);
+
+      // Remove .info file
+      exportPath += ".info";
+      fs::remove(exportPath);
+		}
+
+		// Remove the model data
+		fs::remove(resDir);
+    fs::remove(infoDir);
+  }
+  else
+  {
+    return false;
+  }
+
+	return true;
 }
 
 void AssetManager::onImportButtonClicked() {
@@ -141,6 +263,8 @@ void AssetManager::onImportButtonClicked() {
           this, "Unsupported File Type",
           "The selected file type is not supported for import.");
 		}
+
+		onAssetSelected(ui.assetTreeView->currentIndex());
 	}
   else
   {
@@ -150,7 +274,49 @@ void AssetManager::onImportButtonClicked() {
 	}
 }
 
-void AssetManager::onModifyButtonClicked() {}
+void AssetManager::onExcludeButtonClicked() {
+  QModelIndexList currSelectedAssetIndices =
+      ui.assetTreeView->selectionModel()->selectedIndexes();
+
+  if (currSelectedAssetIndices.size() > 0)
+  {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Exclude Asset",
+                          "Resource files will be removed permanently.\n"
+                          "Are you sure you want to continue?",
+													QMessageBox::Yes | QMessageBox::No);
+
+		if (reply == QMessageBox::Yes)
+    {
+      QModelIndex selectedIndex = currSelectedAssetIndices.at(0);
+      QString filePath = assetFilesModel->filePath(selectedIndex);
+
+      if (excludeAssetFileFromResource(filePath))
+      {
+        QMessageBox::information(
+            this, "Asset Exclusion Success",
+            "The resource files of the selected asset is"
+            " successfully removed from the resource list.");
+      }
+      else
+      {
+        QMessageBox::warning(this, "Asset Exclusion Failed",
+                             "The resource files can't be removed due to"
+                             " the following reasons:\n\n"
+                             " - .info file is not found.\n"
+                             " - Asset is not imported yet.\n"
+                             " - Asset is in unsupported format.\n");
+      }
+
+			onAssetSelected(ui.assetTreeView->currentIndex());
+		}
+	}
+  else
+  {
+    QMessageBox::warning(this, "No File Selected",
+                         "Please select a file to import.");
+  }
+}
 
 
 void AssetManager::onAssetSelected(const QModelIndex& index) {
@@ -158,9 +324,12 @@ void AssetManager::onAssetSelected(const QModelIndex& index) {
   QString relativePath = assetDir.relativeFilePath(filePath);
   ui.assetPathLabel->setText(relativePath);
 
-	UUID uuid = GenerateUUIDFromName(relativePath.toStdString());
+	fs::path fsRelativePath = relativePath.toStdString();
+  std::string strRelativePath = fsRelativePath.string();
+  std::replace(strRelativePath.begin(), strRelativePath.end(), '/', '\\');
+  UUID uuid = GenerateUUIDFromName(strRelativePath);
 
-	fs::path resDir(resourceDir.filesystemPath());
+	fs::path resDir(ns::kResourceDir);
   resDir /= uuid.ToString().substr(0, 2);
 
 	QString message;
@@ -171,11 +340,11 @@ void AssetManager::onAssetSelected(const QModelIndex& index) {
     if (fs::exists(resDir))
     {
       fs::path resourceInfoPath(resDir);
-      resourceInfoPath /= ".info";
+      resourceInfoPath += ".info";
       if (fs::exists(resourceInfoPath))
       {
 				// Load the .info file to show details 
-        QString qstr(resourceInfoPath.generic_string().c_str());
+        QString qstr = QString::fromStdString(resourceInfoPath.string());
         loadResourceDetails(qstr);
 				return;
       }

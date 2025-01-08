@@ -3,6 +3,8 @@
     "assimp",
     "stb",
     "stduuid",
-    "flatbuffers"
+    "flatbuffers",
+    "nlohmann-json",
+    "magic-enum"
   ]
 }

@@ -1,0 +1,31 @@
+{
+    "import_path": "Models\\Ceberus\\Ceberus.glb",
+    "resource_type": "model",
+    "details": {
+        "name": "Scene",
+        "nodes": [
+            {
+                "name": "Cerberus00_Fixed",
+                "idx": 0,
+                "level": 0,
+                "parent": -1,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": [
+                    "Models\\Ceberus\\Mesh.mesh"
+                ]
+            }
+        ],
+        "meshes": [
+            "Models\\Ceberus\\Mesh.mesh"
+        ],
+        "materials": [
+            "Models\\Ceberus\\08 - Default.mat"
+        ],
+        "textures": [
+            "Models\\Ceberus\\*0",
+            "Models\\Ceberus\\*1",
+            "Models\\Ceberus\\*2"
+        ]
+    }
+}

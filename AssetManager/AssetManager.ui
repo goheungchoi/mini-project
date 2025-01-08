@@ -57,14 +57,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="modifyPushButton">
+       <widget class="QPushButton" name="excludePushButton">
         <property name="font">
          <font>
           <family>Arial</family>
          </font>
         </property>
         <property name="text">
-         <string>Modify</string>
+         <string>Exclude</string>
         </property>
        </widget>
       </item>

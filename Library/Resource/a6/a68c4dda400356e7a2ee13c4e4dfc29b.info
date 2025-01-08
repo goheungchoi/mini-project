@@ -1,0 +1,26 @@
+{
+    "import_path": "Models\\Ceberus\\08 - Default.mat",
+    "resource_type": "model",
+    "details": {
+        "name": "08 - Default",
+        "albedo_factor": [
+            [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ]
+        ],
+        "albedo_texture": "Models\\Ceberus\\*0",
+        "metallic_factor": 1.0,
+        "roughness_factor": 1.0,
+        "metallic_roughness_texture": "Models\\Ceberus\\*1",
+        "normal_texture": "Models\\Ceberus\\*2",
+        "occlusion_texture": "",
+        "emissive_factor": 0.0,
+        "emissive_texture": "",
+        "alpha_mode": "AlphaMode_kOpaque",
+        "alpha_cutoff": 0.5,
+        "double_sided": false
+    }
+}

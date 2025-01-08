@@ -178,4 +178,8 @@ private:
 	void ExportModelTexture(Texture& texture);
 
 	std::string GetExportPath(std::string path);
+
+	void GenerateGeometryModelInfoFile(GeometryModel& geoModel);
+	void GenerateModelMeshInfoFile(Mesh& geoMesh);
+	void GenerateModelMaterialInfoFile(Material& geoMat);
 };

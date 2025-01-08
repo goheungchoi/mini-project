@@ -26,10 +26,12 @@ private:
 
 	void loadResourceDetails(const QString& filePath);
 
+  bool excludeAssetFileFromResource(const QString& filePath);
+
   Ui::AssetManagerClass ui;
 
 private slots:
   void onAssetSelected(const QModelIndex& index);
   void onImportButtonClicked();
-  void onModifyButtonClicked();
+  void onExcludeButtonClicked();
 };
