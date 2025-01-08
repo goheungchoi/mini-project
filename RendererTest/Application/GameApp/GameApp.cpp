@@ -1,6 +1,6 @@
 #include "GameApp.h"
 #include "../../Engine/Source/Renderer/DX11/DX11Renderer.h"
-#include "../../Engine/Source/WindowManager/WindowManager.h"
+#include "WindowManager/WindowManager.h"
 void GameApp::Initialize()
 {
   // 윈도우 생성

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Engine/Source/GameEngine/GameEngine.h"
+#include "GameEngine/GameEngine.h"
 
 class GameApp : public GameEngine
 {

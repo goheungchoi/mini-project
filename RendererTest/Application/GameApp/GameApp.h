@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Engine/Source/Engine/GameEngine.h"
+#include "GameEngine/GameEngine.h"
 #include "../../Engine/Source/Renderer/IRenderer.h"
 class GameApp : public GameEngine
 {
