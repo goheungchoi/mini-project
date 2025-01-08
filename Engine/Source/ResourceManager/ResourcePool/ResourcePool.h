@@ -9,6 +9,8 @@
 
 #include "Utils.h"
 
+#include "Shared/Config/Config.h"
+
 template <typename T, size_t GROW_SIZE = 1024>
 class ResourcePool
 {
@@ -37,6 +39,14 @@ public:
 
     return Handle::kInvalidHandle;
   }
+
+	void DiscardDetailedData(Handle& handle, void* pReserved) {
+    DiscardDetailedDataImpl(handle, pReserved);
+	}
+
+	void RestoreDetailedData(Handle& handle, void* pReserved) {
+    RestoreDetailedDataImpl(handle, pReserved);
+	}
 
   void Unload(Handle& handle, void* pReserved)
   {
@@ -69,13 +79,19 @@ private:
     return Handle::kInvalidHandle;
   }
 
+	void DiscardDetailedDataImpl(Handle& handle, void* pReserved) {}
+
+	void RestoreDetailedDataImpl(Handle& handle, void* pReserved) {}
+
 	void UnloadImpl(Handle& handle, void* pReserved) { return; }
 };
 
 template <>
+Handle ResourcePool<ShaderData>::LoadImpl(xUUID uuid, void* pUser);
+template <>
 Handle ResourcePool<TextureData>::LoadImpl(xUUID uuid, void* pUser);
 template <>
-Handle ResourcePool<ShaderData>::LoadImpl(xUUID uuid, void* pUser);
+Handle ResourcePool<MaterialData>::LoadImpl(xUUID uuid, void* pUser);
 template <>
 Handle ResourcePool<MeshData>::LoadImpl(xUUID uuid, void* pUser);
 template <>
@@ -83,11 +99,13 @@ Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser);
 
 
 // TODO;
-template <>
-void ResourcePool<TextureData>::UnloadImpl(Handle& uuid, void* pUser);
-template <>
-void ResourcePool<ShaderData>::UnloadImpl(Handle& uuid, void* pUser);
-template <>
-void ResourcePool<MeshData>::UnloadImpl(Handle& uuid, void* pUser);
-template <>
-void ResourcePool<ModelData>::UnloadImpl(Handle& uuid, void* pUser);
+//template <>
+//void ResourcePool<TextureData>::UnloadImpl(Handle& uuid, void* pUser);
+//template <>
+//void ResourcePool<ShaderData>::UnloadImpl(Handle& uuid, void* pUser);
+//template <>
+//void ResourcePool<MeshData>::UnloadImpl(Handle& uuid, void* pUser);
+//template <>
+//void ResourcePool<ModelData>::UnloadImpl(Handle& uuid, void* pUser);
+
+// TODO: Restore and discard detailed data.

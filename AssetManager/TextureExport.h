@@ -48,6 +48,7 @@ struct TextureExportOptions
 
 
 bool exportTextureFromMemory(const std::vector<char>& input,
+                             const std::string& texturePath,
                              const std::string& exportPath,
                              const ImageData& data,
                              const TextureExportOptions& options);

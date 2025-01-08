@@ -47,7 +47,10 @@ table Material {
   doubleSided: bool;
 }
 
-root_type Material;
+table AABB {
+  min : Vec3;
+  max : Vec3;
+}
 
 table Vertex {
   position: Vec4;
@@ -62,21 +65,20 @@ table Vertex {
 table Mesh {
   name: string;
 
+  aabb: AABB;
   vertices: [Vertex];    // Flat array of vertex positions
   indices: [uint];    // Flat array of indices
   
   material: string;   // Path to the material
 }
 
-root_type Mesh;
-
 table GeometryNode {
   name: string;
 
-  level: uint;
-  parent: uint;
-  firstChild: uint;
-  nextSibling: uint;
+  level: int;
+  parent: int;
+  firstChild: int;
+  nextSibling: int;
 
   meshes: [string];   // Path to the meshes
 }

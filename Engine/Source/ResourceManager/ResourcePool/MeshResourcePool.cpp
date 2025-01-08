@@ -4,9 +4,29 @@
 #include <flatbuffers/flatbuffers.h>
 #include <fstream>
 
+namespace
+{
+struct Pools
+{
+  ResourcePool<TextureData>* texturePool;
+  ResourcePool<MaterialData>* materialPool;
+};
+
+static Pools* pools;
+
+static ResourcePool<TextureData>* texturePool;
 static ResourcePool<MaterialData>* materialPool;
+} // namespace
 
 static void ProcessMesh(MeshData& mesh, const GameResource::Mesh* geoMesh) {
+	// Get AABB
+  mesh.boundingBox.min = {geoMesh->aabb()->min()->x(),
+                          geoMesh->aabb()->min()->y(),
+                          geoMesh->aabb()->min()->z(), 1.f};
+  mesh.boundingBox.max = {geoMesh->aabb()->max()->x(),
+                          geoMesh->aabb()->max()->y(),
+                          geoMesh->aabb()->max()->z(), 1.f};
+	
 	// Get vertices
   const auto* flatVertices = geoMesh->vertices();
   if (flatVertices)
@@ -45,7 +65,8 @@ static void ProcessMesh(MeshData& mesh, const GameResource::Mesh* geoMesh) {
   }
 
 	// Load the material
-  Handle matHandle = ::materialPool->Load(geoMesh->material()->c_str(), nullptr);
+  Handle matHandle =
+      ::materialPool->Load(geoMesh->material()->c_str(), ::pools);
   if (::materialPool->IsValidHandle(matHandle))
   {
     mesh.material = matHandle;
@@ -55,7 +76,9 @@ static void ProcessMesh(MeshData& mesh, const GameResource::Mesh* geoMesh) {
 template<>
 Handle ResourcePool<MeshData>::LoadImpl(xUUID uuid, void* pUser)
 {
-  ::materialPool = (ResourcePool<MaterialData>*)pUser;
+  ::pools = (Pools*)pUser;
+  ::texturePool = pools->texturePool;
+  ::materialPool = pools->materialPool;
 
   fs::path path = GetResourcePath(uuid);
 

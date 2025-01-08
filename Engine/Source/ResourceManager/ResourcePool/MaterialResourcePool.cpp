@@ -4,7 +4,17 @@
 #include <flatbuffers/flatbuffers.h>
 #include <fstream>
 
+namespace
+{
+struct Pools
+{
+  ResourcePool<TextureData>* texturePool;
+};
+
+static Pools* pools;
+
 static ResourcePool<TextureData>* texturePool;
+} // namespace
 
 static void ProcessMaterial(MaterialData& mat,
                             const GameResource::Material* geoMat)
@@ -72,7 +82,8 @@ static void ProcessMaterial(MaterialData& mat,
 template<>
 Handle ResourcePool<MaterialData>::LoadImpl(xUUID uuid, void* pUser)
 {
-  ::texturePool = (ResourcePool<TextureData>*)pUser;
+  ::pools = (Pools*)pUser;
+  ::texturePool = pools->texturePool;
 
   fs::path path = GetResourcePath(uuid);
 

@@ -4,11 +4,11 @@
 
 #include "Core/UUID/UUID.h"
 
-enum class MaterialPassType {
-	kUnknown,
-	kOpacity,
-	kTransparent
-};
+//enum class MaterialPassType {
+//	kUnknown,
+//	kOpacity,
+//	kTransparent
+//};
 
 enum class AlphaMode
 {

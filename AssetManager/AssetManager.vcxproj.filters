@@ -76,11 +76,11 @@
     <ClCompile Include="TextureImportDialog.cpp">
       <Filter>Dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="QtModelImportDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ModelExport.cpp">
       <Filter>Model Exporter</Filter>
+    </ClCompile>
+    <ClCompile Include="QtModelImportDialog.cpp">
+      <Filter>Dialogs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -128,7 +128,7 @@
       <Filter>Dialogs</Filter>
     </QtMoc>
     <QtMoc Include="QtModelImportDialog.h">
-      <Filter>Header Files</Filter>
+      <Filter>Dialogs</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

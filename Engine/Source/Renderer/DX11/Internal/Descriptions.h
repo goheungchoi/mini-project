@@ -98,13 +98,13 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayoutDesc(
 
 D3D11_TEXTURE2D_DESC CreateTexture2DDesc(UINT width, UINT height,
                                          DXGI_FORMAT format, UINT miplevels,
-                                         UINT bindFlag)
+                                         UINT bindFlag,UINT arraysize)
 {
   D3D11_TEXTURE2D_DESC desc = {};
   desc.Width = width;
   desc.Height = height;
   desc.MipLevels = miplevels;
-  desc.ArraySize = 1;
+  desc.ArraySize = arraysize;
   desc.Format = format;
   desc.SampleDesc.Count = 1;
   desc.SampleDesc.Quality = 0;

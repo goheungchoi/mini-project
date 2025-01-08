@@ -2,6 +2,7 @@
 #include "../Common.h"
 #include "../Device.h"
 #include "../Types.h"
+#include "../Resources/Material.h"
 #include "directxtk/SimpleMath.h"
 
 using namespace Microsoft::WRL;
@@ -9,22 +10,30 @@ using namespace DirectX::SimpleMath;
 
 namespace Constant
 {
-struct WVP
+  struct Frame
+  {
+    Vector4 cameraPosition;
+    Matrix view;
+    Matrix projection;
+  };
+
+struct World
 {
   Matrix world;
-  Matrix view;
-  Matrix projection;
 };
 } // namespace Constant
 
 
 struct MeshBuffer
 {
+  ~MeshBuffer() { SAFE_RELEASE(material); }
+  
   ComPtr<ID3D11Buffer> vertexBuffer;
   ComPtr<ID3D11Buffer> indexBuffer;
   UINT stride;
   UINT offset;
   UINT nIndices;
   Matrix world;
+  Material* material;
   RenderPassFlags flags;
 };

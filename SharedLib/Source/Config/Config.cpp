@@ -1,12 +1,12 @@
 #include "Shared/Config/Config.h"
 
-
+#include <string>
 #include <filesystem>
 namespace fs = std::filesystem;
 
 static const char* GetProjectDirectory()
 {
-  static const fs::path projectDir = []() -> fs::path {
+  static const std::string projectDir = []() -> std::string {
     fs::path cwd = fs::current_path();
     fs::path projectDir;
     if (fs::exists(cwd / "Asset") && fs::exists(cwd / "Library"))
@@ -25,15 +25,15 @@ static const char* GetProjectDirectory()
         abort();
       }
     }
-    return projectDir;
+    return projectDir.string();
   }();
 
-  return (const char*)projectDir.c_str();
+  return projectDir.c_str();
 }
 
 static const char* GetAssetDirectory()
 {
-  static const fs::path assetDir = []() -> fs::path {
+  static const std::string assetDir = []() -> std::string {
     fs::path cwd{fs::current_path()};
     fs::path assetDir;
     if (fs::exists(cwd / "Asset"))
@@ -52,15 +52,15 @@ static const char* GetAssetDirectory()
         abort();
       }
     }
-    return assetDir;
+    return assetDir.string();
   }();
 
-  return (const char*)assetDir.c_str();
+  return assetDir.c_str();
 }
 
 static const char* GetResourceDirectory()
 {
-  static const fs::path resourceDir = []() -> fs::path {
+  static const std::string resourceDir = []() -> std::string {
     fs::path cwd{fs::current_path()};
     fs::path resourceDir;
     if (fs::exists(cwd / "Library"))
@@ -81,10 +81,10 @@ static const char* GetResourceDirectory()
         abort();
       }
     }
-    return resourceDir;
+    return resourceDir.string();
   }();
 
-  return (const char*)resourceDir.c_str();
+  return resourceDir.c_str();
 }
 
 // Extern definitions

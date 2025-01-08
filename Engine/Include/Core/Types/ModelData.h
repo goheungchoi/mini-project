@@ -2,17 +2,17 @@
 
 #include "Core/Common.h"
 
-#include <Core/Handle/ResourceHandle.h>
+#include "Core/Handle/ResourceHandle.h"
 
 struct ModelNode
 {
   std::string name;
 	// Matrix transformation;
 
-  uint32_t level;
-  uint32_t parent;
-  uint32_t firstChild;
-  uint32_t nextSibling;
+  int level;
+  int parent;
+  int firstChild;
+  int nextSibling;
 	
 	std::vector<MeshHandle> meshes;
 };

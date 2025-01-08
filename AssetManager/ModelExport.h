@@ -15,11 +15,12 @@ namespace fs = std::filesystem;
 
 #include "dxgiformat.h"
 
-#include "model_generated.h"
-#include "flatbuffers/flatbuffers.h"
+#include "Shared/Serialize/model_generated.h"
+#include <flatbuffers/flatbuffers.h>
 
 enum class ModelFileFormat
 {
+	kUnknown,
 	kFBX,
 	kOBJ,
 	kGLTF
@@ -31,7 +32,12 @@ class ModelExporter
 
 	// TODO: Skeleton extraction
 
-	// TODO: Mesh AABB
+	// Mesh AABB
+  struct AABB
+  {
+    float min[3];
+    float max[3];
+	};
 
 	// Type definitions to store the model data
   enum AlphaMode : int16_t
@@ -93,6 +99,7 @@ class ModelExporter
     std::string path;
     std::string name;
 
+		AABB aabb;
 		std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 
@@ -151,7 +158,8 @@ public:
    * @param fileFormat 
    * @return 
    */
-  bool ExportModel(const char* path, ModelFileFormat fileFormat);
+  bool ExportModel(const char* path, ModelFileFormat fileFormat,
+                   bool preCalculateVertex = false, bool extractBones = false);
 
 private:
   void ProcessScene(const aiScene* scene);
@@ -170,4 +178,8 @@ private:
 	void ExportModelTexture(Texture& texture);
 
 	std::string GetExportPath(std::string path);
+
+	void GenerateGeometryModelInfoFile(GeometryModel& geoModel);
+	void GenerateModelMeshInfoFile(Mesh& geoMesh);
+	void GenerateModelMaterialInfoFile(Material& geoMat);
 };

@@ -2,26 +2,42 @@
 #include "../Common.h"
 #include "../Device.h"
 #include "../Objects/Swapchain.h"
-#include "../Resources/FrameBuffer.h"
+#include "../RenderFrameworks/Shader.h"
+#include "../Resources/ConstantBuffer.h"
 #include "../Resources/PipeLineState.h"
 #include "../Resources/Sampler.h"
 #include "../Types.h"
 #include "Core/Common.h"
+
+namespace Renderer
+{
+struct Camera
+{
+  Vector4 eye;
+  Matrix view;
+  Matrix projection;
+};
+} // namespace Renderer
+
 class RenderPassManager
 {
 private:
   std::vector<MeshBuffer*> _transparentMeshes;
   std::vector<MeshBuffer*> _shadowMesh;
   std::vector<MeshBuffer*> _opaqueMesh;
-  FrameBuffer* _frameBuffer;
+  MeshConstantBuffer* _CB;
+  FrameConstantBuffer* _frameCB;
   std::vector<Sampler*> _samplers;
+  std::unordered_map<std::string, VertexShader*> _vShaders;
+  std::unordered_map<std::string, PixelShader*> _pShaders;
 
 private:
   // renderer에서 생성한 deive 참조.
   Device* _device;
   PipeLine* _pso = nullptr;
-  Matrix _view;
-  Matrix _projection;
+  ShaderCompiler* _compiler = nullptr;
+  Renderer::Camera _camera;
+  Vector4 _mainLightDir;
 
 public:
   RenderPassManager(Device* device, SwapChain* swapchain, int width, int height)
@@ -30,22 +46,29 @@ public:
     _pso = new PipeLine(_device, swapchain, width, height);
     _device->GetImmContext()->IASetPrimitiveTopology(
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    _frameBuffer = new FrameBuffer(device);
+    _frameCB = new FrameConstantBuffer(device);
+    _CB = new MeshConstantBuffer(device);
+    _compiler=new ShaderCompiler(device);
   }
   ~RenderPassManager()
   {
     std::ranges::for_each(_samplers, [](Sampler* sam) { SAFE_RELEASE(sam); });
-    SAFE_RELEASE(_frameBuffer);
+    SAFE_RELEASE(_compiler);
+    SAFE_RELEASE(_CB);
+    SAFE_RELEASE(_frameCB);
+
     SAFE_RELEASE(_pso);
   }
 
 public:
   void ClearBackBuffer() { _pso->ClearBackBuffer(_device); }
-  void SetCameraMatrix(Matrix view, Matrix projection)
+  void SetCamera(Vector4 eye, Matrix view, Matrix projection)
   {
-    _view = view;
-    _projection = projection;
+    _camera.view = view;
+    _camera.projection = projection;
+    _camera.eye = eye;
   }
+  void SetMainLightDir(Vector4 mainLightDir) { _mainLightDir = mainLightDir; }
   void ClassfyPass(MeshBuffer* buff)
   {
     if (buff->flags & RenderPassType::Opaque)
@@ -78,22 +101,31 @@ public:
           &(buffer->offset));
       _device->GetImmContext()->IASetIndexBuffer(buffer->indexBuffer.Get(),
                                                  DXGI_FORMAT_R32_UINT, 0);
-      // TODO : shader handle 물어보고
+      // SWTODO : shader handle 물어보고
       // 작업 끝나면 세팅해주기. ->각 메쉬별로들고있을건가?
       // _device->GetImmContext()->IASetInputLayout()
-      Constant::WVP wvp = {buffer->world, _view, _projection};
-      _frameBuffer->UpdateContantBuffer(wvp, CBType::WVP);
+      Constant::Frame frame = {.cameraPosition = _camera.eye,
+                               .view = _camera.view,
+                               .projection = _camera.projection};
+      _frameCB->UpdateContantBuffer(frame);
+      Constant::World world = {buffer->world};
+      _CB->UpdateContantBuffer(world, CBType::World);
       _device->GetImmContext()->VSSetConstantBuffers(
-          0, 1,
-          _frameBuffer->_constantBuffers[static_cast<UINT>(CBType::WVP)]
+          1, 1,
+          _CB->_constantBuffers[static_cast<UINT>(CBType::World)]
               .GetAddressOf());
       //_device->GetImmContext()->VSSetShader();
       //_device->GetImmContext()->PSSetShader();
-      //_device->GetImmContext()->PSSetShaderResources();
+      buffer->material->PSSetResourceViews(_device);
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
   }
-
+  void CreateMainShader()
+  {
+    std::vector<D3D_SHADER_MACRO> macros;
+    macros.push_back({nullptr, nullptr});
+    _vShaders.insert({"NO_SKINNING", _compiler->CompileVertexShader(macros)});
+  }
   void CreateSamplers()
   {
     D3D11_SAMPLER_DESC sampleDesc = {};

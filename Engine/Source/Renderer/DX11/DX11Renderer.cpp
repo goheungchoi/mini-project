@@ -4,8 +4,8 @@
 #include "Internal/RenderFrameworks/RenderPass.h"
 #include "Internal/ResourceStorage.h"
 #include "Internal/Resources/PipeLineState.h"
+#include "Internal/Resources/Material.h"
 #include "Internal/SwapChain.h"
-#include "ResourceManager/ResourceManager.h"
 
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
@@ -51,9 +51,10 @@ bool DX11Renderer::Cleanup()
 
 void DX11Renderer::ResizeScreen(unsigned int width, unsigned int height) {}
 
-void DX11Renderer::BeginFrame(Matrix view, Matrix projection)
+void DX11Renderer::BeginFrame(Vector4 cameraPos,Matrix view, Matrix projection,Vector4 mainLightDir)
 {
-  _passMgr->SetCameraMatrix(view, projection);
+  _passMgr->SetCamera(cameraPos,view, projection);
+  _passMgr->SetMainLightDir(mainLightDir);
   _passMgr->ClearBackBuffer();
 }
 
@@ -127,7 +128,10 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
     MeshData meshData = AccessMeshData(handle);
     // material
     {
+      meshBuffer->material = new Material;
       MaterialData matData = AccessMaterialData(meshData.material);
+      meshBuffer->material->CreateMaterial(_device,matData);
+      
     }
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
     meshBuffer->vertexBuffer = _device->CreateDataBuffer(
@@ -234,4 +238,9 @@ bool DX11Renderer::CreateComputeEffect()
 bool DX11Renderer::DestoryComputeEffect()
 {
   return false;
+}
+
+void DX11Renderer::CreateEngineShader()
+{
+  _passMgr->CreateMainShader();
 }

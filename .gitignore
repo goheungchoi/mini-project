@@ -7,6 +7,9 @@
 Client/*.filters
 Engine/*.filters
 
+# Assets
+Asset/*
+
 # User-specific files
 *.rsuser
 *.suo

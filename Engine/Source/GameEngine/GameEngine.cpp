@@ -12,6 +12,7 @@ void GameEngine::Initialize()
 
   // NOTE: 엔진 초기화 작업
   // e.g., 리소스 매니저, 팩토리 싱글톤 등...
+
 }
 
 void GameEngine::Execute()
