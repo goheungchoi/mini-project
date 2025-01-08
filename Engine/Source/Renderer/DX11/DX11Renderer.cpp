@@ -22,14 +22,15 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   _debugLayer->Init(_device->GetDevice());
   // Enable breaking on errors
   _debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
-  _passMgr = new RenderPassManager(_device,_swapChain,width,height);
-  _passMgr->CreateSamplers();
   // Optionally, you can also enable breaking on warnings or other severities
   //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, true);
 
   // After debugging, you can disable specific breakpoints
   //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, false);
 #endif // _DEBUG
+  _passMgr = new RenderPassManager(_device,_swapChain,width,height);
+  _passMgr->CreateSamplers();
+  _passMgr->CreateMainShader();
 
   return true;
 }
@@ -51,10 +52,10 @@ bool DX11Renderer::Cleanup()
 
 void DX11Renderer::ResizeScreen(unsigned int width, unsigned int height) {}
 
-void DX11Renderer::BeginFrame(Vector4 cameraPos,Matrix view, Matrix projection,Vector4 mainLightDir)
+void DX11Renderer::BeginFrame(Vector4 cameraPos,Matrix view, Matrix projection,Light::DirectionalLight mainLight)
 {
   _passMgr->SetCamera(cameraPos,view, projection);
-  _passMgr->SetMainLightDir(mainLightDir);
+  _passMgr->SetMainLightDir(mainLight);
   _passMgr->ClearBackBuffer();
 }
 
@@ -82,6 +83,7 @@ void DX11Renderer::EndDraw() {}
 
 void DX11Renderer::EndFrame()
 {
+  _passMgr->FrameSet();
   _passMgr->ProcessPass();
 
   _swapChain->GetSwapChain()->Present(0, 0);
@@ -133,6 +135,7 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
       meshBuffer->material->CreateMaterial(_device,matData);
       
     }
+    // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함.??
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
     meshBuffer->vertexBuffer = _device->CreateDataBuffer(
         meshData.vertices.data(), size, D3D11_BIND_VERTEX_BUFFER);
@@ -142,8 +145,8 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
         meshData.indices.data(), size, D3D11_BIND_INDEX_BUFFER);
 
     meshBuffer->nIndices = meshData.indices.size();
-    meshBuffer->stride = 0;
-    meshBuffer->offset = sizeof(Vertex);
+    meshBuffer->stride = sizeof(Vertex);
+    meshBuffer->offset = 0;
     _storage->meshMap.insert({handle, meshBuffer});
   }
 

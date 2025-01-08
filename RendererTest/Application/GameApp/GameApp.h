@@ -21,5 +21,6 @@ protected:
   virtual void Render() override;
 
 private:
+  Light::DirectionalLight _mainLight;
   IRenderer* _renderer;
 };

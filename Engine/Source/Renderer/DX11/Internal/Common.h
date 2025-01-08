@@ -7,6 +7,7 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <d3d11shader.h>
+#include <directxtk/DDSTextureLoader.h>
 //use comptr
 #include <wrl.h>
 #include <stdexcept>

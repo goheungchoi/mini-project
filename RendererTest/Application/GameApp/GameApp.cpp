@@ -3,7 +3,7 @@
 #include "WindowManager/WindowManager.h"
 #include "ResourceManager/ResourceManager.h"
 
-//#define RenderTest
+#define RenderTest
 
 static ModelHandle modelHandle;
 void GameApp::Initialize()
@@ -14,6 +14,8 @@ void GameApp::Initialize()
   _renderer = new DX11Renderer;
   Super::Initialize();
   _renderer->Init_Win32(1920, 1080, nullptr, &_hwnd);
+#ifdef RenderTest
+#endif // RenderTest
   modelHandle = LoadModel("Models\\Ceberus\\Ceberus.glb");
   ModelData modelData = AccessModelData(modelHandle);
 
@@ -21,8 +23,12 @@ void GameApp::Initialize()
     _renderer->CreateMesh(meshHandle);
   });
   std::ranges::for_each(modelData.meshes, [&](MeshHandle meshHandle) {
-    _renderer->AddRenderPass(meshHandle, RenderPassType::Transparent);
+    _renderer->AddRenderPass(meshHandle, RenderPassType::TransparentPass);
   });
+
+  _mainLight.direction = Vector4(1.f, 0.f, 0.f, 0.f);
+  _mainLight.color = Vector4(1.f, 1.f, 1.f, 0.f);
+  _mainLight.intensity = Vector4(1.f, 1.f, 1.f, 0.f);
 }
 
 void GameApp::Execute()
@@ -44,12 +50,12 @@ void GameApp::Update(float deltaTime) {}
 
 void GameApp::Render()
 {
-  Vector4 eye(0.0f, 0.0f, -10.0f, 1.f);
+  Vector4 eye(-100.0f, 0.0f, 0.f, 1.f);
   Matrix view = DirectX::XMMatrixLookAtLH(eye, Vector3::Zero, Vector3::Up);
   Matrix projection = DirectX::XMMatrixPerspectiveFovLH(
       DirectX::XM_PIDIV2, 1920.0f / 1080.0f, 0.01f, 1000.0f);
   _renderer->BeginFrame(eye, view.Transpose(), projection.Transpose(),
-                        Vector4(0.f, 0.f, 1.f, 0.f));
+                        _mainLight);
 
 #ifdef RenderTest
 

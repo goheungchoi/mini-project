@@ -30,25 +30,89 @@ public:
   static Texture* CreateSRV(Device* device, TextureData data)
   {
     Texture* pInstance = new Texture;
-    D3D11_TEXTURE2D_DESC desc = CreateTexture2DDesc(
-        data.width, data.height, data.format, data.mipLevels,
-        D3D11_BIND_SHADER_RESOURCE, data.arrayLayers);
-    D3D11_SUBRESOURCE_DATA initData{};
-    initData.pSysMem = data.ddsData.data();
-    initData.SysMemPitch = data.width * 4;
-    ComPtr<ID3D11Texture2D> texture;
-    HR_T(device->GetDevice()->CreateTexture2D(&desc, &initData,
-                                              texture.GetAddressOf()));
-    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-    srvDesc.Format = data.format;
-    srvDesc.ViewDimension = data.isCubeMap ? D3D11_SRV_DIMENSION_TEXTURECUBE
-                                           : D3D11_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = data.mipLevels;
-    HR_T(device->GetDevice()->CreateShaderResourceView(
-        texture.Get(), &srvDesc, pInstance->_resource.GetAddressOf()));
+
+    // DirectXTex 라이브러리로 DDS 텍스처 생성
+    ComPtr<ID3D11Resource> textureResource;
+    HR_T(DirectX::CreateDDSTextureFromMemory(
+        device->GetDevice(),
+        data.ddsData.data(),                   // DDS 데이터 포인터
+        data.ddsData.size(),                   // DDS 데이터 크기
+        textureResource.GetAddressOf(),        // 생성된 리소스 반환
+        pInstance->_resource.GetAddressOf())); // 생성된 SRV 반환
+
     return pInstance;
   }
+
   ComPtr<ID3D11ShaderResourceView> GetResource() { return _resource; }
+
+private:
+  uint32_t CalculateSysMemPitch(uint32_t width, DXGI_FORMAT format)
+  {
+    switch (format)
+    {
+    // Uncompressed formats
+    case DXGI_FORMAT_R8_UNORM:
+    case DXGI_FORMAT_R8_UINT:
+      return width * 1; // 1 byte per pixel
+
+    case DXGI_FORMAT_R16_UNORM:
+    case DXGI_FORMAT_R16_UINT:
+    case DXGI_FORMAT_R16_FLOAT:
+      return width * 2; // 2 bytes per pixel
+
+    case DXGI_FORMAT_R8G8_UNORM:
+    case DXGI_FORMAT_R8G8_UINT:
+      return width * 2; // 2 bytes per pixel
+
+    case DXGI_FORMAT_R32_FLOAT:
+    case DXGI_FORMAT_R32_UINT:
+    case DXGI_FORMAT_R32_SINT:
+      return width * 4; // 4 bytes per pixel
+
+    case DXGI_FORMAT_R16G16_FLOAT:
+    case DXGI_FORMAT_R16G16_UNORM:
+    case DXGI_FORMAT_R16G16_UINT:
+      return width * 4; // 4 bytes per pixel
+
+    case DXGI_FORMAT_R8G8B8A8_UNORM:
+    case DXGI_FORMAT_R8G8B8A8_UINT:
+    case DXGI_FORMAT_B8G8R8A8_UNORM:
+      return width * 4; // 4 bytes per pixel
+
+    case DXGI_FORMAT_R32G32_FLOAT:
+    case DXGI_FORMAT_R32G32_UINT:
+      return width * 8; // 8 bytes per pixel
+
+    case DXGI_FORMAT_R32G32B32_FLOAT:
+      return width * 12; // 12 bytes per pixel
+
+    case DXGI_FORMAT_R32G32B32A32_FLOAT:
+    case DXGI_FORMAT_R32G32B32A32_UINT:
+      return width * 16; // 16 bytes per pixel
+
+    // Block-compressed formats
+    case DXGI_FORMAT_BC1_UNORM:
+    case DXGI_FORMAT_BC1_UNORM_SRGB:
+    case DXGI_FORMAT_BC4_UNORM:
+    case DXGI_FORMAT_BC4_SNORM:
+      return ((width + 3) / 4) * 8; // 8 bytes per 4x4 block
+
+    case DXGI_FORMAT_BC2_UNORM:
+    case DXGI_FORMAT_BC2_UNORM_SRGB:
+    case DXGI_FORMAT_BC3_UNORM:
+    case DXGI_FORMAT_BC3_UNORM_SRGB:
+    case DXGI_FORMAT_BC5_UNORM:
+    case DXGI_FORMAT_BC5_SNORM:
+    case DXGI_FORMAT_BC6H_UF16:
+    case DXGI_FORMAT_BC6H_SF16:
+    case DXGI_FORMAT_BC7_UNORM:
+    case DXGI_FORMAT_BC7_UNORM_SRGB:
+      return ((width + 3) / 4) * 16; // 16 bytes per 4x4 block
+
+    default:
+      throw std::runtime_error("Unsupported DXGI_FORMAT");
+    }
+  }
 };
 
 class Material
