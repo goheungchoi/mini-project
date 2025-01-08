@@ -6,6 +6,7 @@ using namespace nlohmann;
 
 #include "UUID.h"
 
+// TODO: Animation data
 // TODO: Skeletal mesh
 bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat,
                                 bool preCalculateVertex,
@@ -58,10 +59,10 @@ bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat,
 	// Process the scene
   ProcessScene(pScene);
 
-
 	// Extract bones option
   if (extractBones)
   {
+    ProcessSkeleton(pScene);
   }
 
 	// Export the geometry model
@@ -803,5 +804,64 @@ void ModelExporter::GenerateModelMaterialInfoFile(Material& geoMat)
   std::ofstream o(GetExportPath(geoMat.path) + ".info");
   o << std::setw(4) << j << std::endl;
 }
+
+void ModelExporter::ExtractBones(aiMesh* mesh, const aiScene* scene) {
+  std::unordered_map<std::string, bool> necessityMap;
+  
+  std::function<void(const aiNode*)> buildNecessityMap =
+      [&](const aiNode* node) {
+        necessityMap[node->mName.C_Str()] = false;
+  
+        for (unsigned int i = 0; i < node->mNumChildren; ++i)
+        {
+          buildNecessityMap(node->mChildren[i]);
+        }
+      };
+  buildNecessityMap(scene->mRootNode);
+
+
+
+
+}
+
+//void ModelExporter::ProcessSkeleton(const aiScene* scene) {
+//	
+//	std::unordered_map<std::string, bool> necessityMap;
+//
+//	std::function<void(const aiNode*)> buildNecessityMap =
+//      [&](const aiNode* node) {
+//        necessityMap[node->mName.C_Str()] = false;
+//
+//        for (unsigned int i = 0; i < node->mNumChildren; ++i)
+//        {
+//          buildNecessityMap(node->mChildren[i]);
+//        }
+//      };
+//  buildNecessityMap(scene->mRootNode);
+//
+//
+//
+//
+//}
+//
+//void ModelExporter::ProcessSkeletonNode(aiNode* node, const aiScene* scene) {
+//  //// Process the meshes of the current geo node.
+//  //for (int i = 0; i < node->mNumMeshes; ++i)
+//  //{
+//  //  aiMesh* mesh = scene->mMeshes[i];
+//  //  ProcessSkeletonMesh(mesh, scene);
+//  //}
+//
+//	// Process the child nodes
+//  for (int i = 0; i < node->mNumChildren; ++i)
+//  {
+//    ProcessSkeletonNode(node->mChildren[i], scene);
+//  }
+//}
+//
+//void ModelExporter::ProcessSkeletonMesh(aiMesh* mesh, const aiScene* scene) {
+//
+//
+//}
 
 

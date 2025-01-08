@@ -5,6 +5,7 @@
 #include <fstream>
 #include <filesystem>
 namespace fs = std::filesystem;
+#include <unordered_map>
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
@@ -31,6 +32,12 @@ class ModelExporter
 	// TODO: Animation export
 
 	// TODO: Skeleton extraction
+  struct Bone
+  {
+    std::string name;
+    int id;
+    float offset[4][4];
+  };
 
 	// Mesh AABB
   struct AABB
@@ -104,6 +111,9 @@ class ModelExporter
     std::vector<uint32_t> indices;
 
 		std::string materialPath;
+
+    // Bone info
+    std::vector<Bone> bones;
 	};
 
 	// Geometry data
@@ -116,6 +126,8 @@ class ModelExporter
     int myIndex;
     int firstChild;
     int nextSibling;
+
+		float transform[4][4];
 
 		std::vector<std::string> meshPaths;
 	};
@@ -130,6 +142,9 @@ class ModelExporter
     std::unordered_map<std::string, Mesh> meshPathMap;
     std::unordered_map<std::string, Material> materialPathMap;
     std::unordered_map<std::string, Texture> texturePathMap;
+		
+		// Model bone data
+    std::vector<Bone> bones;
 	};
 
 	GeometryModel _geoModel;
@@ -162,6 +177,8 @@ public:
                    bool preCalculateVertex = false, bool extractBones = false);
 
 private:
+  bool _extractBones{false};
+
   void ProcessScene(const aiScene* scene);
   void ProcessNode(GeometryModel& geoModel, GeometryNode& parentGeoNode, aiNode* node, const aiScene* scene);
   void ProcessMesh(GeometryModel& geoModel, GeometryNode& geoNode, aiMesh* mesh,
@@ -182,4 +199,12 @@ private:
 	void GenerateGeometryModelInfoFile(GeometryModel& geoModel);
 	void GenerateModelMeshInfoFile(Mesh& geoMesh);
 	void GenerateModelMaterialInfoFile(Material& geoMat);
+
+
+private:
+  void ExtractBones(aiMesh* mesh, const aiScene* scene);
+
+  /*void ProcessSkeleton(const aiScene* scene);
+	void ProcessSkeletonNode(aiNode* node, const aiScene* scene);
+	void ProcessSkeletonMesh(aiMesh* mesh, const aiScene* scene);*/
 };
