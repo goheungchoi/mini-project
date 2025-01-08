@@ -5,7 +5,7 @@
 
 #define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
 #include <Windows.h>
-#include <../Application/GameApp/GameApp.h>
+#include "GameApp/GameApp.h"
 #ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>

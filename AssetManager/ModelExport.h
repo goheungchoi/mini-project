@@ -32,7 +32,7 @@ class ModelExporter
 
 	// TODO: Skeleton extraction
 
-	// TODO: Mesh AABB
+	// Mesh AABB
   struct AABB
   {
     float min[3];

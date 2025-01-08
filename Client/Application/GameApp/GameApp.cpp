@@ -1,5 +1,5 @@
 #include "GameApp.h"
-#include "../../Engine/Source/WindowManager/WindowManager.h"
+#include "WindowManager/WindowManager.h"
 
 void GameApp::Initialize()
 {

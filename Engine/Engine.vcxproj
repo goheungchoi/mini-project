@@ -207,7 +207,7 @@
 		<ClInclude Include="Include\Core\Utils\IOUtils.h" />
 		<ClCompile Include="Include\Core\Utils\ShaderCompiler.cpp" />
 		<ClInclude Include="Include\Core\Utils\ShaderCompiler.h" />
-		<ClInclude Include="Include\Engine\Engine.h" />
+		<ClInclude Include="Include\GameEngine\GameEngine.h" />
 		<ClInclude Include="Include\GameFramework\Components\MaterialComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\MeshComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\SceneComponent.h" />
@@ -216,11 +216,11 @@
 		<ClInclude Include="Include\GameFramework\GameObject\GameObject.h" />
 		<ClInclude Include="Include\GameFramework\World\World.h" />
 		<ClInclude Include="Include\ResourceManager\ResourceManager.h" />
-		<ClCompile Include="Source\Engine\Engine.cpp" />
-		<ClCompile Include="Source\Engine\GameEngine.cpp" />
-		<ClInclude Include="Source\Engine\GameEngine.h" />
+		<ClInclude Include="Include\WinApp\WinApp.h" />
+		<ClInclude Include="Include\WindowManager\WindowManager.h" />
 		<ClCompile Include="Source\FactoryManager\FactoryManager.cpp" />
 		<ClInclude Include="Source\FactoryManager\FactoryManager.h" />
+		<ClCompile Include="Source\GameEngine\GameEngine.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\MaterialComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\MeshComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\SceneComponent.cpp" />
@@ -261,8 +261,6 @@
 		<ClCompile Include="Source\ResourceManager\ResourcePool\TextureResourcePool.cpp" />
 		<ClInclude Include="Source\ResourceManager\ResourcePool\Utils.h" />
 		<ClCompile Include="Source\WinApp\WinApp.cpp" />
-		<ClInclude Include="Source\WinApp\WinApp.h" />
 		<ClCompile Include="Source\WindowManager\WindowManager.cpp" />
-		<ClInclude Include="Source\WindowManager\WindowManager.h" />
 	</ItemGroup>
 </Project>

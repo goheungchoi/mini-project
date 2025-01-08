@@ -1,6 +1,6 @@
-#include "GameEngine.h"
+#include "GameEngine/GameEngine.h"
 #include "Core/Time/TimeSystem.h"
-#include "../../Engine/Source/WindowManager/WindowManager.h"
+#include "WindowManager/WindowManager.h"
 
 void GameEngine::Initialize()
 {

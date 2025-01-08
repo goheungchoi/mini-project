@@ -1,5 +1,5 @@
-#include "WindowManager.h"
-#include "../WinApp/WinApp.h"
+#include "WindowManager/WindowManager.h"
+#include "WinApp/WinApp.h"
 
 WindowManager* WindowManager::m_pInstance = nullptr;
 
