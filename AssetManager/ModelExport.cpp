@@ -6,7 +6,6 @@ using namespace nlohmann;
 
 #include "UUID.h"
 
-// TODO: .info
 // TODO: Skeletal mesh
 bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat,
                                 bool preCalculateVertex,
@@ -33,6 +32,12 @@ bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat,
     flags |= aiProcess_FlipUVs;
   }
 
+	// Pre-calculate vertex option
+  if (preCalculateVertex)
+  {
+    flags |= aiProcess_PreTransformVertices;
+	}
+
   const aiScene* pScene = importer.ReadFile(path, flags);
 
   if (!pScene || (pScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) ||
@@ -53,6 +58,11 @@ bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat,
 	// Process the scene
   ProcessScene(pScene);
 
+
+	// Extract bones option
+  if (extractBones)
+  {
+  }
 
 	// Export the geometry model
   ExportGeometryModel(_geoModel);
