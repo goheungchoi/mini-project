@@ -598,6 +598,7 @@ void ModelExporter::ExportModelTexture(Texture& texture)
   }
   else if (texture.type == aiTextureType_UNKNOWN)
   {
+		// TODO: ARGB -> RGBA
     data.isNormalMap = false;
     data.isCubeMap = false;
 
@@ -614,6 +615,13 @@ void ModelExporter::ExportModelTexture(Texture& texture)
     options.maxMipmapCount = 0;
     options.minMipmapSize = 1;
     options.mipmapFilter = nvtt::MipmapFilter_Box;
+
+		options.swizzleChannels = true;
+    options.swizzles[0] = nvtt::Blue;
+    options.swizzles[1] = nvtt::Green;
+    options.swizzles[2] = nvtt::Red;
+    options.swizzles[3] = nvtt::Zero;
+
     options.useGPU = true;
   }
   else if (texture.type == aiTextureType_NORMALS)
@@ -624,7 +632,7 @@ void ModelExporter::ExportModelTexture(Texture& texture)
     data.colorSpace = ColorSpace::kLinear;
     data.alphaMode = nvtt::AlphaMode_None;
 
-    options.format = ImageFormat::BC5u;
+    options.format = ImageFormat::BC7;
     options.quality = nvtt::Quality_Normal;
 
     options.enableGammaCorrect = false;

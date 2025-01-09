@@ -42,6 +42,10 @@ struct TextureExportOptions
   bool convertToCubeMap;
   nvtt::CubeLayout cubeLayout;
 
+	// Swizzle channel
+  bool swizzleChannels;
+  int swizzles[4];
+
   // Use GPU
   bool useGPU{true};
 };

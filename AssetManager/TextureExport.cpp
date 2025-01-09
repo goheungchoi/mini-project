@@ -448,6 +448,12 @@ bool exportTextureFromMemory(const std::vector<char>& input,
 
     image.setAlphaMode(alphaMode);
 
+		if (options.swizzleChannels)
+    {
+      image.swizzle(options.swizzles[0], options.swizzles[1],
+                    options.swizzles[2], options.swizzles[3]);
+		}
+
     const int faceCount = multiInputImage ? images.GetFaceCount() : 1;
 
     const int mip0Width = image.width();
@@ -682,6 +688,11 @@ bool exportTextureFromMemory(const std::vector<char>& input,
         nvtt::AlphaMode alphaMode = data.alphaMode;
         image.setNormalMap(normal);
         image.setAlphaMode(alphaMode);
+        if (options.swizzleChannels)
+        {
+          image.swizzle(options.swizzles[0], options.swizzles[1],
+                        options.swizzles[2], options.swizzles[3]);
+        }
 
         const int faceCount = 6;
 
@@ -1148,6 +1159,12 @@ bool exportTextureFromMemory(const std::vector<char>& input,
 
         image.setAlphaMode(alphaMode);
 
+				if (options.swizzleChannels)
+        {
+          image.swizzle(options.swizzles[0], options.swizzles[1],
+                        options.swizzles[2], options.swizzles[3]);
+        }
+
         const int faceCount = 6;
 
         const int mip0Width = image.width();
@@ -1401,11 +1418,6 @@ bool exportTextureFromMemory(const std::vector<char>& input,
         }
         textureType = image.type();
 
-				const float* r = image.channel(0);
-				const float* g = image.channel(1);
-				const float* b = image.channel(2);
-        const float* a = image.channel(3);
-
         nvtt::AlphaMode alphaMode = data.alphaMode;
         image.setNormalMap(normal);
 
@@ -1413,6 +1425,17 @@ bool exportTextureFromMemory(const std::vector<char>& input,
           alphaMode = nvtt::AlphaMode_None;
 
         image.setAlphaMode(alphaMode);
+
+				if (options.swizzleChannels)
+        {
+          image.swizzle(options.swizzles[0], options.swizzles[1],
+                        options.swizzles[2], options.swizzles[3]);
+        }
+
+				const float* r = image.channel(0);
+        const float* g = image.channel(1);
+        const float* b = image.channel(2);
+        const float* a = image.channel(3);
 
         const int mip0Width = image.width();
         const int mip0Height = image.height();
