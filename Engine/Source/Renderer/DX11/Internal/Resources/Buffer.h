@@ -36,5 +36,5 @@ struct MeshBuffer
   UINT nIndices;
   Matrix world;
   Material* material;
-  RenderPassFlags flags;
+  RenderPassFlags flags = 0;
 };
