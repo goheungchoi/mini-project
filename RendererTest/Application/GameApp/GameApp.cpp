@@ -1,7 +1,7 @@
 #include "GameApp.h"
 #include "../../Engine/Source/Renderer/DX11/DX11Renderer.h"
-#include "WindowManager/WindowManager.h"
 #include "ResourceManager/ResourceManager.h"
+#include "WindowManager/WindowManager.h"
 
 #define RenderTest
 
@@ -26,9 +26,12 @@ void GameApp::Initialize()
     _renderer->AddRenderPass(meshHandle, RenderPassType::TransparentPass);
   });
 
-  _mainLight.direction = Vector4(1.f, 0.f, 0.f, 0.f);
-  _mainLight.color = Vector4(1.f, 1.f, 1.f, 0.f);
-  _mainLight.intensity = Vector4(1.f, 1.f, 1.f, 0.f);
+  _mainLight.direction = Vector4(-1.f, 0.f, 0.f, 0.f);
+  _mainLight.color = Vector4(1.f, 1.f, 1.f, 1.f);
+  _mainLight.intensity = Vector4(1.f, 1.f, 1.f, 1.f);
+
+  eye = {70.f, 0.0f, 0.f, 1.f};
+  at = Vector4::Zero;
 }
 
 void GameApp::Execute()
@@ -50,18 +53,40 @@ void GameApp::Update(float deltaTime) {}
 
 void GameApp::Render()
 {
-  Vector4 eye(-100.0f, 0.0f, 0.f, 1.f);
-  Matrix view = DirectX::XMMatrixLookAtLH(eye, Vector3::Zero, Vector3::Up);
+  Matrix view = DirectX::XMMatrixLookAtLH(eye, at, Vector3::Up);
   Matrix projection = DirectX::XMMatrixPerspectiveFovLH(
       DirectX::XM_PIDIV2, 1920.0f / 1080.0f, 0.01f, 1000.0f);
   _renderer->BeginFrame(eye, view.Transpose(), projection.Transpose(),
                         _mainLight);
-
+  if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+  {
+    eye.z+=(0.005);
+    at.z+=(0.005);
+  }
+  if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+  {
+    eye.z-=(0.005);
+    at.z-=(0.005);
+  }
+  if (GetAsyncKeyState(VK_UP) & 0x8000)
+  {
+    eye.x-= (0.005);
+    at.x -= (0.005);
+  }
+  if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+  {
+    eye.x += (0.005);
+    at.x += (0.005);
+  }
 #ifdef RenderTest
-
+  Matrix world = Matrix::Identity;
+  Matrix scale = Matrix::CreateScale(3.f);
+  Matrix translate = Matrix::CreateTranslation(Vector3(0.f, 0.f, 230.0f));
+  world *= scale;
+  world *= translate;
   std::ranges::for_each(AccessModelData(modelHandle).meshes,
                         [&](MeshHandle meshHandle) {
-                          _renderer->BeginDraw(meshHandle, Matrix::Identity);
+                          _renderer->BeginDraw(meshHandle, world.Transpose());
                           _renderer->DrawMesh(meshHandle);
                         });
 

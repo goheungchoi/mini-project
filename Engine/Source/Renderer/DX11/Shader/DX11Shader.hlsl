@@ -81,9 +81,9 @@ PS_INPUT vs_main(VS_INPUT input)
     output.worldPosition = output.position;
     output.position = mul(output.position, view);
     output.position = mul(output.position, projection);
-    output.worldNormal = normalize(mul(input.normal, (float3x3) matWolrd));
-    output.worldTangent = normalize(mul(input.tangent, (float3x3) matWolrd));
-    output.worldBitangent = normalize(mul(input.biTangent, (float3x3) matWolrd));
+    output.worldNormal = normalize(mul(normalize(input.normal), (float3x3) matWolrd));
+    output.worldTangent = normalize(mul(normalize(input.tangent), (float3x3) matWolrd));
+    output.worldBitangent = normalize(mul(normalize(input.biTangent), (float3x3) matWolrd));
     output.color = input.color;
     output.uv = input.uv;
     return output;
@@ -98,7 +98,6 @@ float4 ps_main(PS_INPUT input) :SV_TARGET
         albedo = input.color.rgb;
     }
     //gamma correction
-    return float4(albedo, 1.f);
     albedo = pow(albedo, 2.2);
     float metallic = texMetallicRoughness.Sample(samAnisotropy, input.uv).x;
     float roughness = texMetallicRoughness.Sample(samAnisotropy, input.uv).y;
@@ -108,8 +107,7 @@ float4 ps_main(PS_INPUT input) :SV_TARGET
     if (length(normalTexture) > 0.f)
     {
         float3 normalTexColor;
-        normalTexColor.xy = normalTexture.rg * 2.0 - 1.0; 
-        normalTexColor.z = sqrt(saturate(1.0 - dot(normalTexColor.xy, normalTexColor.xy))); 
+        normalTexColor.xyz = normalTexture.rgb * 2.0 - 1.0;
 
         float3 tangent = normalize(input.worldTangent);
         float3 bitangent = normalize(input.worldBitangent);
@@ -125,20 +123,19 @@ float4 ps_main(PS_INPUT input) :SV_TARGET
     float3 lightOut = normalize(cameraPosition.xyz - input.worldPosition.xyz);
     float NdotV = saturate(dot(normal, lightOut));
     float3 lightReflection = 2.f * NdotV * normal - lightOut;
-    float3 lightIn = normalize(mainDirectionalLight.direction.xyz);
+    float3 lightIn = normalize(-mainDirectionalLight.direction.xyz);
     float3 Lradiance = mainDirectionalLight.color.xyz * mainDirectionalLight.intensity.xyz;
     
     float3 lightHalf = normalize(lightIn + lightOut);
-    float NDotH = saturate(dot(lightHalf, normal));
     float NdotL = saturate(dot(normal, lightIn));
-    float3 F = FresnelFactor(max(0.0, dot(lightHalf, lightHalf)), f0);
-    float D = NormalDistributionFunction(normal, lightHalf,
-    max(0.01, roughness));
+    float NDotH = saturate(dot(normal, lightHalf));
+    float3 F = FresnelFactor(max(0.0, dot(lightHalf, lightOut)), f0);
+    float D = NormalDistributionFunction(normal, lightHalf,max(0.01, roughness));
     float G = GAFDirect(normal, lightOut, lightIn, roughness);
     
     float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metallic);
-    float3 diffuseBRDF = kd * NdotL / PI;
-    float3 specularBRDF = F * D * G / max(Epsilon, (4 * NdotL * NdotV));
+    float3 diffuseBRDF = kd * albedo / PI;
+    float3 specularBRDF = (F * D * G) / max(Epsilon, (4 * NdotL * NdotV));
     directLighting += (diffuseBRDF + specularBRDF) * Lradiance * NdotL;
     float alpha=1.0;
     #ifdef Transparency
@@ -150,7 +147,7 @@ float4 ps_main(PS_INPUT input) :SV_TARGET
     float4 temp = float4(float3(directLighting + ambientLighting), 1.f) + emissive;
     temp = pow(temp, 1.0 / 2.2);
     finalColor = float4(temp.rgb, alpha);
-    if (alpha < 0.01)
+    if (alpha < 0.1)
     {
         discard;
     }

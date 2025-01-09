@@ -23,4 +23,6 @@ protected:
 private:
   Light::DirectionalLight _mainLight;
   IRenderer* _renderer;
+  Vector4 eye;
+  Vector4 at;
 };

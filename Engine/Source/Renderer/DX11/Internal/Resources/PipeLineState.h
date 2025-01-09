@@ -31,6 +31,7 @@ private:
   OutputMerger* _om = nullptr;
   Rasterizer* _rs = nullptr;
   float _clearColor[4];
+  float _clearColor2[4] = {0.2f, 0.2f, 0.2f,1.f};
 
 public:
   PipeLine(Device* device, SwapChain* swapChain, int width, int height)
@@ -86,7 +87,7 @@ public:
                      .Width = static_cast<float>(width),
                      .Height = static_cast<float>(height),
                      .MinDepth = 0.f,
-                     .MaxDepth = 0.f};
+                     .MaxDepth = 1.f};
     D3D11_RASTERIZER_DESC rasterizerDesc =
         CreateRaterizerDesc(D3D11_FILL_SOLID, D3D11_CULL_BACK, false, 0, 0.f,
                             0.f, true, false, false, true);
@@ -107,7 +108,7 @@ public:
   void ClearBackBuffer(Device* device)
   {
     device->GetImmContext()->ClearRenderTargetView(_backBuffer->mainRTV.Get(),
-                                                   _clearColor);
+                                                   _clearColor2);
     device->GetImmContext()->ClearDepthStencilView(_backBuffer->mainDSV.Get(),
                                                    D3D11_CLEAR_DEPTH, 1.f, 0);
   }

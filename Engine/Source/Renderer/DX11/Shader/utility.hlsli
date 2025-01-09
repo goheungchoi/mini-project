@@ -10,7 +10,7 @@ float3 FresnelFactor(float cosTheta, float3 F0)
 
 float NormalDistributionFunction(float3 N, float3 Lh, float roughness)
 {
-    float alpha = pow(roughness, 3);
+    float alpha = pow(roughness, 2);
     float alphaSq = alpha * alpha;
     float denominator = PI * pow(pow(dot(N, Lh), 2) * (alphaSq - 1) + 1, 2);
     return alphaSq / denominator;
