@@ -12,12 +12,12 @@
                 "first_child": -1,
                 "next_sibling": -1,
                 "meshes": [
-                    "Models\\Ceberus\\Mesh.mesh"
+                    "Models\\Ceberus\\Mesh0.mesh"
                 ]
             }
         ],
         "meshes": [
-            "Models\\Ceberus\\Mesh.mesh"
+            "Models\\Ceberus\\Mesh0.mesh"
         ],
         "materials": [
             "Models\\Ceberus\\08 - Default.mat"

@@ -400,6 +400,10 @@ bool exportTextureFromMemory(const std::vector<char>& input,
     {
       compressionOptions.setColorWeights(1.f, 1.f, 0);
     }
+    else
+    {
+      compressionOptions.setColorWeights(1.f, 1.f, 1.f, 1.f);
+    }
 
     // Automatically use dds10 if compressing to BC6 or BC7
     if (nvttFormat == nvtt::Format_BC6U || nvttFormat == nvtt::Format_BC6S ||
@@ -1113,6 +1117,10 @@ bool exportTextureFromMemory(const std::vector<char>& input,
         {
           compressionOptions.setColorWeights(1.f, 1.f, 0);
         }
+        else
+        {
+          compressionOptions.setColorWeights(1.f, 1.f, 1.f, 1.f);
+        }
 
         // Automatically use dds10 if compressing to BC6 or BC7
         if (nvttFormat == nvtt::Format_BC6U ||
@@ -1368,6 +1376,10 @@ bool exportTextureFromMemory(const std::vector<char>& input,
         {
           compressionOptions.setColorWeights(1.f, 1.f, 0);
         }
+        else
+        {
+          compressionOptions.setColorWeights(1.f, 1.f, 1.f, 1.f);
+				}
 
         // Automatically use dds10 if compressing to BC6 or BC7
         if (nvttFormat == nvtt::Format_BC6U ||
@@ -1388,6 +1400,11 @@ bool exportTextureFromMemory(const std::vector<char>& input,
           return false;
         }
         textureType = image.type();
+
+				const float* r = image.channel(0);
+				const float* g = image.channel(1);
+				const float* b = image.channel(2);
+        const float* a = image.channel(3);
 
         nvtt::AlphaMode alphaMode = data.alphaMode;
         image.setNormalMap(normal);

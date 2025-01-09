@@ -34,10 +34,27 @@ class ModelExporter
 	// TODO: Skeleton extraction
   struct Bone
   {
-    std::string name;
     int id;
+    std::string name;
+
+		// std::vector<
+
     float offset[4][4];
   };
+
+	// Define a structure for skeleton nodes
+  struct SkeletonNode
+  {
+    std::string name;
+    aiMatrix4x4 transform;
+    std::vector<SkeletonNode> children;
+  };
+
+	struct VertexBoneWeight
+  {
+    int boneId;
+    float weight;
+	};
 
 	// Mesh AABB
   struct AABB
@@ -113,7 +130,7 @@ class ModelExporter
 		std::string materialPath;
 
     // Bone info
-    std::vector<Bone> bones;
+    std::vector<std::vector<VertexBoneWeight>> vertexBoneWeights;
 	};
 
 	// Geometry data
@@ -177,7 +194,9 @@ public:
                    bool preCalculateVertex = false, bool extractBones = false);
 
 private:
+  std::unordered_set<std::string> _meshNameRegistry;
   bool _extractBones{false};
+  bool _exportAnim{false};
 
   void ProcessScene(const aiScene* scene);
   void ProcessNode(GeometryModel& geoModel, GeometryNode& parentGeoNode, aiNode* node, const aiScene* scene);
@@ -202,9 +221,14 @@ private:
 
 
 private:
-  void ExtractBones(aiMesh* mesh, const aiScene* scene);
+  void ExtractSkeletonBonesAndWeights(GeometryModel& geoModel, Mesh& geoMesh,
+                                   aiMesh* mesh, const aiScene* scene);
 
-  void ProcessSkeleton(const aiScene* scene);
-	void ProcessSkeletonNode(aiNode* node, const aiScene* scene);
-	void ProcessSkeletonMesh(aiMesh* mesh, const aiScene* scene);
+  void ExtractSkeletalBones(const aiScene* scene);
+	void ProcessSkeletonNode(GeometryModel& geoModel, aiNode* node, const aiScene* scene);
+  void ProcessSkeletonMesh(GeometryModel& geoModel, aiMesh* mesh,
+                           const aiScene* scene);
+
+private:
+  size_t GetMaxNodeCount(const aiScene* scene);
 };
