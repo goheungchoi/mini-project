@@ -103,7 +103,7 @@ void ModelExporter::ProcessNode(GeometryModel& geoModel,
 	// Process the meshes of the current geo node.
   for (int i = 0; i < node->mNumMeshes; ++i)
   {
-    aiMesh* mesh = scene->mMeshes[i];
+    aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
     ProcessMesh(geoModel, parentGeoNode, mesh, scene);
   }
 

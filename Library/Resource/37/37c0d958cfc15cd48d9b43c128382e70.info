@@ -1,0 +1,13 @@
+{
+    "import_path": "C:\\Users\\K2301160065\\Desktop\\github_repos\\mini-project\\Asset\\Models\\FlightHelmet\\FlightHelmet_Materials_LensesMat_BaseColor.png",
+    "resource_type": "texture",
+    "details": {
+        "is_normal": false,
+        "is_cube": false,
+        "color_space": "kSRGB",
+        "alpha_mode": "kTransparent",
+        "format": "DXGI_FORMAT_BC7_UNORM_SRGB",
+        "mipmap": true,
+        "mipmapCount": 11
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "import_path": "Models\\FlightHelmet\\MetalParts_low0.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "MetalParts_low0",
+        "bounding_box": [
+            [
+                -0.20364271104335785,
+                0.021160749718546867,
+                -0.19947707653045654
+            ],
+            [
+                0.1327083706855774,
+                0.6024364233016968,
+                0.14751268923282623
+            ]
+        ],
+        "num_vertices": 13636,
+        "num_indices": 60288,
+        "material": "Models\\FlightHelmet\\MetalPartsMat.mat"
+    }
+}

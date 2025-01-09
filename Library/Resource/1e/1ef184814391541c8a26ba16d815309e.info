@@ -1,0 +1,22 @@
+{
+    "import_path": "Models\\FlightHelmet\\RubberWood_low0.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "RubberWood_low0",
+        "bounding_box": [
+            [
+                -0.15885746479034424,
+                -2.142429366358556e-05,
+                -0.2000291645526886
+            ],
+            [
+                0.1629406362771988,
+                0.7025225758552551,
+                0.17154578864574432
+            ]
+        ],
+        "num_vertices": 13638,
+        "num_indices": 72534,
+        "material": "Models\\FlightHelmet\\RubberWoodMat.mat"
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "import_path": "Models\\FlightHelmet\\Lenses_low0.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Lenses_low0",
+        "bounding_box": [
+            [
+                -0.101920947432518,
+                0.5300428867340088,
+                -0.1529267281293869
+            ],
+            [
+                0.10192074626684189,
+                0.5936986207962036,
+                -0.09017482399940491
+            ]
+        ],
+        "num_vertices": 436,
+        "num_indices": 2208,
+        "material": "Models\\FlightHelmet\\LensesMat.mat"
+    }
+}
