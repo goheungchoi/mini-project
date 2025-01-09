@@ -204,7 +204,7 @@ private:
 private:
   void ExtractBones(aiMesh* mesh, const aiScene* scene);
 
-  /*void ProcessSkeleton(const aiScene* scene);
+  void ProcessSkeleton(const aiScene* scene);
 	void ProcessSkeletonNode(aiNode* node, const aiScene* scene);
-	void ProcessSkeletonMesh(aiMesh* mesh, const aiScene* scene);*/
+	void ProcessSkeletonMesh(aiMesh* mesh, const aiScene* scene);
 };

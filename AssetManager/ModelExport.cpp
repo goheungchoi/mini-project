@@ -12,6 +12,10 @@ bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat,
                                 bool preCalculateVertex,
                                 bool extractBones)
 {
+	// Extract bone state change
+  _extractBones = extractBones;
+
+	// Get the full path of the model and it's directory
   _fullPath = path;
   _fullDirectory = _fullPath.parent_path();
   if (fs::is_directory(_fullPath))
@@ -52,6 +56,12 @@ bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat,
 	// Relative directory
   _directory = _path.parent_path();
 
+	// Extract bones option
+  if (_extractBones)
+  {
+    ProcessSkeleton(pScene);
+  }
+
 	// Get the geometry model path and the model name
   _geoModel.path = _path.string();
   _geoModel.name = pScene->mName.C_Str();
@@ -59,11 +69,7 @@ bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat,
 	// Process the scene
   ProcessScene(pScene);
 
-	// Extract bones option
-  if (extractBones)
-  {
-    ProcessSkeleton(pScene);
-  }
+	
 
 	// Export the geometry model
   ExportGeometryModel(_geoModel);
@@ -157,13 +163,15 @@ void ModelExporter::ProcessMesh(GeometryModel& geoModel, GeometryNode& geoNode,
                       mesh->mBitangents[i].z},
     };
 
-    if (mesh->HasTextureCoords(i))
+		// Check if any texture coord set exists
+    if (mesh->HasTextureCoords(0))
     {
       v.texcoord[0] = mesh->mTextureCoords[0][i].x;
       v.texcoord[1] = mesh->mTextureCoords[0][i].y;
     }
 
-    if (mesh->HasVertexColors(i))
+		// Check if any vertex color set exists
+    if (mesh->HasVertexColors(0))
     {
       v.color[0] = mesh->mColors[0][i].r;
       v.color[1] = mesh->mColors[0][i].g;
@@ -824,44 +832,44 @@ void ModelExporter::ExtractBones(aiMesh* mesh, const aiScene* scene) {
 
 }
 
-//void ModelExporter::ProcessSkeleton(const aiScene* scene) {
-//	
-//	std::unordered_map<std::string, bool> necessityMap;
-//
-//	std::function<void(const aiNode*)> buildNecessityMap =
-//      [&](const aiNode* node) {
-//        necessityMap[node->mName.C_Str()] = false;
-//
-//        for (unsigned int i = 0; i < node->mNumChildren; ++i)
-//        {
-//          buildNecessityMap(node->mChildren[i]);
-//        }
-//      };
-//  buildNecessityMap(scene->mRootNode);
-//
-//
-//
-//
-//}
-//
-//void ModelExporter::ProcessSkeletonNode(aiNode* node, const aiScene* scene) {
-//  //// Process the meshes of the current geo node.
-//  //for (int i = 0; i < node->mNumMeshes; ++i)
-//  //{
-//  //  aiMesh* mesh = scene->mMeshes[i];
-//  //  ProcessSkeletonMesh(mesh, scene);
-//  //}
-//
-//	// Process the child nodes
-//  for (int i = 0; i < node->mNumChildren; ++i)
-//  {
-//    ProcessSkeletonNode(node->mChildren[i], scene);
-//  }
-//}
-//
-//void ModelExporter::ProcessSkeletonMesh(aiMesh* mesh, const aiScene* scene) {
-//
-//
-//}
+void ModelExporter::ProcessSkeleton(const aiScene* scene) {
+	
+	std::unordered_map<std::string, bool> necessityMap;
+
+	std::function<void(const aiNode*)> buildNecessityMap =
+      [&](const aiNode* node) {
+        necessityMap[node->mName.C_Str()] = false;
+
+        for (unsigned int i = 0; i < node->mNumChildren; ++i)
+        {
+          buildNecessityMap(node->mChildren[i]);
+        }
+      };
+  buildNecessityMap(scene->mRootNode);
+
+
+
+
+}
+
+void ModelExporter::ProcessSkeletonNode(aiNode* node, const aiScene* scene) {
+  //// Process the meshes of the current geo node.
+  //for (int i = 0; i < node->mNumMeshes; ++i)
+  //{
+  //  aiMesh* mesh = scene->mMeshes[i];
+  //  ProcessSkeletonMesh(mesh, scene);
+  //}
+
+	// Process the child nodes
+  for (int i = 0; i < node->mNumChildren; ++i)
+  {
+    ProcessSkeletonNode(node->mChildren[i], scene);
+  }
+}
+
+void ModelExporter::ProcessSkeletonMesh(aiMesh* mesh, const aiScene* scene) {
+
+
+}
 
 
