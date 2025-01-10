@@ -70,10 +70,10 @@ public:
     D3D11_SHADER_RESOURCE_VIEW_DESC rsvDesc;
     ZeroMemory(&rsvDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 
-
+    //SWTODO : 이어서 작성. 컨스탄트 버퍼
     D3D11_BUFFER_DESC buffDesc;
     ZeroMemory(&buffDesc, sizeof(D3D11_BUFFER_DESC));
-    //buffDesc = CreateBufferDesc()
+    //buffDesc = CreateBufferDesc(sizeof())
   }
   ~DefferedPass() {}
 

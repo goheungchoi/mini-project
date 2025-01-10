@@ -97,9 +97,7 @@ void GameApp::Render()
 {
   Matrix view = _camera->GetViewTransform();
   Matrix projection = _camera->GetProjectionMatrix();
-  _renderer->BeginFrame(eye, view.Transpose(), projection.Transpose(),
-                        _mainLight);
-  
+  _renderer->BeginFrame(eye, view, projection, _mainLight);
 #ifdef RenderTest
   Matrix world = Matrix::Identity;
   Matrix scale = Matrix::CreateScale(100.f);
@@ -116,14 +114,14 @@ void GameApp::Render()
   Matrix translate2 = Matrix::CreateTranslation(Vector3(0.f, 0.f, 230.0f));
   world2 *= scale2;
   world2 *= translate2;
-  std::ranges::for_each(AccessModelData(modelHandle2).meshes,
-                        [&](MeshHandle meshHandle) {
-                          _renderer->BeginDraw(meshHandle, world2.Transpose());
-                          _renderer->DrawMesh(meshHandle);
-                        });
   std::ranges::for_each(AccessModelData(modelHandle).meshes,
                         [&](MeshHandle meshHandle) {
-                          _renderer->BeginDraw(meshHandle, world.Transpose());
+                          _renderer->BeginDraw(meshHandle, world);
+                          _renderer->DrawMesh(meshHandle);
+                        });
+  std::ranges::for_each(AccessModelData(modelHandle2).meshes,
+                        [&](MeshHandle meshHandle) {
+                          _renderer->BeginDraw(meshHandle, world2);
                           _renderer->DrawMesh(meshHandle);
                         });
 
