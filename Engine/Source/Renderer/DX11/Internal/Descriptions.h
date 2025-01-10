@@ -31,9 +31,10 @@ DXGI_SWAP_CHAIN_DESC CreateSwapChainDesc(
   desc.OutputWindow = outputWindow;
   return desc;
 }
-
-std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayoutDesc(
-    const std::vector<uint8_t>& vsData, const size_t& vsSize)
+void CreateInputLayoutDesc(
+    std::vector<D3D11_INPUT_ELEMENT_DESC>& inputLayoutDesc,
+  const std::vector<uint8_t>& vsData,
+                           const size_t& vsSize)
 {
   Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pReflector;
   D3DReflect(vsData.data(), vsSize, IID_ID3D11ShaderReflection,
@@ -42,8 +43,7 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayoutDesc(
   D3D11_SHADER_DESC shaderDesc;
   pReflector->GetDesc(&shaderDesc);
 
-  std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
-  inputLayoutDesc.reserve(shaderDesc.InputParameters);
+  inputLayoutDesc.resize(shaderDesc.InputParameters);
 
   for (size_t i = 0; i < shaderDesc.InputParameters; i++)
   {
@@ -52,7 +52,8 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayoutDesc(
 
     // 우리가 inputlayout 만들때 해준 semantic이랑 정해주던거
     D3D11_INPUT_ELEMENT_DESC elemDesc{
-        .SemanticName = paramDesc.SemanticName,
+        .SemanticName =
+            paramDesc.SemanticName ? _strdup(paramDesc.SemanticName) : nullptr,
         .SemanticIndex = paramDesc.SemanticIndex,
         .InputSlot = 0,
         .AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT,
@@ -91,14 +92,76 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayoutDesc(
       else if (paramDesc.Mask <= 15)
         elemDesc.Format = DXGI_FORMAT_R32G32B32A32_SINT;
     }
-    inputLayoutDesc.push_back(elemDesc);
+    inputLayoutDesc[i] = elemDesc;
   }
-  return inputLayoutDesc;
 }
+// std::vector<D3D11_INPUT_ELEMENT_DESC> CreateInputLayoutDesc(
+//     const std::vector<uint8_t>& vsData, const size_t& vsSize)
+//{
+//   Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pReflector;
+//   D3DReflect(vsData.data(), vsSize, IID_ID3D11ShaderReflection,
+//              (void**)pReflector.GetAddressOf());
+//
+//   D3D11_SHADER_DESC shaderDesc;
+//   pReflector->GetDesc(&shaderDesc);
+//
+//   std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
+//   inputLayoutDesc.reserve(shaderDesc.InputParameters);
+//
+//   for (size_t i = 0; i < shaderDesc.InputParameters; i++)
+//   {
+//     D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
+//     pReflector->GetInputParameterDesc(static_cast<UINT>(i), &paramDesc);
+//
+//     // 우리가 inputlayout 만들때 해준 semantic이랑 정해주던거
+//     D3D11_INPUT_ELEMENT_DESC elemDesc{
+//         .SemanticName = paramDesc.SemanticName,
+//         .SemanticIndex = paramDesc.SemanticIndex,
+//         .InputSlot = 0,
+//         .AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT,
+//         .InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
+//         .InstanceDataStepRate = 0};
+//     if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+//     {
+//       if (paramDesc.Mask == 1)
+//         elemDesc.Format = DXGI_FORMAT_R32_FLOAT;
+//       else if (paramDesc.Mask <= 3)
+//         elemDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+//       else if (paramDesc.Mask <= 7)
+//         elemDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+//       else if (paramDesc.Mask <= 15)
+//         elemDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+//     }
+//     else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+//     {
+//       if (paramDesc.Mask == 1)
+//         elemDesc.Format = DXGI_FORMAT_R32_UINT;
+//       else if (paramDesc.Mask <= 3)
+//         elemDesc.Format = DXGI_FORMAT_R32G32_UINT;
+//       else if (paramDesc.Mask <= 7)
+//         elemDesc.Format = DXGI_FORMAT_R32G32B32_UINT;
+//       else if (paramDesc.Mask <= 15)
+//         elemDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT;
+//     }
+//     else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+//     {
+//       if (paramDesc.Mask == 1)
+//         elemDesc.Format = DXGI_FORMAT_R32_SINT;
+//       else if (paramDesc.Mask <= 3)
+//         elemDesc.Format = DXGI_FORMAT_R32G32_SINT;
+//       else if (paramDesc.Mask <= 7)
+//         elemDesc.Format = DXGI_FORMAT_R32G32B32_SINT;
+//       else if (paramDesc.Mask <= 15)
+//         elemDesc.Format = DXGI_FORMAT_R32G32B32A32_SINT;
+//     }
+//     inputLayoutDesc.push_back(elemDesc);
+//   }
+//   return inputLayoutDesc;
+// }
 
 D3D11_TEXTURE2D_DESC CreateTexture2DDesc(UINT width, UINT height,
                                          DXGI_FORMAT format, UINT miplevels,
-                                         UINT bindFlag,UINT arraysize)
+                                         UINT bindFlag, UINT arraysize)
 {
   D3D11_TEXTURE2D_DESC desc = {};
   desc.Width = width;
@@ -172,20 +235,20 @@ D3D11_RENDER_TARGET_BLEND_DESC CreateRTBlendDesc(BOOL blendEnable)
   return rtBlendDesc;
 }
 
-//D3D11_SAMPLER_DESC CreateSamplerDesc(
-//    D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE mode, UINT MaxAnisotropy,
-//    D3D11_COMPARISON_FUNC ComparisonFunc, FLOAT MinLOD = 0,
-//    FLOAT MaxLOD = D3D11_FLOAT32_MAX, FLOAT MipLODBias = 0)
+// D3D11_SAMPLER_DESC CreateSamplerDesc(
+//     D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE mode, UINT MaxAnisotropy,
+//     D3D11_COMPARISON_FUNC ComparisonFunc, FLOAT MinLOD = 0,
+//     FLOAT MaxLOD = D3D11_FLOAT32_MAX, FLOAT MipLODBias = 0)
 //{
-//  D3D11_SAMPLER_DESC sampleDesc = {};
-//  sampleDesc.AddressU = mode;
-//  sampleDesc.AddressV = mode;
-//  sampleDesc.AddressW = mode;
-//  sampleDesc.Filter = Filter;
-//  sampleDesc.MaxAnisotropy = MaxAnisotropy;
-//  sampleDesc.ComparisonFunc = ComparisonFunc;
-//  sampleDesc.MinLOD = MinLOD;
-//  sampleDesc.MaxLOD = MaxLOD;
-//  sampleDesc.MipLODBias = MipLODBias;
-//  return sampleDesc;
-//}
+//   D3D11_SAMPLER_DESC sampleDesc = {};
+//   sampleDesc.AddressU = mode;
+//   sampleDesc.AddressV = mode;
+//   sampleDesc.AddressW = mode;
+//   sampleDesc.Filter = Filter;
+//   sampleDesc.MaxAnisotropy = MaxAnisotropy;
+//   sampleDesc.ComparisonFunc = ComparisonFunc;
+//   sampleDesc.MinLOD = MinLOD;
+//   sampleDesc.MaxLOD = MaxLOD;
+//   sampleDesc.MipLODBias = MipLODBias;
+//   return sampleDesc;
+// }

@@ -139,7 +139,7 @@ float4 ps_main(PS_INPUT input) :SV_TARGET
     directLighting += (diffuseBRDF + specularBRDF) * Lradiance * NdotL;
     float alpha=1.0;
     #ifdef Transparency
-    float4 alphaColor = texOpacity.Sample(samAnisotropy, input.uv);
+    float4 alphaColor = texAlbedo.Sample(samAnisotropy, input.uv);
     alpha = alphaColor.a;
     #endif 
     float4 finalColor;

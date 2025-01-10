@@ -22,7 +22,6 @@ class RenderPassManager
 {
 private:
   std::vector<MeshBuffer*> _transparentMeshes;
-  std::vector<MeshBuffer*> _shadowMesh;
   std::vector<MeshBuffer*> _opaqueMesh;
   MeshConstantBuffer* _CB;
   FrameConstantBuffer* _frameCB;
@@ -90,10 +89,6 @@ public:
       _transparentMeshes.push_back(buff);
     }
 
-    if (buff->flags & RenderPassType::ShadowPass)
-    {
-      _shadowMesh.push_back(buff);
-    }
     if (buff->flags & RenderPassType::LightPass)
     {
     }
@@ -111,7 +106,7 @@ public:
           &(buffer->offset));
       _device->GetImmContext()->IASetIndexBuffer(buffer->indexBuffer.Get(),
                                                  DXGI_FORMAT_R32_UINT, 0);
-      // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함.
+      // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함->skelmesh의 정보는 추가적으로 상수버퍼 이용.
       _device->GetImmContext()->IASetInputLayout(
           _vShaders.find("No_Skinning")->second->layout.Get());
 
@@ -124,7 +119,7 @@ public:
       _device->GetImmContext()->VSSetShader(
           _vShaders.find("No_Skinning")->second->shader.Get(), nullptr, 0);
       _device->GetImmContext()->PSSetShader(
-          _pShaders.find("Default")->second->shader.Get(), nullptr, 0);
+          _pShaders.find("Transparency")->second->shader.Get(), nullptr, 0);
       buffer->material->PSSetResourceViews(_device);
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
@@ -153,6 +148,9 @@ public:
     macros.clear();
     macros = {{nullptr, nullptr}};
     _pShaders.insert({"Default", _compiler->CompilePixelShader(macros)});
+    macros.clear();
+    macros = {{"Transparency", "1"}, {nullptr, nullptr}};
+    _pShaders.insert({"Transparency", _compiler->CompilePixelShader(macros)});
   }
   void CreateSamplers()
   {
