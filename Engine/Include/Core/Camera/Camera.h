@@ -90,7 +90,7 @@ public:
   float GetVerticalFieldOfView() const { return vfov; }
   float GetNearPlane() const { return nearPlane; }
   float GetFarPlane() const { return farPlane; }
-  const XMMATRIX& GetProjectiveMatrix() const { return proj; }
+  const XMMATRIX& GetProjectionMatrix() const { return proj; }
 
   XMVECTOR GetPosition() const { return position; }
   void SetPosition(XMVECTOR position) { this->position = position; }
