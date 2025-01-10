@@ -2,10 +2,6 @@
 #include "Core/Time/TimeSystem.h"
 #include "WindowManager/WindowManager.h"
 
-#include "ResourceManager/ResourceManager.h"
-
-static ModelHandle modelHandle;
-
 void GameEngine::Initialize()
 {
   // TimeSystem 초기화
@@ -16,7 +12,7 @@ void GameEngine::Initialize()
 
   // NOTE: 엔진 초기화 작업
   // e.g., 리소스 매니저, 팩토리 싱글톤 등...
-  modelHandle = LoadModel("Models\\FlightHelmet\\FlightHelmet.gltf");
+
 }
 
 void GameEngine::Execute()
