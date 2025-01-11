@@ -30,6 +30,8 @@ cbuffer Frame : register(b0)
     float4 cameraPosition;
     Matrix view;
     Matrix projection;
+    Matrix InverseViewMatrix;
+    Matrix InverseProjectionMatrix;
 };
 
 cbuffer World : register(b1)
@@ -39,7 +41,6 @@ cbuffer World : register(b1)
     Matrix matrixPalleteArray[127]; 
 #endif
 };
-
 
 struct VS_INPUT
 {

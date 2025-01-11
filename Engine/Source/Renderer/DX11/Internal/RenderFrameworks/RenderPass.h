@@ -2,6 +2,7 @@
 #include "../Common.h"
 #include "../Device.h"
 #include "../Objects/Swapchain.h"
+#include "../RenderFrameworks/DeferredPass.h"
 #include "../RenderFrameworks/Shader.h"
 #include "../Resources/ConstantBuffer.h"
 #include "../Resources/PipeLineState.h"
@@ -21,11 +22,13 @@ struct Camera
 class RenderPassManager
 {
 private:
-  std::map<std::pair<float, MeshBuffer*>, MeshBuffer*, std::greater<std::pair<float,MeshBuffer*>>>
+  std::map<std::pair<float, MeshBuffer*>, MeshBuffer*,
+           std::greater<std::pair<float, MeshBuffer*>>>
       _transparentMeshes;
   std::vector<MeshBuffer*> _opaqueMesh;
   MeshConstantBuffer* _CB;
   FrameConstantBuffer* _frameCB;
+  DefferedPass* _deffered;
   std::vector<Sampler*> _samplers;
   std::unordered_map<std::string, VertexShader*> _vShaders;
   std::unordered_map<std::string, PixelShader*> _pShaders;
@@ -45,9 +48,10 @@ public:
     _pso = new PipeLine(_device, swapchain, width, height);
     _device->GetImmContext()->IASetPrimitiveTopology(
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    _frameCB = new FrameConstantBuffer(device);
-    _CB = new MeshConstantBuffer(device);
-    _compiler = new ShaderCompiler(device);
+    _frameCB = new FrameConstantBuffer(_device);
+    _CB = new MeshConstantBuffer(_device);
+    _compiler = new ShaderCompiler(_device);
+    _deffered = new DefferedPass(width, height, _device);
   }
   ~RenderPassManager()
   {
@@ -106,7 +110,9 @@ public:
   {
     // Shadow pass
     // Deferred pass
-
+    //SWTODO : 셰이더 셋팅해주고 for_each문 안에 defferd드로우 호출
+    std::ranges::for_each(_opaqueMesh, [this](MeshBuffer* buffer) {
+    });
     // Transparent pass -> Forward rendering
     std::ranges::for_each(_transparentMeshes, [this](const auto& pair) {
       const auto& [z, buffer] = pair;
@@ -132,15 +138,20 @@ public:
       buffer->material->PSSetResourceViews(_device);
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
-
-    _transparentMeshes.clear(); // 처리 후 클리어
+    // 처리후 클리어
+    _opaqueMesh.clear();
+    _transparentMeshes.clear();
   }
   void FrameSet()
   {
-    Constant::Frame frame = {.mainDirectionalLight = _mainLight,
-                             .cameraPosition = _camera.eye,
-                             .view = _camera.view.Transpose(),
-                             .projection = _camera.projection.Transpose()};
+    Constant::Frame frame = {
+        .mainDirectionalLight = _mainLight,
+        .cameraPosition = _camera.eye,
+        .view = _camera.view.Transpose(),
+        .projection = _camera.projection.Transpose(),
+        .inverseView = XMMatrixInverse(nullptr, _camera.view),
+        .inverseProjection = XMMatrixInverse(nullptr, _camera.projection)};
+
     _frameCB->UpdateContantBuffer(frame);
     _device->GetImmContext()->VSSetConstantBuffers(
         0, 1, _frameCB->_constantBuffer.GetAddressOf());
