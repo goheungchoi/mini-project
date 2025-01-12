@@ -2,6 +2,7 @@
 #include "../../Engine/Source/Renderer/DX11/DX11Renderer.h"
 #include "ResourceManager/ResourceManager.h"
 #include "WindowManager/WindowManager.h"
+#include "Core/Input/InputSystem.h"
 #define RenderTest
 
 static ModelHandle modelHandle;
@@ -62,35 +63,66 @@ void GameApp::Update(float deltaTime)
 {
 
   // 'Q' 누르면 Down
-  if (GetAsyncKeyState('Q') & 0x8000)
+  if (INPUT->IsKeyPress(Key::Q))
   {
     _camera->MoveDownUp(-deltaTime);
   }
   // 'E' 누르면 Up
-  if (GetAsyncKeyState('E') & 0x8000)
+  if (INPUT->IsKeyPress(Key::E))
   {
     _camera->MoveDownUp(deltaTime);
   }
   // 'A' 누르면 Left
-  if (GetAsyncKeyState('A') & 0x8000)
+  if (INPUT->IsKeyPress(Key::A))
   {
     _camera->MoveLeftRight(-deltaTime);
   }
   // 'D' 누르면 Right
-  if (GetAsyncKeyState('D') & 0x8000)
+  if (INPUT->IsKeyPress(Key::D))
   {
     _camera->MoveLeftRight(deltaTime);
   }
   // 'W' 누르면 Forward
-  if (GetAsyncKeyState('W') & 0x8000)
+  if (INPUT->IsKeyPress(Key::W))
   {
     _camera->MoveBackForward(deltaTime);
   }
   // 'S' 누르면 Backward
-  if (GetAsyncKeyState('S') & 0x8000)
+  if (INPUT->IsKeyPress(Key::S))
   {
     _camera->MoveBackForward(-deltaTime);
   }
+
+  if (INPUT->IsKeyDown(Input::MouseState::RB))
+  {
+    _bCameraMove = !_bCameraMove; // camera bool값이 반대로 됨.
+    ShowCursor(!_bCameraMove);    // 커서가 안 보임
+  }
+  if (INPUT->IsKeyUp(Input::MouseState::RB))
+  {
+    _bCameraMove = !_bCameraMove; // camera bool값이 반대로 됨.
+    ShowCursor(!_bCameraMove);    // 커서가 보임
+  }
+
+
+  // 마우스 회전
+  if (_bCameraMove)
+  {
+    // 마우스 이동량 가져오기
+    Vector2 mouseDelta = INPUT->GetMouseDelta();
+    float x = mouseDelta.x * _camera->GetRotationSpeed();
+    float y = mouseDelta.y * _camera->GetRotationSpeed();
+
+    if ((INPUT->GetCurrMouseState().x != INPUT->GetPrevMouseState().x) ||
+        (INPUT->GetCurrMouseState().y != INPUT->GetPrevMouseState().y))
+    {
+        // 마우스가 Y 축으로 움직이면 X 축 회전
+        _camera->RotateAroundXAxis(y);
+        // 마우스가 X 축으로 움직이면 Y 축 회전
+        _camera->RotateAroundYAxis(x);
+    }
+  }
+
 }
 
 void GameApp::Render()

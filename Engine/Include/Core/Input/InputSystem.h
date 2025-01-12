@@ -6,6 +6,8 @@
 #include <directXTK/Mouse.h>
 #pragma comment(lib, "DirectXTK.lib")
 
+using Key = DirectX::Keyboard::Keys;
+
 namespace Input
 {
 	// 마우스 상태를 나타내는 열거형
@@ -60,6 +62,9 @@ public:
   // 마우스 이동 값 가져오기
   Vector2 GetMouseDelta() const;
 
+  DirectX::Mouse::State GetCurrMouseState() { return _mouseState; }
+  DirectX::Mouse::State GetPrevMouseState() { return _prevMouseState; }
+
 private:
   // DirectXTK 키보드 관련 멤버 변수
   std::unique_ptr<DirectX::Keyboard> _keyboard{};
@@ -75,3 +80,5 @@ private:
   HWND _hWnd{};
   bool _handleOut = false;
 };
+
+#define INPUT InputSystem::GetInstance()

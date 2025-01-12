@@ -27,4 +27,6 @@ private:
   IRenderer* _renderer;
   Vector4 eye;
   Vector4 at;
+
+  bool _bCameraMove = false;
 };
