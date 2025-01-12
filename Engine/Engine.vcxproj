@@ -191,6 +191,7 @@
 		<ClInclude Include="Include\Core\Common.h" />
 		<ClInclude Include="Include\Core\Handle\Handle.h" />
 		<ClInclude Include="Include\Core\Handle\ResourceHandle.h" />
+		<ClInclude Include="Include\Core\Input\InputSystem.h" />
 		<ClInclude Include="Include\Core\Math\MathUtils.h" />
 		<ClInclude Include="Include\Core\Time\TimeSystem.h" />
 		<ClInclude Include="Include\Core\Types\LightData.h" />
@@ -215,6 +216,7 @@
 		<ClInclude Include="Include\WindowManager\WindowManager.h" />
 		<ClCompile Include="Source\Core\Async\Async.cpp" />
 		<ClCompile Include="Source\Core\Camera\Camera.cpp" />
+		<ClCompile Include="Source\Core\Input\InputSystem.cpp" />
 		<ClCompile Include="Source\Core\Math\MathUtils.cpp" />
 		<ClCompile Include="Source\Core\Time\TimeSystem.cpp" />
 		<ClCompile Include="Source\Core\UUID\UUID.cpp" />

@@ -1,6 +1,7 @@
 #include "GameEngine/GameEngine.h"
 #include "Core/Time/TimeSystem.h"
 #include "WindowManager/WindowManager.h"
+#include "Core/Input/InputSystem.h"
 
 void GameEngine::Initialize()
 {
@@ -8,6 +9,8 @@ void GameEngine::Initialize()
   TimeSystem::Initialize();
 
   // InputSystem 초기화
+  InputSystem::GetInstance()->Initialize(_hwnd);
+  
   // Renderer 초기화
 
   // NOTE: 엔진 초기화 작업
@@ -24,6 +27,9 @@ void GameEngine::Shutdown()
 {
   // NOTE: 엔진 종료 작업
   // e.g., 메모리 삭제, 싱글톤 셧다운 등...
+
+  // InputSystem 파괴
+  InputSystem::GetInstance()->Finalize();
 
   // 윈도우 파괴
   WindowManager::GetInstance()->DeleteWinApp();
@@ -54,6 +60,7 @@ void GameEngine::Run()
     else
     {
       TimeSystem::Update();
+      InputSystem::GetInstance()->Update(TimeSystem::GetDeltaTime());
       Update(TimeSystem::GetDeltaTime());
       Render();
     }
