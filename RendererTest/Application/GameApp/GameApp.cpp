@@ -110,8 +110,8 @@ void GameApp::Update(float deltaTime)
   {
     // 마우스 이동량 가져오기
     Vector2 mouseDelta = INPUT->GetMouseDelta();
-    float x = mouseDelta.x * _camera->GetRotationSpeed();
-    float y = mouseDelta.y * _camera->GetRotationSpeed();
+    float x = -mouseDelta.x * _camera->GetRotationSpeed();
+    float y = -mouseDelta.y * _camera->GetRotationSpeed();
 
     if ((INPUT->GetCurrMouseState().x != INPUT->GetPrevMouseState().x) ||
         (INPUT->GetCurrMouseState().y != INPUT->GetPrevMouseState().y))
