@@ -1,8 +1,8 @@
 #include "GameApp.h"
 #include "../../Engine/Source/Renderer/DX11/DX11Renderer.h"
+#include "Core/Input/InputSystem.h"
 #include "ResourceManager/ResourceManager.h"
 #include "WindowManager/WindowManager.h"
-#include "Core/Input/InputSystem.h"
 #define RenderTest
 
 static ModelHandle modelHandle;
@@ -21,7 +21,12 @@ void GameApp::Initialize()
   modelHandle2 = LoadModel("Models\\Ceberus\\Ceberus.glb");
   ModelData modelData = AccessModelData(modelHandle);
   ModelData modelData2 = AccessModelData(modelHandle2);
-
+  // skybox init
+  _renderer->CreateSkyBox(
+      "Textures\BakerEnv.dds", "Textures\BakerSpecularBRDF_LUT.dds",
+      "Textures\BakerDiffuseIrradiance.dds", "Textures\BakerSpecularIBL.dds");
+  // TextureHandle darta = LoadTexture("Textures\BakerEnv.dds",
+  // TextureType::kUnknown);
   std::ranges::for_each(modelData.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
   });
@@ -34,7 +39,7 @@ void GameApp::Initialize()
   std::ranges::for_each(modelData2.meshes, [&](MeshHandle meshHandle) {
     _renderer->AddRenderPass(meshHandle, RenderPassType::OpaquePass);
   });
-  _camera = new Camera(1920,1080);
+  _camera = new Camera(1920, 1080);
   _mainLight.direction = Vector4(-1.f, 0.f, 0.f, 0.f);
   _mainLight.color = Vector4(1.f, 1.f, 1.f, 1.f);
   _mainLight.intensity = Vector4(1.f, 1.f, 1.f, 1.f);
@@ -65,32 +70,32 @@ void GameApp::Update(float deltaTime)
   // 'Q' 누르면 Down
   if (INPUT->IsKeyPress(Key::Q))
   {
-    _camera->MoveDownUp(-deltaTime*3);
+    _camera->MoveDownUp(-deltaTime * 3);
   }
   // 'E' 누르면 Up
   if (INPUT->IsKeyPress(Key::E))
   {
-    _camera->MoveDownUp(deltaTime*3);
+    _camera->MoveDownUp(deltaTime * 3);
   }
   // 'A' 누르면 Left
   if (INPUT->IsKeyPress(Key::A))
   {
-    _camera->MoveLeftRight(-deltaTime*3);
+    _camera->MoveLeftRight(-deltaTime * 3);
   }
   // 'D' 누르면 Right
   if (INPUT->IsKeyPress(Key::D))
   {
-    _camera->MoveLeftRight(deltaTime*3);
+    _camera->MoveLeftRight(deltaTime * 3);
   }
   // 'W' 누르면 Forward
   if (INPUT->IsKeyPress(Key::W))
   {
-    _camera->MoveBackForward(deltaTime*3);
+    _camera->MoveBackForward(deltaTime * 3);
   }
   // 'S' 누르면 Backward
   if (INPUT->IsKeyPress(Key::S))
   {
-    _camera->MoveBackForward(-deltaTime*3);
+    _camera->MoveBackForward(-deltaTime * 3);
   }
 
   if (INPUT->IsKeyDown(Input::MouseState::RB))
@@ -104,7 +109,6 @@ void GameApp::Update(float deltaTime)
     ShowCursor(!_bCameraMove);    // 커서가 보임
   }
 
-
   // 마우스 회전
   if (_bCameraMove)
   {
@@ -116,13 +120,12 @@ void GameApp::Update(float deltaTime)
     if ((INPUT->GetCurrMouseState().x != INPUT->GetPrevMouseState().x) ||
         (INPUT->GetCurrMouseState().y != INPUT->GetPrevMouseState().y))
     {
-        // 마우스가 Y 축으로 움직이면 X 축 회전
-        _camera->RotateAroundXAxis(y);
-        // 마우스가 X 축으로 움직이면 Y 축 회전
-        _camera->RotateAroundYAxis(x);
+      // 마우스가 Y 축으로 움직이면 X 축 회전
+      _camera->RotateAroundXAxis(y);
+      // 마우스가 X 축으로 움직이면 Y 축 회전
+      _camera->RotateAroundYAxis(x);
     }
   }
-
 }
 
 void GameApp::Render()

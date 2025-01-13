@@ -85,4 +85,7 @@ public:
 
   virtual bool CreateComputeEffect() = 0;
   virtual bool DestoryComputeEffect() = 0;
+
+  virtual void CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
+                            LPCSTR diffuseIrrPath, LPCSTR specularIBLPath) = 0;
 };

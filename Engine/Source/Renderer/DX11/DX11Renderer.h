@@ -8,6 +8,7 @@ class Device;
 class SwapChain;
 class PipeLine;
 class RenderPassManager;
+class SkyBox;
 class DX11Renderer : public IRenderer
 {
 public:
@@ -39,6 +40,8 @@ public:
   bool DestroyPipeline() override;
   bool CreateComputeEffect() override;
   bool DestoryComputeEffect() override;
+  void CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
+                    LPCSTR diffuseIrrPath, LPCSTR specularIBLPath) override;
 
 public:
 private:
@@ -52,4 +55,5 @@ private:
 #endif // _DEBUG
   ResourceStorage* _storage = nullptr;
   RenderPassManager* _passMgr = nullptr;
+  SkyBox* _skyBox = nullptr;
 };
