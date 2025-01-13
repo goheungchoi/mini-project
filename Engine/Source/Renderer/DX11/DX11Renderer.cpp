@@ -5,7 +5,6 @@
 #include "Internal/ResourceStorage.h"
 #include "Internal/Resources/Material.h"
 #include "Internal/Resources/PipeLineState.h"
-#include "Internal/Resources/SkyBox.h"
 #include "Internal/SwapChain.h"
 
 DX11Renderer::~DX11Renderer() {}
@@ -33,7 +32,6 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   _passMgr->CreateSamplers();
   _passMgr->CreateMainShader();
   
-  _skyBox = new SkyBox(_device);
   return true;
 }
 
@@ -49,7 +47,6 @@ bool DX11Renderer::Cleanup()
   SAFE_RELEASE(_debugLayer);
   SAFE_RELEASE(_swapChain);
   SAFE_RELEASE(_storage);
-  SAFE_RELEASE(_skyBox);
   return false;
 }
 
@@ -252,7 +249,8 @@ bool DX11Renderer::DestoryComputeEffect()
 void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                                 LPCSTR diffuseIrrPath, LPCSTR specularIBLPath)
 {
-  
+  _passMgr->SetSkyBox(envPath, specularBRDFPath, diffuseIrrPath,
+                      specularIBLPath);
 }
 
 void DX11Renderer::CreateEngineShader()

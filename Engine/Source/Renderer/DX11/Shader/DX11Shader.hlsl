@@ -8,7 +8,12 @@ Texture2D texAlbedo : register(t0);
 Texture2D texNormal : register(t1);
 Texture2D texMetallicRoughness : register(t2);
 Texture2D texEmissive : register(t3);
-Texture2D texOpacity : register(t3);
+Texture2D texOpacity : register(t4);
+//skybox
+TextureCube evnTexture : register(t5);
+Texture2D evnSpecularBRDF : register(t6);
+TextureCube evnIrradianceTexture : register(t7);
+TextureCube evnSpecularIBLTexture : register(t8);
 //deferred
 Texture2D deferredDepth : register(t10);
 Texture2D deferredAlbedo : register(t11);
@@ -285,3 +290,28 @@ float4 ps_main(PS_INPUT input) :SV_TARGET0
     return finalColor;
 }
 #endif 
+
+//---------------------------define SkyBox--------------------------------------------
+#ifdef SkyBox
+struct SKYBOX_PS_INPUT
+{
+    float3 texCoord : TEXCOORD;
+    float4 positionProj : SV_POSITION;
+
+};
+
+SKYBOX_PS_INPUT skybox_vs_main(VS_INPUT input)
+{
+    SKYBOX_PS_INPUT output = (SKYBOX_PS_INPUT) 0;
+    float4 pos = mul(input.position, world);
+    output.texCoord = pos.xyz;
+    float3 pos3 = mul(pos.xyz, (float3x3) view);
+    pos = mul(float4(pos3, 1.f), projection);
+    output.positionProj = pos;
+    return output;
+}
+float4 skybox_ps_main(SKYBOX_PS_INPUT input):SV_Target1
+{
+    return evnTexture.Sample(samAnisotropy, input.texCoord);
+}
+#endif

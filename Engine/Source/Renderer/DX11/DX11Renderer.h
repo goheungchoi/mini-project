@@ -55,5 +55,4 @@ private:
 #endif // _DEBUG
   ResourceStorage* _storage = nullptr;
   RenderPassManager* _passMgr = nullptr;
-  SkyBox* _skyBox = nullptr;
 };

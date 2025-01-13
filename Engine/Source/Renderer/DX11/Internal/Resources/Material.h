@@ -110,7 +110,7 @@ private:
       return ((width + 3) / 4) * 16; // 16 bytes per 4x4 block
 
     default:
-      throw std::runtime_error("Unsupported DXGI_FORMAT");
+      throw std::runtime_error("Unsupported DXGI_FOR,MAT");
     }
   }
 };
@@ -124,7 +124,10 @@ public:
   Material() {}
   ~Material()
   {
-    std::ranges::for_each(_textures, [](Texture* tex) { SAFE_RELEASE(tex); });
+    if (!_textures.empty())
+    {
+      std::ranges::for_each(_textures, [](Texture* tex) { SAFE_RELEASE(tex); });
+    }
   }
 
 public:

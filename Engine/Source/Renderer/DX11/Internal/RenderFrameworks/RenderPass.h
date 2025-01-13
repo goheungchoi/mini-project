@@ -7,6 +7,7 @@
 #include "../Resources/ConstantBuffer.h"
 #include "../Resources/PipeLineState.h"
 #include "../Resources/Sampler.h"
+#include "../Resources/SkyBox.h"
 #include "Core/Common.h"
 
 namespace Renderer
@@ -26,6 +27,7 @@ private:
            std::greater<std::pair<float, int>>>
       _transparentMeshes;
   std::vector<MeshBuffer*> _opaqueMesh;
+  SkyBox* _skyBox = nullptr;
   MeshConstantBuffer* _CB;
   FrameConstantBuffer* _frameCB;
   DefferedPass* _deffered;
@@ -53,6 +55,7 @@ public:
     _CB = new MeshConstantBuffer(_device);
     _compiler = new ShaderCompiler(_device);
     _deffered = new DefferedPass(width, height, _device);
+    _skyBox = new SkyBox(_device);
   }
   ~RenderPassManager()
   {
@@ -70,6 +73,7 @@ public:
     SAFE_RELEASE(_frameCB);
     SAFE_RELEASE(_deffered);
     SAFE_RELEASE(_pso);
+    SAFE_RELEASE(_skyBox);
   }
 
 public:
@@ -110,17 +114,32 @@ public:
   }
   void ProcessPass()
   {
+    
     _pso->ClearBackBuffer(_device);
     // Shadow pass
     // Deferred pass
+    //skybox
     _pso->SetBlendOnEnable(false,_device);
+    _deffered->ClearGbuffer(_pso->_backBuffer);
+    _device->GetImmContext()->IASetInputLayout(
+        _vShaders.find("SkyBox")->second->layout.Get());
+    _device->GetImmContext()->VSSetShader(
+        _vShaders.find("SkyBox")->second->shader.Get(), nullptr, 0);
+    _device->GetImmContext()->PSSetShader(
+        _pShaders.find("SkyBox")->second->shader.Get(), nullptr, 0);
+    Constant::World world = {_skyBox->GetMesh()->world.Transpose()};
+    _CB->UpdateContantBuffer(world, CBType::World);
+    _device->GetImmContext()->VSSetConstantBuffers(
+        1, 1,
+        _CB->_constantBuffers[static_cast<UINT>(CBType::World)].GetAddressOf());
+    _skyBox ->Render();
+    //Deferred meshes
     _device->GetImmContext()->IASetInputLayout(
         _vShaders.find("No_Skinning")->second->layout.Get());
     _device->GetImmContext()->VSSetShader(
         _vShaders.find("No_Skinning")->second->shader.Get(), nullptr, 0);
     _device->GetImmContext()->PSSetShader(
         _pShaders.find("Deffered")->second->shader.Get(), nullptr, 0);
-    _deffered->ClearGbuffer(_pso->_backBuffer);
     std::ranges::for_each(_opaqueMesh, [this](MeshBuffer* buffer) {
       _device->GetImmContext()->IASetVertexBuffers(
           0, 1, buffer->vertexBuffer.GetAddressOf(), &(buffer->stride),
@@ -198,6 +217,13 @@ public:
     _device->GetImmContext()->PSSetConstantBuffers(
         0, 1, _frameCB->_constantBuffer.GetAddressOf());
   }
+  void SetSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath, LPCSTR diffuseIrrPath,
+                 LPCSTR specularIBLPath)
+  {
+    _skyBox->Init();
+    _skyBox->SetTexture(envPath, specularBRDFPath, diffuseIrrPath,
+                        specularIBLPath);
+  }
   void CreateMainShader()
   {
     // vs
@@ -214,6 +240,9 @@ public:
     _vShaders.insert(
         {"Quad", _compiler->CompileVertexShader(macros, "quad_vs_main")});
     macros.clear();
+    macros = {{"SkyBox", "1"}, {nullptr, nullptr}};
+    _vShaders.insert(
+        {"SkyBox", _compiler->CompileVertexShader(macros, "skybox_vs_main")});
     // ps
     macros = {{"Deffered", "1"}, {nullptr, nullptr}};
     _pShaders.insert(
@@ -226,6 +255,10 @@ public:
     macros = {{"Quad", "1"}, {nullptr, nullptr}};
     _pShaders.insert(
         {"Quad", _compiler->CompilePixelShader(macros, "quad_ps_main")});
+    macros.clear();
+    macros = {{"SkyBox", "1"}, {nullptr, nullptr}};
+    _pShaders.insert(
+        {"SkyBox", _compiler->CompilePixelShader(macros, "skybox_ps_main")});
   }
   void CreateSamplers()
   {

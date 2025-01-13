@@ -29,7 +29,10 @@ struct World
 
 struct MeshBuffer
 {
-  ~MeshBuffer() { SAFE_RELEASE(material); }
+  ~MeshBuffer()
+  { 
+    SAFE_RELEASE(material); 
+  }
 
   ComPtr<ID3D11Buffer> vertexBuffer;
   ComPtr<ID3D11Buffer> indexBuffer;
@@ -37,6 +40,6 @@ struct MeshBuffer
   UINT offset;
   UINT nIndices;
   Matrix world;
-  Material* material;
+  Material* material=nullptr;
   RenderPassFlags flags = 0;
 };
