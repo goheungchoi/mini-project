@@ -174,12 +174,19 @@ void ModelExporter::ProcessMesh(GeometryModel& geoModel, GeometryNode& geoNode,
         .position = {mesh->mVertices[i].x, mesh->mVertices[i].y,
                      mesh->mVertices[i].z, 1.0},
         .normal = {mesh->mNormals[i].x, mesh->mNormals[i].y,
-                   mesh->mNormals[i].z},
-        .tangent = {mesh->mTangents[i].x, mesh->mTangents[i].y,
-                    mesh->mTangents[i].z},
-        .bitangent = {mesh->mBitangents[i].x, mesh->mBitangents[i].y,
-                      mesh->mBitangents[i].z},
+                   mesh->mNormals[i].z}
     };
+
+		if (mesh->HasTangentsAndBitangents())
+    {
+      v.tangent[0] = mesh->mTangents[i].x;
+      v.tangent[1] = mesh->mTangents[i].y;
+      v.tangent[2] = mesh->mTangents[i].z;
+
+			v.bitangent[0] = mesh->mBitangents[i].x;
+			v.bitangent[1] = mesh->mBitangents[i].y;
+			v.bitangent[2] = mesh->mBitangents[i].z;
+		}
 
 		// Check if any texture coord set exists
     if (mesh->HasTextureCoords(0))
