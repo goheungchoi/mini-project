@@ -1,0 +1,22 @@
+{
+    "import_path": "Models\\Skybox\\defaultobject0.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "defaultobject0",
+        "bounding_box": [
+            [
+                -10.000003814697266,
+                -10.0,
+                -10.000005722045898
+            ],
+            [
+                10.000004768371582,
+                10.0,
+                10.000003814697266
+            ]
+        ],
+        "num_vertices": 24,
+        "num_indices": 36,
+        "material": "Models\\Skybox\\DefaultMaterial.mat"
+    }
+}
