@@ -2,6 +2,7 @@
 #include "../Common.h"
 #include "../Device.h"
 #include "../Objects/Swapchain.h"
+#include "../RenderFrameworks/DeferredPass.h"
 #include "../RenderFrameworks/Shader.h"
 #include "../Resources/ConstantBuffer.h"
 #include "../Resources/PipeLineState.h"
@@ -21,11 +22,13 @@ struct Camera
 class RenderPassManager
 {
 private:
-  std::vector<MeshBuffer*> _transparentMeshes;
-  std::vector<MeshBuffer*> _shadowMesh;
+  std::map<std::pair<float, MeshBuffer*>, MeshBuffer*,
+           std::greater<std::pair<float, MeshBuffer*>>>
+      _transparentMeshes;
   std::vector<MeshBuffer*> _opaqueMesh;
   MeshConstantBuffer* _CB;
   FrameConstantBuffer* _frameCB;
+  DefferedPass* _deffered;
   std::vector<Sampler*> _samplers;
   std::unordered_map<std::string, VertexShader*> _vShaders;
   std::unordered_map<std::string, PixelShader*> _pShaders;
@@ -45,9 +48,10 @@ public:
     _pso = new PipeLine(_device, swapchain, width, height);
     _device->GetImmContext()->IASetPrimitiveTopology(
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    _frameCB = new FrameConstantBuffer(device);
-    _CB = new MeshConstantBuffer(device);
-    _compiler = new ShaderCompiler(device);
+    _frameCB = new FrameConstantBuffer(_device);
+    _CB = new MeshConstantBuffer(_device);
+    _compiler = new ShaderCompiler(_device);
+    _deffered = new DefferedPass(width, height, _device);
   }
   ~RenderPassManager()
   {
@@ -87,35 +91,41 @@ public:
     }
     if (buff->flags & RenderPassType::TransparentPass)
     {
-      _transparentMeshes.push_back(buff);
+      // 뷰 공간의 Z값 계산
+      Vector3 worldPos3 = buff->world.Translation(); // 월드 공간에서의 위치
+      Vector4 worldPos = {worldPos3.x, worldPos3.y, worldPos3.z,
+                          1.f}; // 월드 공간에서의 위치
+      Vector4 viewPos =
+          Vector4::Transform(worldPos, _camera.view); // 뷰 공간으로 변환
+      float viewZ = viewPos.z;                        // 뷰 공간 Z값 추출
+
+      _transparentMeshes.insert({{viewZ, buff}, buff});
     }
 
-    if (buff->flags & RenderPassType::ShadowPass)
-    {
-      _shadowMesh.push_back(buff);
-    }
     if (buff->flags & RenderPassType::LightPass)
     {
     }
   }
   void ProcessPass()
   {
-    // shadow pass
+    // Shadow pass
+    // Deferred pass
+    //SWTODO : 셰이더 셋팅해주고 for_each문 안에 defferd드로우 호출
+    std::ranges::for_each(_opaqueMesh, [this](MeshBuffer* buffer) {
+    });
+    // Transparent pass -> Forward rendering
+    std::ranges::for_each(_transparentMeshes, [this](const auto& pair) {
+      const auto& [z, buffer] = pair;
 
-    // deffered pass
-
-    // transparent -> forward rendering
-    std::ranges::for_each(_transparentMeshes, [this](MeshBuffer* buffer) {
       _device->GetImmContext()->IASetVertexBuffers(
           0, 1, buffer->vertexBuffer.GetAddressOf(), &(buffer->stride),
           &(buffer->offset));
       _device->GetImmContext()->IASetIndexBuffer(buffer->indexBuffer.Get(),
                                                  DXGI_FORMAT_R32_UINT, 0);
-      // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함.
       _device->GetImmContext()->IASetInputLayout(
           _vShaders.find("No_Skinning")->second->layout.Get());
 
-      Constant::World world = {buffer->world};
+      Constant::World world = {buffer->world.Transpose()};
       _CB->UpdateContantBuffer(world, CBType::World);
       _device->GetImmContext()->VSSetConstantBuffers(
           1, 1,
@@ -124,18 +134,24 @@ public:
       _device->GetImmContext()->VSSetShader(
           _vShaders.find("No_Skinning")->second->shader.Get(), nullptr, 0);
       _device->GetImmContext()->PSSetShader(
-          _pShaders.find("Default")->second->shader.Get(), nullptr, 0);
+          _pShaders.find("Transparency")->second->shader.Get(), nullptr, 0);
       buffer->material->PSSetResourceViews(_device);
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
+    // 처리후 클리어
+    _opaqueMesh.clear();
     _transparentMeshes.clear();
   }
   void FrameSet()
   {
-    Constant::Frame frame = {.mainDirectionalLight = _mainLight,
-                             .cameraPosition = _camera.eye,
-                             .view = _camera.view,
-                             .projection = _camera.projection};
+    Constant::Frame frame = {
+        .mainDirectionalLight = _mainLight,
+        .cameraPosition = _camera.eye,
+        .view = _camera.view.Transpose(),
+        .projection = _camera.projection.Transpose(),
+        .inverseView = XMMatrixInverse(nullptr, _camera.view),
+        .inverseProjection = XMMatrixInverse(nullptr, _camera.projection)};
+
     _frameCB->UpdateContantBuffer(frame);
     _device->GetImmContext()->VSSetConstantBuffers(
         0, 1, _frameCB->_constantBuffer.GetAddressOf());
@@ -153,12 +169,15 @@ public:
     macros.clear();
     macros = {{nullptr, nullptr}};
     _pShaders.insert({"Default", _compiler->CompilePixelShader(macros)});
+    macros.clear();
+    macros = {{"Transparency", "1"}, {nullptr, nullptr}};
+    _pShaders.insert({"Transparency", _compiler->CompilePixelShader(macros)});
   }
   void CreateSamplers()
   {
     D3D11_SAMPLER_DESC sampleDesc = {};
     // linear
-    ZeroMemory(&sampleDesc,sizeof(D3D11_SAMPLER_DESC));
+    ZeroMemory(&sampleDesc, sizeof(D3D11_SAMPLER_DESC));
     sampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
     sampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
     sampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -169,7 +188,7 @@ public:
     MakeSampler(sampleDesc, SamplerType::LINEAR_WRAP);
     // iblspecularBRDF
     // clamp
-    ZeroMemory(&sampleDesc,sizeof(D3D11_SAMPLER_DESC));
+    ZeroMemory(&sampleDesc, sizeof(D3D11_SAMPLER_DESC));
     sampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
     sampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -180,7 +199,7 @@ public:
     MakeSampler(sampleDesc, SamplerType::LINEAR_CLAMP);
     // default
     // anisotropy
-    ZeroMemory(&sampleDesc,sizeof(D3D11_SAMPLER_DESC));
+    ZeroMemory(&sampleDesc, sizeof(D3D11_SAMPLER_DESC));
     sampleDesc.Filter = D3D11_FILTER_ANISOTROPIC;
     sampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
     sampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -190,7 +209,7 @@ public:
     sampleDesc.MaxLOD = D3D11_FLOAT32_MAX;
     MakeSampler(sampleDesc, SamplerType::ANIMSOROPIC);
     // Comparison
-    ZeroMemory(&sampleDesc,sizeof(D3D11_SAMPLER_DESC));
+    ZeroMemory(&sampleDesc, sizeof(D3D11_SAMPLER_DESC));
     sampleDesc = {};
     sampleDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
     sampleDesc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;

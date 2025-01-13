@@ -38,13 +38,17 @@ public:
 #endif
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
-    HR_T(D3DCompileFromFile(L"../Engine/Source/Renderer/DX11/Shader/DX11Shader.hlsl", macros.data(),
-                            D3D_COMPILE_STANDARD_FILE_INCLUDE, "vs_main",
-                            "vs_5_0", shaderFlags, 0, &shaderBlob, &errorBlob));
+    HR_T(D3DCompileFromFile(
+        L"../Engine/Source/Renderer/DX11/Shader/DX11Shader.hlsl", macros.data(),
+        D3D_COMPILE_STANDARD_FILE_INCLUDE, "vs_main", "vs_5_0", shaderFlags, 0,
+        &shaderBlob, &errorBlob));
     HR_T(_device->GetDevice()->CreateVertexShader(
         shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
         pShader->shader.GetAddressOf()));
-    std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc = CreateInputLayoutDesc(
+    std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
+
+    CreateInputLayoutDesc(
+        inputLayoutDesc,
         std::vector<uint8_t>((uint8_t*)shaderBlob->GetBufferPointer(),
                              (uint8_t*)shaderBlob->GetBufferPointer() +
                                  shaderBlob->GetBufferSize()),
@@ -54,7 +58,9 @@ public:
         inputLayoutDesc.data(), static_cast<UINT>(inputLayoutDesc.size()),
         shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
         pShader->layout.GetAddressOf()));
-
+    std::ranges::for_each(inputLayoutDesc, [](D3D11_INPUT_ELEMENT_DESC& desc) {
+      SAFE_RELEASE(desc.SemanticName);
+    });
     shaderBlob->Release();
     return pShader;
   }
@@ -75,13 +81,12 @@ public:
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
     HR_T(D3DCompileFromFile(
-        L"../Engine/Source/Renderer/DX11/Shader/DX11Shader.hlsl",
-        macros.data(), D3D_COMPILE_STANDARD_FILE_INCLUDE, "ps_main", "ps_5_0",
-        shaderFlags, 0, &shaderBlob, &errorBlob));
+        L"../Engine/Source/Renderer/DX11/Shader/DX11Shader.hlsl", macros.data(),
+        D3D_COMPILE_STANDARD_FILE_INCLUDE, "ps_main", "ps_5_0", shaderFlags, 0,
+        &shaderBlob, &errorBlob));
     HR_T(_device->GetDevice()->CreatePixelShader(
         shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
         pShader->shader.GetAddressOf()));
-
 
     shaderBlob->Release();
     return pShader;

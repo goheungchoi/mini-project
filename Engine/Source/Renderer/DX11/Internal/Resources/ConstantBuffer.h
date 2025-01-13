@@ -12,6 +12,7 @@ enum class CBType
 {
   Frame,
   World,
+  Defferd,
   Light,
   End
 };

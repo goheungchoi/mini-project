@@ -3,8 +3,8 @@
 #include "Internal/Device.h"
 #include "Internal/RenderFrameworks/RenderPass.h"
 #include "Internal/ResourceStorage.h"
-#include "Internal/Resources/PipeLineState.h"
 #include "Internal/Resources/Material.h"
+#include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
 
 DX11Renderer::~DX11Renderer() {}
@@ -28,7 +28,7 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   // After debugging, you can disable specific breakpoints
   //_debugLayer->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, false);
 #endif // _DEBUG
-  _passMgr = new RenderPassManager(_device,_swapChain,width,height);
+  _passMgr = new RenderPassManager(_device, _swapChain, width, height);
   _passMgr->CreateSamplers();
   _passMgr->CreateMainShader();
 
@@ -52,9 +52,10 @@ bool DX11Renderer::Cleanup()
 
 void DX11Renderer::ResizeScreen(unsigned int width, unsigned int height) {}
 
-void DX11Renderer::BeginFrame(Vector4 cameraPos,Matrix view, Matrix projection,Light::DirectionalLight mainLight)
+void DX11Renderer::BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
+                              Light::DirectionalLight mainLight)
 {
-  _passMgr->SetCamera(cameraPos,view, projection);
+  _passMgr->SetCamera(cameraPos, view, projection);
   _passMgr->SetMainLightDir(mainLight);
   _passMgr->ClearBackBuffer();
 }
@@ -132,8 +133,7 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
     {
       meshBuffer->material = new Material;
       MaterialData matData = AccessMaterialData(meshData.material);
-      meshBuffer->material->CreateMaterial(_device,matData);
-      
+      meshBuffer->material->CreateMaterial(_device, matData);
     }
     // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함.??
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
@@ -194,10 +194,13 @@ bool DX11Renderer::CreateShaderModule(ShaderHandle shaderHandle)
       HR_T(_device->GetDevice()->CreateVertexShader(
           data.data.data(), data.data.size(), nullptr, &vs));
       _storage->vertexShaderMap[shaderHandle].shader = vs;
-      std::vector<D3D11_INPUT_ELEMENT_DESC> descs =
-          CreateInputLayoutDesc(data.data, data.data.size());
+      std::vector<D3D11_INPUT_ELEMENT_DESC> descs;
+      CreateInputLayoutDesc(descs, data.data, data.data.size());
       _storage->vertexShaderMap[shaderHandle].layout =
           _device->CreateInputLayout(descs, data.data);
+      std::ranges::for_each(descs, [](D3D11_INPUT_ELEMENT_DESC& desc) {
+        SAFE_RELEASE(desc.SemanticName);
+      });
     }
     break;
   }

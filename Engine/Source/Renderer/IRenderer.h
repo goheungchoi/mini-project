@@ -23,8 +23,8 @@ public:
   /**
    * @brief call per frame
    * @param cameraPos : camera position
-   * @param view : camera view matrix after transpose
-   * @param projection : camera projection matrix after transpose
+   * @param view : camera view matrix
+   * @param projection : camera projection matrix
    * @param mainLightDir : main light direction
    */
   virtual void BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
@@ -32,7 +32,7 @@ public:
   /**
    * @brief call per mesh
    * @param handle : mesh handle owned by mesh
-   * @param world : world matrix of mesh after transpose
+   * @param world : world matrix of mesh
    */
   virtual void BeginDraw(MeshHandle handle, Matrix world) = 0;
   /**
