@@ -22,8 +22,8 @@ struct Camera
 class RenderPassManager
 {
 private:
-  std::map<std::pair<float, MeshBuffer*>, MeshBuffer*,
-           std::greater<std::pair<float, MeshBuffer*>>>
+  std::map<std::pair<float, int>, MeshBuffer*,
+           std::greater<std::pair<float, int>>>
       _transparentMeshes;
   std::vector<MeshBuffer*> _opaqueMesh;
   MeshConstantBuffer* _CB;
@@ -40,6 +40,7 @@ private:
   ShaderCompiler* _compiler = nullptr;
   Renderer::Camera _camera;
   Light::DirectionalLight _mainLight;
+  int max = std::numeric_limits<int>::max();
 
 public:
   RenderPassManager(Device* device, SwapChain* swapchain, int width, int height)
@@ -67,7 +68,7 @@ public:
     SAFE_RELEASE(_compiler);
     SAFE_RELEASE(_CB);
     SAFE_RELEASE(_frameCB);
-
+    SAFE_RELEASE(_deffered);
     SAFE_RELEASE(_pso);
   }
 
@@ -99,7 +100,8 @@ public:
           Vector4::Transform(worldPos, _camera.view); // 뷰 공간으로 변환
       float viewZ = viewPos.z;                        // 뷰 공간 Z값 추출
 
-      _transparentMeshes.insert({{viewZ, buff}, buff});
+      _transparentMeshes.insert({{viewZ, max}, buff});
+      max--;
     }
 
     if (buff->flags & RenderPassType::LightPass)
@@ -108,12 +110,50 @@ public:
   }
   void ProcessPass()
   {
+    _pso->ClearBackBuffer(_device);
     // Shadow pass
     // Deferred pass
-    //SWTODO : 셰이더 셋팅해주고 for_each문 안에 defferd드로우 호출
+    _pso->SetBlendOnEnable(false,_device);
+    _device->GetImmContext()->IASetInputLayout(
+        _vShaders.find("No_Skinning")->second->layout.Get());
+    _device->GetImmContext()->VSSetShader(
+        _vShaders.find("No_Skinning")->second->shader.Get(), nullptr, 0);
+    _device->GetImmContext()->PSSetShader(
+        _pShaders.find("Deffered")->second->shader.Get(), nullptr, 0);
+    _deffered->ClearGbuffer(_pso->_backBuffer);
     std::ranges::for_each(_opaqueMesh, [this](MeshBuffer* buffer) {
+      _device->GetImmContext()->IASetVertexBuffers(
+          0, 1, buffer->vertexBuffer.GetAddressOf(), &(buffer->stride),
+          &(buffer->offset));
+      _device->GetImmContext()->IASetIndexBuffer(buffer->indexBuffer.Get(),
+                                                 DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {buffer->world.Transpose()};
+      _CB->UpdateContantBuffer(world, CBType::World);
+      buffer->material->PSSetResourceViews(_device);
+      _device->GetImmContext()->VSSetConstantBuffers(
+          1, 1,
+          _CB->_constantBuffers[static_cast<UINT>(CBType::World)]
+              .GetAddressOf());
+      _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
+    _pso->TurnZBufferOff(_device);
+    _device->GetImmContext()->IASetInputLayout(
+        _vShaders.find("Quad")->second->layout.Get());
+    _device->GetImmContext()->VSSetShader(
+        _vShaders.find("Quad")->second->shader.Get(), nullptr, 0);
+    _device->GetImmContext()->PSSetShader(
+        _pShaders.find("Quad")->second->shader.Get(), nullptr, 0);
+    _pso->SetBackBuffer(_device);
+    _deffered->QuadDraw();
     // Transparent pass -> Forward rendering
+    _pso->SetBlendOnEnable(true, _device);
+    _device->GetImmContext()->IASetInputLayout(
+        _vShaders.find("No_Skinning")->second->layout.Get());
+    _device->GetImmContext()->VSSetShader(
+        _vShaders.find("No_Skinning")->second->shader.Get(), nullptr, 0);
+    _device->GetImmContext()->PSSetShader(
+        _pShaders.find("Transparency")->second->shader.Get(), nullptr, 0);
+    _pso->TurnZBufferOn(_device);
     std::ranges::for_each(_transparentMeshes, [this](const auto& pair) {
       const auto& [z, buffer] = pair;
 
@@ -122,25 +162,21 @@ public:
           &(buffer->offset));
       _device->GetImmContext()->IASetIndexBuffer(buffer->indexBuffer.Get(),
                                                  DXGI_FORMAT_R32_UINT, 0);
-      _device->GetImmContext()->IASetInputLayout(
-          _vShaders.find("No_Skinning")->second->layout.Get());
-
       Constant::World world = {buffer->world.Transpose()};
       _CB->UpdateContantBuffer(world, CBType::World);
       _device->GetImmContext()->VSSetConstantBuffers(
           1, 1,
           _CB->_constantBuffers[static_cast<UINT>(CBType::World)]
               .GetAddressOf());
-      _device->GetImmContext()->VSSetShader(
-          _vShaders.find("No_Skinning")->second->shader.Get(), nullptr, 0);
-      _device->GetImmContext()->PSSetShader(
-          _pShaders.find("Transparency")->second->shader.Get(), nullptr, 0);
+
       buffer->material->PSSetResourceViews(_device);
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
     // 처리후 클리어
     _opaqueMesh.clear();
     _transparentMeshes.clear();
+    // max값 초기화
+    max = std::numeric_limits<int>::max();
   }
   void FrameSet()
   {
@@ -149,9 +185,13 @@ public:
         .cameraPosition = _camera.eye,
         .view = _camera.view.Transpose(),
         .projection = _camera.projection.Transpose(),
-        .inverseView = XMMatrixInverse(nullptr, _camera.view),
-        .inverseProjection = XMMatrixInverse(nullptr, _camera.projection)};
-
+        };
+    Matrix IView = _camera.view;
+    Matrix IProj = _camera.projection;
+    IView = DirectX::XMMatrixInverse(nullptr, IView);
+    IProj = DirectX::XMMatrixInverse(nullptr, IProj);
+    frame.inverseView = DirectX::XMMatrixTranspose(IView);
+    frame.inverseProjection = DirectX::XMMatrixTranspose(IProj);
     _frameCB->UpdateContantBuffer(frame);
     _device->GetImmContext()->VSSetConstantBuffers(
         0, 1, _frameCB->_constantBuffer.GetAddressOf());
@@ -160,18 +200,32 @@ public:
   }
   void CreateMainShader()
   {
+    // vs
     std::vector<D3D_SHADER_MACRO> macros;
     macros = {{nullptr, nullptr}};
-    _vShaders.insert({"No_Skinning", _compiler->CompileVertexShader(macros)});
+    _vShaders.insert(
+        {"No_Skinning", _compiler->CompileVertexShader(macros, "vs_main")});
     macros.clear();
     macros = {{"Skinning", "1"}, {nullptr, nullptr}};
-    _vShaders.insert({"Skinning", _compiler->CompileVertexShader(macros)});
+    _vShaders.insert(
+        {"Skinning", _compiler->CompileVertexShader(macros, "vs_main")});
     macros.clear();
-    macros = {{nullptr, nullptr}};
-    _pShaders.insert({"Default", _compiler->CompilePixelShader(macros)});
+    macros = {{"Quad", "1"}, {nullptr, nullptr}};
+    _vShaders.insert(
+        {"Quad", _compiler->CompileVertexShader(macros, "quad_vs_main")});
+    macros.clear();
+    // ps
+    macros = {{"Deffered", "1"}, {nullptr, nullptr}};
+    _pShaders.insert(
+        {"Deffered", _compiler->CompilePixelShader(macros, "ps_main")});
     macros.clear();
     macros = {{"Transparency", "1"}, {nullptr, nullptr}};
-    _pShaders.insert({"Transparency", _compiler->CompilePixelShader(macros)});
+    _pShaders.insert(
+        {"Transparency", _compiler->CompilePixelShader(macros, "ps_main")});
+    macros.clear();
+    macros = {{"Quad", "1"}, {nullptr, nullptr}};
+    _pShaders.insert(
+        {"Quad", _compiler->CompilePixelShader(macros, "quad_ps_main")});
   }
   void CreateSamplers()
   {

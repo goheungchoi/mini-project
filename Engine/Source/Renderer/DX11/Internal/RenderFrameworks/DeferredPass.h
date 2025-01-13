@@ -1,3 +1,4 @@
+;
 #pragma once
 #include "../Common.h"
 #include "../Device.h"
@@ -5,6 +6,7 @@
 #include "../Resources/Buffer.h"
 #include "Core/Common.h"
 #include "directxtk/SimpleMath.h"
+#include "../Resources/PipeLineState.h"
 using namespace DirectX::SimpleMath;
 using namespace Microsoft::WRL;
 namespace Quad
@@ -12,24 +14,52 @@ namespace Quad
 struct Vertex
 {
   Vector4 position;
-  Vector2 texture;
+  Vector2 uv;
 };
 class QuadFrame
 {
-private:
+public:
   ComPtr<ID3D11Buffer> _vertexBuffer;
   ComPtr<ID3D11Buffer> _indexBuffer;
   ComPtr<ID3D11Buffer> _constant;
-  int _vertexCount, _indexCount;
-  ID3D11DeviceContext* _dc = nullptr;
+  int _vertexCount = 0;
+  int _indexCount = 0;
+  Device* _device = nullptr;
 
 public:
   // SWTODO : 초기화
-  QuadFrame() {}
+  QuadFrame(Device* device) : _device{device} {}
   ~QuadFrame() {}
 
 public:
-  void InitializeBuffers(int windowWidth, int windowHeight) {}
+  void InitializeBuffers()
+  {
+    Quad::Vertex* vertices;
+    std::vector<UINT> indices;
+    _vertexCount = 4;
+    _indexCount = 6;
+    vertices = new Quad::Vertex[_vertexCount];
+    vertices[0].position =
+        DirectX::SimpleMath::Vector4(-1.0f, 1.0f, 0.0f, 1.0f); // Top left
+    vertices[1].position =
+        DirectX::SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f); // Top right
+    vertices[2].position =
+        DirectX::SimpleMath::Vector4(-1.0f, -1.0f, 0.0f, 1.0f); // Bottom left
+    vertices[3].position =
+        DirectX::SimpleMath::Vector4(1.0f, -1.0f, 0.0f, 1.0f); // Bottom right
+    vertices[0].uv = DirectX::SimpleMath::Vector2(0.0f, 0.0f); // Top left
+    vertices[1].uv = DirectX::SimpleMath::Vector2(1.0f, 0.0f); // Top right
+    vertices[2].uv = DirectX::SimpleMath::Vector2(0.0f, 1.0f); // Bottom left
+    vertices[3].uv = DirectX::SimpleMath::Vector2(1.0f, 1.0f); // Bottom right
+    indices = {0, 1, 2, 2, 1, 3};
+    _vertexBuffer =
+        _device->CreateDataBuffer(vertices, sizeof(Quad::Vertex) * _vertexCount,
+                                  D3D11_BIND_VERTEX_BUFFER);
+    _indexBuffer = _device->CreateDataBuffer(
+        indices.data(), sizeof(UINT) * _indexCount, D3D11_BIND_INDEX_BUFFER);
+    delete[] vertices;
+    vertices = 0;
+  }
 };
 } // namespace Quad
 
@@ -37,7 +67,7 @@ class DefferedPass
 {
 private:
   Device* _device;
-  Quad::QuadFrame _frame;
+  Quad::QuadFrame* _frame;
   // 0 : depth,1 : albedo, 2 : Normal, 3 : Material(metalic,roughness), 4 :
   // Emissive 5: shadowPosition
   std::vector<ComPtr<ID3D11Texture2D>> _renderTargetTextures;
@@ -45,17 +75,20 @@ private:
   std::vector<ComPtr<ID3D11ShaderResourceView>> _renderTargetSRVs;
   size_t _gBuffSize = 6;
   float _clearColor[4] = {0.f, 0.f, 0.f, 1.f};
+  float _clearColor2[4] = {0.2f, 0.2f, 0.2f, 1.f};
 
 public:
-  DefferedPass(int width, int hegiht, Device* device) : _device{device}
+  DefferedPass(int width, int height, Device* device) : _device{device}
   {
+    _frame = new Quad::QuadFrame(device);
+    _frame->InitializeBuffers();
     _renderTargetTextures.resize(_gBuffSize);
     _renderTargets.resize(_gBuffSize);
     _renderTargetSRVs.resize(_gBuffSize);
     D3D11_TEXTURE2D_DESC texDesc;
     ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
     texDesc = CreateTexture2DDesc(
-        width, hegiht, DXGI_FORMAT_R32G32B32A32_FLOAT, 1,
+        width, height, DXGI_FORMAT_R32G32B32A32_FLOAT, 1,
         D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, 1);
 
     std::ranges::for_each(std::views::iota(0u, _gBuffSize), [&](size_t i) {
@@ -85,10 +118,10 @@ public:
           _renderTargetSRVs[i].GetAddressOf()));
     });
   }
-  ~DefferedPass() {}
+  ~DefferedPass() { SAFE_RELEASE(_frame); }
 
 public:
-  void DrawMeshDeffered(MeshBuffer* buffer)
+  void ClearGbuffer(BackBuffer* backBuffer)
   {
     std::ranges::for_each(_renderTargets,
                           [&](ComPtr<ID3D11RenderTargetView>& targetView) {
@@ -98,7 +131,24 @@ public:
 
     _device->GetImmContext()->OMSetRenderTargets(
         static_cast<UINT>(_renderTargets.size()),
-        _renderTargets.data()->GetAddressOf(), nullptr);
-    // SWTODO : 드로우 호출
+        _renderTargets.data()->GetAddressOf(), backBuffer->mainDSV.Get());
+  }
+  void QuadDraw()
+  {
+    unsigned int stride;
+    unsigned int offset;
+    // Set vertex buffer stride and offset.
+    stride = sizeof(Quad::Vertex);
+    offset = 0;
+    //_dc->UpdateSubresource(_constant.Get(), 0, nullptr, &cb, 0, 0);
+    _device->GetImmContext()->IASetVertexBuffers(
+        0, 1, _frame->_vertexBuffer.GetAddressOf(), &stride, &offset);
+    _device->GetImmContext()->IASetIndexBuffer(_frame->_indexBuffer.Get(),
+                                               DXGI_FORMAT_R32_UINT, 0);
+    _device->GetImmContext()->PSSetShaderResources(
+        10, _gBuffSize, _renderTargetSRVs.data()->GetAddressOf());
+    _device->GetImmContext()->IASetPrimitiveTopology(
+        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    _device->GetImmContext()->DrawIndexed(_frame->_indexCount, 0, 0);
   }
 };

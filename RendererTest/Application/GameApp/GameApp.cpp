@@ -32,7 +32,7 @@ void GameApp::Initialize()
     _renderer->CreateMesh(meshHandle);
   });
   std::ranges::for_each(modelData2.meshes, [&](MeshHandle meshHandle) {
-    _renderer->AddRenderPass(meshHandle, RenderPassType::TransparentPass);
+    _renderer->AddRenderPass(meshHandle, RenderPassType::OpaquePass);
   });
   _camera = new Camera(1920,1080);
   _mainLight.direction = Vector4(-1.f, 0.f, 0.f, 0.f);
@@ -65,32 +65,32 @@ void GameApp::Update(float deltaTime)
   // 'Q' 누르면 Down
   if (INPUT->IsKeyPress(Key::Q))
   {
-    _camera->MoveDownUp(-deltaTime);
+    _camera->MoveDownUp(-deltaTime*3);
   }
   // 'E' 누르면 Up
   if (INPUT->IsKeyPress(Key::E))
   {
-    _camera->MoveDownUp(deltaTime);
+    _camera->MoveDownUp(deltaTime*3);
   }
   // 'A' 누르면 Left
   if (INPUT->IsKeyPress(Key::A))
   {
-    _camera->MoveLeftRight(-deltaTime);
+    _camera->MoveLeftRight(-deltaTime*3);
   }
   // 'D' 누르면 Right
   if (INPUT->IsKeyPress(Key::D))
   {
-    _camera->MoveLeftRight(deltaTime);
+    _camera->MoveLeftRight(deltaTime*3);
   }
   // 'W' 누르면 Forward
   if (INPUT->IsKeyPress(Key::W))
   {
-    _camera->MoveBackForward(deltaTime);
+    _camera->MoveBackForward(deltaTime*3);
   }
   // 'S' 누르면 Backward
   if (INPUT->IsKeyPress(Key::S))
   {
-    _camera->MoveBackForward(-deltaTime);
+    _camera->MoveBackForward(-deltaTime*3);
   }
 
   if (INPUT->IsKeyDown(Input::MouseState::RB))

@@ -4,6 +4,11 @@
 #include "../SwapChain.h"
 using namespace Microsoft::WRL;
 
+struct BackBuffer
+{
+  ComPtr<ID3D11RenderTargetView> mainRTV;
+  ComPtr<ID3D11DepthStencilView> mainDSV;
+};
 class PipeLine
 {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 private:
@@ -20,13 +25,7 @@ private:
     D3D11_VIEWPORT viewPort;
   };
 
-  struct BackBuffer
-  {
-    ComPtr<ID3D11RenderTargetView> mainRTV;
-    ComPtr<ID3D11DepthStencilView> mainDSV;
-  };
-
-private:
+public:
   BackBuffer* _backBuffer = nullptr;
   OutputMerger* _om = nullptr;
   Rasterizer* _rs = nullptr;
@@ -107,6 +106,7 @@ public:
 public:
   void ClearBackBuffer(Device* device)
   {
+    
     device->GetImmContext()->ClearRenderTargetView(_backBuffer->mainRTV.Get(),
                                                    _clearColor2);
     device->GetImmContext()->ClearDepthStencilView(_backBuffer->mainDSV.Get(),
@@ -126,6 +126,11 @@ public:
     // 초기 blend상태 true.
     device->GetImmContext()->OMSetBlendState(_om->blentState.Get(), blendFactor,
                                              0xFFFFFFFF);
+  }
+  void SetBackBuffer(Device* device)
+  {
+    device->GetImmContext()->OMSetRenderTargets(
+        1, _backBuffer->mainRTV.GetAddressOf(), _backBuffer->mainDSV.Get());
   }
   void TurnZBufferOn(Device* device)
   {

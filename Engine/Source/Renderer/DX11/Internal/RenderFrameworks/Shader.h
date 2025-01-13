@@ -22,7 +22,7 @@ public:
   ~ShaderCompiler() {}
 
 public:
-  VertexShader* CompileVertexShader(const std::vector<D3D_SHADER_MACRO>& macros)
+  VertexShader* CompileVertexShader(const std::vector<D3D_SHADER_MACRO>& macros,LPCSTR entryPoint)
   {
     VertexShader* pShader = new VertexShader();
     DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
@@ -40,7 +40,7 @@ public:
     ID3DBlob* errorBlob = nullptr;
     HR_T(D3DCompileFromFile(
         L"../Engine/Source/Renderer/DX11/Shader/DX11Shader.hlsl", macros.data(),
-        D3D_COMPILE_STANDARD_FILE_INCLUDE, "vs_main", "vs_5_0", shaderFlags, 0,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "vs_5_0", shaderFlags, 0,
         &shaderBlob, &errorBlob));
     HR_T(_device->GetDevice()->CreateVertexShader(
         shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
@@ -64,7 +64,8 @@ public:
     shaderBlob->Release();
     return pShader;
   }
-  PixelShader* CompilePixelShader(const std::vector<D3D_SHADER_MACRO>& macros)
+  PixelShader* CompilePixelShader(const std::vector<D3D_SHADER_MACRO>& macros,
+                                  LPCSTR entryPoint)
   {
     PixelShader* pShader = new PixelShader();
     DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
@@ -82,7 +83,7 @@ public:
     ID3DBlob* errorBlob = nullptr;
     HR_T(D3DCompileFromFile(
         L"../Engine/Source/Renderer/DX11/Shader/DX11Shader.hlsl", macros.data(),
-        D3D_COMPILE_STANDARD_FILE_INCLUDE, "ps_main", "ps_5_0", shaderFlags, 0,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "ps_5_0", shaderFlags, 0,
         &shaderBlob, &errorBlob));
     HR_T(_device->GetDevice()->CreatePixelShader(
         shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
