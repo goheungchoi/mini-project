@@ -23,8 +23,8 @@ void GameApp::Initialize()
   ModelData modelData2 = AccessModelData(modelHandle2);
   // skybox init
   _renderer->CreateSkyBox(
-      "Textures\\BakerEnv.dds", "Textures\\BakerSpecularBRDF_LUT.dds",
-      "Textures\\BakerDiffuseIrradiance.dds", "Textures\\BakerSpecularIBL.dds");
+      "Textures/BakerEnv.dds", "Textures/BakerSpecularBRDF_LUT.dds",
+      "Textures/BakerDiffuseIrradiance.dds", "Textures/BakerSpecularIBL.dds");
   std::ranges::for_each(modelData.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
   });

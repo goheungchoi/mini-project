@@ -13,7 +13,12 @@ private:
 
 public:
   SkyBox(Device* device) : _device{device} {}
-  ~SkyBox() { SAFE_RELEASE(_mesh); }
+  ~SkyBox()
+  {
+    SAFE_RELEASE(_mesh);
+    std::ranges::for_each(_textures,
+                          [](auto& texture) { SAFE_RELEASE(texture); });
+  }
 
 public:
   void Init()
@@ -78,7 +83,8 @@ public:
     std::ranges::for_each(_textures, [&srvs](Texture* tex) {
       srvs.push_back(tex->GetResource().Get());
     });
-    _device->GetImmContext()->PSSetShaderResources(5, srvs.size(), srvs.data());
+    _device->GetImmContext()->PSSetShaderResources(5, srvs.size(),
+    srvs.data());
   }
   void Render()
   {

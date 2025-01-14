@@ -39,6 +39,32 @@ public:
         data.ddsData.size(),                   // DDS 单捞磐 农扁
         textureResource.GetAddressOf(),        // 积己等 府家胶 馆券
         pInstance->_resource.GetAddressOf())); // 积己等 SRV 馆券
+    //ComPtr<ID3D11Texture2D> texture2D;
+    //HR_T(textureResource.As(&texture2D));
+
+    //D3D11_TEXTURE2D_DESC textureDesc;
+    //texture2D->GetDesc(&textureDesc);
+
+    //D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    //srvDesc.Format = textureDesc.Format;
+
+    //if (textureDesc.ArraySize == 6 &&
+    //    (textureDesc.MiscFlags & D3D11_RESOURCE_MISC_TEXTURECUBE))
+    //{
+    //  srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+    //  srvDesc.TextureCube.MostDetailedMip = 0;
+    //  srvDesc.TextureCube.MipLevels = textureDesc.MipLevels;
+    //}
+    //else
+    //{
+    //  srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    //  srvDesc.Texture2D.MostDetailedMip = 0;
+    //  srvDesc.Texture2D.MipLevels = textureDesc.MipLevels;
+    //}
+
+    //// SRV 积己
+    //HR_T(device->GetDevice()->CreateShaderResourceView(
+    //    textureResource.Get(), &srvDesc, pInstance->_resource.GetAddressOf()));
 
     return pInstance;
   }
