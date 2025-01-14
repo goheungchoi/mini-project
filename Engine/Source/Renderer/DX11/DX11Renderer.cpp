@@ -57,7 +57,6 @@ void DX11Renderer::BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
 {
   _passMgr->SetCamera(cameraPos, view, projection);
   _passMgr->SetMainLightDir(mainLight);
-  _passMgr->ClearBackBuffer();
 }
 
 void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)

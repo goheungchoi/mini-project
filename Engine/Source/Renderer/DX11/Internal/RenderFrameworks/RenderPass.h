@@ -77,7 +77,6 @@ public:
   }
 
 public:
-  void ClearBackBuffer() { _pso->ClearBackBuffer(_device); }
   void SetCamera(Vector4 eye, Matrix view, Matrix projection)
   {
     _camera.view = view;
@@ -115,7 +114,6 @@ public:
   void ProcessPass()
   {
     
-    _pso->ClearBackBuffer(_device);
     // Shadow pass
     // Deferred pass
     //skybox
@@ -155,6 +153,7 @@ public:
               .GetAddressOf());
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
+    _pso->ClearBackBuffer(_device);
     _pso->TurnZBufferOff(_device);
     _device->GetImmContext()->IASetInputLayout(
         _vShaders.find("Quad")->second->layout.Get());
@@ -164,6 +163,7 @@ public:
         _pShaders.find("Quad")->second->shader.Get(), nullptr, 0);
     _pso->SetBackBuffer(_device);
     _deffered->QuadDraw();
+    _deffered->ClearRenderTargets();
     // Transparent pass -> Forward rendering
     _pso->SetBlendOnEnable(true, _device);
     _device->GetImmContext()->IASetInputLayout(

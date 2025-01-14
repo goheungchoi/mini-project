@@ -151,4 +151,11 @@ public:
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     _device->GetImmContext()->DrawIndexed(_frame->_indexCount, 0, 0);
   }
+  void ClearRenderTargets()
+  {
+    ID3D11ShaderResourceView* srvs[6] = {
+        nullptr,
+    };
+    _device->GetImmContext()->PSSetShaderResources(10,6,srvs);
+  }
 };
