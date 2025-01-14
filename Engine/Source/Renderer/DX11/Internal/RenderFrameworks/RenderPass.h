@@ -113,7 +113,7 @@ public:
   }
   void ProcessPass()
   {
-    
+    _pso->ClearBackBufferDSV(_device);
     // Shadow pass
     // Deferred pass
     //skybox
@@ -133,9 +133,9 @@ public:
     _skyBox ->Render();
     //Deferred meshes
     _device->GetImmContext()->IASetInputLayout(
-        _vShaders.find("No_Skinning")->second->layout.Get());
+        _vShaders.find("Default")->second->layout.Get());
     _device->GetImmContext()->VSSetShader(
-        _vShaders.find("No_Skinning")->second->shader.Get(), nullptr, 0);
+        _vShaders.find("Default")->second->shader.Get(), nullptr, 0);
     _device->GetImmContext()->PSSetShader(
         _pShaders.find("Deffered")->second->shader.Get(), nullptr, 0);
     std::ranges::for_each(_opaqueMesh, [this](MeshBuffer* buffer) {
@@ -153,7 +153,7 @@ public:
               .GetAddressOf());
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
-    _pso->ClearBackBuffer(_device);
+    _pso->ClearBackBufferRTV(_device);
     _pso->TurnZBufferOff(_device);
     _device->GetImmContext()->IASetInputLayout(
         _vShaders.find("Quad")->second->layout.Get());
@@ -167,9 +167,9 @@ public:
     // Transparent pass -> Forward rendering
     _pso->SetBlendOnEnable(true, _device);
     _device->GetImmContext()->IASetInputLayout(
-        _vShaders.find("No_Skinning")->second->layout.Get());
+        _vShaders.find("Default")->second->layout.Get());
     _device->GetImmContext()->VSSetShader(
-        _vShaders.find("No_Skinning")->second->shader.Get(), nullptr, 0);
+        _vShaders.find("Default")->second->shader.Get(), nullptr, 0);
     _device->GetImmContext()->PSSetShader(
         _pShaders.find("Transparency")->second->shader.Get(), nullptr, 0);
     _pso->TurnZBufferOn(_device);
@@ -230,7 +230,7 @@ public:
     std::vector<D3D_SHADER_MACRO> macros;
     macros = {{nullptr, nullptr}};
     _vShaders.insert(
-        {"No_Skinning", _compiler->CompileVertexShader(macros, "vs_main")});
+        {"Default", _compiler->CompileVertexShader(macros, "vs_main")});
     macros.clear();
     macros = {{"Skinning", "1"}, {nullptr, nullptr}};
     _vShaders.insert(

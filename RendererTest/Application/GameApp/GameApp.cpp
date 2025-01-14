@@ -38,11 +38,12 @@ void GameApp::Initialize()
     _renderer->AddRenderPass(meshHandle, RenderPassType::OpaquePass);
   });
   _camera = new Camera(1920, 1080);
-  _mainLight.direction = Vector4(-1.f, 0.f, 0.f, 0.f);
+  _mainLight.direction = Vector4(0.f, 0.f, 1.f, 0.f);
   _mainLight.color = Vector4(1.f, 1.f, 1.f, 1.f);
   _mainLight.intensity = Vector4(1.f, 1.f, 1.f, 1.f);
 
-  eye = {70.f, 0.0f, 0.f, 1.f};
+  _camera->SetPosition({4.367269, -0.90219879, -40.523827, +76.853645});
+  eye = {4.367269, -0.90219879, -40.523827, +76.853645};
   at = Vector4::Zero;
 }
 
@@ -115,6 +116,7 @@ void GameApp::Update(float deltaTime)
     float x = -mouseDelta.x * _camera->GetRotationSpeed();
     float y = -mouseDelta.y * _camera->GetRotationSpeed();
 
+   
     if ((INPUT->GetCurrMouseState().x != INPUT->GetPrevMouseState().x) ||
         (INPUT->GetCurrMouseState().y != INPUT->GetPrevMouseState().y))
     {
@@ -130,23 +132,26 @@ void GameApp::Render()
 {
   Matrix view = _camera->GetViewTransform();
   Matrix projection = _camera->GetProjectionMatrix();
-  _renderer->BeginFrame(eye, view, projection, _mainLight);
+  _renderer->BeginFrame(_camera->GetPosition(), view, projection,
+                        _mainLight);
 #ifdef RenderTest
   Matrix world = Matrix::Identity;
   Matrix scale = Matrix::CreateScale(100.f);
   Matrix translate = Matrix::CreateTranslation(Vector3(0.f, -50.f, 0.0f));
-  Quaternion rotation = Quaternion::CreateFromAxisAngle(
-      Vector3(0.f, 1.f, 0.f), XMConvertToRadians(-90.f));
-  Matrix rotationMatrix = Matrix::CreateFromQuaternion(rotation);
-  world *= rotationMatrix;
+  
 
   world *= scale;
   world *= translate;
   Matrix world2 = Matrix::Identity;
   Matrix scale2 = Matrix::CreateScale(1.5f);
   Matrix translate2 = Matrix::CreateTranslation(Vector3(0.f, 0.f, 230.0f));
+  Quaternion rotation = Quaternion::CreateFromAxisAngle(
+      Vector3(0.f, 1.f, 0.f), XMConvertToRadians(-90.f));
+  Matrix rotationMatrix = Matrix::CreateFromQuaternion(rotation);
   world2 *= scale2;
   world2 *= translate2;
+  world2 *= rotationMatrix;
+
   std::ranges::for_each(AccessModelData(modelHandle).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world);

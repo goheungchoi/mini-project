@@ -15,12 +15,11 @@ Texture2D evnSpecularBRDF : register(t6);
 TextureCube evnIrradianceTexture : register(t7);
 TextureCube evnSpecularIBLTexture : register(t8);
 //deferred
-Texture2D deferredDepth : register(t10);
-Texture2D deferredAlbedo : register(t11);
-Texture2D deferredNormal : register(t12);
-Texture2D deferredMaterial : register(t13);
-Texture2D deferredEmissive : register(t14);
-Texture2D deferredShadowPosition : register(t15);
+Texture2D deferredAlbedoDepth : register(t10);
+Texture2D deferredNormal : register(t11);
+Texture2D deferredMaterial : register(t12);
+Texture2D deferredEmissive : register(t13);
+Texture2D deferredShadowPosition : register(t14);
 
 struct DirectionalLight
 {
@@ -78,6 +77,13 @@ struct PS_INPUT
     float2 uv : TEXCOORD;
     float4 worldPosition : WORLD;
 };
+
+uint querySpecularTextureLevels()
+{
+    uint width, height, levels;
+    evnSpecularIBLTexture.GetDimensions(0, width, height, levels);
+    return levels;
+}
 //---------------------------define Quad--------------------------------------------
 #ifdef Quad
 float3 GetWorldPosition(float2 screenUV, float depth)
@@ -118,43 +124,61 @@ QUAD_PS_INPUT quad_vs_main(QUAD_VS_INPUT input)
 }
 float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
 {
-    float4 depthColor = deferredDepth.Sample(samLinear, input.uv);
+    float depthColor = deferredAlbedoDepth.Sample(samAnisotropy, input.uv).a;
     float3 worldPos = GetWorldPosition(input.uv, depthColor.r);
     
-    float3 albedo = deferredAlbedo.Sample(samLinear, input.uv).xyz;
+    float3 albedo = deferredAlbedoDepth.Sample(samAnisotropy, input.uv).xyz;
+    albedo = pow(albedo, 2.2);
     if (depthColor.r == 0)
     {
         return float4(pow(albedo, 1 / 2.2), 1.f);
     }
     //gamma correction
-    albedo = pow(albedo, 2.2);
-    float3 normal = deferredNormal.Sample(samLinear, input.uv).rgb;
-    float metallic = deferredMaterial.Sample(samLinear, input.uv).r;
-    float roughness = deferredMaterial.Sample(samLinear, input.uv).g;
-    float4 emissive = deferredEmissive.Sample(samLinear, input.uv);
+    float3 normal = deferredNormal.Sample(samAnisotropy, input.uv).rgb;
+    float metallic = deferredMaterial.Sample(samAnisotropy, input.uv).r;
+    float roughness = deferredMaterial.Sample(samAnisotropy, input.uv).g;
+
+    float4 emissive = deferredEmissive.Sample(samAnisotropy, input.uv);
     
     //Fresnel reflectance
-    float3 f0 = lerp(Fdielectric, albedo, metallic);
+    float3 F0 = lerp(Fdielectric, albedo, metallic);
     float3 directLighting = 0.f;
     float3 ambientLighting = 0.f;
     
     float3 lightOut = normalize(cameraPosition.xyz - worldPos.xyz);
-    float NdotV = saturate(dot(normal, lightOut));
+    float NdotV = max(0.0,dot(normal, lightOut));
     float3 lightReflection = 2.f * NdotV * normal - lightOut;
     float3 lightIn = normalize(-mainDirectionalLight.direction.xyz);
     float3 Lradiance = mainDirectionalLight.color.xyz * mainDirectionalLight.intensity.xyz;
-    
+    //pbr
     float3 lightHalf = normalize(lightIn + lightOut);
-    float NdotL = saturate(dot(normal, lightIn));
-    float NDotH = saturate(dot(normal, lightHalf));
-    float3 F = FresnelFactor(max(0.0, dot(lightHalf, lightOut)), f0);
+    float NdotL = max(0.0,dot(normal, lightIn));
+    float NDotH = max(0.0,dot(normal, lightHalf));
+    float3 F = FresnelFactor(max(0.0, dot(lightHalf, lightOut)), F0);
     float D = NormalDistributionFunction(normal, lightHalf, max(0.01, roughness));
     float G = GAFDirect(normal, lightOut, lightIn, roughness);
     
-    float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metallic);
+    float3 kd = lerp(float3(1.0, 1.0, 1.0) - F, float3(0.0, 0.0, 0.0), metallic);
     float3 diffuseBRDF = kd * albedo / PI;
-    float3 specularBRDF = (F * D * G) / max(Epsilon, (4 * NdotL * NdotV));
+    float3 specularBRDF = (F * D * G) / max(Epsilon, (4.0 * NdotL * NdotV));
+    //SWTODO : 문제의코드? specularBRDF
     directLighting += (diffuseBRDF + specularBRDF) * Lradiance * NdotL;
+    //ibl
+    float3 irradiance = evnIrradianceTexture.Sample(samAnisotropy, normal).rgb;
+    F = FresnelFactor(NdotV, F0);
+        //금속일수록 specular항을 그대로, 표면 산란을 줄인다.
+    kd = lerp(float3(1.f, 1.f, 1.f) - F, float3(0.f, 0.f, 0.f), metallic);
+    float3 IBLdiffuse = kd * albedo * irradiance;
+        //mip map 레벨 구하기
+    uint specularTextureLevels = querySpecularTextureLevels();
+        //레벨에 따라 roughness를 곱해서 반사의 선명함 정도 구하기 -> roughness가0이면 제일 큰 해상도의 큐브맵 반사
+    float3 specularIrradiance = evnSpecularIBLTexture.SampleLevel(samAnisotropy, lightReflection, roughness * specularTextureLevels).rgb;
+        //look up table pbr은정적이므로 미리 계산된 텍스쳐로 uv좌표의 근사값을 사용
+    float2 IBLSpecularBRDF = evnSpecularBRDF.Sample(samClamp, float2(NdotV, roughness)).rg;
+    float3 specularIBL = (F0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
+        //더하기
+    ambientLighting += (IBLdiffuse + specularIBL);
+
     float4 finalColor;
     float4 temp = float4(float3(directLighting + ambientLighting), 1.f) + emissive;
     temp = pow(temp, 1.0 / 2.2);
@@ -166,33 +190,33 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
 #ifdef Deffered
 struct DEFFERED_PS_OUT
 {
-    float4 depth : SV_Target0;
-    float4 Albedo : SV_Target1;
-    float4 Normal : SV_Target2;
-    float4 Material : SV_Target3;
-    float4 Emissive : SV_Target4;
-    float4 ShadowPosition : SV_Target5;
+    float4 AlbedoDepth : SV_Target0;
+    float4 Normal : SV_Target1;
+    float4 Material : SV_Target2;
+    float4 Emissive : SV_Target3;
+    float4 ShadowPosition : SV_Target4;
 };
 
 DEFFERED_PS_OUT ps_main(PS_INPUT input)
 {
     DEFFERED_PS_OUT output = (DEFFERED_PS_OUT) 0;
     float depth = input.position.z;
-    output.depth = float4(depth, depth, depth, 1.f);
-    output.Albedo = texAlbedo.Sample(samLinear, input.uv);
+    output.AlbedoDepth = texAlbedo.Sample(samLinear, input.uv);
+    output.AlbedoDepth.a = depth;
     //shadow 할때 ㄱㄱ
     //output.ShadowPosition = 
     float metalic = texMetallicRoughness.Sample(samAnisotropy, input.uv).r;
     float roughness = texMetallicRoughness.Sample(samAnisotropy, input.uv).g;
  
     float3 N = normalize(input.worldNormal);
-    float4 normalTexture = texNormal.Sample(samLinear, input.uv);
+    float4 normalTexture = texNormal.Sample(samAnisotropy, input.uv);
     if (length(normalTexture) > 0.f)
     {
-        float3 normalTexColor;
-        normalTexColor.xyz = normalTexture.rgb * 2.0 - 1.0;
-        float3 B = normalize(input.worldBitangent);
         float3 T = normalize(input.worldTangent);
+        float3 B = normalize(input.worldBitangent);
+        float3 normalTexColor;
+        normalTexColor = (normalTexture.rgb * 2.0) - 1.0;
+        normalTexColor = normalize(normalTexColor);
         float3x3 TBN = float3x3(T, B, N);
         N = normalize(mul(normalTexColor, TBN));
     }
@@ -228,25 +252,25 @@ PS_INPUT vs_main(VS_INPUT input)
 }
 //---------------------------define Transparency--------------------------------------------
 #ifdef Transparency
-float4 ps_main(PS_INPUT input) :SV_TARGET0
+
+float4 ps_main(PS_INPUT input) : SV_TARGET0
 {
-    float3 albedo = texAlbedo.Sample(samAnisotropy, input.uv).xyz;
+    float3 albedo = texAlbedo.Sample(samLinear, input.uv).xyz;
+    albedo = pow(albedo, 2.2);
     if (length(albedo) == 0.f)
     {
         albedo = input.color.rgb;
     }
     //gamma correction
-    albedo = pow(albedo, 2.2);
-    float metallic = texMetallicRoughness.Sample(samAnisotropy, input.uv).x;
-    float roughness = texMetallicRoughness.Sample(samAnisotropy, input.uv).y;
-    
+    float metallic = texMetallicRoughness.Sample(samLinear, input.uv).x;
+    float roughness = texMetallicRoughness.Sample(samLinear, input.uv).y;
     float3 normal = normalize(input.worldNormal);
-    float4 normalTexture = texNormal.Sample(samAnisotropy, input.uv);
+    float4 normalTexture = texNormal.Sample(samLinear, input.uv);
     if (length(normalTexture) > 0.f)
     {
         float3 normalTexColor;
         normalTexColor.xyz = normalTexture.rgb * 2.0 - 1.0;
-
+        normalTexColor = normalize(normalTexColor);
         float3 tangent = normalize(input.worldTangent);
         float3 bitangent = normalize(input.worldBitangent);
 
@@ -257,7 +281,7 @@ float4 ps_main(PS_INPUT input) :SV_TARGET0
     float3 f0 = lerp(Fdielectric, albedo, metallic);
     float3 directLighting = 0.f;
     float3 ambientLighting = 0.f;
-    
+    //pbr
     float3 lightOut = normalize(cameraPosition.xyz - input.worldPosition.xyz);
     float NdotV = saturate(dot(normal, lightOut));
     float3 lightReflection = 2.f * NdotV * normal - lightOut;
@@ -268,18 +292,38 @@ float4 ps_main(PS_INPUT input) :SV_TARGET0
     float NdotL = saturate(dot(normal, lightIn));
     float NDotH = saturate(dot(normal, lightHalf));
     float3 F = FresnelFactor(max(0.0, dot(lightHalf, lightOut)), f0);
-    float D = NormalDistributionFunction(normal, lightHalf,max(0.01, roughness));
+    float D = NormalDistributionFunction(normal, lightHalf, max(0.01, roughness));
     float G = GAFDirect(normal, lightOut, lightIn, roughness);
     
     float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metallic);
     float3 diffuseBRDF = kd * albedo / PI;
+    //SWTODO : 문제의코드? specularBRDF
     float3 specularBRDF = (F * D * G) / max(Epsilon, (4 * NdotL * NdotV));
     directLighting += (diffuseBRDF + specularBRDF) * Lradiance * NdotL;
-    float alpha=1.0;
-    float4 alphaColor = texAlbedo.Sample(samAnisotropy, input.uv);
+    //ibl
+    float3 irradiance = evnIrradianceTexture.Sample(samAnisotropy, normal).rgb;
+    F = FresnelFactor(NdotV, f0);
+        //금속일수록 specular항을 그대로, 표면 산란을 줄인다.
+    kd = lerp(float3(1.f, 1.f, 1.f) - F, float3(0.f, 0.f, 0.f), metallic);
+    float3 IBLdiffuse = kd * albedo * irradiance;
+        //mip map 레벨 구하기
+    uint specularTextureLevels = querySpecularTextureLevels();
+        //레벨에 따라 roughness를 곱해서 반사의 선명함 정도 구하기 -> roughness가0이면 제일 큰 해상도의 큐브맵 반사
+    float3 specularIrradiance = evnSpecularIBLTexture.SampleLevel(samAnisotropy, lightReflection, roughness* specularTextureLevels).rgb;
+        //look up table pbr은정적이므로 미리 계산된 텍스쳐로 uv좌표의 근사값을 사용
+    float2 IBLSpecularBRDF = evnSpecularBRDF.Sample(samClamp, float2(NdotV, roughness)).rg;
+    float3 specularIBL = (f0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
+        //더하기
+    ambientLighting += (IBLdiffuse + specularIBL);
+
+    float alpha = 1.0;
+    float4 alphaColor = texAlbedo.Sample(samLinear, input.uv);
     alpha = alphaColor.a;
+    
+    
+    
     float4 finalColor;
-    float4 emissive = texEmissive.Sample(samAnisotropy, input.uv);
+    float4 emissive = texEmissive.Sample(samLinear, input.uv);
     float4 temp = float4(float3(directLighting + ambientLighting), 1.f) + emissive;
     temp = pow(temp, 1.0 / 2.2);
     finalColor = float4(temp.rgb, alpha);
@@ -310,7 +354,7 @@ SKYBOX_PS_INPUT skybox_vs_main(VS_INPUT input)
     output.positionProj = pos;
     return output;
 }
-float4 skybox_ps_main(SKYBOX_PS_INPUT input):SV_Target1
+float4 skybox_ps_main(SKYBOX_PS_INPUT input):SV_Target0
 {
     return evnTexture.Sample(samAnisotropy, input.texCoord);
 }

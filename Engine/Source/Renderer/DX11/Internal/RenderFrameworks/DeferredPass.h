@@ -68,12 +68,12 @@ class DefferedPass
 private:
   Device* _device;
   Quad::QuadFrame* _frame;
-  // 0 : depth,1 : albedo, 2 : Normal, 3 : Material(metalic,roughness), 4 :
-  // Emissive 5: shadowPosition
+  // 0: albedo,depth 1 : Normal, 2: Material(metalic,roughness), 3 :
+  // Emissive 4: shadowPosition
   std::vector<ComPtr<ID3D11Texture2D>> _renderTargetTextures;
   std::vector<ComPtr<ID3D11RenderTargetView>> _renderTargets;
   std::vector<ComPtr<ID3D11ShaderResourceView>> _renderTargetSRVs;
-  size_t _gBuffSize = 6;
+  size_t _gBuffSize = 5;
   float _clearColor[4] = {0.f, 0.f, 0.f, 1.f};
   float _clearColor2[4] = {0.2f, 0.2f, 0.2f, 1.f};
 

@@ -2,7 +2,6 @@
 static const float3 Fdielectric = 0.04;
 static const float PI = 3.141592654f;
 static const float Epsilon = 0.00001;
-
 float3 FresnelFactor(float cosTheta, float3 F0)
 {
     return F0 + (1 - F0) * pow(1 - cosTheta, 5);
@@ -26,9 +25,3 @@ float GAFDirect(float3 N, float3 Lo, float3 Li, float roughness)
     return GSchlickGGX(Lo, N, roughness) * GSchlickGGX(Li, N, roughness);
 }
 
-//uint querySpecularTextureLevels()
-//{
-//    uint width, height, levels;
-//    evnSpecularTexture.GetDimensions(0, width, height, levels);
-//    return levels;
-//}

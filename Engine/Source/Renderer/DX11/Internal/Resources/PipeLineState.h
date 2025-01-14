@@ -104,11 +104,15 @@ public:
   }
 
 public:
-  void ClearBackBuffer(Device* device)
+  void ClearBackBufferRTV(Device* device)
   {
     
     device->GetImmContext()->ClearRenderTargetView(_backBuffer->mainRTV.Get(),
                                                    _clearColor2);
+  }
+  void ClearBackBufferDSV(Device* device)
+  {
+
     device->GetImmContext()->ClearDepthStencilView(_backBuffer->mainDSV.Get(),
                                                    D3D11_CLEAR_DEPTH, 1.f, 0);
   }
