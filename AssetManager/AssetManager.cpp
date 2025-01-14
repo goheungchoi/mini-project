@@ -139,7 +139,7 @@ static std::string GetExportPath(std::string path)
 }
 
 bool AssetManager::excludeAssetFileFromResource(const QString& filePath) {
-  QString relativePath = assetDir.relativeFilePath(filePath);
+  QString relativePath = assetDir.relativeFilePath(filePath).replace('/', '\\');
   ui.assetPathLabel->setText(relativePath);
 
   fs::path fsRelativePath = relativePath.toStdString();
@@ -241,8 +241,8 @@ void AssetManager::onImportButtonClicked() {
 	if (currSelectedAssetIndices.size() > 0)
   {
     QModelIndex selectedIndex = currSelectedAssetIndices.at(0);
-    QString filePath = assetFilesModel->filePath(selectedIndex);
-
+    QString filePath = assetFilesModel->filePath(selectedIndex).replace('/', '\\');
+    
 		QString extension = QFileInfo(filePath).suffix().toLower();
 
 		if (extension == "jpg" || extension == "jpeg" || extension == "png" ||

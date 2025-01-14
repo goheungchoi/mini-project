@@ -716,6 +716,8 @@ void ModelExporter::ExportModelTexture(Texture& texture)
 
 std::string ModelExporter::GetExportPath(std::string path)
 {
+  std::replace(path.begin(), path.end(), '/', '\\');
+
   std::string strUUID = GenerateUUIDFromName(path).ToString();
 
   fs::path resourceSubDir = fs::absolute(resourceDir) / strUUID.substr(0, 2);
