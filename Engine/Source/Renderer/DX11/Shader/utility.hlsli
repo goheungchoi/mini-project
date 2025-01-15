@@ -16,12 +16,12 @@ float NormalDistributionFunction(float3 N, float3 Lh, float roughness)
 }
 float GSchlickGGX(float3 Vector, float3 N, float roughness)
 {
-    float NDotVec = dot(Vector, N);
-    float k = pow((roughness + 1), 2) / 8;
-    return NDotVec / (NDotVec * (1 - k) + k);
+    float NDotVec = saturate(dot(N, Vector));
+    float r = roughness + 1.0;
+    float k = (r * r) / 8.0;
+    return NDotVec / (NDotVec * (1.0 - k) + k);
 }
 float GAFDirect(float3 N, float3 Lo, float3 Li, float roughness)
 {
     return GSchlickGGX(Lo, N, roughness) * GSchlickGGX(Li, N, roughness);
 }
-

@@ -157,11 +157,9 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     float3 F = FresnelFactor(max(0.0, dot(lightHalf, lightOut)), F0);
     float D = NormalDistributionFunction(normal, lightHalf, max(0.01, roughness));
     float G = GAFDirect(normal, lightOut, lightIn, roughness);
-    
     float3 kd = lerp(float3(1.0, 1.0, 1.0) - F, float3(0.0, 0.0, 0.0), metallic);
     float3 diffuseBRDF = kd * albedo / PI;
     float3 specularBRDF = (F * D * G) / max(Epsilon, (4.0 * NdotL * NdotV));
-    //SWTODO : 문제의코드? specularBRDF
     directLighting += (diffuseBRDF + specularBRDF) * Lradiance * NdotL;
     //ibl
     float3 irradiance = evnIrradianceTexture.Sample(samAnisotropy, normal).rgb;
@@ -294,10 +292,8 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     float3 F = FresnelFactor(max(0.0, dot(lightHalf, lightOut)), f0);
     float D = NormalDistributionFunction(normal, lightHalf, max(0.01, roughness));
     float G = GAFDirect(normal, lightOut, lightIn, roughness);
-    
     float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metallic);
     float3 diffuseBRDF = kd * albedo / PI;
-    //SWTODO : 문제의코드? specularBRDF
     float3 specularBRDF = (F * D * G) / max(Epsilon, (4 * NdotL * NdotV));
     directLighting += (diffuseBRDF + specularBRDF) * Lradiance * NdotL;
     //ibl

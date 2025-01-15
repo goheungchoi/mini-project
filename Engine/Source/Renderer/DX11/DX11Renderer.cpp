@@ -14,7 +14,9 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   HWND* pHwnd = reinterpret_cast<HWND*>(hwnd);
   _device = new Device;
   _swapChain = new SwapChain;
+#ifdef _DEBUG
   _debugLayer = new DebugLayer;
+#endif // _DEBUG
   _storage = new ResourceStorage;
   _device->Init();
   _swapChain->Init(pHwnd, _device->GetDevice(), width, height);
@@ -44,7 +46,9 @@ bool DX11Renderer::Cleanup()
   DestroyShaderModule();
   SAFE_RELEASE(_passMgr);
   SAFE_RELEASE(_device);
+  #ifdef _DEBUG
   SAFE_RELEASE(_debugLayer);
+  #endif
   SAFE_RELEASE(_swapChain);
   SAFE_RELEASE(_storage);
   return false;
