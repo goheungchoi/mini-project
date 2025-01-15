@@ -256,3 +256,7 @@ void DX11Renderer::CreateEngineShader()
 {
   _passMgr->CreateMainShader();
 }
+
+void DX11Renderer::InitImGui() {
+
+}

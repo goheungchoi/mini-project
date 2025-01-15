@@ -132,7 +132,10 @@ Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser)
     ProcessGeoNode(model, geoNode, geoModel);
 	}
 
-  return _handleTable.ClaimHandle(std::move(model),
-																	(uint16_t)ResourceType::kModel);
+	// Claim the handle and map the UUID.
+	Handle handle = _handleTable.ClaimHandle(std::move(model),
+                                                (uint16_t)ResourceType::kModel);
+  _uuidMap[uuid] = handle.index;
+  return handle;
 }
 

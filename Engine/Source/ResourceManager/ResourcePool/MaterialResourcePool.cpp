@@ -97,6 +97,8 @@ Handle ResourcePool<MaterialData>::LoadImpl(xUUID uuid, void* pUser)
   MaterialData mat;
   ProcessMaterial(mat, geoMat);
 
-	return _handleTable.ClaimHandle(std::move(mat),
-                                  (uint16_t)ResourceType::kMaterial);
+	Handle handle = _handleTable.ClaimHandle(std::move(mat),
+                                           (uint16_t)ResourceType::kMaterial);
+  _uuidMap[uuid] = handle.index;
+  return handle;
 }

@@ -48,6 +48,9 @@ Handle ResourcePool<TextureData>::LoadImpl(xUUID uuid, void* pUser)
 		data.ddsData = reinterpret_cast<std::vector<uint8_t>&&>(std::move(rawFile));
   }
 
-  return _handleTable.ClaimHandle(std::move(data),
-                                  (uint16_t)ResourceType::kTexture);
+	// Claim the handle and map the UUID.
+	Handle handle = _handleTable.ClaimHandle(
+      std::move(data), (uint16_t)ResourceType::kTexture);
+  _uuidMap[uuid] = handle.index;
+  return handle;
 }

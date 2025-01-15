@@ -2,6 +2,12 @@
 #include <Windows.h>
 #include "Core/Input/InputSystem.h"
 
+#include <imgui_impl_win32.h>
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
+                                                             UINT msg,
+                                                             WPARAM wParam,
+                                                             LPARAM lParam);
 
 WinApp::WinApp(const wchar_t* className, HINSTANCE hInstance)
 {
@@ -48,6 +54,9 @@ void WinApp::App_CreateWindow(int width, int height)
 LRESULT CALLBACK WinApp::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam,
                               LPARAM lParam)
 {
+  if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+    return true;
+
   switch (uMsg)
   {
   case WM_DESTROY:

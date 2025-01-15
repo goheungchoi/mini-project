@@ -47,6 +47,9 @@ public:
 private:
   void CreateEngineShader();
 
+	// Initialize ImGui
+  void InitImGui();
+
 private:
   Device* _device = nullptr;
   SwapChain* _swapChain = nullptr;

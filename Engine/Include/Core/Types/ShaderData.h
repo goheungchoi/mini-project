@@ -36,23 +36,34 @@ enum class ShaderDefineValueType : uint8_t
   kFloat,   // 4 bytes
 };
 
-struct ShaderDefine
-{
-  ShaderDefineValueType type;
-  std::string define;
-  union Value {
-    char vNone[0];
-    bool vBool;
-    int vInt;
-    float vFloat;
-	} value;
+union ShaderDefineValue {
+  char vNone;
+  bool vBool;
+  int vInt;
+  float vFloat;
 };
 
-struct ShaderData {
+struct ShaderDefine
+{
+  std::string define;
+  ShaderDefineValueType type;
+  ShaderDefineValue value;
+};
+
+struct ShaderOption
+{
+  std::string name;
+  std::string define;
+  ShaderDefineValueType type;
+  std::vector<ShaderDefineValue> values;
+};
+
+struct ShaderData
+{
   std::string name;
   std::string path;
+  ShaderType type;
   std::vector<ShaderDefine> defines;
-	ShaderType type;
 
-	std::vector<uint8_t> data;
+  std::vector<uint8_t> data;
 };
