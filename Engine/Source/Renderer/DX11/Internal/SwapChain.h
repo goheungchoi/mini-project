@@ -30,9 +30,21 @@ public:
     // create swapchain
     HR_T(factory->CreateSwapChain(device, &desc,
                                   _swapChain.GetAddressOf()));
+
+		// Get the window handle.
+    _hwnd = *hwnd;
   }
+
+	/**
+   * @author Goheung Choi
+   * @brief Get the HWND handle bound to the swapchian.
+   * @return If set correctly, it returns a window handle. Otherwise, nullptr
+   * will be returned.
+   */
+  HWND GetWindowHandle() { return _hwnd; }
   IDXGISwapChain* GetSwapChain() { return _swapChain.Get(); }
 
 private:
+  HWND _hwnd{nullptr};
   ComPtr<IDXGISwapChain> _swapChain = nullptr;
 };

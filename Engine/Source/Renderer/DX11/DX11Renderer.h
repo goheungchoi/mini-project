@@ -44,6 +44,9 @@ public:
                     LPCSTR diffuseIrrPath, LPCSTR specularIBLPath) override;
 
 public:
+	// Render ImGui graphical interface.
+  void DrawImGui();
+
 private:
   void CreateEngineShader();
 

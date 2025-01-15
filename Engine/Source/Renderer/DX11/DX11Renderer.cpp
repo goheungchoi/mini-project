@@ -7,6 +7,10 @@
 #include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
 
+#include <imgui.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_win32.h>
+
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
@@ -256,11 +260,50 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                       specularIBLPath);
 }
 
+void DX11Renderer::DrawImGui()
+{
+  // TODO: Set swapchain back buffer
+  ID3D11RenderTargetView* rtv[] = {_swapchain->GetBackBuffer()};
+  _device->GetImmContext()->OMSetRenderTargets(1, rtv, nullptr);
+  const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+  _device->GetImmContext()->ClearRenderTargetView(*rtv, clearColor);
+
+  // Start the Dear ImGui frame
+  ImGui_ImplDX11_NewFrame();
+  ImGui_ImplWin32_NewFrame();
+  ImGui::NewFrame();
+
+  if (ImGui::Begin("Renderer Frame"))
+  {
+    ImGui::Text("Position: ");
+  }
+  ImGui::End();
+
+  // Rendering
+  ImGui::Render();
+  ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}
+
 void DX11Renderer::CreateEngineShader()
 {
   _passMgr->CreateMainShader();
 }
 
 void DX11Renderer::InitImGui() {
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
 
+  ImGuiIO& io = ImGui::GetIO();
+  (void)io;
+  io.ConfigFlags |=
+      ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+  io.ConfigFlags |=
+      ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+
+  // Setup Dear ImGui style
+  ImGui::StyleColorsDark();
+
+  // Setup Platform/Renderer backends
+  ImGui_ImplWin32_Init(_swapChain->GetWindowHandle());
+  ImGui_ImplDX11_Init(_device->GetDevice(), _device->GetImmContext());
 }
