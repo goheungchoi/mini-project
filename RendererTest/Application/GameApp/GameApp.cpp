@@ -146,11 +146,11 @@ void GameApp::Render()
   Matrix scale2 = Matrix::CreateScale(1.5f);
   Matrix translate2 = Matrix::CreateTranslation(Vector3(0.f, 0.f, 230.0f));
   Quaternion rotation = Quaternion::CreateFromAxisAngle(
-      Vector3(0.f, 1.f, 0.f), XMConvertToRadians(-90.f));
+      Vector3(0.f, 1.f, 0.f), XMConvertToRadians(90.f));
   Matrix rotationMatrix = Matrix::CreateFromQuaternion(rotation);
   world2 *= scale2;
-  world2 *= translate2;
   world2 *= rotationMatrix;
+  world2 *= translate2;
 
   std::ranges::for_each(AccessModelData(modelHandle).meshes,
                         [&](MeshHandle meshHandle) {
