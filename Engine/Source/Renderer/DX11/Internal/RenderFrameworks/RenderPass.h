@@ -115,9 +115,11 @@ public:
   {
     _pso->ClearBackBufferDSV(_device);
     // Shadow pass
+
+    // //--------------------------------------------------------------------------------------//
     // Deferred pass
-    //skybox
-    _pso->SetBlendOnEnable(false,_device);
+    // skybox
+    _pso->SetBlendOnEnable(false, _device);
     _deffered->ClearGbuffer(_pso->_backBuffer);
     _device->GetImmContext()->IASetInputLayout(
         _vShaders.find("SkyBox")->second->layout.Get());
@@ -126,12 +128,13 @@ public:
     _device->GetImmContext()->PSSetShader(
         _pShaders.find("SkyBox")->second->shader.Get(), nullptr, 0);
     Constant::World world = {_skyBox->GetMesh()->world.Transpose()};
-    _CB->UpdateContantBuffer(world, CBType::World);
+    _CB->UpdateContantBuffer(world, MeshCBType::World);
     _device->GetImmContext()->VSSetConstantBuffers(
         1, 1,
-        _CB->_constantBuffers[static_cast<UINT>(CBType::World)].GetAddressOf());
-    _skyBox ->Render();
-    //Deferred meshes
+        _CB->_constantBuffers[static_cast<UINT>(MeshCBType::World)]
+            .GetAddressOf());
+    _skyBox->Render();
+    // Deferred meshes
     _device->GetImmContext()->IASetInputLayout(
         _vShaders.find("Default")->second->layout.Get());
     _device->GetImmContext()->VSSetShader(
@@ -145,11 +148,17 @@ public:
       _device->GetImmContext()->IASetIndexBuffer(buffer->indexBuffer.Get(),
                                                  DXGI_FORMAT_R32_UINT, 0);
       Constant::World world = {buffer->world.Transpose()};
-      _CB->UpdateContantBuffer(world, CBType::World);
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {.alphaCutoff = buffer->material->alphaCutoff};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
       buffer->material->PSSetResourceViews(_device);
       _device->GetImmContext()->VSSetConstantBuffers(
           1, 1,
-          _CB->_constantBuffers[static_cast<UINT>(CBType::World)]
+          _CB->_constantBuffers[static_cast<UINT>(MeshCBType::World)]
+              .GetAddressOf());
+      _device->GetImmContext()->PSSetConstantBuffers(
+          2, 1,
+          _CB->_constantBuffers[static_cast<UINT>(MeshCBType::PixelData)]
               .GetAddressOf());
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
@@ -164,6 +173,7 @@ public:
     _pso->SetBackBuffer(_device);
     _deffered->QuadDraw();
     _deffered->ClearRenderTargets();
+    //--------------------------------------------------------------------------------------//
     // Transparent pass -> Forward rendering
     _pso->SetBlendOnEnable(true, _device);
     _device->GetImmContext()->IASetInputLayout(
@@ -182,10 +192,10 @@ public:
       _device->GetImmContext()->IASetIndexBuffer(buffer->indexBuffer.Get(),
                                                  DXGI_FORMAT_R32_UINT, 0);
       Constant::World world = {buffer->world.Transpose()};
-      _CB->UpdateContantBuffer(world, CBType::World);
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
       _device->GetImmContext()->VSSetConstantBuffers(
           1, 1,
-          _CB->_constantBuffers[static_cast<UINT>(CBType::World)]
+          _CB->_constantBuffers[static_cast<UINT>(MeshCBType::World)]
               .GetAddressOf());
 
       buffer->material->PSSetResourceViews(_device);
@@ -204,7 +214,7 @@ public:
         .cameraPosition = _camera.eye,
         .view = _camera.view.Transpose(),
         .projection = _camera.projection.Transpose(),
-        };
+    };
     Matrix IView = _camera.view;
     Matrix IProj = _camera.projection;
     IView = DirectX::XMMatrixInverse(nullptr, IView);
@@ -223,6 +233,10 @@ public:
     _skyBox->Init();
     _skyBox->SetTexture(envPath, specularBRDFPath, diffuseIrrPath,
                         specularIBLPath);
+  }
+  ID3D11RenderTargetView* GetBackBuffer()
+  {
+    return _pso->_backBuffer->mainRTV.Get();
   }
   void CreateMainShader()
   {

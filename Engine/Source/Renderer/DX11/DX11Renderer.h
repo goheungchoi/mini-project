@@ -26,8 +26,8 @@ public:
   void DrawMesh(MeshHandle handle) override;
   void EndDraw() override;
   void EndFrame() override;
-  void AddRenderPass(MeshHandle handle, RenderPassType type) override;
-  void DeleteRenderPass(MeshHandle handle, RenderPassType type) override;
+  void AddShadow(MeshHandle handle) override;
+  void DeleteShadow(MeshHandle handle) override;
   void BindPipeline() override;
   void BindResource() override;
   bool CreateMesh(MeshHandle handle) override;

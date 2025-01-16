@@ -7,6 +7,8 @@
 
 static ModelHandle modelHandle;
 static ModelHandle modelHandle2;
+static ModelHandle modelHandle3;
+static ModelHandle modelHandle4;
 void GameApp::Initialize()
 {
   // 윈도우 생성
@@ -19,8 +21,12 @@ void GameApp::Initialize()
 #endif // RenderTest
   modelHandle = LoadModel("Models\\FlightHelmet\\FlightHelmet.gltf");
   modelHandle2 = LoadModel("Models\\Ceberus\\Ceberus.glb");
+  modelHandle3 = LoadModel("Models\\Sphere\\Sphere.obj");
+  modelHandle4 = LoadModel("Models\\Sponza\\Sponza.gltf");
   ModelData modelData = AccessModelData(modelHandle);
   ModelData modelData2 = AccessModelData(modelHandle2);
+  ModelData modelData3 = AccessModelData(modelHandle3);
+  ModelData modelData4 = AccessModelData(modelHandle4);
   // skybox init
   _renderer->CreateSkyBox(
       "Textures/BakerEnv.dds", "Textures/BakerSpecularBRDF_LUT.dds",
@@ -28,14 +34,14 @@ void GameApp::Initialize()
   std::ranges::for_each(modelData.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
   });
-  std::ranges::for_each(modelData.meshes, [&](MeshHandle meshHandle) {
-    _renderer->AddRenderPass(meshHandle, RenderPassType::TransparentPass);
-  });
   std::ranges::for_each(modelData2.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
   });
-  std::ranges::for_each(modelData2.meshes, [&](MeshHandle meshHandle) {
-    _renderer->AddRenderPass(meshHandle, RenderPassType::OpaquePass);
+  std::ranges::for_each(modelData3.meshes, [&](MeshHandle meshHandle) {
+    _renderer->CreateMesh(meshHandle);
+  });
+  std::ranges::for_each(modelData4.meshes, [&](MeshHandle meshHandle) {
+    _renderer->CreateMesh(meshHandle);
   });
   _camera = new Camera(1920, 1080);
   _mainLight.direction = Vector4(0.f, 0.f, 1.f, 0.f);
@@ -69,32 +75,32 @@ void GameApp::Update(float deltaTime)
   // 'Q' 누르면 Down
   if (INPUT->IsKeyPress(Key::Q))
   {
-    _camera->MoveDownUp(-deltaTime * 3);
+    _camera->MoveDownUp(-deltaTime * 6);
   }
   // 'E' 누르면 Up
   if (INPUT->IsKeyPress(Key::E))
   {
-    _camera->MoveDownUp(deltaTime * 3);
+    _camera->MoveDownUp(deltaTime * 6);
   }
   // 'A' 누르면 Left
   if (INPUT->IsKeyPress(Key::A))
   {
-    _camera->MoveLeftRight(-deltaTime * 3);
+    _camera->MoveLeftRight(-deltaTime * 6);
   }
   // 'D' 누르면 Right
   if (INPUT->IsKeyPress(Key::D))
   {
-    _camera->MoveLeftRight(deltaTime * 3);
+    _camera->MoveLeftRight(deltaTime * 6);
   }
   // 'W' 누르면 Forward
   if (INPUT->IsKeyPress(Key::W))
   {
-    _camera->MoveBackForward(deltaTime * 3);
+    _camera->MoveBackForward(deltaTime * 6);
   }
   // 'S' 누르면 Backward
   if (INPUT->IsKeyPress(Key::S))
   {
-    _camera->MoveBackForward(-deltaTime * 3);
+    _camera->MoveBackForward(-deltaTime * 6);
   }
 
   if (INPUT->IsKeyDown(Input::MouseState::RB))
@@ -144,7 +150,7 @@ void GameApp::Render()
   world *= translate;
   Matrix world2 = Matrix::Identity;
   Matrix scale2 = Matrix::CreateScale(1.5f);
-  Matrix translate2 = Matrix::CreateTranslation(Vector3(0.f, 0.f, 230.0f));
+  Matrix translate2 = Matrix::CreateTranslation(Vector3(-100.f, 0.f, 0.0f));
   Quaternion rotation = Quaternion::CreateFromAxisAngle(
       Vector3(0.f, 1.f, 0.f), XMConvertToRadians(90.f));
   Matrix rotationMatrix = Matrix::CreateFromQuaternion(rotation);
@@ -152,6 +158,17 @@ void GameApp::Render()
   world2 *= rotationMatrix;
   world2 *= translate2;
 
+  Matrix world3 = Matrix::Identity;
+  Matrix scale3 = Matrix::CreateScale(20.f);
+  Matrix translate3 = Matrix::CreateTranslation(Vector3(100.f, 0.f,.0f));
+  world3 *= scale3;
+  world3 *= translate3;
+
+  Matrix world4 = Matrix::Identity;
+  //Matrix scale4 = Matrix::CreateScale(0.5f);
+  Matrix translate4 = Matrix::CreateTranslation(Vector3(0.f, -100.f, .0f));
+  //world4 *= scale4;
+  world4 *= translate4;
   std::ranges::for_each(AccessModelData(modelHandle).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world);
@@ -162,6 +179,17 @@ void GameApp::Render()
                           _renderer->BeginDraw(meshHandle, world2);
                           _renderer->DrawMesh(meshHandle);
                         });
+  std::ranges::for_each(AccessModelData(modelHandle3).meshes,
+                        [&](MeshHandle meshHandle) {
+                          _renderer->BeginDraw(meshHandle, world3);
+                          _renderer->DrawMesh(meshHandle);
+                        });
+  std::ranges::for_each(AccessModelData(modelHandle4).meshes,
+                        [&](MeshHandle meshHandle) {
+                          _renderer->BeginDraw(meshHandle, world4);
+                          _renderer->DrawMesh(meshHandle);
+                        });
+
 
 #endif // RenderTest
   _renderer->EndFrame();

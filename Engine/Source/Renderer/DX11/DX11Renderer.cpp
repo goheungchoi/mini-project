@@ -37,7 +37,7 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   _passMgr = new RenderPassManager(_device, _swapChain, width, height);
   _passMgr->CreateSamplers();
   _passMgr->CreateMainShader();
-  
+  InitImGui();
   return true;
 }
 
@@ -50,11 +50,14 @@ bool DX11Renderer::Cleanup()
   DestroyShaderModule();
   SAFE_RELEASE(_passMgr);
   SAFE_RELEASE(_device);
-  #ifdef _DEBUG
+#ifdef _DEBUG
   SAFE_RELEASE(_debugLayer);
-  #endif
+#endif
   SAFE_RELEASE(_swapChain);
   SAFE_RELEASE(_storage);
+  ImGui_ImplDX11_Shutdown();
+  ImGui_ImplWin32_Shutdown();
+  ImGui::DestroyContext();
   return false;
 }
 
@@ -93,35 +96,35 @@ void DX11Renderer::EndFrame()
 {
   _passMgr->FrameSet();
   _passMgr->ProcessPass();
-
+  DrawImGui();
   _swapChain->GetSwapChain()->Present(0, 0);
 }
 
-void DX11Renderer::AddRenderPass(MeshHandle handle, RenderPassType type)
+ void DX11Renderer::AddShadow(MeshHandle handle)
 {
-  auto buffer = _storage->meshMap.find(handle);
-  if (buffer != _storage->meshMap.end())
-  {
-    if (buffer->second->flags & type)
-    {
-      return;
-    }
-    buffer->second->flags |= type;
-  }
-}
+   auto buffer = _storage->meshMap.find(handle);
+   if (buffer != _storage->meshMap.end())
+   {
+     if (buffer->second->flags & RenderPassType::ShadowPass)
+     {
+       return;
+     }
+     buffer->second->flags |= RenderPassType::ShadowPass;
+   }
+ }
 
-void DX11Renderer::DeleteRenderPass(MeshHandle handle, RenderPassType type)
+ void DX11Renderer::DeleteShadow(MeshHandle handle)
 {
-  auto buffer = _storage->meshMap.find(handle);
-  if (buffer != _storage->meshMap.end())
-  {
-    if (!(buffer->second->flags & type))
-    {
-      return;
-    }
-    buffer->second->flags &= ~type;
-  }
-}
+   auto buffer = _storage->meshMap.find(handle);
+   if (buffer != _storage->meshMap.end())
+   {
+     if (!(buffer->second->flags & RenderPassType::ShadowPass))
+     {
+       return;
+     }
+     buffer->second->flags &= ~RenderPassType::ShadowPass;
+   }
+ }
 
 void DX11Renderer::BindPipeline() {}
 
@@ -141,6 +144,21 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
       meshBuffer->material = new Material;
       MaterialData matData = AccessMaterialData(meshData.material);
       meshBuffer->material->CreateMaterial(_device, matData);
+      switch (matData.alphaMode)
+      {
+      case AlphaMode::kOpaque: {
+        meshBuffer->flags |= RenderPassType::OpaquePass;
+        break;
+      }
+      case AlphaMode::kMask: {
+        meshBuffer->flags |= RenderPassType::OpaquePass;
+        break;
+      }
+      case AlphaMode::kBlend: {
+        meshBuffer->flags |= RenderPassType::TransparentPass;
+        break;
+      }
+      }
     }
     // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함.??
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
@@ -263,10 +281,10 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
 void DX11Renderer::DrawImGui()
 {
   // TODO: Set swapchain back buffer
-  ID3D11RenderTargetView* rtv[] = {_swapchain->GetBackBuffer()};
-  _device->GetImmContext()->OMSetRenderTargets(1, rtv, nullptr);
-  const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-  _device->GetImmContext()->ClearRenderTargetView(*rtv, clearColor);
+  // ID3D11RenderTargetView* rtv[] = {_passMgr->GetBackBuffer()};
+  //_device->GetImmContext()->OMSetRenderTargets(1, rtv, nullptr);
+  // const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+  //_device->GetImmContext()->ClearRenderTargetView(*rtv, clearColor);
 
   // Start the Dear ImGui frame
   ImGui_ImplDX11_NewFrame();
@@ -289,7 +307,8 @@ void DX11Renderer::CreateEngineShader()
   _passMgr->CreateMainShader();
 }
 
-void DX11Renderer::InitImGui() {
+void DX11Renderer::InitImGui()
+{
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 

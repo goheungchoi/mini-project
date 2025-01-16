@@ -55,16 +55,14 @@ public:
      2. Runs only the type of render path you added, for this mesh
      3. don't call every loop
    * Param1 : own meshHandle
-   * Parma2 : RenderPassType::...
    */
-  virtual void AddRenderPass(MeshHandle handle, RenderPassType type) = 0;
-  /*
-   * @brief
-     1. you can delete meshes render pass type.
-   * Param1 : own meshHandle
-   * Parma2 : RenderPassType::...
-   */
-  virtual void DeleteRenderPass(MeshHandle handle, RenderPassType type) = 0;
+  virtual void AddShadow(MeshHandle handle) = 0;
+  ///*
+  // * @brief
+  //   1. you can delete meshes render pass type.
+  // * Param1 : own meshHandle
+  // */
+  virtual void DeleteShadow(MeshHandle handle) = 0;
 
   virtual void BindPipeline() = 0;
 

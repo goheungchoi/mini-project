@@ -40,7 +40,7 @@ public:
     _mesh->stride = sizeof(Vertex);
     _mesh->offset = 0;
     Matrix world = Matrix::Identity;
-    Matrix scale = Matrix::CreateScale(100.f);
+    Matrix scale = Matrix::CreateScale(1000.f);
     _mesh->world = world * scale;
     _mesh->flags |= RenderPassType::OpaquePass;
   }

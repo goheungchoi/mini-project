@@ -53,6 +53,12 @@ cbuffer World : register(b1)
 #endif
 };
 
+cbuffer PixelData : register(b2)
+{
+    float alphaCutoff;
+    float3 padding1;
+}
+
 struct VS_INPUT
 {
     float4 position : POSITION;
@@ -175,7 +181,7 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     float2 IBLSpecularBRDF = evnSpecularBRDF.Sample(samClamp, float2(NdotV, roughness)).rg;
     float3 specularIBL = (F0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
         //더하기
-    ambientLighting += (IBLdiffuse + specularIBL);
+    ambientLighting += (IBLdiffuse + specularIBL)*0.5;
 
     float4 finalColor;
     float4 temp = float4(float3(directLighting + ambientLighting), 1.f) + emissive;
@@ -199,7 +205,9 @@ DEFFERED_PS_OUT ps_main(PS_INPUT input)
 {
     DEFFERED_PS_OUT output = (DEFFERED_PS_OUT) 0;
     float depth = input.position.z;
-    output.AlbedoDepth = texAlbedo.Sample(samLinear, input.uv);
+    float4 albedo = texAlbedo.Sample(samLinear, input.uv);
+    clip(albedo.a - alphaCutoff);
+    output.AlbedoDepth.xyz = albedo;
     output.AlbedoDepth.a = depth;
     //shadow 할때 ㄱㄱ
     //output.ShadowPosition = 

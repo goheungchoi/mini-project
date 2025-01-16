@@ -25,6 +25,11 @@ struct World
   Matrix world;
 };
 
+struct PixelData
+{
+  float alphaCutoff;
+  Vector3 padding1{};
+};
 } // namespace Constant
 
 struct MeshBuffer
