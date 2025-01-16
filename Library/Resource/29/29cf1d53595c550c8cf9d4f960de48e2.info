@@ -17,6 +17,6 @@
         ],
         "num_vertices": 128,
         "num_indices": 324,
-        "material": "Models\\Sponza\\.mat"
+        "material": "Models\\Sponza\\4.mat"
     }
 }

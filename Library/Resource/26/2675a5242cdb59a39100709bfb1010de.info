@@ -1,0 +1,26 @@
+{
+    "import_path": "Models\\Sponza\\6.mat",
+    "resource_type": "model",
+    "details": {
+        "name": "6",
+        "albedo_factor": [
+            [
+                0.5879999995231628,
+                0.5879999995231628,
+                0.5879999995231628,
+                1.0
+            ]
+        ],
+        "albedo_texture": "Models\\Sponza\\15295713303328085182.jpg",
+        "metallic_factor": 1.0,
+        "roughness_factor": 1.0,
+        "metallic_roughness_texture": "Models\\Sponza\\9916269861720640319.jpg",
+        "normal_texture": "Models\\Sponza\\10388182081421875623.jpg",
+        "occlusion_texture": "",
+        "emissive_factor": 0.0,
+        "emissive_texture": "",
+        "alpha_mode": "AlphaMode_kOpaque",
+        "alpha_cutoff": 0.5,
+        "double_sided": false
+    }
+}

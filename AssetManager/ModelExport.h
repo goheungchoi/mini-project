@@ -1,16 +1,16 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <fstream>
 #include <filesystem>
+#include <fstream>
+#include <string>
+#include <vector>
 namespace fs = std::filesystem;
 #include <unordered_map>
 
-#include "assimp/Importer.hpp"
-#include "assimp/scene.h"
-#include "assimp/postprocess.h"
 #include "assimp/GltfMaterial.h"
+#include "assimp/Importer.hpp"
+#include "assimp/postprocess.h"
+#include "assimp/scene.h"
 
 #include "TextureExport.h"
 
@@ -21,28 +21,28 @@ namespace fs = std::filesystem;
 
 enum class ModelFileFormat
 {
-	kUnknown,
-	kFBX,
-	kOBJ,
-	kGLTF
+  kUnknown,
+  kFBX,
+  kOBJ,
+  kGLTF
 };
 
 class ModelExporter
 {
-	// TODO: Animation export
+  // TODO: Animation export
 
-	// TODO: Skeleton extraction
+  // TODO: Skeleton extraction
   struct Bone
   {
     int id;
     std::string name;
 
-		// std::vector<
+    // std::vector<
 
     float offset[4][4];
   };
 
-	// Define a structure for skeleton nodes
+  // Define a structure for skeleton nodes
   struct SkeletonNode
   {
     std::string name;
@@ -50,28 +50,28 @@ class ModelExporter
     std::vector<SkeletonNode> children;
   };
 
-	struct VertexBoneWeight
+  struct VertexBoneWeight
   {
     int boneId;
     float weight;
-	};
+  };
 
-	// Mesh AABB
+  // Mesh AABB
   struct AABB
   {
     float min[3];
     float max[3];
-	};
-
-	// Type definitions to store the model data
-  enum AlphaMode : int16_t
-  {
-    AlphaMode_kOpaque = 0,		// Alpha value is ignored
-    AlphaMode_kMask = 1,			// Alpha cutoff
-    AlphaMode_kBlend = 2			// Blended with the background
   };
 
-	struct Vertex
+  // Type definitions to store the model data
+  enum AlphaMode : int16_t
+  {
+    AlphaMode_kOpaque = 0, // Alpha value is ignored
+    AlphaMode_kMask = 1,   // Alpha cutoff
+    AlphaMode_kBlend = 2   // Blended with the background
+  };
+
+  struct Vertex
   {
     float position[4];
     float normal[3];
@@ -81,151 +81,156 @@ class ModelExporter
     float color[4];
   };
 
-	// Texture
+  // Texture
   struct Texture
   {
     std::string path;
 
-		aiTextureType type;
+    aiTextureType type;
 
-		AlphaMode alphaMode;
-	
-		const aiTexture* embedded;
-	};
+    AlphaMode alphaMode;
 
-	// Material
+    const aiTexture* embedded;
+  };
+
+  // Material
   struct Material
   {
     std::string path;
     std::string name;
 
-		float albedoFactor[4];
-    std::string albedoTexture;	// Path to the texture
+    float albedoFactor[4];
+    std::string albedoTexture; // Path to the texture
 
-		float metallicFactor;
+    float metallicFactor;
     float roughnessFactor;
     std::string metallicRoughnessTexture;
 
-		std::string normalTexture;
+    std::string normalTexture;
 
-		std::string occlusionTexture;
+    std::string occlusionTexture;
 
-		float emissiveFactor;
+    float emissiveFactor;
     std::string emissiveTexture;
 
-		AlphaMode alphaMode;
+    AlphaMode alphaMode;
     float alphaCutoff;
     bool doubleSided;
-	};
+  };
 
-	// Mesh
-	struct Mesh {
+  // Mesh
+  struct Mesh
+  {
     std::string path;
     std::string name;
 
-		AABB aabb;
-		std::vector<Vertex> vertices;
+    AABB aabb;
+    std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 
-		std::string materialPath;
+    std::string materialPath;
 
     // Bone info
     std::vector<std::vector<VertexBoneWeight>> vertexBoneWeights;
-	};
+  };
 
-	// Geometry data
+  // Geometry data
   struct GeometryNode
   {
     std::string name;
 
-		int level;
+    int level;
     int parent;
     int myIndex;
     int firstChild;
     int nextSibling;
 
-		float transform[4][4];
+    float transform[4][4];
 
-		std::vector<std::string> meshPaths;
-	};
+    std::vector<std::string> meshPaths;
+  };
 
-	// Model
-	struct GeometryModel
+  // Model
+  struct GeometryModel
   {
     std::string path;
     std::string name;
 
-		std::vector<GeometryNode> nodes;
+    std::vector<GeometryNode> nodes;
     std::unordered_map<std::string, Mesh> meshPathMap;
     std::unordered_map<std::string, Material> materialPathMap;
     std::unordered_map<std::string, Texture> texturePathMap;
-		
-		// Model bone data
-    std::vector<Bone> bones;
-	};
 
-	GeometryModel _geoModel;
+    // Model bone data
+    std::vector<Bone> bones;
+  };
+
+  GeometryModel _geoModel;
 
 private:
   fs::path _fullPath;
   fs::path _fullDirectory;
 
-	// Path are relative to the asset directory and resource directory.
-	// The resource directory is the mirror of the asset directory, but
-	// name the assets by UUIDs.
+  // Path are relative to the asset directory and resource directory.
+  // The resource directory is the mirror of the asset directory, but
+  // name the assets by UUIDs.
   fs::path _path;
   fs::path _directory;
 
 public:
-
-	fs::path assetDir;
+  fs::path assetDir;
   fs::path resourceDir;
 
-	ModelExporter(const fs::path& assetDir, const fs::path& resourceDir)
-      : assetDir(assetDir), resourceDir(resourceDir) {}
+  ModelExporter(const fs::path& assetDir, const fs::path& resourceDir)
+      : assetDir(assetDir), resourceDir(resourceDir)
+  {
+  }
 
   /**
    * @brief Export a model.
    * @param path The full path to the model. Should starts such as "C:/...".
-   * @param fileFormat 
-   * @return 
+   * @param fileFormat
+   * @return
    */
   bool ExportModel(const char* path, ModelFileFormat fileFormat,
                    bool preCalculateVertex = false, bool extractBones = false);
 
 private:
   std::unordered_set<std::string> _meshNameRegistry;
+  std::unordered_set<std::string> _materialNameRegistry;
   bool _extractBones{false};
   bool _exportAnim{false};
 
   void ProcessScene(const aiScene* scene);
-  void ProcessNode(GeometryModel& geoModel, GeometryNode& parentGeoNode, aiNode* node, const aiScene* scene);
+  void ProcessNode(GeometryModel& geoModel, GeometryNode& parentGeoNode,
+                   aiNode* node, const aiScene* scene);
   void ProcessMesh(GeometryModel& geoModel, GeometryNode& geoNode, aiMesh* mesh,
                    const aiScene* scene);
   void ProcessMaterial(GeometryModel& geoModel, GeometryNode& geoNode,
                        Mesh& geoMesh, aiMaterial* material,
                        const aiScene* scene);
-  void ProcessMaterialTexture(GeometryModel& geoModel, Material& geoMat, aiMaterial* material, aiTextureType type,
-                                  const aiScene* scene);
+  void ProcessMaterialTexture(GeometryModel& geoModel, Material& geoMat,
+                              aiMaterial* material, aiTextureType type,
+                              const aiScene* scene);
 
-	void ExportGeometryModel(GeometryModel& geoModel);
+  void ExportGeometryModel(GeometryModel& geoModel);
   void ExportModelMesh(Mesh& geoMesh);
   void ExportModelMaterial(Material& geoMat);
-	void ExportModelTexture(Texture& texture);
+  void ExportModelTexture(Texture& texture);
 
-	std::string GetExportPath(std::string path);
+  std::string GetExportPath(std::string path);
 
-	void GenerateGeometryModelInfoFile(GeometryModel& geoModel);
-	void GenerateModelMeshInfoFile(Mesh& geoMesh);
-	void GenerateModelMaterialInfoFile(Material& geoMat);
-
+  void GenerateGeometryModelInfoFile(GeometryModel& geoModel);
+  void GenerateModelMeshInfoFile(Mesh& geoMesh);
+  void GenerateModelMaterialInfoFile(Material& geoMat);
 
 private:
   void ExtractSkeletonBonesAndWeights(GeometryModel& geoModel, Mesh& geoMesh,
-                                   aiMesh* mesh, const aiScene* scene);
+                                      aiMesh* mesh, const aiScene* scene);
 
   void ExtractSkeletalBones(const aiScene* scene);
-	void ProcessSkeletonNode(GeometryModel& geoModel, aiNode* node, const aiScene* scene);
+  void ProcessSkeletonNode(GeometryModel& geoModel, aiNode* node,
+                           const aiScene* scene);
   void ProcessSkeletonMesh(GeometryModel& geoModel, aiMesh* mesh,
                            const aiScene* scene);
 

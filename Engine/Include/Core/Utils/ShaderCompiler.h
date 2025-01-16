@@ -1,5 +1,14 @@
 #pragma once
 
-//bool PopulateShaderVariants(
-//    size_t numDefineOptions, const ShaderDefineOption* defineOptions,
-//    std::vector<std::vector<ShaderDefine>>* outVariants);
+#include "Core/Types/ShaderData.h"
+
+namespace Utils
+{
+
+bool PopulateShaderVariants(
+    size_t numOptions, const ShaderOption* defineOptions,
+    std::vector<std::vector<ShaderDefine>>& outVariants);
+
+bool GenerateShaderVariantsFile(const char* shaderDir);
+
+} // namespace Utils
