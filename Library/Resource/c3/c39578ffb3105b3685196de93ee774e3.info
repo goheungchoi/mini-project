@@ -1,0 +1,36 @@
+{
+    "import_path": "Models\\Sphere\\Sphere.obj",
+    "resource_type": "model",
+    "details": {
+        "name": "",
+        "nodes": [
+            {
+                "name": "Sphere.obj",
+                "idx": 0,
+                "level": 0,
+                "parent": -1,
+                "first_child": 1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "Sphere",
+                "idx": 1,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": [
+                    "Models\\Sphere\\Sphere0.mesh"
+                ]
+            }
+        ],
+        "meshes": [
+            "Models\\Sphere\\Sphere0.mesh"
+        ],
+        "materials": [
+            "Models\\Sphere\\DefaultMaterial.mat"
+        ],
+        "textures": []
+    }
+}

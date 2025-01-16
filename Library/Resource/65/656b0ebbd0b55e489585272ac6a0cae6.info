@@ -1,0 +1,26 @@
+{
+    "import_path": "Models\\Sponza\\.mat",
+    "resource_type": "model",
+    "details": {
+        "name": "",
+        "albedo_factor": [
+            [
+                0.5879999995231628,
+                0.5879999995231628,
+                0.5879999995231628,
+                1.0
+            ]
+        ],
+        "albedo_texture": "Models\\Sponza\\5061699253647017043.png",
+        "metallic_factor": 1.0,
+        "roughness_factor": 1.0,
+        "metallic_roughness_texture": "Models\\Sponza\\11872827283454512094.jpg",
+        "normal_texture": "Models\\Sponza\\8773302468495022225.jpg",
+        "occlusion_texture": "",
+        "emissive_factor": 0.0,
+        "emissive_texture": "",
+        "alpha_mode": "AlphaMode_kMask",
+        "alpha_cutoff": 0.5,
+        "double_sided": true
+    }
+}

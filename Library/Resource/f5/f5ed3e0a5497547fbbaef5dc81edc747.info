@@ -1,0 +1,22 @@
+{
+    "import_path": "Models\\Sphere\\Sphere0.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Sphere0",
+        "bounding_box": [
+            [
+                -0.9999989867210388,
+                -1.0,
+                -0.9999989867210388
+            ],
+            [
+                1.0,
+                1.0,
+                1.0
+            ]
+        ],
+        "num_vertices": 1984,
+        "num_indices": 2880,
+        "material": "Models\\Sphere\\DefaultMaterial.mat"
+    }
+}

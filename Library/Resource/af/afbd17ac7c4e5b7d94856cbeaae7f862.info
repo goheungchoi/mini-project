@@ -1,0 +1,13 @@
+{
+    "import_path": "C:\\Users\\ga1ox\\Desktop\\github-repos\\mini-project\\Asset\\Models\\Sponza\\14650633544276105767.jpg",
+    "resource_type": "texture",
+    "details": {
+        "is_normal": false,
+        "is_cube": false,
+        "color_space": "kSRGB",
+        "alpha_mode": "kOpaque",
+        "format": "DXGI_FORMAT_BC7_UNORM_SRGB",
+        "mipmap": true,
+        "mipmapCount": 11
+    }
+}

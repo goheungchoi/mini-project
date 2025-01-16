@@ -1,0 +1,22 @@
+{
+    "import_path": "Models\\Sponza\\meshes[0]-980.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "meshes[0]-980",
+        "bounding_box": [
+            [
+                -1427.434326171875,
+                79.90480041503906,
+                -42.85340118408203
+            ],
+            [
+                -1352.456298828125,
+                264.7611999511719,
+                113.30570220947266
+            ]
+        ],
+        "num_vertices": 866,
+        "num_indices": 4563,
+        "material": "Models\\Sponza\\.mat"
+    }
+}
