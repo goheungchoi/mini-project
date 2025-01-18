@@ -1,4 +1,4 @@
-// WinMain.cpp
+// Cient::WinMain.cpp
 #ifndef UNICODE
 #define UNICODE
 #endif

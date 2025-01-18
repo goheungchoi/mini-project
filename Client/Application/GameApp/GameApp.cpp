@@ -3,7 +3,7 @@
 #include "Core/Input/InputSystem.h"
 #include "ResourceManager/ResourceManager.h"
 #include "WindowManager/WindowManager.h"
-#define RenderTest
+#define ClientTest
 
 static ModelHandle modelHandle;
 static ModelHandle modelHandle2;
@@ -16,8 +16,22 @@ void GameApp::Initialize()
       WindowManager::GetInstance()->CreateWinApp(1280, 720, L"Client Test");
   _renderer = new DX11Renderer;
   Super::Initialize();
+
+  #ifdef ClientTest
+  // 디버그용 콘솔창 생성 *Debug*
+  bool bUseConsole = true; // 이거 true로 바꾸면 콘솔창 뜸.
+  if (bUseConsole)
+  {
+    AllocConsole();
+    FILE* _tempFile;
+    freopen_s(&_tempFile, "CONOUT$", "w", stdout);
+  }
+#endif // DEBUG
+
+
+
   _renderer->Init_Win32(1280, 720, nullptr, &_hwnd);
-#ifdef RenderTest
+#ifdef ClientTest
 #endif // RenderTest
   modelHandle = LoadModel("Models\\FlightHelmet\\FlightHelmet.gltf");
   modelHandle2 = LoadModel("Models\\Ceberus\\Ceberus.glb");
@@ -138,7 +152,7 @@ void GameApp::Render()
   Matrix view = _camera->GetViewTransform();
   Matrix projection = _camera->GetProjectionMatrix();
   _renderer->BeginFrame(_camera->GetPosition(), view, projection, _mainLight);
-#ifdef RenderTest
+#ifdef ClientTest
   Matrix world = Matrix::Identity;
   Matrix scale = Matrix::CreateScale(100.f);
   Matrix translate = Matrix::CreateTranslation(Vector3(0.f, -50.f, 0.0f));
@@ -187,6 +201,6 @@ void GameApp::Render()
                           _renderer->DrawMesh(meshHandle);
                         });
 
-#endif // RenderTest
+#endif // ClientTest
   _renderer->EndFrame();
 }
