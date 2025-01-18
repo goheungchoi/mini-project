@@ -5,6 +5,9 @@
 
 void GameEngine::Initialize()
 {
+  // Com 라이브러리 초기화
+  HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
+
   // TimeSystem 초기화
   TimeSystem::Initialize();
 
