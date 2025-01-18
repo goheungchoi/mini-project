@@ -21,6 +21,12 @@ protected:
   virtual void Update(float deltaTime) override;
   virtual void Render() override;
 
+  virtual bool OnActivated() override;
+  virtual bool OnDeactivated() override;
+  virtual bool OnSuspending() override;
+  virtual bool OnResuming() override;
+  virtual bool OnWindowResized() override;
+
 private:
   Camera* _camera;
   Light::DirectionalLight _mainLight;

@@ -11,13 +11,7 @@ static ModelHandle modelHandle3;
 static ModelHandle modelHandle4;
 void GameApp::Initialize()
 {
-  // 윈도우 생성
-  _hwnd =
-      WindowManager::GetInstance()->CreateWinApp(1280, 720, L"Client Test");
-  _renderer = new DX11Renderer;
-  Super::Initialize();
-
-  #ifdef ClientTest
+#ifdef ClientTest
   // 디버그용 콘솔창 생성 *Debug*
   bool bUseConsole = true; // 이거 true로 바꾸면 콘솔창 뜸.
   if (bUseConsole)
@@ -28,6 +22,12 @@ void GameApp::Initialize()
   }
 #endif // DEBUG
 
+  // 윈도우 생성
+  _hwnd =
+      WindowManager::GetInstance()->CreateWinApp(1280, 720, L"Client Test");
+  _renderer = new DX11Renderer;
+  
+  Super::Initialize();
 
 
   _renderer->Init_Win32(1280, 720, nullptr, &_hwnd);
@@ -203,4 +203,50 @@ void GameApp::Render()
 
 #endif // ClientTest
   _renderer->EndFrame();
+}
+
+bool GameApp::OnActivated()
+{
+  // TODO: 게임이 활성화된 윈도우가 됩니다.
+
+  std::cout << "GameApp::OnActivated()" << std::endl;
+
+
+  return true;
+}
+
+bool GameApp::OnDeactivated()
+{
+  // TODO: 게임이 백그라운드 윈도우로 전환됩니다.
+
+  std::cout << "GameApp::OnDeactivated()" << std::endl;
+
+  return true;
+}
+
+bool GameApp::OnSuspending()
+{
+  // TODO: 게임이 절전 모드로 전환됩니다(또는 최소화됩니다).
+
+  std::cout << "GameApp::OnSuspending()" << std::endl;
+
+  return true;
+}
+
+bool GameApp::OnResuming()
+{
+  // TODO: 게임이 절전 모드에서 복귀(또는 최소화 복귀)합니다.
+
+  std::cout << "GameApp::OnResuming()" << std::endl;
+
+  return true;
+}
+
+bool GameApp::OnWindowResized()
+{
+  // TODO: 게임 윈도우 크기가 조정됩니다.
+
+  std::cout << "GameApp::OnWindowResized()" << std::endl;
+
+  return true;
 }

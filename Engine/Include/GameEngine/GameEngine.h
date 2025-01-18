@@ -19,6 +19,12 @@ protected:
   virtual void Update(float deltaTime) = 0;
   virtual void Render() = 0;
 
+  virtual bool OnActivated();
+  virtual bool OnDeactivated();
+  virtual bool OnSuspending();
+  virtual bool OnResuming();
+  virtual bool OnWindowResized();
+
 private:
   // Main Loop
   void Run();

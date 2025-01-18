@@ -58,6 +58,32 @@ bool WindowManager::DestroyWindowManager()
   return true;
 }
 
+bool WindowManager::SetWindowEventCallbacks(HWND hwnd,
+    std::function<bool()> onActivated, std::function<bool()> onDeactivated,
+    std::function<bool()> onSuspending, std::function<bool()> onResuming,
+    std::function<bool()> onWindowResized)
+{
+  auto&& winapp =
+      std::find_if(_winApps.begin(), _winApps.end(),
+          [hwnd](const WinApp* app) {
+        return app->GetHWND() == hwnd; });
+
+  if (winapp == _winApps.end())
+  {
+    return false;
+  }
+  
+  (*winapp)->_onActivated = std::move(onActivated);
+  (*winapp)->_onDeactivated = std::move(onDeactivated);
+  (*winapp)->_onSuspending = std::move(onSuspending);
+  (*winapp)->_onResuming = std::move(onResuming);
+  (*winapp)->_onWindowResized = std::move(onWindowResized);
+
+  (*winapp)->_onActivated();
+
+  return true;
+}
+
 //LRESULT WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam,
 //                               LPARAM lParam)
 //{
