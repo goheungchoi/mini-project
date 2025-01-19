@@ -8,12 +8,10 @@ Current Frmae Buffer
 :stores information about the current frame's constant buffers
 */
 
-enum class CBType
+enum class MeshCBType
 {
-  Frame,
   World,
-  Defferd,
-  Light,
+  PixelData,
   End
 };
 
@@ -55,14 +53,16 @@ public:
   {
     // 일단 5개 잡아두긴했는데 늘어나면 조정.
     _constantBuffers.resize(5);
-    _constantBuffers[static_cast <UINT>(CBType::World)] =
+    _constantBuffers[static_cast <UINT>(MeshCBType::World)] =
         _device->CreateConstantBuffer<Constant::World>();
+    _constantBuffers[static_cast<UINT>(MeshCBType::PixelData)] =
+        _device->CreateConstantBuffer<Constant::PixelData>();
   }
   ~MeshConstantBuffer() = default;
 
 public:
   template <typename T>
-  void UpdateContantBuffer(T cb, CBType type)
+  void UpdateContantBuffer(T cb, MeshCBType type)
   {
     _device->GetImmContext()->UpdateSubresource(
         _constantBuffers[static_cast<UINT>(type)].Get(), 0, nullptr, &cb, 0, 0);

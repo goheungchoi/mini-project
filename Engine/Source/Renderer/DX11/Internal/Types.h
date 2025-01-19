@@ -19,12 +19,12 @@ namespace Light
   };
 }
 
-//그림자는 기본적으로 지원.
 enum RenderPassType : uint8_t
 {
   None = 0,       
-  OpaquePass = 1 << 0,      // 0000 0001
-  TransparentPass = 1 << 1, // 0000 0010
-  LightPass = 1 << 2,       // 0000 0100
+  kOpaquePass = 1 << 0,      // 0000 0001
+  kTransparentPass = 1 << 1, // 0000 0010
+  kShadowPass = 1 << 2,       // 0000 0100
+  kLightPass = 1 << 3,       // 0000 0100
 };
 using RenderPassFlags = uint8_t;

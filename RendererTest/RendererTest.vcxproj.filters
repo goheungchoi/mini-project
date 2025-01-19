@@ -18,5 +18,6 @@
 		<ClCompile Include="Application\GameApp\GameApp.cpp">
 			<Filter>Application\GameApp</Filter>
 		</ClCompile>
+		<None Include="imgui.ini" />
 	</ItemGroup>
 </Project>

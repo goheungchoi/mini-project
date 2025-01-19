@@ -5,6 +5,17 @@
 
 void GameEngine::Initialize()
 {
+    // 윈도우 크기 조정 이벤트 관련 함수들 설정
+  WindowManager::GetInstance()->SetWindowEventCallbacks(_hwnd,
+      [this]() -> bool { return this->OnActivated(); },
+      [this]() -> bool { return this->OnDeactivated(); },
+      [this]() -> bool { return this->OnSuspending(); },
+      [this]() -> bool { return this->OnResuming(); },
+      [this]() -> bool { return this->OnWindowResized(); });
+
+  // Com 라이브러리 초기화
+  HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
+
   // TimeSystem 초기화
   TimeSystem::Initialize();
 
@@ -34,6 +45,46 @@ void GameEngine::Shutdown()
   // 윈도우 파괴
   WindowManager::GetInstance()->DeleteWinApp();
   WindowManager::GetInstance()->DestroyWindowManager();
+}
+
+bool GameEngine::OnActivated()
+{
+  // TODO: 게임이 활성화된 윈도우가 됩니다.
+  std::cout << "GameEngine::OnActivated()" << std::endl;
+
+  return true;
+}
+
+bool GameEngine::OnDeactivated()
+{
+  // TODO: 게임이 백그라운드 윈도우로 전환됩니다.
+  std::cout << "GameEngine::OnDeactivated()" << std::endl;
+  
+  return true;
+}
+
+bool GameEngine::OnSuspending()
+{
+  // TODO: 게임이 절전 모드로 전환됩니다(또는 최소화됩니다).
+  std::cout << "GameEngine::OnSuspending()" << std::endl;
+
+  return true;
+}
+
+bool GameEngine::OnResuming()
+{
+  // TODO: 게임이 절전 모드에서 복귀(또는 최소화 복귀)합니다.
+  std::cout << "GameEngine::OnResuming()" << std::endl;
+
+  return true;
+}
+
+bool GameEngine::OnWindowResized()
+{
+  // TODO: 게임 윈도우 크기가 조정됩니다.
+  std::cout << "GameEngine::OnWindowResized()" << std::endl;
+
+  return true;
 }
 
 void GameEngine::Run()

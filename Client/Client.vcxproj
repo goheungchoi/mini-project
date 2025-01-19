@@ -167,5 +167,6 @@
 		<ClCompile Include="Application\GameApp\GameApp.cpp" />
 		<ClInclude Include="Application\GameApp\GameApp.h" />
 		<ClCompile Include="Application\WinMain.cpp" />
+		<None Include="imgui.ini" />
 	</ItemGroup>
 </Project>

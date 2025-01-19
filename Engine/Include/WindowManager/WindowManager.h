@@ -20,9 +20,18 @@ private:
     HWND CreateWinApp(int width = 1920, int height = 1080,
                       const wchar_t* className = L"WinClass",
                            HINSTANCE hInstance = GetModuleHandle(NULL));
+
   bool DeleteWinApp();
 
   bool DestroyWindowManager();
+
+  bool SetWindowEventCallbacks(HWND hwnd,
+                               std::function<bool()> onActivated,
+                               std::function<bool()> onDeactivated,
+                               std::function<bool()> onSuspending,
+                               std::function<bool()> onResuming,
+                               std::function<bool()> onWindowResized);
+
   //LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam,
   //                         LPARAM lParam);
 

@@ -274,6 +274,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\RenderPass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\Shader.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShaderModule.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShadowPass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\ResourceStorage.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Buffer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\ConstantBuffer.h" />

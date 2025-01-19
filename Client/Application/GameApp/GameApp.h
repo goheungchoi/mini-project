@@ -1,10 +1,11 @@
 #pragma once
 
 #include "GameEngine/GameEngine.h"
-
+#include "../../Engine/Source/Renderer/IRenderer.h"
+#include "Core/Camera/Camera.h"
 class GameApp : public GameEngine
 {
-	using Super = GameEngine;
+  using Super = GameEngine;
 
 public:
   GameApp() = default;
@@ -20,4 +21,18 @@ protected:
   virtual void Update(float deltaTime) override;
   virtual void Render() override;
 
+  virtual bool OnActivated() override;
+  virtual bool OnDeactivated() override;
+  virtual bool OnSuspending() override;
+  virtual bool OnResuming() override;
+  virtual bool OnWindowResized() override;
+
+private:
+  Camera* _camera;
+  Light::DirectionalLight _mainLight;
+  IRenderer* _renderer;
+  Vector4 eye;
+  Vector4 at;
+
+  bool _bCameraMove = false;
 };
