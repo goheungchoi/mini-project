@@ -13,9 +13,14 @@ private:
   ComPtr<ID3D11DepthStencilView> _shadowDSV = nullptr;
   D3D11_VIEWPORT _shadowViewPort = {};
   Device* _device = nullptr;
+  // VARIABLE
+  float _nearPlane = 7000.f;
+  float _farPlane = 20000.f;
+  float _forwardDist = 3500.f;
+  float _upLookAtDist = 13000.f;
 
 public:
-  Matrix view;
+  Matrix View;
   Matrix Projection;
 
 public:
@@ -51,10 +56,58 @@ public:
                        .Height = static_cast<float>(height),
                        .MinDepth = 0.f,
                        .MaxDepth = 1.f};
+   
   }
   ~ShadowPass() {}
 
 public:
+#ifdef _DEBUG
+  void UpdateVarialbe()
+  {
+    if (ImGui::Begin("Shadow"))
+    {
+      ImGui::SliderFloat("forwadDist", &_forwardDist, 0.f, 5000.f);
+      ImGui::SliderFloat("UpLookAtDist", &_upLookAtDist, 1000.f, 50000.f);
+      ImGui::SliderFloat("NearPlane", &_nearPlane, 1.f, 10000.f);
+      ImGui::SliderFloat("FarPlane", &_farPlane, 10000.f, 100000.f);
+      ImTextureID imgID = (ImTextureID)(uintptr_t)_shadowSRV.Get();
+      ImGui::Image(imgID, ImVec2(400, 400));
+    }
+    ImGui::End();
+  }
+#endif
+  void CalculateMatrix(const Matrix& view, const Vector4& eye,
+                       const Vector4& lightDir)
+  {
+    Vector3 _lightDir = {lightDir.x, lightDir.y, lightDir.z};
+    _lightDir.Normalize();
+    Vector3 viewForward = view.Forward();
+    Vector4 shadowLookAt = eye + viewForward * _forwardDist;
+    Vector4 shadowPos = shadowLookAt + (-_lightDir * _upLookAtDist);
+    Vector3 up = {0.f, 1.f, 0.f};
+    Vector3 forward;
+    forward.x = shadowLookAt.x - shadowPos.x;
+    forward.y = shadowLookAt.y - shadowPos.y;
+    forward.z = shadowLookAt.z - shadowPos.z;
+    forward.Normalize();
+    if (fabs(forward.y) > 0.99)
+    {
+      up = {1, 0, 0};
+    }
+    Vector3 right = up.Cross(forward);
+    right.Normalize();
+    up = forward.Cross(right);
+    up.Normalize();
+    float x = -right.Dot(Vector3(shadowPos));
+    float y = -up.Dot(Vector3(shadowPos));
+    float z = -forward.Dot(Vector3(shadowPos));
+    View = Matrix(right.x, up.x, forward.x, 0.0f, right.y, up.y, forward.y,
+                  0.0f, right.z, up.z, forward.z, 0.0f, x, y, z, 1.0f);
+
+    Projection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, 1,
+                                                   _nearPlane, _farPlane);
+    
+  }
   void Prepare()
   {
     ID3D11RenderTargetView* nullrtv = nullptr;
@@ -62,6 +115,7 @@ public:
     dc->ClearDepthStencilView(_shadowDSV.Get(), D3D11_CLEAR_DEPTH, 1.f, 0);
     dc->OMSetRenderTargets(0, &nullrtv, _shadowDSV.Get());
     dc->RSSetViewports(1, &_shadowViewPort);
-    //SWTODO : 이어서 작업하기. 
+    dc->PSSetShaderResources(9, 1,
+                                                  _shadowSRV.GetAddressOf());
   }
 };

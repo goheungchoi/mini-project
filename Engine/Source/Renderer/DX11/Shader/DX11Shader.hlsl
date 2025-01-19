@@ -14,6 +14,7 @@ TextureCube evnTexture : register(t5);
 Texture2D evnSpecularBRDF : register(t6);
 TextureCube evnIrradianceTexture : register(t7);
 TextureCube evnSpecularIBLTexture : register(t8);
+Texture2D texShadow : register(t9);
 //deferred
 Texture2D deferredAlbedoDepth : register(t10);
 Texture2D deferredNormal : register(t11);
@@ -44,7 +45,7 @@ cbuffer Frame : register(b0)
     Matrix InverseViewMatrix;
     Matrix InverseProjectionMatrix;
     Matrix shadowView;
-    Matrix sahdowProjection;
+    Matrix shadowProjection;
 };
 
 cbuffer World : register(b1)
@@ -78,6 +79,7 @@ struct VS_INPUT
 struct PS_INPUT
 {
     float4 position : SV_POSITION;
+    float4 positionShadow : POSITION;
     float4 color : COLOR;
     float3 worldNormal : NORMAL;
     float3 worldTangent : TANGENT;
@@ -256,6 +258,9 @@ PS_INPUT vs_main(VS_INPUT input)
     output.worldBitangent = normalize(mul(normalize(input.biTangent), (float3x3) matWolrd));
     output.color = input.color;
     output.uv = input.uv;
+    output.positionShadow = mul(output.worldPosition,
+    shadowView);
+    output.positionShadow = mul(output.positionShadow, shadowProjection);
     return output;
 }
 //---------------------------define Transparency--------------------------------------------
@@ -322,6 +327,36 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
         //더하기
     ambientLighting += (IBLdiffuse + specularIBL);
 
+    float currShadowDepth = input.positionShadow.z / input.positionShadow.w;
+    float2 uv = input.positionShadow.xy / input.positionShadow.w;
+    //y뒤집기
+    uv.y = -uv.y;
+    //-1~1 ->0~1
+    uv = uv * 0.5f + 0.5f;
+    //그림자 factor
+    float shadowFactor = 1.f;
+    if (uv.x >= 0.f && uv.x <= 1.f && uv.y >= 0.f && uv.y <= 1.f)
+    {
+        float2 offset[9] =
+        {
+            float2(-1, -1), float2(0, -1), float2(1, -1),
+                float2(-1, 0), float2(0, 0), float2(1, 0),
+                float2(-1, 1), float2(0, 1), float2(1, 1)
+        };
+        uint width, height, levels;
+        texShadow.GetDimensions(width, height);
+        float texelSize = 1.0 / width; //텍셀 크기
+        shadowFactor = 0.f;
+            [unroll]
+        for (int i = 0; i < 9; i++)
+        {
+            float2 sampleUV = uv + offset[i] * texelSize; //오프셋 계산
+                //sampleCmpLevelZero로 pcf샘플링
+            shadowFactor += texShadow.SampleCmpLevelZero(samComparison, sampleUV, currShadowDepth - 0.001);
+
+        }
+        shadowFactor = shadowFactor / 9.f;
+    }
     float alpha = 1.0;
     float4 alphaColor = texAlbedo.Sample(samLinear, input.uv);
     alpha = alphaColor.a;
@@ -330,7 +365,7 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     
     float4 finalColor;
     float4 emissive = texEmissive.Sample(samLinear, input.uv);
-    float4 temp = float4(float3(directLighting + ambientLighting), 1.f) + emissive;
+    float4 temp = float4(float3((directLighting * shadowFactor) + ambientLighting), 1.f) + emissive;
     temp = pow(temp, 1.0 / 2.2);
     finalColor = float4(temp.rgb, alpha);
     if (alpha < 0.1)
@@ -363,5 +398,19 @@ SKYBOX_PS_INPUT skybox_vs_main(VS_INPUT input)
 float4 skybox_ps_main(SKYBOX_PS_INPUT input):SV_Target0
 {
     return evnTexture.Sample(samAnisotropy, input.texCoord);
+}
+#endif
+
+//---------------------------define Shadow--------------------------------------------
+#ifdef Shadow
+PS_INPUT shadow_vs_main(VS_INPUT input)
+{
+    PS_INPUT output = (PS_INPUT) 0;
+    float4 pos = input.position;
+    pos = mul(pos, world);
+    pos = mul(pos, shadowView);
+    pos = mul(pos, shadowProjection);
+    output.position = pos;
+    return output;
 }
 #endif

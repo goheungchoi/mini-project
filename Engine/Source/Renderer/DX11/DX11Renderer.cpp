@@ -6,7 +6,6 @@
 #include "Internal/Resources/Material.h"
 #include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
-
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
@@ -33,7 +32,9 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   _passMgr = new RenderPassManager(_device, _swapChain, width, height);
   _passMgr->CreateSamplers();
   _passMgr->CreateMainShader();
+#ifdef _DEBUG
   InitImGui();
+#endif
   return true;
 }
 
@@ -64,8 +65,10 @@ void DX11Renderer::BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
 {
   _passMgr->SetCamera(cameraPos, view, projection);
   _passMgr->SetMainLightDir(mainLight);
+#ifdef _DEBUG
   BeginImGuiDraw();
   _passMgr->UpdateVariable();
+#endif
 }
 
 void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
@@ -94,7 +97,9 @@ void DX11Renderer::EndFrame()
 {
   _passMgr->FrameSet();
   _passMgr->ProcessPass();
+#ifdef _DEBUG
   DrawImGui();
+#endif
   _swapChain->GetSwapChain()->Present(0, 0);
 }
 
@@ -292,7 +297,6 @@ void DX11Renderer::DrawImGui()
   //_device->GetImmContext()->ClearRenderTargetView(*rtv, clearColor);
 
   // Start the Dear ImGui frame
-  
 
   // Rendering
   ImGui::Render();

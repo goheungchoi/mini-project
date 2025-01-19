@@ -3,6 +3,9 @@
 #include "Core/Input/InputSystem.h"
 #include "ResourceManager/ResourceManager.h"
 #include "WindowManager/WindowManager.h"
+#include <imgui.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_win32.h>
 #define RenderTest
 
 static ModelHandle modelHandle;
@@ -50,8 +53,7 @@ void GameApp::Initialize()
   _mainLight.intensity = Vector4(1.f, 1.f, 1.f, 1.f);
 
 
-  _camera->SetPosition({4.367269, -0.90219879, -40.523827, +76.853645});
-  eye = {4.367269, -0.90219879, -40.523827, +76.853645};
+  _camera->SetPosition({0, 0, -50, 1});
   at = Vector4::Zero;
 }
 
@@ -142,6 +144,16 @@ void GameApp::Render()
   Matrix projection = _camera->GetProjectionMatrix();
   _renderer->BeginFrame(_camera->GetPosition(), view, projection,
                         _mainLight);
+  if (ImGui::Begin("main Light"))
+  {
+    float _mainLightDir[3] = {_mainLight.direction.x, _mainLight.direction.y,
+                              _mainLight.direction.z};
+    ImGui::SliderFloat3("direction", _mainLightDir, -1.f,1.f);
+    _mainLight.direction.x = _mainLightDir[0];
+    _mainLight.direction.y = _mainLightDir[1];
+    _mainLight.direction.z = _mainLightDir[2];
+  }
+  ImGui::End();
 #ifdef RenderTest
   Matrix world = Matrix::Identity;
   Matrix scale = Matrix::CreateScale(100.f);
