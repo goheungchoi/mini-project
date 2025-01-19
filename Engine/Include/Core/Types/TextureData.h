@@ -27,6 +27,8 @@ enum class TextureType : uint8_t
 };
 
 struct TextureData {
+  std::string name;
+
   TextureType type;
 	
 	bool isSRGB;

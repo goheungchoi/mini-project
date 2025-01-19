@@ -7,7 +7,7 @@
 struct ModelNode
 {
   std::string name;
-	// Matrix transformation;
+	Matrix transform;
 
   int level;
   int parent;
@@ -24,4 +24,10 @@ struct ModelData {
   std::unordered_set<MeshHandle> meshes;
   std::unordered_set<MaterialHandle> materials;
   std::unordered_set<TextureHandle> textures;
+
+	// Animations
+  std::unordered_set<AnimationHandle> animations;
+
+	// Skeleton
+  SkeletonHandle skeleton;
 };

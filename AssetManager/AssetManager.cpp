@@ -223,6 +223,17 @@ bool AssetManager::excludeAssetFileFromResource(const QString& filePath) {
       fs::remove(exportPath);
 		}
 
+		// Remove Skeleton
+    if (auto it = details.find("skeleton"); it != details.end())
+    {
+      fs::path exportPath = GetExportPath(it.value());
+      fs::remove(exportPath);
+
+			// Remove .info file
+      exportPath += ".info";
+      fs::remove(exportPath);
+		}
+
 		// Remove the model data
 		fs::remove(resDir);
     fs::remove(infoDir);

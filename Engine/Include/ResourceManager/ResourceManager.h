@@ -8,6 +8,8 @@
 #include "Core/Types/ModelData.h"
 #include "Core/Types/MaterialData.h"
 #include "Core/Types/TextureData.h"
+#include "Core/Types/SkeletonData.h"
+#include "Core/Types/AnimationData.h"
 
 struct ResourceManager {
   
@@ -31,6 +33,14 @@ struct ResourceManager {
   const ModelData& (*AccessModelData)(ModelHandle handle);
   void (*UnloadModel)(ModelHandle handle);
 
+	SkeletonHandle (*LoadSkeleton)(const std::string& path);
+  const SkeletonData& (*AccessSkeletonData)(SkeletonHandle handle);
+  void (*UnloadSkeleton)(SkeletonHandle handle);
+
+	AnimationHandle (*LoadAnimation)(const std::string& path);
+  const AnimationData& (*AccessAnimationData)(AnimationHandle handle);
+  void (*UnloadAnimation)(AnimationHandle handle);
+
   ResourceType (*GetResourceType)(const Handle& handle);
   bool (*IsValidHandle)(const Handle& handle);
 
@@ -39,7 +49,7 @@ struct ResourceManager {
 
 const ResourceManager* GetResourceManager();
 
-
+// Shader
 inline ShaderHandle LoadShader(const std::string& path, ShaderType type)
 {
   return GetResourceManager()->LoadShader(path, type);
@@ -55,7 +65,7 @@ inline void UnloadShader(ShaderHandle handle)
   GetResourceManager()->UnloadShader(handle);
 }
 
-
+// Texture
 inline TextureHandle LoadTexture(const std::string& path, TextureType type)
 {
   return GetResourceManager()->LoadTexture(path, type);
@@ -71,7 +81,7 @@ inline void UnloadTexture(TextureHandle handle)
   GetResourceManager()->UnloadTexture(handle);
 }
 
-
+// Material
 inline MaterialHandle LoadMaterial(const std::string& path)
 {
   return GetResourceManager()->LoadMaterial(path);
@@ -87,7 +97,7 @@ inline void UnloadMaterial(MaterialHandle handle)
   GetResourceManager()->UnloadMaterial(handle);
 }
 
-
+// Mesh
 inline MeshHandle LoadMesh(const std::string& path)
 {
   return GetResourceManager()->LoadMesh(path);
@@ -121,6 +131,39 @@ inline const ModelData& AccessModelData(ModelHandle handle)
 inline void UnloadModel(ModelHandle handle)
 {
   GetResourceManager()->UnloadModel(handle);
+}
+
+
+// Skeleton
+inline SkeletonHandle LoadSkeleton(const std::string& path)
+{
+  return GetResourceManager()->LoadSkeleton(path);
+}
+
+inline const SkeletonData& AccessSkeletonData(SkeletonHandle handle)
+{
+  return GetResourceManager()->AccessSkeletonData(handle);
+}
+
+inline void UnloadSkeleton(SkeletonHandle handle)
+{
+  GetResourceManager()->UnloadSkeleton(handle);
+}
+
+// Animation
+inline AnimationHandle LoadAnimation(const std::string& path)
+{
+  return GetResourceManager()->LoadAnimation(path);
+}
+
+inline const AnimationData& AccessAnimationData(AnimationHandle handle)
+{
+  return GetResourceManager()->AccessAnimationData(handle);
+}
+
+inline void UnloadAnimation(AnimationHandle handle)
+{
+  GetResourceManager()->UnloadAnimation(handle);
 }
 
 

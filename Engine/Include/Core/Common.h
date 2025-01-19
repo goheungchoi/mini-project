@@ -4,10 +4,16 @@
 #define NOMINMAX
 #include <Windows.h>
 
+//use comptr
+#include <wrl.h>
+
 #include <iostream>
+#include <typeindex>
+#include <typeinfo>
 #include <memory>
 #include <optional>
 #include <string>
+using namespace std::literals;
 #include <string_view>
 #include <vector>
 #include <queue>
@@ -30,6 +36,9 @@ namespace fs = std::filesystem;
 
 // #include <fmt/core.h>
 // #include <fmt/format.h>
+
+
+
 
 constexpr uint64_t kUInt64Max{(std::numeric_limits<uint64_t>::max)()};
 

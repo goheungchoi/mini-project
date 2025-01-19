@@ -16,22 +16,42 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 namespace GameResource {
 
 struct TexCoord;
-struct TexCoordBuilder;
 
 struct Vec3;
-struct Vec3Builder;
 
 struct Vec4;
-struct Vec4Builder;
+
+struct Matrix;
+
+struct KeyPosition;
+
+struct KeyRotation;
+
+struct KeyScaling;
+
+struct AnimationChannel;
+struct AnimationChannelBuilder;
+
+struct Animation;
+struct AnimationBuilder;
+
+struct Bone;
+struct BoneBuilder;
+
+struct SkeletonNode;
+struct SkeletonNodeBuilder;
+
+struct Skeleton;
+struct SkeletonBuilder;
 
 struct Material;
 struct MaterialBuilder;
 
 struct AABB;
-struct AABBBuilder;
 
 struct Vertex;
-struct VertexBuilder;
+
+struct VertexBoneWeight;
 
 struct Mesh;
 struct MeshBuilder;
@@ -75,187 +95,882 @@ inline const char *EnumNameAlphaMode(AlphaMode e) {
   return EnumNamesAlphaMode()[index];
 }
 
-struct TexCoord FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef TexCoordBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_U = 4,
-    VT_V = 6
-  };
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) TexCoord FLATBUFFERS_FINAL_CLASS {
+ private:
+  float u_;
+  float v_;
+
+ public:
+  TexCoord()
+      : u_(0),
+        v_(0) {
+  }
+  TexCoord(float _u, float _v)
+      : u_(::flatbuffers::EndianScalar(_u)),
+        v_(::flatbuffers::EndianScalar(_v)) {
+  }
   float u() const {
-    return GetField<float>(VT_U, 0.0f);
+    return ::flatbuffers::EndianScalar(u_);
   }
   float v() const {
-    return GetField<float>(VT_V, 0.0f);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<float>(verifier, VT_U, 4) &&
-           VerifyField<float>(verifier, VT_V, 4) &&
-           verifier.EndTable();
+    return ::flatbuffers::EndianScalar(v_);
   }
 };
+FLATBUFFERS_STRUCT_END(TexCoord, 8);
 
-struct TexCoordBuilder {
-  typedef TexCoord Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_u(float u) {
-    fbb_.AddElement<float>(TexCoord::VT_U, u, 0.0f);
-  }
-  void add_v(float v) {
-    fbb_.AddElement<float>(TexCoord::VT_V, v, 0.0f);
-  }
-  explicit TexCoordBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<TexCoord> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<TexCoord>(end);
-    return o;
-  }
-};
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Vec3 FLATBUFFERS_FINAL_CLASS {
+ private:
+  float x_;
+  float y_;
+  float z_;
 
-inline ::flatbuffers::Offset<TexCoord> CreateTexCoord(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    float u = 0.0f,
-    float v = 0.0f) {
-  TexCoordBuilder builder_(_fbb);
-  builder_.add_v(v);
-  builder_.add_u(u);
-  return builder_.Finish();
-}
-
-struct Vec3 FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef Vec3Builder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_X = 4,
-    VT_Y = 6,
-    VT_Z = 8
-  };
+ public:
+  Vec3()
+      : x_(0),
+        y_(0),
+        z_(0) {
+  }
+  Vec3(float _x, float _y, float _z)
+      : x_(::flatbuffers::EndianScalar(_x)),
+        y_(::flatbuffers::EndianScalar(_y)),
+        z_(::flatbuffers::EndianScalar(_z)) {
+  }
   float x() const {
-    return GetField<float>(VT_X, 0.0f);
+    return ::flatbuffers::EndianScalar(x_);
   }
   float y() const {
-    return GetField<float>(VT_Y, 0.0f);
+    return ::flatbuffers::EndianScalar(y_);
   }
   float z() const {
-    return GetField<float>(VT_Z, 0.0f);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<float>(verifier, VT_X, 4) &&
-           VerifyField<float>(verifier, VT_Y, 4) &&
-           VerifyField<float>(verifier, VT_Z, 4) &&
-           verifier.EndTable();
+    return ::flatbuffers::EndianScalar(z_);
   }
 };
+FLATBUFFERS_STRUCT_END(Vec3, 12);
 
-struct Vec3Builder {
-  typedef Vec3 Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_x(float x) {
-    fbb_.AddElement<float>(Vec3::VT_X, x, 0.0f);
-  }
-  void add_y(float y) {
-    fbb_.AddElement<float>(Vec3::VT_Y, y, 0.0f);
-  }
-  void add_z(float z) {
-    fbb_.AddElement<float>(Vec3::VT_Z, z, 0.0f);
-  }
-  explicit Vec3Builder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<Vec3> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Vec3>(end);
-    return o;
-  }
-};
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Vec4 FLATBUFFERS_FINAL_CLASS {
+ private:
+  float x_;
+  float y_;
+  float z_;
+  float w_;
 
-inline ::flatbuffers::Offset<Vec3> CreateVec3(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    float x = 0.0f,
-    float y = 0.0f,
-    float z = 0.0f) {
-  Vec3Builder builder_(_fbb);
-  builder_.add_z(z);
-  builder_.add_y(y);
-  builder_.add_x(x);
-  return builder_.Finish();
-}
-
-struct Vec4 FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef Vec4Builder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_X = 4,
-    VT_Y = 6,
-    VT_Z = 8,
-    VT_W = 10
-  };
+ public:
+  Vec4()
+      : x_(0),
+        y_(0),
+        z_(0),
+        w_(0) {
+  }
+  Vec4(float _x, float _y, float _z, float _w)
+      : x_(::flatbuffers::EndianScalar(_x)),
+        y_(::flatbuffers::EndianScalar(_y)),
+        z_(::flatbuffers::EndianScalar(_z)),
+        w_(::flatbuffers::EndianScalar(_w)) {
+  }
   float x() const {
-    return GetField<float>(VT_X, 0.0f);
+    return ::flatbuffers::EndianScalar(x_);
   }
   float y() const {
-    return GetField<float>(VT_Y, 0.0f);
+    return ::flatbuffers::EndianScalar(y_);
   }
   float z() const {
-    return GetField<float>(VT_Z, 0.0f);
+    return ::flatbuffers::EndianScalar(z_);
   }
   float w() const {
-    return GetField<float>(VT_W, 0.0f);
+    return ::flatbuffers::EndianScalar(w_);
+  }
+};
+FLATBUFFERS_STRUCT_END(Vec4, 16);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Matrix FLATBUFFERS_FINAL_CLASS {
+ private:
+  float _11_;
+  float _12_;
+  float _13_;
+  float _14_;
+  float _21_;
+  float _22_;
+  float _23_;
+  float _24_;
+  float _31_;
+  float _32_;
+  float _33_;
+  float _34_;
+  float _41_;
+  float _42_;
+  float _43_;
+  float _44_;
+
+ public:
+  Matrix()
+      : _11_(0),
+        _12_(0),
+        _13_(0),
+        _14_(0),
+        _21_(0),
+        _22_(0),
+        _23_(0),
+        _24_(0),
+        _31_(0),
+        _32_(0),
+        _33_(0),
+        _34_(0),
+        _41_(0),
+        _42_(0),
+        _43_(0),
+        _44_(0) {
+  }
+  Matrix(float __11, float __12, float __13, float __14, float __21, float __22, float __23, float __24, float __31, float __32, float __33, float __34, float __41, float __42, float __43, float __44)
+      : _11_(::flatbuffers::EndianScalar(__11)),
+        _12_(::flatbuffers::EndianScalar(__12)),
+        _13_(::flatbuffers::EndianScalar(__13)),
+        _14_(::flatbuffers::EndianScalar(__14)),
+        _21_(::flatbuffers::EndianScalar(__21)),
+        _22_(::flatbuffers::EndianScalar(__22)),
+        _23_(::flatbuffers::EndianScalar(__23)),
+        _24_(::flatbuffers::EndianScalar(__24)),
+        _31_(::flatbuffers::EndianScalar(__31)),
+        _32_(::flatbuffers::EndianScalar(__32)),
+        _33_(::flatbuffers::EndianScalar(__33)),
+        _34_(::flatbuffers::EndianScalar(__34)),
+        _41_(::flatbuffers::EndianScalar(__41)),
+        _42_(::flatbuffers::EndianScalar(__42)),
+        _43_(::flatbuffers::EndianScalar(__43)),
+        _44_(::flatbuffers::EndianScalar(__44)) {
+  }
+  float _11() const {
+    return ::flatbuffers::EndianScalar(_11_);
+  }
+  float _12() const {
+    return ::flatbuffers::EndianScalar(_12_);
+  }
+  float _13() const {
+    return ::flatbuffers::EndianScalar(_13_);
+  }
+  float _14() const {
+    return ::flatbuffers::EndianScalar(_14_);
+  }
+  float _21() const {
+    return ::flatbuffers::EndianScalar(_21_);
+  }
+  float _22() const {
+    return ::flatbuffers::EndianScalar(_22_);
+  }
+  float _23() const {
+    return ::flatbuffers::EndianScalar(_23_);
+  }
+  float _24() const {
+    return ::flatbuffers::EndianScalar(_24_);
+  }
+  float _31() const {
+    return ::flatbuffers::EndianScalar(_31_);
+  }
+  float _32() const {
+    return ::flatbuffers::EndianScalar(_32_);
+  }
+  float _33() const {
+    return ::flatbuffers::EndianScalar(_33_);
+  }
+  float _34() const {
+    return ::flatbuffers::EndianScalar(_34_);
+  }
+  float _41() const {
+    return ::flatbuffers::EndianScalar(_41_);
+  }
+  float _42() const {
+    return ::flatbuffers::EndianScalar(_42_);
+  }
+  float _43() const {
+    return ::flatbuffers::EndianScalar(_43_);
+  }
+  float _44() const {
+    return ::flatbuffers::EndianScalar(_44_);
+  }
+};
+FLATBUFFERS_STRUCT_END(Matrix, 64);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) KeyPosition FLATBUFFERS_FINAL_CLASS {
+ private:
+  float position_[4];
+  float timeStamp_;
+
+ public:
+  KeyPosition()
+      : position_(),
+        timeStamp_(0) {
+  }
+  KeyPosition(float _timeStamp)
+      : position_(),
+        timeStamp_(::flatbuffers::EndianScalar(_timeStamp)) {
+  }
+  KeyPosition(::flatbuffers::span<const float, 4> _position, float _timeStamp)
+      : timeStamp_(::flatbuffers::EndianScalar(_timeStamp)) {
+    ::flatbuffers::CastToArray(position_).CopyFromSpan(_position);
+  }
+  const ::flatbuffers::Array<float, 4> *position() const {
+    return &::flatbuffers::CastToArray(position_);
+  }
+  float timeStamp() const {
+    return ::flatbuffers::EndianScalar(timeStamp_);
+  }
+};
+FLATBUFFERS_STRUCT_END(KeyPosition, 20);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) KeyRotation FLATBUFFERS_FINAL_CLASS {
+ private:
+  float orientation_[4];
+  float timeStamp_;
+
+ public:
+  KeyRotation()
+      : orientation_(),
+        timeStamp_(0) {
+  }
+  KeyRotation(float _timeStamp)
+      : orientation_(),
+        timeStamp_(::flatbuffers::EndianScalar(_timeStamp)) {
+  }
+  KeyRotation(::flatbuffers::span<const float, 4> _orientation, float _timeStamp)
+      : timeStamp_(::flatbuffers::EndianScalar(_timeStamp)) {
+    ::flatbuffers::CastToArray(orientation_).CopyFromSpan(_orientation);
+  }
+  const ::flatbuffers::Array<float, 4> *orientation() const {
+    return &::flatbuffers::CastToArray(orientation_);
+  }
+  float timeStamp() const {
+    return ::flatbuffers::EndianScalar(timeStamp_);
+  }
+};
+FLATBUFFERS_STRUCT_END(KeyRotation, 20);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) KeyScaling FLATBUFFERS_FINAL_CLASS {
+ private:
+  float scaling_[4];
+  float timeStamp_;
+
+ public:
+  KeyScaling()
+      : scaling_(),
+        timeStamp_(0) {
+  }
+  KeyScaling(float _timeStamp)
+      : scaling_(),
+        timeStamp_(::flatbuffers::EndianScalar(_timeStamp)) {
+  }
+  KeyScaling(::flatbuffers::span<const float, 4> _scaling, float _timeStamp)
+      : timeStamp_(::flatbuffers::EndianScalar(_timeStamp)) {
+    ::flatbuffers::CastToArray(scaling_).CopyFromSpan(_scaling);
+  }
+  const ::flatbuffers::Array<float, 4> *scaling() const {
+    return &::flatbuffers::CastToArray(scaling_);
+  }
+  float timeStamp() const {
+    return ::flatbuffers::EndianScalar(timeStamp_);
+  }
+};
+FLATBUFFERS_STRUCT_END(KeyScaling, 20);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) AABB FLATBUFFERS_FINAL_CLASS {
+ private:
+  GameResource::Vec3 min_;
+  GameResource::Vec3 max_;
+
+ public:
+  AABB()
+      : min_(),
+        max_() {
+  }
+  AABB(const GameResource::Vec3 &_min, const GameResource::Vec3 &_max)
+      : min_(_min),
+        max_(_max) {
+  }
+  const GameResource::Vec3 &min() const {
+    return min_;
+  }
+  const GameResource::Vec3 &max() const {
+    return max_;
+  }
+};
+FLATBUFFERS_STRUCT_END(AABB, 24);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Vertex FLATBUFFERS_FINAL_CLASS {
+ private:
+  GameResource::Vec4 position_;
+  GameResource::Vec3 normal_;
+  GameResource::Vec3 tangent_;
+  GameResource::Vec3 bitangent_;
+  GameResource::TexCoord texcoord_;
+  GameResource::Vec4 color_;
+
+ public:
+  Vertex()
+      : position_(),
+        normal_(),
+        tangent_(),
+        bitangent_(),
+        texcoord_(),
+        color_() {
+  }
+  Vertex(const GameResource::Vec4 &_position, const GameResource::Vec3 &_normal, const GameResource::Vec3 &_tangent, const GameResource::Vec3 &_bitangent, const GameResource::TexCoord &_texcoord, const GameResource::Vec4 &_color)
+      : position_(_position),
+        normal_(_normal),
+        tangent_(_tangent),
+        bitangent_(_bitangent),
+        texcoord_(_texcoord),
+        color_(_color) {
+  }
+  const GameResource::Vec4 &position() const {
+    return position_;
+  }
+  const GameResource::Vec3 &normal() const {
+    return normal_;
+  }
+  const GameResource::Vec3 &tangent() const {
+    return tangent_;
+  }
+  const GameResource::Vec3 &bitangent() const {
+    return bitangent_;
+  }
+  const GameResource::TexCoord &texcoord() const {
+    return texcoord_;
+  }
+  const GameResource::Vec4 &color() const {
+    return color_;
+  }
+};
+FLATBUFFERS_STRUCT_END(Vertex, 76);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) VertexBoneWeight FLATBUFFERS_FINAL_CLASS {
+ private:
+  int32_t boneId_;
+  float weight_;
+
+ public:
+  VertexBoneWeight()
+      : boneId_(0),
+        weight_(0) {
+  }
+  VertexBoneWeight(int32_t _boneId, float _weight)
+      : boneId_(::flatbuffers::EndianScalar(_boneId)),
+        weight_(::flatbuffers::EndianScalar(_weight)) {
+  }
+  int32_t boneId() const {
+    return ::flatbuffers::EndianScalar(boneId_);
+  }
+  float weight() const {
+    return ::flatbuffers::EndianScalar(weight_);
+  }
+};
+FLATBUFFERS_STRUCT_END(VertexBoneWeight, 8);
+
+struct AnimationChannel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef AnimationChannelBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_BONEID = 4,
+    VT_NODENAME = 6,
+    VT_NUMKEYPOSITIONS = 8,
+    VT_NUMKEYROTATIONS = 10,
+    VT_NUMKEYSCALINGS = 12,
+    VT_KEYPOSITIONS = 14,
+    VT_KEYROTATIONS = 16,
+    VT_KEYSCALINGS = 18
+  };
+  int32_t boneId() const {
+    return GetField<int32_t>(VT_BONEID, 0);
+  }
+  const ::flatbuffers::String *nodeName() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NODENAME);
+  }
+  uint32_t numKeyPositions() const {
+    return GetField<uint32_t>(VT_NUMKEYPOSITIONS, 0);
+  }
+  uint32_t numKeyRotations() const {
+    return GetField<uint32_t>(VT_NUMKEYROTATIONS, 0);
+  }
+  uint32_t numKeyScalings() const {
+    return GetField<uint32_t>(VT_NUMKEYSCALINGS, 0);
+  }
+  const ::flatbuffers::Vector<const GameResource::KeyPosition *> *keyPositions() const {
+    return GetPointer<const ::flatbuffers::Vector<const GameResource::KeyPosition *> *>(VT_KEYPOSITIONS);
+  }
+  const ::flatbuffers::Vector<const GameResource::KeyRotation *> *keyRotations() const {
+    return GetPointer<const ::flatbuffers::Vector<const GameResource::KeyRotation *> *>(VT_KEYROTATIONS);
+  }
+  const ::flatbuffers::Vector<const GameResource::KeyScaling *> *keyScalings() const {
+    return GetPointer<const ::flatbuffers::Vector<const GameResource::KeyScaling *> *>(VT_KEYSCALINGS);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<float>(verifier, VT_X, 4) &&
-           VerifyField<float>(verifier, VT_Y, 4) &&
-           VerifyField<float>(verifier, VT_Z, 4) &&
-           VerifyField<float>(verifier, VT_W, 4) &&
+           VerifyField<int32_t>(verifier, VT_BONEID, 4) &&
+           VerifyOffset(verifier, VT_NODENAME) &&
+           verifier.VerifyString(nodeName()) &&
+           VerifyField<uint32_t>(verifier, VT_NUMKEYPOSITIONS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_NUMKEYROTATIONS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_NUMKEYSCALINGS, 4) &&
+           VerifyOffset(verifier, VT_KEYPOSITIONS) &&
+           verifier.VerifyVector(keyPositions()) &&
+           VerifyOffset(verifier, VT_KEYROTATIONS) &&
+           verifier.VerifyVector(keyRotations()) &&
+           VerifyOffset(verifier, VT_KEYSCALINGS) &&
+           verifier.VerifyVector(keyScalings()) &&
            verifier.EndTable();
   }
 };
 
-struct Vec4Builder {
-  typedef Vec4 Table;
+struct AnimationChannelBuilder {
+  typedef AnimationChannel Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_x(float x) {
-    fbb_.AddElement<float>(Vec4::VT_X, x, 0.0f);
+  void add_boneId(int32_t boneId) {
+    fbb_.AddElement<int32_t>(AnimationChannel::VT_BONEID, boneId, 0);
   }
-  void add_y(float y) {
-    fbb_.AddElement<float>(Vec4::VT_Y, y, 0.0f);
+  void add_nodeName(::flatbuffers::Offset<::flatbuffers::String> nodeName) {
+    fbb_.AddOffset(AnimationChannel::VT_NODENAME, nodeName);
   }
-  void add_z(float z) {
-    fbb_.AddElement<float>(Vec4::VT_Z, z, 0.0f);
+  void add_numKeyPositions(uint32_t numKeyPositions) {
+    fbb_.AddElement<uint32_t>(AnimationChannel::VT_NUMKEYPOSITIONS, numKeyPositions, 0);
   }
-  void add_w(float w) {
-    fbb_.AddElement<float>(Vec4::VT_W, w, 0.0f);
+  void add_numKeyRotations(uint32_t numKeyRotations) {
+    fbb_.AddElement<uint32_t>(AnimationChannel::VT_NUMKEYROTATIONS, numKeyRotations, 0);
   }
-  explicit Vec4Builder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_numKeyScalings(uint32_t numKeyScalings) {
+    fbb_.AddElement<uint32_t>(AnimationChannel::VT_NUMKEYSCALINGS, numKeyScalings, 0);
+  }
+  void add_keyPositions(::flatbuffers::Offset<::flatbuffers::Vector<const GameResource::KeyPosition *>> keyPositions) {
+    fbb_.AddOffset(AnimationChannel::VT_KEYPOSITIONS, keyPositions);
+  }
+  void add_keyRotations(::flatbuffers::Offset<::flatbuffers::Vector<const GameResource::KeyRotation *>> keyRotations) {
+    fbb_.AddOffset(AnimationChannel::VT_KEYROTATIONS, keyRotations);
+  }
+  void add_keyScalings(::flatbuffers::Offset<::flatbuffers::Vector<const GameResource::KeyScaling *>> keyScalings) {
+    fbb_.AddOffset(AnimationChannel::VT_KEYSCALINGS, keyScalings);
+  }
+  explicit AnimationChannelBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<Vec4> Finish() {
+  ::flatbuffers::Offset<AnimationChannel> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Vec4>(end);
+    auto o = ::flatbuffers::Offset<AnimationChannel>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<Vec4> CreateVec4(
+inline ::flatbuffers::Offset<AnimationChannel> CreateAnimationChannel(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    float x = 0.0f,
-    float y = 0.0f,
-    float z = 0.0f,
-    float w = 0.0f) {
-  Vec4Builder builder_(_fbb);
-  builder_.add_w(w);
-  builder_.add_z(z);
-  builder_.add_y(y);
-  builder_.add_x(x);
+    int32_t boneId = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> nodeName = 0,
+    uint32_t numKeyPositions = 0,
+    uint32_t numKeyRotations = 0,
+    uint32_t numKeyScalings = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<const GameResource::KeyPosition *>> keyPositions = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<const GameResource::KeyRotation *>> keyRotations = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<const GameResource::KeyScaling *>> keyScalings = 0) {
+  AnimationChannelBuilder builder_(_fbb);
+  builder_.add_keyScalings(keyScalings);
+  builder_.add_keyRotations(keyRotations);
+  builder_.add_keyPositions(keyPositions);
+  builder_.add_numKeyScalings(numKeyScalings);
+  builder_.add_numKeyRotations(numKeyRotations);
+  builder_.add_numKeyPositions(numKeyPositions);
+  builder_.add_nodeName(nodeName);
+  builder_.add_boneId(boneId);
   return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<AnimationChannel> CreateAnimationChannelDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t boneId = 0,
+    const char *nodeName = nullptr,
+    uint32_t numKeyPositions = 0,
+    uint32_t numKeyRotations = 0,
+    uint32_t numKeyScalings = 0,
+    const std::vector<GameResource::KeyPosition> *keyPositions = nullptr,
+    const std::vector<GameResource::KeyRotation> *keyRotations = nullptr,
+    const std::vector<GameResource::KeyScaling> *keyScalings = nullptr) {
+  auto nodeName__ = nodeName ? _fbb.CreateString(nodeName) : 0;
+  auto keyPositions__ = keyPositions ? _fbb.CreateVectorOfStructs<GameResource::KeyPosition>(*keyPositions) : 0;
+  auto keyRotations__ = keyRotations ? _fbb.CreateVectorOfStructs<GameResource::KeyRotation>(*keyRotations) : 0;
+  auto keyScalings__ = keyScalings ? _fbb.CreateVectorOfStructs<GameResource::KeyScaling>(*keyScalings) : 0;
+  return GameResource::CreateAnimationChannel(
+      _fbb,
+      boneId,
+      nodeName__,
+      numKeyPositions,
+      numKeyRotations,
+      numKeyScalings,
+      keyPositions__,
+      keyRotations__,
+      keyScalings__);
+}
+
+struct Animation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef AnimationBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_DURATION = 6,
+    VT_TICKSPERSECOND = 8,
+    VT_GLOBALINVERSETRANSFORM = 10,
+    VT_ANIMATIONCHANNELS = 12
+  };
+  const ::flatbuffers::String *name() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  float duration() const {
+    return GetField<float>(VT_DURATION, 0.0f);
+  }
+  float ticksPerSecond() const {
+    return GetField<float>(VT_TICKSPERSECOND, 0.0f);
+  }
+  const GameResource::Matrix *globalInverseTransform() const {
+    return GetStruct<const GameResource::Matrix *>(VT_GLOBALINVERSETRANSFORM);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::AnimationChannel>> *animationChannels() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::AnimationChannel>> *>(VT_ANIMATIONCHANNELS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(name()) &&
+           VerifyField<float>(verifier, VT_DURATION, 4) &&
+           VerifyField<float>(verifier, VT_TICKSPERSECOND, 4) &&
+           VerifyField<GameResource::Matrix>(verifier, VT_GLOBALINVERSETRANSFORM, 4) &&
+           VerifyOffset(verifier, VT_ANIMATIONCHANNELS) &&
+           verifier.VerifyVector(animationChannels()) &&
+           verifier.VerifyVectorOfTables(animationChannels()) &&
+           verifier.EndTable();
+  }
+};
+
+struct AnimationBuilder {
+  typedef Animation Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
+    fbb_.AddOffset(Animation::VT_NAME, name);
+  }
+  void add_duration(float duration) {
+    fbb_.AddElement<float>(Animation::VT_DURATION, duration, 0.0f);
+  }
+  void add_ticksPerSecond(float ticksPerSecond) {
+    fbb_.AddElement<float>(Animation::VT_TICKSPERSECOND, ticksPerSecond, 0.0f);
+  }
+  void add_globalInverseTransform(const GameResource::Matrix *globalInverseTransform) {
+    fbb_.AddStruct(Animation::VT_GLOBALINVERSETRANSFORM, globalInverseTransform);
+  }
+  void add_animationChannels(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::AnimationChannel>>> animationChannels) {
+    fbb_.AddOffset(Animation::VT_ANIMATIONCHANNELS, animationChannels);
+  }
+  explicit AnimationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<Animation> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<Animation>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<Animation> CreateAnimation(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> name = 0,
+    float duration = 0.0f,
+    float ticksPerSecond = 0.0f,
+    const GameResource::Matrix *globalInverseTransform = nullptr,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::AnimationChannel>>> animationChannels = 0) {
+  AnimationBuilder builder_(_fbb);
+  builder_.add_animationChannels(animationChannels);
+  builder_.add_globalInverseTransform(globalInverseTransform);
+  builder_.add_ticksPerSecond(ticksPerSecond);
+  builder_.add_duration(duration);
+  builder_.add_name(name);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<Animation> CreateAnimationDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *name = nullptr,
+    float duration = 0.0f,
+    float ticksPerSecond = 0.0f,
+    const GameResource::Matrix *globalInverseTransform = nullptr,
+    const std::vector<::flatbuffers::Offset<GameResource::AnimationChannel>> *animationChannels = nullptr) {
+  auto name__ = name ? _fbb.CreateString(name) : 0;
+  auto animationChannels__ = animationChannels ? _fbb.CreateVector<::flatbuffers::Offset<GameResource::AnimationChannel>>(*animationChannels) : 0;
+  return GameResource::CreateAnimation(
+      _fbb,
+      name__,
+      duration,
+      ticksPerSecond,
+      globalInverseTransform,
+      animationChannels__);
+}
+
+struct Bone FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef BoneBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ID = 4,
+    VT_NAME = 6,
+    VT_OFFSET = 8
+  };
+  int32_t id() const {
+    return GetField<int32_t>(VT_ID, 0);
+  }
+  const ::flatbuffers::String *name() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  const GameResource::Matrix *offset() const {
+    return GetStruct<const GameResource::Matrix *>(VT_OFFSET);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_ID, 4) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(name()) &&
+           VerifyField<GameResource::Matrix>(verifier, VT_OFFSET, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct BoneBuilder {
+  typedef Bone Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_id(int32_t id) {
+    fbb_.AddElement<int32_t>(Bone::VT_ID, id, 0);
+  }
+  void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
+    fbb_.AddOffset(Bone::VT_NAME, name);
+  }
+  void add_offset(const GameResource::Matrix *offset) {
+    fbb_.AddStruct(Bone::VT_OFFSET, offset);
+  }
+  explicit BoneBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<Bone> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<Bone>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<Bone> CreateBone(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t id = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> name = 0,
+    const GameResource::Matrix *offset = nullptr) {
+  BoneBuilder builder_(_fbb);
+  builder_.add_offset(offset);
+  builder_.add_name(name);
+  builder_.add_id(id);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<Bone> CreateBoneDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t id = 0,
+    const char *name = nullptr,
+    const GameResource::Matrix *offset = nullptr) {
+  auto name__ = name ? _fbb.CreateString(name) : 0;
+  return GameResource::CreateBone(
+      _fbb,
+      id,
+      name__,
+      offset);
+}
+
+struct SkeletonNode FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SkeletonNodeBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_LEVEL = 6,
+    VT_PARENT = 8,
+    VT_FIRSTCHILD = 10,
+    VT_NEXTSIBLING = 12,
+    VT_BONEID = 14
+  };
+  const ::flatbuffers::String *name() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  int32_t level() const {
+    return GetField<int32_t>(VT_LEVEL, 0);
+  }
+  int32_t parent() const {
+    return GetField<int32_t>(VT_PARENT, 0);
+  }
+  int32_t firstChild() const {
+    return GetField<int32_t>(VT_FIRSTCHILD, 0);
+  }
+  int32_t nextSibling() const {
+    return GetField<int32_t>(VT_NEXTSIBLING, 0);
+  }
+  int32_t boneId() const {
+    return GetField<int32_t>(VT_BONEID, 0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(name()) &&
+           VerifyField<int32_t>(verifier, VT_LEVEL, 4) &&
+           VerifyField<int32_t>(verifier, VT_PARENT, 4) &&
+           VerifyField<int32_t>(verifier, VT_FIRSTCHILD, 4) &&
+           VerifyField<int32_t>(verifier, VT_NEXTSIBLING, 4) &&
+           VerifyField<int32_t>(verifier, VT_BONEID, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct SkeletonNodeBuilder {
+  typedef SkeletonNode Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
+    fbb_.AddOffset(SkeletonNode::VT_NAME, name);
+  }
+  void add_level(int32_t level) {
+    fbb_.AddElement<int32_t>(SkeletonNode::VT_LEVEL, level, 0);
+  }
+  void add_parent(int32_t parent) {
+    fbb_.AddElement<int32_t>(SkeletonNode::VT_PARENT, parent, 0);
+  }
+  void add_firstChild(int32_t firstChild) {
+    fbb_.AddElement<int32_t>(SkeletonNode::VT_FIRSTCHILD, firstChild, 0);
+  }
+  void add_nextSibling(int32_t nextSibling) {
+    fbb_.AddElement<int32_t>(SkeletonNode::VT_NEXTSIBLING, nextSibling, 0);
+  }
+  void add_boneId(int32_t boneId) {
+    fbb_.AddElement<int32_t>(SkeletonNode::VT_BONEID, boneId, 0);
+  }
+  explicit SkeletonNodeBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SkeletonNode> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SkeletonNode>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SkeletonNode> CreateSkeletonNode(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> name = 0,
+    int32_t level = 0,
+    int32_t parent = 0,
+    int32_t firstChild = 0,
+    int32_t nextSibling = 0,
+    int32_t boneId = 0) {
+  SkeletonNodeBuilder builder_(_fbb);
+  builder_.add_boneId(boneId);
+  builder_.add_nextSibling(nextSibling);
+  builder_.add_firstChild(firstChild);
+  builder_.add_parent(parent);
+  builder_.add_level(level);
+  builder_.add_name(name);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<SkeletonNode> CreateSkeletonNodeDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *name = nullptr,
+    int32_t level = 0,
+    int32_t parent = 0,
+    int32_t firstChild = 0,
+    int32_t nextSibling = 0,
+    int32_t boneId = 0) {
+  auto name__ = name ? _fbb.CreateString(name) : 0;
+  return GameResource::CreateSkeletonNode(
+      _fbb,
+      name__,
+      level,
+      parent,
+      firstChild,
+      nextSibling,
+      boneId);
+}
+
+struct Skeleton FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SkeletonBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_BONES = 6,
+    VT_NODES = 8
+  };
+  const ::flatbuffers::String *name() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Bone>> *bones() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Bone>> *>(VT_BONES);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::SkeletonNode>> *nodes() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::SkeletonNode>> *>(VT_NODES);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(name()) &&
+           VerifyOffset(verifier, VT_BONES) &&
+           verifier.VerifyVector(bones()) &&
+           verifier.VerifyVectorOfTables(bones()) &&
+           VerifyOffset(verifier, VT_NODES) &&
+           verifier.VerifyVector(nodes()) &&
+           verifier.VerifyVectorOfTables(nodes()) &&
+           verifier.EndTable();
+  }
+};
+
+struct SkeletonBuilder {
+  typedef Skeleton Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
+    fbb_.AddOffset(Skeleton::VT_NAME, name);
+  }
+  void add_bones(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Bone>>> bones) {
+    fbb_.AddOffset(Skeleton::VT_BONES, bones);
+  }
+  void add_nodes(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::SkeletonNode>>> nodes) {
+    fbb_.AddOffset(Skeleton::VT_NODES, nodes);
+  }
+  explicit SkeletonBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<Skeleton> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<Skeleton>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<Skeleton> CreateSkeleton(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> name = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Bone>>> bones = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::SkeletonNode>>> nodes = 0) {
+  SkeletonBuilder builder_(_fbb);
+  builder_.add_nodes(nodes);
+  builder_.add_bones(bones);
+  builder_.add_name(name);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<Skeleton> CreateSkeletonDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *name = nullptr,
+    const std::vector<::flatbuffers::Offset<GameResource::Bone>> *bones = nullptr,
+    const std::vector<::flatbuffers::Offset<GameResource::SkeletonNode>> *nodes = nullptr) {
+  auto name__ = name ? _fbb.CreateString(name) : 0;
+  auto bones__ = bones ? _fbb.CreateVector<::flatbuffers::Offset<GameResource::Bone>>(*bones) : 0;
+  auto nodes__ = nodes ? _fbb.CreateVector<::flatbuffers::Offset<GameResource::SkeletonNode>>(*nodes) : 0;
+  return GameResource::CreateSkeleton(
+      _fbb,
+      name__,
+      bones__,
+      nodes__);
 }
 
 struct Material FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -279,7 +994,7 @@ struct Material FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
   const GameResource::Vec4 *albedoFactor() const {
-    return GetPointer<const GameResource::Vec4 *>(VT_ALBEDOFACTOR);
+    return GetStruct<const GameResource::Vec4 *>(VT_ALBEDOFACTOR);
   }
   const ::flatbuffers::String *albedoTexture() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ALBEDOTEXTURE);
@@ -318,8 +1033,7 @@ struct Material FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
-           VerifyOffset(verifier, VT_ALBEDOFACTOR) &&
-           verifier.VerifyTable(albedoFactor()) &&
+           VerifyField<GameResource::Vec4>(verifier, VT_ALBEDOFACTOR, 4) &&
            VerifyOffset(verifier, VT_ALBEDOTEXTURE) &&
            verifier.VerifyString(albedoTexture()) &&
            VerifyField<float>(verifier, VT_METALLICFACTOR, 4) &&
@@ -347,8 +1061,8 @@ struct MaterialBuilder {
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
     fbb_.AddOffset(Material::VT_NAME, name);
   }
-  void add_albedoFactor(::flatbuffers::Offset<GameResource::Vec4> albedoFactor) {
-    fbb_.AddOffset(Material::VT_ALBEDOFACTOR, albedoFactor);
+  void add_albedoFactor(const GameResource::Vec4 *albedoFactor) {
+    fbb_.AddStruct(Material::VT_ALBEDOFACTOR, albedoFactor);
   }
   void add_albedoTexture(::flatbuffers::Offset<::flatbuffers::String> albedoTexture) {
     fbb_.AddOffset(Material::VT_ALBEDOTEXTURE, albedoTexture);
@@ -397,7 +1111,7 @@ struct MaterialBuilder {
 inline ::flatbuffers::Offset<Material> CreateMaterial(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
-    ::flatbuffers::Offset<GameResource::Vec4> albedoFactor = 0,
+    const GameResource::Vec4 *albedoFactor = nullptr,
     ::flatbuffers::Offset<::flatbuffers::String> albedoTexture = 0,
     float metallicFactor = 0.0f,
     float roughnessFactor = 0.0f,
@@ -429,7 +1143,7 @@ inline ::flatbuffers::Offset<Material> CreateMaterial(
 inline ::flatbuffers::Offset<Material> CreateMaterialDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *name = nullptr,
-    ::flatbuffers::Offset<GameResource::Vec4> albedoFactor = 0,
+    const GameResource::Vec4 *albedoFactor = nullptr,
     const char *albedoTexture = nullptr,
     float metallicFactor = 0.0f,
     float roughnessFactor = 0.0f,
@@ -464,156 +1178,6 @@ inline ::flatbuffers::Offset<Material> CreateMaterialDirect(
       doubleSided);
 }
 
-struct AABB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef AABBBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_MIN = 4,
-    VT_MAX = 6
-  };
-  const GameResource::Vec3 *min() const {
-    return GetPointer<const GameResource::Vec3 *>(VT_MIN);
-  }
-  const GameResource::Vec3 *max() const {
-    return GetPointer<const GameResource::Vec3 *>(VT_MAX);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_MIN) &&
-           verifier.VerifyTable(min()) &&
-           VerifyOffset(verifier, VT_MAX) &&
-           verifier.VerifyTable(max()) &&
-           verifier.EndTable();
-  }
-};
-
-struct AABBBuilder {
-  typedef AABB Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_min(::flatbuffers::Offset<GameResource::Vec3> min) {
-    fbb_.AddOffset(AABB::VT_MIN, min);
-  }
-  void add_max(::flatbuffers::Offset<GameResource::Vec3> max) {
-    fbb_.AddOffset(AABB::VT_MAX, max);
-  }
-  explicit AABBBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<AABB> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<AABB>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<AABB> CreateAABB(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<GameResource::Vec3> min = 0,
-    ::flatbuffers::Offset<GameResource::Vec3> max = 0) {
-  AABBBuilder builder_(_fbb);
-  builder_.add_max(max);
-  builder_.add_min(min);
-  return builder_.Finish();
-}
-
-struct Vertex FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef VertexBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_POSITION = 4,
-    VT_NORMAL = 6,
-    VT_TANGENT = 8,
-    VT_BITANGENT = 10,
-    VT_TEXCOORD = 12,
-    VT_COLOR = 14
-  };
-  const GameResource::Vec4 *position() const {
-    return GetPointer<const GameResource::Vec4 *>(VT_POSITION);
-  }
-  const GameResource::Vec3 *normal() const {
-    return GetPointer<const GameResource::Vec3 *>(VT_NORMAL);
-  }
-  const GameResource::Vec3 *tangent() const {
-    return GetPointer<const GameResource::Vec3 *>(VT_TANGENT);
-  }
-  const GameResource::Vec3 *bitangent() const {
-    return GetPointer<const GameResource::Vec3 *>(VT_BITANGENT);
-  }
-  const GameResource::TexCoord *texcoord() const {
-    return GetPointer<const GameResource::TexCoord *>(VT_TEXCOORD);
-  }
-  const GameResource::Vec4 *color() const {
-    return GetPointer<const GameResource::Vec4 *>(VT_COLOR);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_POSITION) &&
-           verifier.VerifyTable(position()) &&
-           VerifyOffset(verifier, VT_NORMAL) &&
-           verifier.VerifyTable(normal()) &&
-           VerifyOffset(verifier, VT_TANGENT) &&
-           verifier.VerifyTable(tangent()) &&
-           VerifyOffset(verifier, VT_BITANGENT) &&
-           verifier.VerifyTable(bitangent()) &&
-           VerifyOffset(verifier, VT_TEXCOORD) &&
-           verifier.VerifyTable(texcoord()) &&
-           VerifyOffset(verifier, VT_COLOR) &&
-           verifier.VerifyTable(color()) &&
-           verifier.EndTable();
-  }
-};
-
-struct VertexBuilder {
-  typedef Vertex Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_position(::flatbuffers::Offset<GameResource::Vec4> position) {
-    fbb_.AddOffset(Vertex::VT_POSITION, position);
-  }
-  void add_normal(::flatbuffers::Offset<GameResource::Vec3> normal) {
-    fbb_.AddOffset(Vertex::VT_NORMAL, normal);
-  }
-  void add_tangent(::flatbuffers::Offset<GameResource::Vec3> tangent) {
-    fbb_.AddOffset(Vertex::VT_TANGENT, tangent);
-  }
-  void add_bitangent(::flatbuffers::Offset<GameResource::Vec3> bitangent) {
-    fbb_.AddOffset(Vertex::VT_BITANGENT, bitangent);
-  }
-  void add_texcoord(::flatbuffers::Offset<GameResource::TexCoord> texcoord) {
-    fbb_.AddOffset(Vertex::VT_TEXCOORD, texcoord);
-  }
-  void add_color(::flatbuffers::Offset<GameResource::Vec4> color) {
-    fbb_.AddOffset(Vertex::VT_COLOR, color);
-  }
-  explicit VertexBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<Vertex> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Vertex>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<Vertex> CreateVertex(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<GameResource::Vec4> position = 0,
-    ::flatbuffers::Offset<GameResource::Vec3> normal = 0,
-    ::flatbuffers::Offset<GameResource::Vec3> tangent = 0,
-    ::flatbuffers::Offset<GameResource::Vec3> bitangent = 0,
-    ::flatbuffers::Offset<GameResource::TexCoord> texcoord = 0,
-    ::flatbuffers::Offset<GameResource::Vec4> color = 0) {
-  VertexBuilder builder_(_fbb);
-  builder_.add_color(color);
-  builder_.add_texcoord(texcoord);
-  builder_.add_bitangent(bitangent);
-  builder_.add_tangent(tangent);
-  builder_.add_normal(normal);
-  builder_.add_position(position);
-  return builder_.Finish();
-}
-
 struct Mesh FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef MeshBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -621,16 +1185,18 @@ struct Mesh FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_AABB = 6,
     VT_VERTICES = 8,
     VT_INDICES = 10,
-    VT_MATERIAL = 12
+    VT_MATERIAL = 12,
+    VT_BONES = 14,
+    VT_VERTEXBONEWEIGHTS = 16
   };
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
   const GameResource::AABB *aabb() const {
-    return GetPointer<const GameResource::AABB *>(VT_AABB);
+    return GetStruct<const GameResource::AABB *>(VT_AABB);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Vertex>> *vertices() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Vertex>> *>(VT_VERTICES);
+  const ::flatbuffers::Vector<const GameResource::Vertex *> *vertices() const {
+    return GetPointer<const ::flatbuffers::Vector<const GameResource::Vertex *> *>(VT_VERTICES);
   }
   const ::flatbuffers::Vector<uint32_t> *indices() const {
     return GetPointer<const ::flatbuffers::Vector<uint32_t> *>(VT_INDICES);
@@ -638,19 +1204,28 @@ struct Mesh FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *material() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MATERIAL);
   }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Bone>> *bones() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Bone>> *>(VT_BONES);
+  }
+  const ::flatbuffers::Vector<const GameResource::VertexBoneWeight *> *vertexBoneWeights() const {
+    return GetPointer<const ::flatbuffers::Vector<const GameResource::VertexBoneWeight *> *>(VT_VERTEXBONEWEIGHTS);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
-           VerifyOffset(verifier, VT_AABB) &&
-           verifier.VerifyTable(aabb()) &&
+           VerifyField<GameResource::AABB>(verifier, VT_AABB, 4) &&
            VerifyOffset(verifier, VT_VERTICES) &&
            verifier.VerifyVector(vertices()) &&
-           verifier.VerifyVectorOfTables(vertices()) &&
            VerifyOffset(verifier, VT_INDICES) &&
            verifier.VerifyVector(indices()) &&
            VerifyOffset(verifier, VT_MATERIAL) &&
            verifier.VerifyString(material()) &&
+           VerifyOffset(verifier, VT_BONES) &&
+           verifier.VerifyVector(bones()) &&
+           verifier.VerifyVectorOfTables(bones()) &&
+           VerifyOffset(verifier, VT_VERTEXBONEWEIGHTS) &&
+           verifier.VerifyVector(vertexBoneWeights()) &&
            verifier.EndTable();
   }
 };
@@ -662,10 +1237,10 @@ struct MeshBuilder {
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
     fbb_.AddOffset(Mesh::VT_NAME, name);
   }
-  void add_aabb(::flatbuffers::Offset<GameResource::AABB> aabb) {
-    fbb_.AddOffset(Mesh::VT_AABB, aabb);
+  void add_aabb(const GameResource::AABB *aabb) {
+    fbb_.AddStruct(Mesh::VT_AABB, aabb);
   }
-  void add_vertices(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Vertex>>> vertices) {
+  void add_vertices(::flatbuffers::Offset<::flatbuffers::Vector<const GameResource::Vertex *>> vertices) {
     fbb_.AddOffset(Mesh::VT_VERTICES, vertices);
   }
   void add_indices(::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> indices) {
@@ -673,6 +1248,12 @@ struct MeshBuilder {
   }
   void add_material(::flatbuffers::Offset<::flatbuffers::String> material) {
     fbb_.AddOffset(Mesh::VT_MATERIAL, material);
+  }
+  void add_bones(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Bone>>> bones) {
+    fbb_.AddOffset(Mesh::VT_BONES, bones);
+  }
+  void add_vertexBoneWeights(::flatbuffers::Offset<::flatbuffers::Vector<const GameResource::VertexBoneWeight *>> vertexBoneWeights) {
+    fbb_.AddOffset(Mesh::VT_VERTEXBONEWEIGHTS, vertexBoneWeights);
   }
   explicit MeshBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -688,11 +1269,15 @@ struct MeshBuilder {
 inline ::flatbuffers::Offset<Mesh> CreateMesh(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
-    ::flatbuffers::Offset<GameResource::AABB> aabb = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Vertex>>> vertices = 0,
+    const GameResource::AABB *aabb = nullptr,
+    ::flatbuffers::Offset<::flatbuffers::Vector<const GameResource::Vertex *>> vertices = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> indices = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> material = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> material = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::Bone>>> bones = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<const GameResource::VertexBoneWeight *>> vertexBoneWeights = 0) {
   MeshBuilder builder_(_fbb);
+  builder_.add_vertexBoneWeights(vertexBoneWeights);
+  builder_.add_bones(bones);
   builder_.add_material(material);
   builder_.add_indices(indices);
   builder_.add_vertices(vertices);
@@ -704,35 +1289,45 @@ inline ::flatbuffers::Offset<Mesh> CreateMesh(
 inline ::flatbuffers::Offset<Mesh> CreateMeshDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *name = nullptr,
-    ::flatbuffers::Offset<GameResource::AABB> aabb = 0,
-    const std::vector<::flatbuffers::Offset<GameResource::Vertex>> *vertices = nullptr,
+    const GameResource::AABB *aabb = nullptr,
+    const std::vector<GameResource::Vertex> *vertices = nullptr,
     const std::vector<uint32_t> *indices = nullptr,
-    const char *material = nullptr) {
+    const char *material = nullptr,
+    const std::vector<::flatbuffers::Offset<GameResource::Bone>> *bones = nullptr,
+    const std::vector<GameResource::VertexBoneWeight> *vertexBoneWeights = nullptr) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
-  auto vertices__ = vertices ? _fbb.CreateVector<::flatbuffers::Offset<GameResource::Vertex>>(*vertices) : 0;
+  auto vertices__ = vertices ? _fbb.CreateVectorOfStructs<GameResource::Vertex>(*vertices) : 0;
   auto indices__ = indices ? _fbb.CreateVector<uint32_t>(*indices) : 0;
   auto material__ = material ? _fbb.CreateString(material) : 0;
+  auto bones__ = bones ? _fbb.CreateVector<::flatbuffers::Offset<GameResource::Bone>>(*bones) : 0;
+  auto vertexBoneWeights__ = vertexBoneWeights ? _fbb.CreateVectorOfStructs<GameResource::VertexBoneWeight>(*vertexBoneWeights) : 0;
   return GameResource::CreateMesh(
       _fbb,
       name__,
       aabb,
       vertices__,
       indices__,
-      material__);
+      material__,
+      bones__,
+      vertexBoneWeights__);
 }
 
 struct GeometryNode FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef GeometryNodeBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_NAME = 4,
-    VT_LEVEL = 6,
-    VT_PARENT = 8,
-    VT_FIRSTCHILD = 10,
-    VT_NEXTSIBLING = 12,
-    VT_MESHES = 14
+    VT_TRANSFORM = 6,
+    VT_LEVEL = 8,
+    VT_PARENT = 10,
+    VT_FIRSTCHILD = 12,
+    VT_NEXTSIBLING = 14,
+    VT_MESHES = 16
   };
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  const GameResource::Matrix *transform() const {
+    return GetStruct<const GameResource::Matrix *>(VT_TRANSFORM);
   }
   int32_t level() const {
     return GetField<int32_t>(VT_LEVEL, 0);
@@ -753,6 +1348,7 @@ struct GeometryNode FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
+           VerifyField<GameResource::Matrix>(verifier, VT_TRANSFORM, 4) &&
            VerifyField<int32_t>(verifier, VT_LEVEL, 4) &&
            VerifyField<int32_t>(verifier, VT_PARENT, 4) &&
            VerifyField<int32_t>(verifier, VT_FIRSTCHILD, 4) &&
@@ -770,6 +1366,9 @@ struct GeometryNodeBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
     fbb_.AddOffset(GeometryNode::VT_NAME, name);
+  }
+  void add_transform(const GameResource::Matrix *transform) {
+    fbb_.AddStruct(GeometryNode::VT_TRANSFORM, transform);
   }
   void add_level(int32_t level) {
     fbb_.AddElement<int32_t>(GeometryNode::VT_LEVEL, level, 0);
@@ -800,6 +1399,7 @@ struct GeometryNodeBuilder {
 inline ::flatbuffers::Offset<GeometryNode> CreateGeometryNode(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
+    const GameResource::Matrix *transform = nullptr,
     int32_t level = 0,
     int32_t parent = 0,
     int32_t firstChild = 0,
@@ -811,6 +1411,7 @@ inline ::flatbuffers::Offset<GeometryNode> CreateGeometryNode(
   builder_.add_firstChild(firstChild);
   builder_.add_parent(parent);
   builder_.add_level(level);
+  builder_.add_transform(transform);
   builder_.add_name(name);
   return builder_.Finish();
 }
@@ -818,6 +1419,7 @@ inline ::flatbuffers::Offset<GeometryNode> CreateGeometryNode(
 inline ::flatbuffers::Offset<GeometryNode> CreateGeometryNodeDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *name = nullptr,
+    const GameResource::Matrix *transform = nullptr,
     int32_t level = 0,
     int32_t parent = 0,
     int32_t firstChild = 0,
@@ -828,6 +1430,7 @@ inline ::flatbuffers::Offset<GeometryNode> CreateGeometryNodeDirect(
   return GameResource::CreateGeometryNode(
       _fbb,
       name__,
+      transform,
       level,
       parent,
       firstChild,
@@ -842,7 +1445,9 @@ struct GeometryModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_NODES = 6,
     VT_MESHES = 8,
     VT_MATERIALS = 10,
-    VT_TEXTURES = 12
+    VT_TEXTURES = 12,
+    VT_SKELETON = 14,
+    VT_ANIMATIONS = 16
   };
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
@@ -858,6 +1463,12 @@ struct GeometryModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *textures() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TEXTURES);
+  }
+  const ::flatbuffers::String *skeleton() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SKELETON);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *animations() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ANIMATIONS);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -875,6 +1486,11 @@ struct GeometryModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_TEXTURES) &&
            verifier.VerifyVector(textures()) &&
            verifier.VerifyVectorOfStrings(textures()) &&
+           VerifyOffset(verifier, VT_SKELETON) &&
+           verifier.VerifyString(skeleton()) &&
+           VerifyOffset(verifier, VT_ANIMATIONS) &&
+           verifier.VerifyVector(animations()) &&
+           verifier.VerifyVectorOfStrings(animations()) &&
            verifier.EndTable();
   }
 };
@@ -898,6 +1514,12 @@ struct GeometryModelBuilder {
   void add_textures(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> textures) {
     fbb_.AddOffset(GeometryModel::VT_TEXTURES, textures);
   }
+  void add_skeleton(::flatbuffers::Offset<::flatbuffers::String> skeleton) {
+    fbb_.AddOffset(GeometryModel::VT_SKELETON, skeleton);
+  }
+  void add_animations(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> animations) {
+    fbb_.AddOffset(GeometryModel::VT_ANIMATIONS, animations);
+  }
   explicit GeometryModelBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -915,8 +1537,12 @@ inline ::flatbuffers::Offset<GeometryModel> CreateGeometryModel(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GameResource::GeometryNode>>> nodes = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> meshes = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> materials = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> textures = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> textures = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> skeleton = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> animations = 0) {
   GeometryModelBuilder builder_(_fbb);
+  builder_.add_animations(animations);
+  builder_.add_skeleton(skeleton);
   builder_.add_textures(textures);
   builder_.add_materials(materials);
   builder_.add_meshes(meshes);
@@ -931,19 +1557,25 @@ inline ::flatbuffers::Offset<GeometryModel> CreateGeometryModelDirect(
     const std::vector<::flatbuffers::Offset<GameResource::GeometryNode>> *nodes = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *meshes = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *materials = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *textures = nullptr) {
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *textures = nullptr,
+    const char *skeleton = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *animations = nullptr) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
   auto nodes__ = nodes ? _fbb.CreateVector<::flatbuffers::Offset<GameResource::GeometryNode>>(*nodes) : 0;
   auto meshes__ = meshes ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*meshes) : 0;
   auto materials__ = materials ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*materials) : 0;
   auto textures__ = textures ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*textures) : 0;
+  auto skeleton__ = skeleton ? _fbb.CreateString(skeleton) : 0;
+  auto animations__ = animations ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*animations) : 0;
   return GameResource::CreateGeometryModel(
       _fbb,
       name__,
       nodes__,
       meshes__,
       materials__,
-      textures__);
+      textures__,
+      skeleton__,
+      animations__);
 }
 
 inline const GameResource::GeometryModel *GetGeometryModel(const void *buf) {

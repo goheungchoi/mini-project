@@ -34,7 +34,7 @@ class Camera
   float yaw{0.f};   // around y-axis in radian
   float roll{0.f};  // around z-axis in radian. Must be 0.f
 public:
-  Camera(UINT width, UINT height, float vfov = MathUtils::kHalfPi_f,
+  Camera(UINT width, UINT height, float vfov = MathUtil::kHalfPi_f,
          float nearPlane = 0.01f, float farPlane = 10000.f)
       : vfov{vfov}, width{width}, height{height},
         aspectRatio{(float)width / (float)height}, nearPlane{nearPlane},

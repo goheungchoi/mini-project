@@ -263,10 +263,10 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
 void DX11Renderer::DrawImGui()
 {
   // TODO: Set swapchain back buffer
-  ID3D11RenderTargetView* rtv[] = {_swapchain->GetBackBuffer()};
+  /*ID3D11RenderTargetView* rtv[] = {_swapchain->GetBackBuffer()};
   _device->GetImmContext()->OMSetRenderTargets(1, rtv, nullptr);
   const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-  _device->GetImmContext()->ClearRenderTargetView(*rtv, clearColor);
+  _device->GetImmContext()->ClearRenderTargetView(*rtv, clearColor);*/
 
   // Start the Dear ImGui frame
   ImGui_ImplDX11_NewFrame();

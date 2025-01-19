@@ -10,6 +10,9 @@ enum class ResourceType : uint16_t
   kMaterial,
   kTexture,
 	kModel,
+
+	kSkeleton,
+
   kAnimation,
   kAnimator,
   kAudio,
@@ -134,6 +137,19 @@ struct ModelHandle : public Handle
   //{
   //  SetHandleResourceType(this, ResourceType::kModel);
   //}
+};
+
+struct SkeletonHandle : public Handle
+{
+  SkeletonHandle() : Handle{} {}
+  SkeletonHandle(Handle& handle) : Handle(handle)
+  {
+    ResourceType type = GetHandleResourceType(this);
+    if (ResourceType::kSkeleton != type && ResourceType::kInvalid != type)
+    {
+      throw std::exception("Handle's resource type mismatch!");
+    }
+  }
 };
 
 struct AnimationHandle : public Handle

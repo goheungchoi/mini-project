@@ -11,6 +11,8 @@ struct Pools
   ResourcePool<TextureData>* texturePool;
   ResourcePool<MaterialData>* materialPool;
   ResourcePool<MeshData>* meshPool;
+  ResourcePool<SkeletonData>* skeletonPool;
+  ResourcePool<AnimationData>* animationPool;
 };
 
 static Pools* pools;
@@ -18,6 +20,8 @@ static Pools* pools;
 static ResourcePool<TextureData>* texturePool;
 static ResourcePool<MaterialData>* materialPool;
 static ResourcePool<MeshData>* meshPool;
+static ResourcePool<SkeletonData>* skeletonPool;
+static ResourcePool<AnimationData>* animationPool;
 }
 
 static void ProcessGeoMesh(ModelData& model, ModelNode& node,
@@ -102,6 +106,26 @@ static void ProcessGeoNode(ModelData& model,
   model.nodes.emplace_back(std::move(node));
 }
 
+static void ProcessSkeleton(ModelData& model, const flatbuffers::String* flatSkeleton)
+{
+  Handle skeletonHandle = ::skeletonPool->Load(flatSkeleton->c_str(), nullptr);
+  if (::skeletonPool->IsValidHandle(skeletonHandle))
+  {
+    model.skeleton = skeletonHandle;
+	}
+}
+
+// TODO: Animation
+static void ProcessAnimation(ModelData& model,
+                             const flatbuffers::String* flatAnimation)
+{
+  Handle animationHandle =
+      ::animationPool->Load(flatAnimation->c_str(), nullptr);
+	if (::animationPool->IsValidHandle(animationHandle)) {
+    model.animations.insert(animationHandle);
+	}
+}
+
 template<>
 Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser)
 {
@@ -109,6 +133,8 @@ Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser)
   ::texturePool = pools->texturePool;
   ::materialPool = pools->materialPool;
   ::meshPool = pools->meshPool;
+  ::skeletonPool = pools->skeletonPool;
+  ::animationPool = pools->animationPool;
 
   fs::path path = GetResourcePath(uuid);
 
@@ -130,6 +156,21 @@ Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser)
 	for (const auto* geoNode : *geoModel->nodes())
   {
     ProcessGeoNode(model, geoNode, geoModel);
+	}
+
+	const auto* flatSkeleton = geoModel->skeleton();
+  if (flatSkeleton)
+  {
+    ProcessSkeleton(model, flatSkeleton);
+	}
+
+	const auto* flatAnimations = geoModel->animations();
+  if (flatAnimations)
+  {
+    for (const auto* flatAnimation : *flatAnimations)
+    {
+      ProcessAnimation(model, flatAnimation);
+		}
 	}
 
 	// Claim the handle and map the UUID.

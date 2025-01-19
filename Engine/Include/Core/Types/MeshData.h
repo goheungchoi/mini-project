@@ -4,7 +4,7 @@
 
 #include "Core/Handle/ResourceHandle.h"
 
-#include "Core/Math/MathUtils.h"
+#include "BoneData.h"
 
 struct Vertex
 {
@@ -19,12 +19,18 @@ struct Vertex
 using Index = uint32_t;
 
 struct MeshData {
-  MathUtils::AABB boundingBox;
+  std::string name;
+
+  MathUtil::AABB boundingBox;
 
   std::vector<Vertex> vertices;
   std::vector<Index> indices;
   uint32_t stride;
   uint32_t offset;
+
+	std::vector<Bone> bones;
+	std::vector<BoneId> boneIds;
+  std::vector<BoneWeight> boneWeights;
 
 	MaterialHandle material;
 };

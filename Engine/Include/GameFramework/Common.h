@@ -2,12 +2,14 @@
 
 #include "Core/Common.h"
 
+#include "ResourceManager/ResourceManager.h"
+
 enum EStatus
 {
-  Status_Awake,
-  Status_Inactive,
-  Status_Active,
-  Status_Destroy,
-  Status_Cleanup
+  EStatus_Awake,
+  EStatus_Inactive,
+  EStatus_Active,
+  EStatus_Destroy,
+  EStatus_Cleanup
 };
 

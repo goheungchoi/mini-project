@@ -20,12 +20,12 @@ static ResourcePool<MaterialData>* materialPool;
 
 static void ProcessMesh(MeshData& mesh, const GameResource::Mesh* geoMesh) {
 	// Get AABB
-  mesh.boundingBox.min = {geoMesh->aabb()->min()->x(),
-                          geoMesh->aabb()->min()->y(),
-                          geoMesh->aabb()->min()->z(), 1.f};
-  mesh.boundingBox.max = {geoMesh->aabb()->max()->x(),
-                          geoMesh->aabb()->max()->y(),
-                          geoMesh->aabb()->max()->z(), 1.f};
+  mesh.boundingBox.min = {geoMesh->aabb()->min().x(),
+                          geoMesh->aabb()->min().y(),
+                          geoMesh->aabb()->min().z(), 1.f};
+  mesh.boundingBox.max = {geoMesh->aabb()->max().x(),
+                          geoMesh->aabb()->max().y(),
+                          geoMesh->aabb()->max().z(), 1.f};
 	
 	// Get vertices
   const auto* flatVertices = geoMesh->vertices();
@@ -36,18 +36,18 @@ static void ProcessMesh(MeshData& mesh, const GameResource::Mesh* geoMesh) {
     {
       Vertex vertex;
       vertex.position = {
-          flatVertex->position()->x(), flatVertex->position()->y(),
-          flatVertex->position()->z(), flatVertex->position()->w()};
-      vertex.normal = {flatVertex->normal()->x(), flatVertex->normal()->y(),
-                       flatVertex->normal()->z()};
-      vertex.tangent = {flatVertex->tangent()->x(), flatVertex->tangent()->y(),
-                        flatVertex->tangent()->z()};
-      vertex.bitangent = {flatVertex->bitangent()->x(),
-                          flatVertex->bitangent()->y(),
-                          flatVertex->bitangent()->z()};
-      vertex.uv = {flatVertex->texcoord()->u(), flatVertex->texcoord()->v()};
-      vertex.color = {flatVertex->color()->x(), flatVertex->color()->y(),
-                      flatVertex->color()->z()};
+          flatVertex->position().x(), flatVertex->position().y(),
+          flatVertex->position().z(), flatVertex->position().w()};
+      vertex.normal = {flatVertex->normal().x(), flatVertex->normal().y(),
+                       flatVertex->normal().z()};
+      vertex.tangent = {flatVertex->tangent().x(), flatVertex->tangent().y(),
+                        flatVertex->tangent().z()};
+      vertex.bitangent = {flatVertex->bitangent().x(),
+                          flatVertex->bitangent().y(),
+                          flatVertex->bitangent().z()};
+      vertex.uv = {flatVertex->texcoord().u(), flatVertex->texcoord().v()};
+      vertex.color = {flatVertex->color().x(), flatVertex->color().y(),
+                      flatVertex->color().z()};
 
       mesh.vertices.push_back(vertex);
     }
@@ -63,6 +63,33 @@ static void ProcessMesh(MeshData& mesh, const GameResource::Mesh* geoMesh) {
       mesh.indices.push_back(index);
     }
   }
+
+	// Get bones
+  const auto* flatBones = geoMesh->bones();
+  if (flatBones)
+  {
+    mesh.bones.reserve(flatBones->size());
+    for (const auto& flatBone : *flatBones)
+    {
+      Bone bone{.id = flatBone->id(),
+                .name = flatBone->name()->c_str(),
+                .inverseBindMatrix = XMMATRIX((float*)flatBone->offset())};
+      mesh.bones.push_back(bone);
+		}
+	}
+
+	// Get bone influences
+  const auto* flatBoneWeights = geoMesh->vertexBoneWeights();
+  if (flatBoneWeights)
+  {
+    mesh.boneIds.resize(flatBoneWeights->size());
+    mesh.boneWeights.resize(flatBoneWeights->size());
+    for (size_t i = 0; i < flatBoneWeights->size(); ++i)
+    {
+      mesh.boneIds[i] = flatBoneWeights->operator[](i)->boneId();
+      mesh.boneWeights[i] = flatBoneWeights->operator[](i)->weight();
+		}
+	}
 
 	// Load the material
   Handle matHandle =

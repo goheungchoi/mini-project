@@ -12,6 +12,8 @@ struct __ResourceManagerPrivate__
   ResourcePool<MaterialData> materialPool;
   ResourcePool<MeshData> meshPool;
   ResourcePool<ModelData> modelPool;
+  ResourcePool<SkeletonData> skeletonPool;
+  ResourcePool<AnimationData> animationPool;
 };
 
 struct Pools
@@ -19,6 +21,8 @@ struct Pools
   ResourcePool<TextureData>* texturePool;
   ResourcePool<MaterialData>* materialPool;
   ResourcePool<MeshData>* meshPool;
+  ResourcePool<SkeletonData>* skeletonPool;
+  ResourcePool<AnimationData>* animationPool;
 };
 }
 
@@ -29,7 +33,8 @@ static ::__ResourceManagerPrivate__& _m() {
 }
 
 static ::Pools& _pools() {
-  static ::Pools pools{&_m().texturePool, &_m().materialPool, &_m().meshPool};
+  static ::Pools pools{&_m().texturePool, &_m().materialPool, &_m().meshPool,
+                       &_m().skeletonPool, &_m().animationPool};
   return pools;
 }
 
@@ -106,6 +111,22 @@ static const ModelData& __AccessModelData__(ModelHandle handle)
 }
 static void __UnloadModel__(ModelHandle handle) {}
 
+// Skeleton
+static SkeletonHandle __LoadSkeleton__(const std::string& path)
+{
+  Handle skeletonHandle = _m().skeletonPool.Load(path.c_str(), &_pools());
+  if (_m().skeletonPool.IsValidHandle(skeletonHandle))
+  {
+    return skeletonHandle;
+  }
+  return SkeletonHandle();
+}
+static const SkeletonData& __AccessSkeletonData__(SkeletonHandle handle)
+{
+  return _m().skeletonPool.AccessResourceData(handle);
+}
+static void __UnloadSkeleton__(SkeletonHandle handle) {}
+
 static ResourceType __GetResourceType__(const Handle& handle) {
   // TODO:
 	return ResourceType::kUnknown;
@@ -142,6 +163,10 @@ const ResourceManager* GetResourceManager() {
 			.LoadModel = __LoadModel__,
 			.AccessModelData = __AccessModelData__,
 			.UnloadModel = __UnloadModel__,
+
+			.LoadSkeleton = __LoadSkeleton__,
+			.AccessSkeletonData = __AccessSkeletonData__,
+      .UnloadSkeleton = __UnloadSkeleton__,
 
       .GetResourceType = __GetResourceType__,
       .IsValidHandle = __IsValidHandle__,

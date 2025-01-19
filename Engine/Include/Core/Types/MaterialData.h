@@ -3,12 +3,9 @@
 #include "Core/Common.h"
 
 #include "Core/UUID/UUID.h"
+#include "Core/Math/MathUtils.h"
 
-//enum class MaterialPassType {
-//	kUnknown,
-//	kOpacity,
-//	kTransparent
-//};
+#include "Core/Handle/ResourceHandle.h"
 
 enum class AlphaMode
 {

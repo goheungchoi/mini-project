@@ -1,22 +1,94 @@
 namespace GameResource;
 
-table TexCoord {
+struct TexCoord {
   u: float;
   v: float;
 }
 
-table Vec3 {
+struct Vec3 {
   x: float;
   y: float;
   z: float;
 }
 
-table Vec4 {
+struct Vec4 {
   x: float;
   y: float;
   z: float;
   w: float;
 }
+
+struct Matrix {
+  _11: float; _12: float; _13: float; _14: float;
+  _21: float; _22: float; _23: float; _24: float;
+  _31: float; _32: float; _33: float; _34: float;
+  _41: float; _42: float; _43: float; _44: float;
+}
+
+struct KeyPosition {
+  position: [float:4];
+  timeStamp: float;
+}
+
+struct KeyRotation {
+  orientation: [float:4];
+  timeStamp: float;
+}
+
+struct KeyScaling {
+  scaling: [float:4];
+  timeStamp: float;
+}
+
+table AnimationChannel {
+  boneId: int;
+  nodeName: string;
+
+  numKeyPositions: uint;
+  numKeyRotations: uint;
+  numKeyScalings: uint;
+
+  keyPositions: [KeyPosition];
+  keyRotations: [KeyRotation];
+  keyScalings: [KeyScaling];
+}
+
+table Animation {
+  name: string;
+
+  duration: float;
+  ticksPerSecond: float;
+
+  globalInverseTransform: Matrix;
+
+  animationChannels: [AnimationChannel];
+}
+
+
+table Bone {
+  id: int;
+  name: string;
+  offset: Matrix;
+}
+
+table SkeletonNode {
+  name: string;
+
+  level: int;
+  parent: int;
+  firstChild: int;
+  nextSibling: int;
+
+  boneId: int;
+}
+
+table Skeleton {
+  name: string;
+
+  bones: [Bone];
+  nodes: [SkeletonNode];
+}
+
 
 enum AlphaMode : short {
   kOpaque,
@@ -47,18 +119,23 @@ table Material {
   doubleSided: bool;
 }
 
-table AABB {
+struct AABB {
   min : Vec3;
   max : Vec3;
 }
 
-table Vertex {
+struct Vertex {
   position: Vec4;
   normal: Vec3;
   tangent: Vec3;
   bitangent: Vec3;
   texcoord: TexCoord;
   color: Vec4;
+}
+
+struct VertexBoneWeight {
+  boneId: int;
+  weight: float;
 }
 
 // Mesh definition
@@ -70,10 +147,14 @@ table Mesh {
   indices: [uint];    // Flat array of indices
   
   material: string;   // Path to the material
+
+  bones: [Bone];
+  vertexBoneWeights: [VertexBoneWeight];
 }
 
 table GeometryNode {
   name: string;
+  transform: Matrix;
 
   level: int;
   parent: int;
@@ -91,6 +172,10 @@ table GeometryModel {
   meshes: [string];       // Paths to meshes
   materials: [string];    // Paths to materials
   textures: [string];     // Paths to textures
+
+  skeleton: string;
+
+  animations: [string];   // Paths to animations
 }
 
 // Define the root type

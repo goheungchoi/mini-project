@@ -6,6 +6,8 @@
 #include "Core/Types/MaterialData.h"
 #include "Core/Types/ShaderData.h"
 #include "Core/Types/ModelData.h"
+#include "Core/Types/SkeletonData.h"
+#include "Core/Types/AnimationData.h"
 
 #include "Utils.h"
 
@@ -96,7 +98,10 @@ template <>
 Handle ResourcePool<MeshData>::LoadImpl(xUUID uuid, void* pUser);
 template <>
 Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser);
-
+template <>
+Handle ResourcePool<SkeletonData>::LoadImpl(xUUID uuid, void* pUser);
+template <>
+Handle ResourcePool<AnimationData>::LoadImpl(xUUID uuid, void* pUser);
 
 // TODO;
 //template <>

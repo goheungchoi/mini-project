@@ -31,30 +31,106 @@ class ModelExporter
 {
   // TODO: Animation export
 
-  // TODO: Skeleton extraction
-  struct Bone
+  struct KeyPosition
   {
-    int id;
+    float position[4];
+    float timeStamp;
+  };
+
+  struct KeyRotation
+  {
+    /**
+     * @brief Orientation angles represented by quaternion.
+     * RotationAngle is in radians
+     * x = RotationAxis.x * sin(RotationAngle / 2)
+     * y = RotationAxis.y * sin(RotationAngle / 2)
+     * z = RotationAxis.z * sin(RotationAngle / 2)
+     * w = cos(RotationAngle / 2)
+     *
+     * To get the rotation angle,
+     * std::acos(w) * 2.
+     */
+    float orientation[4];
+    float timeStamp;
+  };
+
+  struct KeyScaling
+  {
+    float scaling[4];
+    float timeStamp;
+  };
+
+  struct AnimationChannel
+  {
+    int boneId; // The id of the bone if it's a skeletal animation's key frame.
+                // Otherwise, -1.
+    std::string nodeName; // The name of the node (or bone) influenced by this
+                          // key frame.
+
+    uint32_t numKeyPositions;
+    uint32_t numKeyRotations;
+    uint32_t numKeyScalings;
+    std::vector<KeyPosition> keyPositions;
+    std::vector<KeyRotation> keyRotations;
+    std::vector<KeyScaling> keyScalings;
+  };
+
+  struct Animation
+  {
+    std::string path;
     std::string name;
 
-    // std::vector<
+    float duration;
+    float ticksPerSecond;
 
-    float offset[4][4];
+    aiMatrix4x4 globalInverseTransform;
+    
+		std::vector<AnimationChannel> animationChannels;
+  };
+
+  // Skeleton extraction
+  static constexpr uint32_t kMaxBoneInfluences{8};
+
+	using BoneId = int;
+	using BoneWeight = float;
+
+	struct VertexBoneWeight
+  {
+    BoneId boneId;
+    BoneWeight weight;
+  };
+
+  struct Bone
+  {
+    BoneId id;
+    std::string name;
+    aiMatrix4x4 offset;
   };
 
   // Define a structure for skeleton nodes
   struct SkeletonNode
   {
     std::string name;
-    aiMatrix4x4 transform;
-    std::vector<SkeletonNode> children;
+    
+		int level;
+    int parent;
+    int myIndex;
+    int firstChild;
+    int nextSibling;
+
+    BoneId boneId;
   };
 
-  struct VertexBoneWeight
+	struct Skeleton
   {
-    int boneId;
-    float weight;
-  };
+    std::string path;
+    std::string name;
+
+		std::unordered_map<std::string, BoneId> boneNameIdMap;
+    std::vector<Bone> bones;
+    std::vector<SkeletonNode> nodes;
+	};
+  
 
   // Mesh AABB
   struct AABB
@@ -131,6 +207,7 @@ class ModelExporter
     std::string materialPath;
 
     // Bone info
+    std::vector<Bone> bones;
     std::vector<std::vector<VertexBoneWeight>> vertexBoneWeights;
   };
 
@@ -138,14 +215,13 @@ class ModelExporter
   struct GeometryNode
   {
     std::string name;
+    aiMatrix4x4 transform;
 
     int level;
     int parent;
     int myIndex;
     int firstChild;
     int nextSibling;
-
-    float transform[4][4];
 
     std::vector<std::string> meshPaths;
   };
@@ -162,7 +238,10 @@ class ModelExporter
     std::unordered_map<std::string, Texture> texturePathMap;
 
     // Model bone data
-    std::vector<Bone> bones;
+    std::optional<std::string> skeletonPath;
+
+		// Model Animation data
+    std::unordered_map<std::string, Animation> animationPathMap;
   };
 
   GeometryModel _geoModel;
@@ -193,7 +272,7 @@ public:
    * @return
    */
   bool ExportModel(const char* path, ModelFileFormat fileFormat,
-                   bool preCalculateVertex = false, bool extractBones = false);
+                   bool preCalculateVertex = false, bool extractBones = false, bool exportAnimation = false);
 
 private:
   std::unordered_set<std::string> _meshNameRegistry;
@@ -218,6 +297,7 @@ private:
   void ExportModelMaterial(Material& geoMat);
   void ExportModelTexture(Texture& texture);
 
+	std::string GetUUID(std::string path);
   std::string GetExportPath(std::string path);
 
   void GenerateGeometryModelInfoFile(GeometryModel& geoModel);
@@ -225,14 +305,30 @@ private:
   void GenerateModelMaterialInfoFile(Material& geoMat);
 
 private:
-  void ExtractSkeletonBonesAndWeights(GeometryModel& geoModel, Mesh& geoMesh,
-                                      aiMesh* mesh, const aiScene* scene);
+  Skeleton _skeleton;
 
-  void ExtractSkeletalBones(const aiScene* scene);
-  void ProcessSkeletonNode(GeometryModel& geoModel, aiNode* node,
-                           const aiScene* scene);
-  void ProcessSkeletonMesh(GeometryModel& geoModel, aiMesh* mesh,
-                           const aiScene* scene);
+  void ExtractSkeleton(const aiScene* scene);
+  void ProcessSkeletonNode(Skeleton& skeleton, SkeletonNode& parentSkeletonNode,
+                           aiNode* node, const aiScene* scene);
+
+	void ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
+                                 const aiScene* scene);
+
+	void ExportSkeleton(Skeleton& skeleton);
+  void GenerateSkeletonInfoFile(Skeleton& skeleton);
+
+private:
+  std::unordered_set<std::string> _animationNameRegistry;
+
+  void ProcessAnimations(const aiScene* scene);
+  void ProcessAnimation(Animation& geoAnim, const aiAnimation* anim,
+                        const aiScene* scene);
+  void ProcessAnimationChannel(AnimationChannel& animChannel,
+                               const aiNodeAnim* channel);
+
+
+  void ExportAnimation(Animation& geoAnim);
+  void GenerateAnimationInfoFile(Animation& geoAnim);
 
 private:
   size_t GetMaxNodeCount(const aiScene* scene);

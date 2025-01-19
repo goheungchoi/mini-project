@@ -1,0 +1,27 @@
+{
+    "uuid": "f74ffacabdb7569691b6253bbb13c394",
+    "import_path": "Models\\SkinningTest\\Beta_Joints_MAT10.mat",
+    "resource_type": "model",
+    "details": {
+        "name": "Beta_Joints_MAT10",
+        "albedo_factor": [
+            [
+                0.3333333432674408,
+                0.12452887743711472,
+                0.10101473331451416,
+                1.0
+            ]
+        ],
+        "albedo_texture": "",
+        "metallic_factor": 0.5,
+        "roughness_factor": 0.858578622341156,
+        "metallic_roughness_texture": "",
+        "normal_texture": "",
+        "occlusion_texture": "",
+        "emissive_factor": 0.0,
+        "emissive_texture": "",
+        "alpha_mode": "AlphaMode_kOpaque",
+        "alpha_cutoff": 0.5,
+        "double_sided": true
+    }
+}

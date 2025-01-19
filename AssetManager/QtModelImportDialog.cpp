@@ -46,7 +46,8 @@ void QtModelImportDialog::onOKButtonClicked()
   bool res =
       exporter.ExportModel(_modelPath.toStdString().c_str(), fileformat,
                            ui.precalculateVertexPositionsCheckBox->isChecked(),
-                           ui.extractArmatureDataCheckBox->isChecked());
+                           ui.extractArmatureDataCheckBox->isChecked(),
+													 ui.exportAnimationsCheckBox->isChecked());
   if (!res)
   {
     QMessageBox::critical(this, "Error",
