@@ -1,4 +1,5 @@
 {
+    "uuid": "a0ba66903c4c515393fdb5c88356964f",
     "import_path": "Models\\Sponza\\meshes[0]-270.mesh",
     "resource_type": "model",
     "details": {
@@ -17,6 +18,8 @@
         ],
         "num_vertices": 122,
         "num_indices": 336,
-        "material": "Models\\Sponza\\27.mat"
+        "material": "Models\\Sponza\\27.mat",
+        "bones": [],
+        "bone_weights": []
     }
 }

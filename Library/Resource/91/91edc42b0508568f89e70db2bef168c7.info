@@ -1,8 +1,9 @@
 {
-    "import_path": "Models\\FlightHelmet\\RubberWoodMat.mat",
+    "uuid": "91edc42b0508568f89e70db2bef168c7",
+    "import_path": "Models\\FlightHelmet\\HoseMat0.mat",
     "resource_type": "model",
     "details": {
-        "name": "RubberWoodMat",
+        "name": "HoseMat0",
         "albedo_factor": [
             [
                 1.0,
@@ -21,6 +22,6 @@
         "emissive_texture": "",
         "alpha_mode": "AlphaMode_kOpaque",
         "alpha_cutoff": 0.5,
-        "double_sided": false
+        "double_sided": true
     }
 }

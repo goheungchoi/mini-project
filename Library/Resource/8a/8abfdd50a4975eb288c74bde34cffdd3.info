@@ -1,4 +1,5 @@
 {
+    "uuid": "8abfdd50a4975eb288c74bde34cffdd3",
     "import_path": "Models\\Ceberus\\Mesh0.mesh",
     "resource_type": "model",
     "details": {
@@ -17,6 +18,8 @@
         ],
         "num_vertices": 26971,
         "num_indices": 100623,
-        "material": "Models\\Ceberus\\08 - Default.mat"
+        "material": "Models\\Ceberus\\08 - Default0.mat",
+        "bones": [],
+        "bone_weights": []
     }
 }

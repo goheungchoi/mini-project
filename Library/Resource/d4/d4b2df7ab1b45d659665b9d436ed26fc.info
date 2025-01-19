@@ -1,8 +1,9 @@
 {
-    "import_path": "Models\\FlightHelmet\\LensesMat.mat",
+    "uuid": "d4b2df7ab1b45d659665b9d436ed26fc",
+    "import_path": "Models\\FlightHelmet\\LensesMat0.mat",
     "resource_type": "model",
     "details": {
-        "name": "LensesMat",
+        "name": "LensesMat0",
         "albedo_factor": [
             [
                 1.0,

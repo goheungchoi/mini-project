@@ -1,4 +1,5 @@
 {
+    "uuid": "f5ed3e0a5497547fbbaef5dc81edc747",
     "import_path": "Models\\Sphere\\Sphere0.mesh",
     "resource_type": "model",
     "details": {
@@ -17,6 +18,8 @@
         ],
         "num_vertices": 1984,
         "num_indices": 2880,
-        "material": "Models\\Sphere\\DefaultMaterial.mat"
+        "material": "Models\\Sphere\\DefaultMaterial0.mat",
+        "bones": [],
+        "bone_weights": []
     }
 }

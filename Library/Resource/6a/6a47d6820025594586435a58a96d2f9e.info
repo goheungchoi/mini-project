@@ -1,4 +1,5 @@
 {
+    "uuid": "6a47d6820025594586435a58a96d2f9e",
     "import_path": "Models\\FlightHelmet\\Hose_low0.mesh",
     "resource_type": "model",
     "details": {
@@ -17,6 +18,8 @@
         ],
         "num_vertices": 10472,
         "num_indices": 59040,
-        "material": "Models\\FlightHelmet\\HoseMat.mat"
+        "material": "Models\\FlightHelmet\\HoseMat0.mat",
+        "bones": [],
+        "bone_weights": []
     }
 }

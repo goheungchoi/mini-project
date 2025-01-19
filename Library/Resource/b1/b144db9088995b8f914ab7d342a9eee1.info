@@ -1,4 +1,5 @@
 {
+    "uuid": "b144db9088995b8f914ab7d342a9eee1",
     "import_path": "Models\\FlightHelmet\\LeatherParts_low0.mesh",
     "resource_type": "model",
     "details": {
@@ -17,6 +18,8 @@
         ],
         "num_vertices": 12534,
         "num_indices": 65688,
-        "material": "Models\\FlightHelmet\\LeatherPartsMat.mat"
+        "material": "Models\\FlightHelmet\\LeatherPartsMat0.mat",
+        "bones": [],
+        "bone_weights": []
     }
 }

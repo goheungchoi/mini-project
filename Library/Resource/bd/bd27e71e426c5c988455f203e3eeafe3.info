@@ -1,4 +1,5 @@
 {
+    "uuid": "bd27e71e426c5c988455f203e3eeafe3",
     "import_path": "Models\\FlightHelmet\\Lenses_low0.mesh",
     "resource_type": "model",
     "details": {
@@ -17,6 +18,8 @@
         ],
         "num_vertices": 436,
         "num_indices": 2208,
-        "material": "Models\\FlightHelmet\\LensesMat.mat"
+        "material": "Models\\FlightHelmet\\LensesMat0.mat",
+        "bones": [],
+        "bone_weights": []
     }
 }

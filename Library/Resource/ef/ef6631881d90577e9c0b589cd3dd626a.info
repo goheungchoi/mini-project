@@ -1,8 +1,9 @@
 {
-    "import_path": "Models\\FlightHelmet\\LeatherPartsMat.mat",
+    "uuid": "ef6631881d90577e9c0b589cd3dd626a",
+    "import_path": "Models\\FlightHelmet\\RubberWoodMat0.mat",
     "resource_type": "model",
     "details": {
-        "name": "LeatherPartsMat",
+        "name": "RubberWoodMat0",
         "albedo_factor": [
             [
                 1.0,
@@ -11,11 +12,11 @@
                 1.0
             ]
         ],
-        "albedo_texture": "Models\\FlightHelmet\\FlightHelmet_Materials_LeatherPartsMat_BaseColor.png",
+        "albedo_texture": "Models\\FlightHelmet\\FlightHelmet_Materials_RubberWoodMat_BaseColor.png",
         "metallic_factor": 1.0,
         "roughness_factor": 1.0,
-        "metallic_roughness_texture": "Models\\FlightHelmet\\FlightHelmet_Materials_LeatherPartsMat_RoughMetal.png",
-        "normal_texture": "Models\\FlightHelmet\\FlightHelmet_Materials_LeatherPartsMat_Normal.png",
+        "metallic_roughness_texture": "Models\\FlightHelmet\\FlightHelmet_Materials_RubberWoodMat_RoughMetal.png",
+        "normal_texture": "Models\\FlightHelmet\\FlightHelmet_Materials_RubberWoodMat_Normal.png",
         "occlusion_texture": "",
         "emissive_factor": 0.0,
         "emissive_texture": "",

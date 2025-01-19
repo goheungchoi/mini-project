@@ -1,4 +1,5 @@
 {
+    "uuid": "72f9c4e57f50554191e7ec2f9697a947",
     "import_path": "Models\\Skybox\\defaultobject0.mesh",
     "resource_type": "model",
     "details": {
@@ -17,6 +18,8 @@
         ],
         "num_vertices": 24,
         "num_indices": 36,
-        "material": "Models\\Skybox\\DefaultMaterial.mat"
+        "material": "Models\\Skybox\\DefaultMaterial0.mat",
+        "bones": [],
+        "bone_weights": []
     }
 }

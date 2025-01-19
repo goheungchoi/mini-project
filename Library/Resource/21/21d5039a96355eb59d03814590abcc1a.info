@@ -1,8 +1,9 @@
 {
-    "import_path": "Models\\FlightHelmet\\GlassPlasticMat.mat",
+    "uuid": "21d5039a96355eb59d03814590abcc1a",
+    "import_path": "Models\\FlightHelmet\\GlassPlasticMat0.mat",
     "resource_type": "model",
     "details": {
-        "name": "GlassPlasticMat",
+        "name": "GlassPlasticMat0",
         "albedo_factor": [
             [
                 1.0,

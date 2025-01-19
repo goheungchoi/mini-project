@@ -1,4 +1,5 @@
 {
+    "uuid": "912bf1798a7f5a9c86a3008569bb007c",
     "import_path": "Models\\Skybox\\Skybox.obj",
     "resource_type": "model",
     "details": {
@@ -29,7 +30,7 @@
             "Models\\Skybox\\defaultobject0.mesh"
         ],
         "materials": [
-            "Models\\Skybox\\DefaultMaterial.mat"
+            "Models\\Skybox\\DefaultMaterial0.mat"
         ],
         "textures": []
     }

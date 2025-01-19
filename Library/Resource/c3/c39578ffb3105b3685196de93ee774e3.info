@@ -1,4 +1,5 @@
 {
+    "uuid": "c39578ffb3105b3685196de93ee774e3",
     "import_path": "Models\\Sphere\\Sphere.obj",
     "resource_type": "model",
     "details": {
@@ -29,7 +30,7 @@
             "Models\\Sphere\\Sphere0.mesh"
         ],
         "materials": [
-            "Models\\Sphere\\DefaultMaterial.mat"
+            "Models\\Sphere\\DefaultMaterial0.mat"
         ],
         "textures": []
     }

@@ -1,4 +1,5 @@
 {
+    "uuid": "1ef184814391541c8a26ba16d815309e",
     "import_path": "Models\\FlightHelmet\\RubberWood_low0.mesh",
     "resource_type": "model",
     "details": {
@@ -17,6 +18,8 @@
         ],
         "num_vertices": 13638,
         "num_indices": 72534,
-        "material": "Models\\FlightHelmet\\RubberWoodMat.mat"
+        "material": "Models\\FlightHelmet\\RubberWoodMat0.mat",
+        "bones": [],
+        "bone_weights": []
     }
 }

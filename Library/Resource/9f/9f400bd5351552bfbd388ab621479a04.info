@@ -1,4 +1,5 @@
 {
+    "uuid": "9f400bd5351552bfbd388ab621479a04",
     "import_path": "Models\\Ceberus\\Ceberus.glb",
     "resource_type": "model",
     "details": {
@@ -20,7 +21,7 @@
             "Models\\Ceberus\\Mesh0.mesh"
         ],
         "materials": [
-            "Models\\Ceberus\\08 - Default.mat"
+            "Models\\Ceberus\\08 - Default0.mat"
         ],
         "textures": [
             "Models\\Ceberus\\*0",

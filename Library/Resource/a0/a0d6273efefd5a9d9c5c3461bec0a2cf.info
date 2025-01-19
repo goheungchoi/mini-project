@@ -1,4 +1,5 @@
 {
+    "uuid": "a0d6273efefd5a9d9c5c3461bec0a2cf",
     "import_path": "Models\\FlightHelmet\\GlassPlastic_low0.mesh",
     "resource_type": "model",
     "details": {
@@ -17,6 +18,8 @@
         ],
         "num_vertices": 4676,
         "num_indices": 24408,
-        "material": "Models\\FlightHelmet\\GlassPlasticMat.mat"
+        "material": "Models\\FlightHelmet\\GlassPlasticMat0.mat",
+        "bones": [],
+        "bone_weights": []
     }
 }

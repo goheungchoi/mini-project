@@ -1,8 +1,9 @@
 {
-    "import_path": "Models\\Ceberus\\08 - Default.mat",
+    "uuid": "1cf74fac015752d1bf5ca6d1b53073d5",
+    "import_path": "Models\\Ceberus\\08 - Default0.mat",
     "resource_type": "model",
     "details": {
-        "name": "08 - Default",
+        "name": "08 - Default0",
         "albedo_factor": [
             [
                 1.0,

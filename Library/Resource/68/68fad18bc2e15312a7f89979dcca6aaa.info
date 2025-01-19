@@ -1,8 +1,9 @@
 {
-    "import_path": "Models\\Skybox\\DefaultMaterial.mat",
+    "uuid": "68fad18bc2e15312a7f89979dcca6aaa",
+    "import_path": "Models\\Sphere\\DefaultMaterial0.mat",
     "resource_type": "model",
     "details": {
-        "name": "DefaultMaterial",
+        "name": "DefaultMaterial0",
         "albedo_factor": [
             [
                 0.0,

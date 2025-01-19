@@ -1,8 +1,9 @@
 {
-    "import_path": "Models\\FlightHelmet\\MetalPartsMat.mat",
+    "uuid": "ab026a03578757b79e60e94c40dcb1f9",
+    "import_path": "Models\\FlightHelmet\\MetalPartsMat0.mat",
     "resource_type": "model",
     "details": {
-        "name": "MetalPartsMat",
+        "name": "MetalPartsMat0",
         "albedo_factor": [
             [
                 1.0,

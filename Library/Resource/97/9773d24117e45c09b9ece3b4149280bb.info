@@ -1,4 +1,5 @@
 {
+    "uuid": "9773d24117e45c09b9ece3b4149280bb",
     "import_path": "Models\\FlightHelmet\\FlightHelmet.gltf",
     "resource_type": "model",
     "details": {
@@ -89,12 +90,12 @@
             "Models\\FlightHelmet\\Lenses_low0.mesh"
         ],
         "materials": [
-            "Models\\FlightHelmet\\HoseMat.mat",
-            "Models\\FlightHelmet\\MetalPartsMat.mat",
-            "Models\\FlightHelmet\\RubberWoodMat.mat",
-            "Models\\FlightHelmet\\GlassPlasticMat.mat",
-            "Models\\FlightHelmet\\LeatherPartsMat.mat",
-            "Models\\FlightHelmet\\LensesMat.mat"
+            "Models\\FlightHelmet\\HoseMat0.mat",
+            "Models\\FlightHelmet\\MetalPartsMat0.mat",
+            "Models\\FlightHelmet\\RubberWoodMat0.mat",
+            "Models\\FlightHelmet\\GlassPlasticMat0.mat",
+            "Models\\FlightHelmet\\LeatherPartsMat0.mat",
+            "Models\\FlightHelmet\\LensesMat0.mat"
         ],
         "textures": [
             "Models\\FlightHelmet\\FlightHelmet_Materials_RubberWoodMat_BaseColor.png",
