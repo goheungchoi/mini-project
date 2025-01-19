@@ -7,10 +7,6 @@
 #include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
 
-#include <imgui.h>
-#include <imgui_impl_dx11.h>
-#include <imgui_impl_win32.h>
-
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
@@ -68,6 +64,8 @@ void DX11Renderer::BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
 {
   _passMgr->SetCamera(cameraPos, view, projection);
   _passMgr->SetMainLightDir(mainLight);
+  BeginImGuiDraw();
+  _passMgr->UpdateVariable();
 }
 
 void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
@@ -100,31 +98,31 @@ void DX11Renderer::EndFrame()
   _swapChain->GetSwapChain()->Present(0, 0);
 }
 
- void DX11Renderer::AddShadow(MeshHandle handle)
+void DX11Renderer::AddShadow(MeshHandle handle)
 {
-   auto buffer = _storage->meshMap.find(handle);
-   if (buffer != _storage->meshMap.end())
-   {
-     if (buffer->second->flags & RenderPassType::ShadowPass)
-     {
-       return;
-     }
-     buffer->second->flags |= RenderPassType::ShadowPass;
-   }
- }
+  auto buffer = _storage->meshMap.find(handle);
+  if (buffer != _storage->meshMap.end())
+  {
+    if (buffer->second->flags & RenderPassType::kShadowPass)
+    {
+      return;
+    }
+    buffer->second->flags |= RenderPassType::kShadowPass;
+  }
+}
 
- void DX11Renderer::DeleteShadow(MeshHandle handle)
+void DX11Renderer::DeleteShadow(MeshHandle handle)
 {
-   auto buffer = _storage->meshMap.find(handle);
-   if (buffer != _storage->meshMap.end())
-   {
-     if (!(buffer->second->flags & RenderPassType::ShadowPass))
-     {
-       return;
-     }
-     buffer->second->flags &= ~RenderPassType::ShadowPass;
-   }
- }
+  auto buffer = _storage->meshMap.find(handle);
+  if (buffer != _storage->meshMap.end())
+  {
+    if (!(buffer->second->flags & RenderPassType::kShadowPass))
+    {
+      return;
+    }
+    buffer->second->flags &= ~RenderPassType::kShadowPass;
+  }
+}
 
 void DX11Renderer::BindPipeline() {}
 
@@ -147,15 +145,15 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
       switch (matData.alphaMode)
       {
       case AlphaMode::kOpaque: {
-        meshBuffer->flags |= RenderPassType::OpaquePass;
+        meshBuffer->flags |= RenderPassType::kOpaquePass;
         break;
       }
       case AlphaMode::kMask: {
-        meshBuffer->flags |= RenderPassType::OpaquePass;
+        meshBuffer->flags |= RenderPassType::kOpaquePass;
         break;
       }
       case AlphaMode::kBlend: {
-        meshBuffer->flags |= RenderPassType::TransparentPass;
+        meshBuffer->flags |= RenderPassType::kTransparentPass;
         break;
       }
       }
@@ -278,6 +276,13 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                       specularIBLPath);
 }
 
+void DX11Renderer::BeginImGuiDraw()
+{
+  ImGui_ImplDX11_NewFrame();
+  ImGui_ImplWin32_NewFrame();
+  ImGui::NewFrame();
+}
+
 void DX11Renderer::DrawImGui()
 {
   // TODO: Set swapchain back buffer
@@ -287,15 +292,7 @@ void DX11Renderer::DrawImGui()
   //_device->GetImmContext()->ClearRenderTargetView(*rtv, clearColor);
 
   // Start the Dear ImGui frame
-  ImGui_ImplDX11_NewFrame();
-  ImGui_ImplWin32_NewFrame();
-  ImGui::NewFrame();
-
-  if (ImGui::Begin("Renderer Frame"))
-  {
-    ImGui::Text("Position: ");
-  }
-  ImGui::End();
+  
 
   // Rendering
   ImGui::Render();

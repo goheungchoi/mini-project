@@ -5,7 +5,6 @@
 #include "../RenderFrameworks/Shader.h"
 #include "../Resources/Buffer.h"
 #include "Core/Common.h"
-#include "directxtk/SimpleMath.h"
 #include "../Resources/PipeLineState.h"
 using namespace DirectX::SimpleMath;
 using namespace Microsoft::WRL;
@@ -121,7 +120,7 @@ public:
   ~DefferedPass() { SAFE_RELEASE(_frame); }
 
 public:
-  void ClearGbuffer(BackBuffer* backBuffer)
+  void Prepare(BackBuffer* backBuffer)
   {
     std::ranges::for_each(_renderTargets,
                           [&](ComPtr<ID3D11RenderTargetView>& targetView) {

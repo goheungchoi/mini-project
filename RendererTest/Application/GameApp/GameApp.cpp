@@ -36,7 +36,8 @@ void GameApp::Initialize()
   });
   std::ranges::for_each(modelData2.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
-  });
+    _renderer->AddShadow(meshHandle);
+    });
   std::ranges::for_each(modelData3.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
   });
@@ -47,6 +48,7 @@ void GameApp::Initialize()
   _mainLight.direction = Vector4(0.f, 0.f, 1.f, 0.f);
   _mainLight.color = Vector4(1.f, 1.f, 1.f, 1.f);
   _mainLight.intensity = Vector4(1.f, 1.f, 1.f, 1.f);
+
 
   _camera->SetPosition({4.367269, -0.90219879, -40.523827, +76.853645});
   eye = {4.367269, -0.90219879, -40.523827, +76.853645};

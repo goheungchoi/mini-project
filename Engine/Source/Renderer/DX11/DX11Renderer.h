@@ -45,6 +45,7 @@ public:
 
 public:
 	// Render ImGui graphical interface.
+  void BeginImGuiDraw();
   void DrawImGui();
 
 private:

@@ -4,6 +4,7 @@
 #include "../Objects/Swapchain.h"
 #include "../RenderFrameworks/DeferredPass.h"
 #include "../RenderFrameworks/Shader.h"
+#include "../RenderFrameworks/ShadowPass.h"
 #include "../Resources/ConstantBuffer.h"
 #include "../Resources/PipeLineState.h"
 #include "../Resources/Sampler.h"
@@ -23,15 +24,22 @@ struct Camera
 class RenderPassManager
 {
 private:
+  // mesh
   std::map<std::pair<float, int>, MeshBuffer*,
            std::greater<std::pair<float, int>>>
       _transparentMeshes;
   std::vector<MeshBuffer*> _opaqueMesh;
+  std::vector<MeshBuffer*> _shadowMesh;
   SkyBox* _skyBox = nullptr;
+  // Constant Buffer
   MeshConstantBuffer* _CB;
   FrameConstantBuffer* _frameCB;
+  // pass
+  ShadowPass* _shadow;
   DefferedPass* _deffered;
+  // sampler
   std::vector<Sampler*> _samplers;
+  // shader
   std::unordered_map<std::string, VertexShader*> _vShaders;
   std::unordered_map<std::string, PixelShader*> _pShaders;
 
@@ -54,6 +62,7 @@ public:
     _frameCB = new FrameConstantBuffer(_device);
     _CB = new MeshConstantBuffer(_device);
     _compiler = new ShaderCompiler(_device);
+    _shadow = new ShadowPass(_device, 8192, 8192);
     _deffered = new DefferedPass(width, height, _device);
     _skyBox = new SkyBox(_device);
   }
@@ -72,6 +81,7 @@ public:
     SAFE_RELEASE(_CB);
     SAFE_RELEASE(_frameCB);
     SAFE_RELEASE(_deffered);
+    SAFE_RELEASE(_shadow);
     SAFE_RELEASE(_pso);
     SAFE_RELEASE(_skyBox);
   }
@@ -89,11 +99,11 @@ public:
   }
   void ClassfyPass(MeshBuffer* buff)
   {
-    if (buff->flags & RenderPassType::OpaquePass)
+    if (buff->flags & RenderPassType::kOpaquePass)
     {
       _opaqueMesh.push_back(buff);
     }
-    if (buff->flags & RenderPassType::TransparentPass)
+    if (buff->flags & RenderPassType::kTransparentPass)
     {
       // 뷰 공간의 Z값 계산
       Vector3 worldPos3 = buff->world.Translation(); // 월드 공간에서의 위치
@@ -107,20 +117,22 @@ public:
       max--;
     }
 
-    if (buff->flags & RenderPassType::LightPass)
+    if (buff->flags & RenderPassType::kShadowPass)
     {
+      _shadowMesh.push_back(buff);
     }
   }
   void ProcessPass()
   {
-    _pso->ClearBackBufferDSV(_device);
+    _pso->ClearBackBufferDSV();
     // Shadow pass
-
+    _shadow->Prepare();
     // //--------------------------------------------------------------------------------------//
     // Deferred pass
     // skybox
-    _pso->SetBlendOnEnable(false, _device);
-    _deffered->ClearGbuffer(_pso->_backBuffer);
+    _pso->SetBlendOnEnable(false);
+    _pso->SetMainViewPort();
+    _deffered->Prepare(_pso->_backBuffer);
     _device->GetImmContext()->IASetInputLayout(
         _vShaders.find("SkyBox")->second->layout.Get());
     _device->GetImmContext()->VSSetShader(
@@ -162,27 +174,27 @@ public:
               .GetAddressOf());
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
-    _pso->ClearBackBufferRTV(_device);
-    _pso->TurnZBufferOff(_device);
+    _pso->ClearBackBufferRTV();
+    _pso->TurnZBufferOff();
     _device->GetImmContext()->IASetInputLayout(
         _vShaders.find("Quad")->second->layout.Get());
     _device->GetImmContext()->VSSetShader(
         _vShaders.find("Quad")->second->shader.Get(), nullptr, 0);
     _device->GetImmContext()->PSSetShader(
         _pShaders.find("Quad")->second->shader.Get(), nullptr, 0);
-    _pso->SetBackBuffer(_device);
+    _pso->SetBackBuffer();
     _deffered->QuadDraw();
     _deffered->ClearRenderTargets();
     //--------------------------------------------------------------------------------------//
     // Transparent pass -> Forward rendering
-    _pso->SetBlendOnEnable(true, _device);
+    _pso->SetBlendOnEnable(true);
     _device->GetImmContext()->IASetInputLayout(
         _vShaders.find("Default")->second->layout.Get());
     _device->GetImmContext()->VSSetShader(
         _vShaders.find("Default")->second->shader.Get(), nullptr, 0);
     _device->GetImmContext()->PSSetShader(
         _pShaders.find("Transparency")->second->shader.Get(), nullptr, 0);
-    _pso->TurnZBufferOn(_device);
+    _pso->TurnZBufferOn();
     std::ranges::for_each(_transparentMeshes, [this](const auto& pair) {
       const auto& [z, buffer] = pair;
 
@@ -202,6 +214,7 @@ public:
       _device->GetImmContext()->DrawIndexed(buffer->nIndices, 0, 0);
     });
     // 처리후 클리어
+    _shadowMesh.clear();
     _opaqueMesh.clear();
     _transparentMeshes.clear();
     // max값 초기화
@@ -221,6 +234,7 @@ public:
     IProj = DirectX::XMMatrixInverse(nullptr, IProj);
     frame.inverseView = DirectX::XMMatrixTranspose(IView);
     frame.inverseProjection = DirectX::XMMatrixTranspose(IProj);
+
     _frameCB->UpdateContantBuffer(frame);
     _device->GetImmContext()->VSSetConstantBuffers(
         0, 1, _frameCB->_constantBuffer.GetAddressOf());
@@ -325,6 +339,15 @@ public:
     });
     _device->GetImmContext()->PSSetSamplers(
         0, static_cast<UINT>(samplers.size()), samplers.data());
+  }
+  void UpdateVariable() 
+  {
+    //SWTODO : _shadow ->update 변수 처리하기.
+    if (ImGui::Begin("Renderer Frame"))
+    {
+      ImGui::Text("Position: ");
+    }
+    ImGui::End();
   }
 
 private:

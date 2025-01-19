@@ -43,6 +43,8 @@ cbuffer Frame : register(b0)
     Matrix projection;
     Matrix InverseViewMatrix;
     Matrix InverseProjectionMatrix;
+    Matrix shadowView;
+    Matrix sahdowProjection;
 };
 
 cbuffer World : register(b1)

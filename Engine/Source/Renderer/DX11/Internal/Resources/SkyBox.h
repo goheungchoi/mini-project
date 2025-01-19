@@ -42,7 +42,7 @@ public:
     Matrix world = Matrix::Identity;
     Matrix scale = Matrix::CreateScale(1000.f);
     _mesh->world = world * scale;
-    _mesh->flags |= RenderPassType::OpaquePass;
+    _mesh->flags |= RenderPassType::kOpaquePass;
   }
   void SetTexture(LPCSTR envPath, LPCSTR specularBRDFPath,
                   LPCSTR diffuseIrrPath, LPCSTR specularIBLPath)

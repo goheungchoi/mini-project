@@ -3,7 +3,6 @@
 #include "../Device.h"
 #include "../Resources/Material.h"
 #include "../Types.h"
-#include "directxtk/SimpleMath.h"
 
 using namespace Microsoft::WRL;
 using namespace DirectX::SimpleMath;
@@ -18,6 +17,8 @@ struct Frame
   Matrix projection;
   Matrix inverseView;
   Matrix inverseProjection;
+  Matrix shadwoView;
+  Matrix shadowProjection;
 };
 
 struct World
