@@ -87,7 +87,36 @@ static const char* GetResourceDirectory()
   return resourceDir.c_str();
 }
 
+static const char* GetShaderDirectory() {
+    static const std::string resourceDir = []() -> std::string {
+    fs::path cwd{fs::current_path()};
+    fs::path resourceDir;
+    if (fs::exists(cwd / "Library"))
+    {
+      fs::create_directory(cwd / "Library" / "Shader");
+      resourceDir = fs::absolute(cwd / "Library" / "Shader");
+    }
+    else
+    { // Go to the parent path.
+      cwd = cwd.parent_path();
+      if (fs::exists(cwd / "Library"))
+      {
+        fs::create_directory(cwd / "Library" / "Shader");
+        resourceDir = fs::absolute(cwd / "Library" / "Shader");
+      }
+      else
+      {
+        abort();
+      }
+    }
+    return resourceDir.string();
+  }();
+
+  return resourceDir.c_str();
+}
+
 // Extern definitions
 const char* ns::kProjectDir = GetProjectDirectory();
 const char* ns::kAssetDir = GetAssetDirectory();
 const char* ns::kResourceDir = GetResourceDirectory();
+const char* ns::kShader = GetShaderDirectory();
