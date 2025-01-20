@@ -38,6 +38,7 @@ public:
 #endif
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
+    //SWTODO : shader complie 경로 바꾸기
     HR_T(D3DCompileFromFile(
         L"../Engine/Source/Renderer/DX11/Shader/DX11Shader.hlsl", macros.data(),
         D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "vs_5_0", shaderFlags, 0,
