@@ -22,6 +22,7 @@ static void ProcessSkeleton(SkeletonData& skeleton, const GameResource::Skeleton
     const GameResource::SkeletonNode* node =
         flatSkeleton->nodes()->operator[](i);
     skeleton.nodes[i].name = node->name()->c_str();
+    skeleton.nodes[i].transform = XMMATRIX((float*)node->transform());
     skeleton.nodes[i].level = node->level();
     skeleton.nodes[i].parent = node->parent();
     skeleton.nodes[i].firstChild = node->firstChild();

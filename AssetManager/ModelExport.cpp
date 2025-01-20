@@ -1002,6 +1002,7 @@ void ModelExporter::ExtractSkeleton(const aiScene* scene) {
   // Start from the root node and progress recursively.
   SkeletonNode skeletonNode;
   skeletonNode.name = scene->mRootNode->mName.C_Str();
+  skeletonNode.transform = aiMatrix4x4();
   skeletonNode.level = 0;
   skeletonNode.parent = -1;
   skeletonNode.myIndex = 0;
@@ -1037,6 +1038,7 @@ void ModelExporter::ProcessSkeletonNode(Skeleton& skeleton,
 		// Create a skeleton node.
     SkeletonNode skeletonNode;
     skeletonNode.name = node->mChildren[i]->mName.C_Str();
+    skeletonNode.transform = node->mChildren[i]->mTransformation;
     skeletonNode.level = parentSkeletonNode.level + 1;
     skeletonNode.parent = parentSkeletonNode.myIndex;
     skeletonNode.myIndex = skeleton.nodes.size();
@@ -1148,9 +1150,15 @@ void ModelExporter::ExportSkeleton(Skeleton& skeleton) {
   {
     auto node_name = builder.CreateString(node.name);
 
+		auto node_transform = GameResource::Matrix(
+        node.transform[0][0], node.transform[0][1], node.transform[0][2], node.transform[0][3], 
+				node.transform[1][0], node.transform[1][1], node.transform[1][2], node.transform[1][3], 
+				node.transform[2][0], node.transform[2][1], node.transform[2][2], node.transform[2][3],
+        node.transform[3][0], node.transform[3][1], node.transform[3][2], node.transform[3][3]);
+
 		auto node_offset = GameResource::CreateSkeletonNode(
-        builder, node_name, node.level, node.parent, node.firstChild,
-        node.nextSibling, node.boneId);
+        builder, node_name, &node_transform, node.level, node.parent,
+        node.firstChild, node.nextSibling, node.boneId);
 
 		nodes.push_back(node_offset);
   }
