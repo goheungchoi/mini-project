@@ -8,7 +8,7 @@ Texture2D texAlbedo : register(t0);
 Texture2D texNormal : register(t1);
 Texture2D texMetallicRoughness : register(t2);
 Texture2D texEmissive : register(t3);
-Texture2D texOpacity : register(t4);
+Texture2D texOcclusion : register(t4);
 //skybox
 TextureCube evnTexture : register(t5);
 Texture2D evnSpecularBRDF : register(t6);
@@ -185,10 +185,46 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     float2 IBLSpecularBRDF = evnSpecularBRDF.Sample(samClamp, float2(NdotV, roughness)).rg;
     float3 specularIBL = (F0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
         //더하기
-    ambientLighting += (IBLdiffuse + specularIBL)*0.5;
+    
+    ambientLighting += (IBLdiffuse + specularIBL)*0.2;
+    //ambientLighting += 0;
+    
+    
+    float4 positionShadow = deferredShadowPosition.Sample(samLinear, input.uv);
+    float currShadowDepth = positionShadow.z; // / positionShadow.w;
+    float2 uv = positionShadow.xy; // / positionShadow.w;
+    //y뒤집기
+    uv.y = -uv.y;
+    //-1~1 ->0~1
+    uv = uv * 0.5f + 0.5f;
+    //그림자 factor
+    float shadowFactor = 1.f;
+    //커버할수 있는 영역이 아니면 처리 x
+    if (uv.x >= 0.f && uv.x <= 1.f && uv.y >= 0.f && uv.y <= 1.f)
+    {
+        float2 offset[9] =
+        {
+            float2(-1, -1), float2(0, -1), float2(1, -1),
+                float2(-1, 0), float2(0, 0), float2(1, 0),
+                float2(-1, 1), float2(0, 1), float2(1, 1)
+        };
+        uint width, height, levels;
+        texShadow.GetDimensions(width, height);
+        float texelSize = 1.0 / width; //텍셀 크기
+        shadowFactor = 0.f;
+            [unroll]
+        for (int i = 0; i < 9; i++)
+        {
+            float2 sampleUV = uv + offset[i] * texelSize; //오프셋 계산
+                //sampleCmpLevelZero로 pcf샘플링
+            shadowFactor += texShadow.SampleCmpLevelZero(samComparison, sampleUV, currShadowDepth - 0.001);
 
+        }
+        shadowFactor = shadowFactor / 9.f;
+            
+    }
     float4 finalColor;
-    float4 temp = float4(float3(directLighting + ambientLighting), 1.f) + emissive;
+    float4 temp = float4(float3(directLighting*shadowFactor + ambientLighting), 1.f) + emissive;
     temp = pow(temp, 1.0 / 2.2);
     finalColor = float4(temp.rgb, 1.f);
     return finalColor;
@@ -213,8 +249,7 @@ DEFFERED_PS_OUT ps_main(PS_INPUT input)
     clip(albedo.a - alphaCutoff);
     output.AlbedoDepth.xyz = albedo;
     output.AlbedoDepth.a = depth;
-    //shadow 할때 ㄱㄱ
-    //output.ShadowPosition = 
+    output.ShadowPosition = input.positionShadow / input.positionShadow.w;
     float metalic = texMetallicRoughness.Sample(samAnisotropy, input.uv).r;
     float roughness = texMetallicRoughness.Sample(samAnisotropy, input.uv).g;
  
@@ -320,11 +355,18 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
         //mip map 레벨 구하기
     uint specularTextureLevels = querySpecularTextureLevels();
         //레벨에 따라 roughness를 곱해서 반사의 선명함 정도 구하기 -> roughness가0이면 제일 큰 해상도의 큐브맵 반사
-    float3 specularIrradiance = evnSpecularIBLTexture.SampleLevel(samAnisotropy, lightReflection, roughness* specularTextureLevels).rgb;
+    float3 specularIrradiance = evnSpecularIBLTexture.SampleLevel(samAnisotropy, lightReflection, roughness * specularTextureLevels).rgb;
         //look up table pbr은정적이므로 미리 계산된 텍스쳐로 uv좌표의 근사값을 사용
     float2 IBLSpecularBRDF = evnSpecularBRDF.Sample(samClamp, float2(NdotV, roughness)).rg;
     float3 specularIBL = (f0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
         //더하기
+    float4 ambientFactor = texOcclusion.Sample(samLinear, input.uv);
+    
+    if (length(ambientFactor) == 0.f)
+    {
+        ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
+    }
+    
     ambientLighting += (IBLdiffuse + specularIBL);
 
     float currShadowDepth = input.positionShadow.z / input.positionShadow.w;
