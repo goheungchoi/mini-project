@@ -7,6 +7,9 @@ using namespace physx;
 class PhyjixWorld;
 class RigidBody :  public IRigidBody
 {
+
+	using CollisionEvent = std::function<void(RigidBody* self, RigidBody* other)>;
+
 public:
 	RigidBody(PxPhysics* physics, const DirectX::SimpleMath::Vector3& position, const DirectX::SimpleMath::Vector3& size , ColliderShape shape , BOOL isStatic, PhyjixWorld* world);
 	~RigidBody();
