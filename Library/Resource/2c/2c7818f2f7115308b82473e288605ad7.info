@@ -1,0 +1,37 @@
+{
+    "uuid": "2c7818f2f7115308b82473e288605ad7",
+    "import_path": "Models\\Box\\Box.fbx",
+    "resource_type": "model",
+    "details": {
+        "name": "",
+        "nodes": [
+            {
+                "name": "RootNode",
+                "idx": 0,
+                "level": 0,
+                "parent": -1,
+                "first_child": 1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "Cube",
+                "idx": 1,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": [
+                    "Models\\Box\\Cube0.mesh"
+                ]
+            }
+        ],
+        "meshes": [
+            "Models\\Box\\Cube0.mesh"
+        ],
+        "materials": [
+            "Models\\Box\\Material0.mat"
+        ],
+        "textures": []
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "uuid": "c20fde7c917d583b87335b325cb78268",
+    "import_path": "Models\\Cylinder\\Cylinder0.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Cylinder0",
+        "bounding_box": [
+            [
+                -0.9951847195625305,
+                -0.9951846599578857,
+                -1.0000001192092896
+            ],
+            [
+                0.9951848387718201,
+                0.9951847195625305,
+                1.0
+            ]
+        ],
+        "num_vertices": 192,
+        "num_indices": 372,
+        "material": "Models\\Cylinder\\DefaultMaterial0.mat",
+        "bones": [],
+        "bone_weights": []
+    }
+}
