@@ -48,7 +48,7 @@ void GameApp::Initialize()
     _renderer->CreateMesh(meshHandle);
   });
   _camera = new Camera(1920, 1080);
-  _mainLight.direction = Vector4(0.f, 0.f, 1.f, 0.f);
+  _mainLight.direction = Vector4(0.f, -1.f, 1.f, 0.f);
   _mainLight.color = Vector4(1.f, 1.f, 1.f, 1.f);
   _mainLight.intensity = Vector4(1.f, 1.f, 1.f, 1.f);
 

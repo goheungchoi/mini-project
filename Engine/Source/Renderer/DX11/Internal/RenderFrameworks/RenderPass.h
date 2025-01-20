@@ -208,6 +208,7 @@ public:
     dc->PSSetShader(
         _pShaders.find("Quad")->second->shader.Get(), nullptr, 0);
     _pso->SetBackBuffer();
+    _shadow->SetDepthSRV();
     _deffered->QuadDraw();
     _deffered->ClearRenderTargets();
     //--------------------------------------------------------------------------------------//
