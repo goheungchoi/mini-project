@@ -143,7 +143,7 @@ public:
   void CreateMaterial(Device* device, MaterialData data)
   {
     alphaMode = data.alphaMode;
-    if (alphaMode == AlphaMode::kBlend||alphaMode==AlphaMode::kMask)
+    if (alphaMode == AlphaMode::kBlend || alphaMode == AlphaMode::kMask)
     {
       alphaCutoff = data.alphaCutoff;
     }
@@ -185,6 +185,17 @@ public:
       Texture* emissive =
           Texture::CreateSRV(device, AccessTextureData(data.emissiveTexture));
       _textures.push_back(emissive);
+    }
+    else
+    {
+      Texture* nullTex = Texture::NullSRV(device);
+      _textures.push_back(nullTex);
+    }
+    if (data.occlusionTexture != Handle::kInvalidHandle)
+    {
+      Texture* occlusion =
+          Texture::CreateSRV(device, AccessTextureData(data.occlusionTexture));
+      _textures.push_back(occlusion);
     }
     else
     {

@@ -16,8 +16,8 @@ private:
   // VARIABLE
   float _nearPlane = 7000.f;
   float _farPlane = 20000.f;
-  float _forwardDist = 3500.f;
-  float _upLookAtDist = 13000.f;
+  float _forwardDist = 0;
+  float _upLookAtDist = 9000;
 
 public:
   Matrix View;
@@ -56,7 +56,6 @@ public:
                        .Height = static_cast<float>(height),
                        .MinDepth = 0.f,
                        .MaxDepth = 1.f};
-   
   }
   ~ShadowPass() {}
 
@@ -101,12 +100,14 @@ public:
     float x = -right.Dot(Vector3(shadowPos));
     float y = -up.Dot(Vector3(shadowPos));
     float z = -forward.Dot(Vector3(shadowPos));
-    View = Matrix(right.x, up.x, forward.x, 0.0f, right.y, up.y, forward.y,
-                  0.0f, right.z, up.z, forward.z, 0.0f, x, y, z, 1.0f);
+    View = Matrix(
+      right.x, up.x, forward.x, 0.0f,
+      right.y, up.y, forward.y, 0.0f, 
+      right.z, up.z, forward.z, 0.0f,
+      x, y, z, 1.0f);
 
-    Projection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, 1,
+    Projection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV2, 1,
                                                    _nearPlane, _farPlane);
-    
   }
   void Prepare()
   {
@@ -115,7 +116,10 @@ public:
     dc->ClearDepthStencilView(_shadowDSV.Get(), D3D11_CLEAR_DEPTH, 1.f, 0);
     dc->OMSetRenderTargets(0, &nullrtv, _shadowDSV.Get());
     dc->RSSetViewports(1, &_shadowViewPort);
-    dc->PSSetShaderResources(9, 1,
-                                                  _shadowSRV.GetAddressOf());
+  }
+  void SetDepthSRV()
+  {
+    _device->GetImmContext()->PSSetShaderResources(9, 1,
+                                                   _shadowSRV.GetAddressOf());
   }
 };
