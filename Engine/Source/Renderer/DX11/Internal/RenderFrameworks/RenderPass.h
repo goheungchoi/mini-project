@@ -29,8 +29,8 @@ private:
   vector<map<pair<float, int>, MeshBuffer*, greater<std::pair<float, int>>>>
       _transparentMeshes;
   // 0 : single sided 1 : double sided
-  vector<std::vector<MeshBuffer*>> _opaqueMesh;
-  vector<MeshBuffer*> _shadowMesh;
+  vector<vector<MeshBuffer*>> _opaqueMesh;
+  vector<vector<MeshBuffer*>> _shadowMesh;
   SkyBox* _skyBox = nullptr;
   // Constant Buffer
   MeshConstantBuffer* _CB;
@@ -77,6 +77,9 @@ public:
             .GetAddressOf());
     dc->VSSetConstantBuffers(0, 1, _frameCB->_constantBuffer.GetAddressOf());
     dc->PSSetConstantBuffers(0, 1, _frameCB->_constantBuffer.GetAddressOf());
+    _transparentMeshes.resize(2);
+    _opaqueMesh.resize(2);
+    _shadowMesh.resize(2);
   }
   ~RenderPassManager()
   {
@@ -137,7 +140,10 @@ public:
 
     if (buff->flags & RenderPassType::kShadowPass)
     {
-      _shadowMesh.push_back(buff);
+      if (!buff->material->doubleSided)
+        _shadowMesh[0].push_back(buff);
+      else
+        _shadowMesh[1].push_back(buff);
     }
   }
   void ProcessPass()
@@ -151,7 +157,7 @@ public:
     dc->VSSetShader(_vShaders.find("Shadow")->second->shader.Get(), nullptr, 0);
     dc->PSSetShader(nullptr, nullptr, 0);
 
-    std::ranges::for_each(_opaqueMesh[0], [this, dc](MeshBuffer* buffer) {
+    std::ranges::for_each(_shadowMesh[0], [this, dc](MeshBuffer* buffer) {
       dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
                              &(buffer->stride), &(buffer->offset));
       dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
@@ -160,7 +166,7 @@ public:
       dc->DrawIndexed(buffer->nIndices, 0, 0);
     });
 
-    std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& pair) {
+    /*std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& pair) {
       const auto& [z, buffer] = pair;
 
       dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
@@ -169,9 +175,9 @@ public:
       Constant::World world = {buffer->world.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
       dc->DrawIndexed(buffer->nIndices, 0, 0);
-    });
+    });*/
     _pso->SetCullNone();
-    std::ranges::for_each(_opaqueMesh[1], [this, dc](MeshBuffer* buffer) {
+    std::ranges::for_each(_shadowMesh[1], [this, dc](MeshBuffer* buffer) {
       dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
                              &(buffer->stride), &(buffer->offset));
       dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
@@ -180,7 +186,7 @@ public:
       dc->DrawIndexed(buffer->nIndices, 0, 0);
     });
 
-    std::ranges::for_each(_transparentMeshes[1], [this, dc](const auto& pair) {
+    /*std::ranges::for_each(_transparentMeshes[1], [this, dc](const auto& pair) {
       const auto& [z, buffer] = pair;
 
       dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
@@ -189,7 +195,7 @@ public:
       Constant::World world = {buffer->world.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
       dc->DrawIndexed(buffer->nIndices, 0, 0);
-    });
+    });*/
     //---------------------------------------,-----------------------------------------------//
     // Deferred pass
     // skybox
@@ -278,9 +284,14 @@ public:
     // wireFrame pass -> Forward rendering
     
     // 처리후 클리어
-    _shadowMesh.clear();
-    _opaqueMesh.clear();
-    _transparentMeshes.clear();
+    std::ranges::for_each(_opaqueMesh,
+                          [](std::vector<MeshBuffer*>& vec) { vec.clear(); });
+    std::ranges::for_each(_transparentMeshes,
+        [](map<pair<float, int>, MeshBuffer*, greater<std::pair<float, int>>>&
+               map) { map.clear(); });
+    std::ranges::for_each(_shadowMesh,
+                          [](std::vector<MeshBuffer*>& vec) { vec.clear(); });
+
     // max값 초기화
     max = std::numeric_limits<int>::max();
   }

@@ -84,6 +84,8 @@ public:
     // 2.Rasterizer Start
     // defulat
     _rsDefault = new Rasterizer;
+    _rsCullNone = new Rasterizer;
+    _rsWireFrame = new Rasterizer;
     _rsDefault->viewPort = {.TopLeftX = 0.f,
                      .TopLeftY = 0.f,
                      .Width = static_cast<float>(width),

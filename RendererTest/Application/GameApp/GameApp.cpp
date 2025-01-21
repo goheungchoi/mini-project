@@ -36,6 +36,7 @@ void GameApp::Initialize()
       "Textures/BakerDiffuseIrradiance.dds", "Textures/BakerSpecularIBL.dds");
   std::ranges::for_each(modelData.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
+    _renderer->AddShadow(meshHandle);
   });
   std::ranges::for_each(modelData2.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
@@ -46,6 +47,7 @@ void GameApp::Initialize()
   });
   std::ranges::for_each(modelData4.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
+    _renderer->AddShadow(meshHandle);
   });
   _camera = new Camera(1920, 1080);
   _mainLight.direction = Vector4(0.f, -1.f, 1.f, 0.f);
