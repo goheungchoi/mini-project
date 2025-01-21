@@ -3,12 +3,34 @@
 #include "Core/Input/InputSystem.h"
 #include "ResourceManager/ResourceManager.h"
 #include "WindowManager/WindowManager.h"
+
+#include "GameFramework/World/World.h"
+#include "GameFramework/Level/Level.h"
+
+#include "GameFramework/Components/Animation/Animation.h"
+#include "GameFramework/Components/Animation/AnimationState.h"
+#include "GameFramework/Components/Animation/AnimatorComponent.h"
+
 #define ClientTest
 
 static ModelHandle modelHandle;
 static ModelHandle modelHandle2;
 static ModelHandle modelHandle3;
 static ModelHandle modelHandle4;
+
+static World* myWorld;
+static Level* myLevel;
+static ModelHandle skinningTest;
+
+static GameObject* root;
+
+static Animation* anim1;
+static AnimationState* animState1;
+static AnimatorComponent* animComponent1;
+
+static SkeletalMeshComponent* animSkeletal1;
+static SkeletalMeshComponent* animSkeletal2;
+
 void GameApp::Initialize()
 {
 #ifdef ClientTest
@@ -31,6 +53,31 @@ void GameApp::Initialize()
 
 
   _renderer->Init_Win32(1280, 720, nullptr, &_hwnd);
+
+  myWorld = new World();
+  myLevel = myWorld->CreateLevel<Level>("My Level");
+
+  skinningTest = LoadModel("Models\\SkinningTest\\SkinningTest.gltf");
+
+  root = myLevel->CreateGameObjectFromModel<GameObject>("Models\\SkinningTest\\SkinningTest.gltf");
+
+  animSkeletal1 = (*root->childrens.begin())->GetComponent<SkeletalMeshComponent>();
+  animSkeletal2 = (*std::next(root->childrens.begin()))->GetComponent<SkeletalMeshComponent>();
+
+  const ModelData& skinningData = AccessModelData(skinningTest);
+
+  for (auto animHandle : skinningData.animations)
+  {
+    anim1 = new Animation(animHandle, true);
+  }
+
+  animState1 = new AnimationState(anim1);
+
+  animComponent1 = root->CreateComponent<AnimatorComponent>();
+  animComponent1->BineSkeleton(skinningData.skeleton);
+
+  animComponent1->SetState(animState1);
+
 #ifdef ClientTest
 #endif // RenderTest
   modelHandle = LoadModel("Models\\FlightHelmet\\FlightHelmet.gltf");
@@ -65,6 +112,7 @@ void GameApp::Initialize()
   _camera->SetPosition({4.367269, -0.90219879, -40.523827, +76.853645});
   eye = {4.367269, -0.90219879, -40.523827, +76.853645};
   at = Vector4::Zero;
+  
 }
 
 void GameApp::Execute()
@@ -81,11 +129,16 @@ void GameApp::Shutdown()
   Super::Shutdown();
 }
 
-void GameApp::FixedUpdate(float deltaTime) {}
+void GameApp::FixedUpdate(float deltaTime) {
+  animComponent1->UpdateAnimation(deltaTime);
+
+  animSkeletal1->UpdateBoneTransforms();
+  animSkeletal2->UpdateBoneTransforms();
+}
 
 void GameApp::Update(float deltaTime)
 {
-
+  // _camera->LookAt({10, 0, 0, 1});
   // 'Q' ´©¸£¸é Down
   if (INPUT->IsKeyPress(Key::Q))
   {

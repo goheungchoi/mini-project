@@ -194,7 +194,7 @@ class Animation
 public:
   bool isLoop;
 
-  Animation(AnimationHandle handle, bool isLoop) : isLoop{isLoop}
+  Animation(AnimationHandle handle, bool isLoop = false) : isLoop{isLoop}
   {
     data = &AccessAnimationData(handle);
 
@@ -280,9 +280,12 @@ public:
 
 		// The root node is always identity.
 		finalBoneTransforms[0] = XMMatrixIdentity();
+    // Update the bone transforms of the skeleton
 		for (uint32_t i = 1; i < skeleton->nodes.size(); ++i)
     {
       const SkeletonNode& node = skeleton->nodes[i];
+      if (node.boneId < 0)
+        continue;
 
 			// Check if this bone is in the current animation.
       XMMATRIX nodeTransform{node.transform};
@@ -295,8 +298,9 @@ public:
 
 			// Hierarchical transformation.
 			const SkeletonNode& parentNode = skeleton->nodes[node.parent];
-      XMMATRIX globalTransform =
-          nodeTransform * finalBoneTransforms[parentNode.boneId];
+      XMMATRIX globalTransform = nodeTransform;
+      if (parentNode.boneId >= 0)
+        globalTransform *= finalBoneTransforms[parentNode.boneId];
 
 			// Update it's final bone transformation.
 			finalBoneTransforms[node.boneId] =

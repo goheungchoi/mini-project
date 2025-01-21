@@ -14,33 +14,47 @@ protected:
   class World* world = nullptr;
 
 public:
+  std::string tag;
   std::string name;
 	
   GameObject* parent;
-  std::vector<GameObject*> childrens;
+  std::list<GameObject*> childrens;
 
 	using ComponentRegistry = std::unordered_map<std::type_index, class ComponentBase*>;
   ComponentRegistry components;
 
 	/* Properties */
   bool bNeedTransformUpdate{false};
-	class TransformComponent* transform{nullptr};
+	TransformComponent* transform{nullptr};
 
 	EStatus status{EStatus_Awake};
   bool isActive{false};
 
 	GameObject(class World* world) : world{world} {
-    CreateComponent<TransformComponent>();
+    transform = CreateComponent<TransformComponent>();
 	}
 
 	void SetWorld(class World* world) { this->world = world; }
-  class World* GetWorld() { return world; }
+  class World* GetWorld() const { return world; }
+
+  void SetTag(const std::string& tag) { this->tag = tag; }
+  const std::string& GetTag() const { return tag; }
 
 	void SetName(const std::string& name) { this->name = name; }
   const std::string& GetName() const { return name; }
 
-	void AddChild(GameObject* gameObject);
-  void RemoveChild(GameObject* gameObject);
+  void AddChild(GameObject* gameObject)
+  {
+    gameObject->parent = this;
+    childrens.push_back(gameObject);
+    transform->AddChild(gameObject->transform);
+  }
+  void RemoveChild(GameObject* gameObject)
+  {
+    gameObject->parent = nullptr;
+    childrens.remove(gameObject);
+    transform->RemoveChild(gameObject->transform);
+  }
 
 	void SetActive(bool active)
   {

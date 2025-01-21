@@ -3,6 +3,8 @@
 #include "WindowManager/WindowManager.h"
 #include "Core/Input/InputSystem.h"
 
+constexpr float kFixedRate{1.f / 60.f};
+
 void GameEngine::Initialize()
 {
     // 윈도우 크기 조정 이벤트 관련 함수들 설정
@@ -111,6 +113,7 @@ void GameEngine::Run()
     else
     {
       TimeSystem::Update();
+      FixedUpdate(kFixedRate);
       InputSystem::GetInstance()->Update(TimeSystem::GetDeltaTime());
       Update(TimeSystem::GetDeltaTime());
       Render();

@@ -114,6 +114,26 @@ public:
   }
   void RotateAroundYAxis(float degrees) { yaw += XMConvertToRadians(degrees); }
 
+  void LookAt(XMVECTOR point) {
+    // Calculate the direction vector from the camera to the target point
+    XMVECTOR direction = XMVectorSubtract(point, position);
+    direction = XMVector3Normalize(direction);
+
+    // Extract the components of the direction vector
+    float dirX = XMVectorGetX(direction);
+    float dirY = XMVectorGetY(direction);
+    float dirZ = XMVectorGetZ(direction);
+
+    // Calculate yaw (rotation around the Y-axis)
+    yaw = atan2f(dirX, dirZ);
+
+    // Calculate pitch (rotation around the X-axis)
+    pitch = asinf(-dirY);
+
+    // Roll remains zero in most LookAt implementations
+    roll = 0.0f;
+  }
+
   XMMATRIX GetViewTransform()
   {
     // Rotation
