@@ -2,90 +2,106 @@
 
 #include "GameFramework/Components/ComponentBase.h"
 
+
+#include "AnimationState.h"
+
 class AnimatorComponent : public ComponentBase
 {
-//  const AnimationData* _currentAnimation;
-//  const SkeletonData* skeleton{nullptr};
-//  std::vector<XMMATRIX> _finalBoneTransforms;
-//
-//public:
-//  AnimatorComponent(class GameObject* owner) : ComponentBase{owner} {}
-//
-//	void BineSkeleton(const std::string& skeletonPath) {
-//    auto skeletonHandle = LoadSkeleton(skeletonPath);
-//    skeleton = &AccessSkeletonData(skeletonHandle);
-//
-//		// TODO: _finalBoneTransforms
-//	}
-//
-//	void UnbindSkeleton() { skeleton = nullptr; }
-//
-//	
-//	void UpdateAnimation(float dt)
-//  {
-//    _deltaTime = dt;
-//    if (_currentAnimation)
-//    {
-//      _currentTime += _currentAnimation->GetTicksPerSecond() * dt;
-//      _currentTime = fmod(_currentTime, _currentAnimation->GetDuration());
-//      CalculateBoneTransform(&_currentAnimation->GetRootNode(),
-//                             XMMatrixIdentity());
-//    }
-//  }
-//
-//  void PlayAnimation(Animation* animation)
-//  {
-//    _currentAnimation = animation;
-//    _currentTime = 0.f;
-//  }
-//
-//		/**
-//   * @brief Recursively find the world transformations of all bones.
-//   * @param node Bone hierarchy node
-//   * @param parentTransform
-//   */
-//  void CalculateBoneTransform(const AnimationNode* node,
-//                              XMMATRIX parentTransform)
-//  {
-//    std::string nodeName = node->name;
-//    XMMATRIX nodeTransform = node->transform; // Bone's original local transform
-//
-//    // Check if this bone is in the current animation;
-//    // engaged in this animation by finding it from _bones array of animation
-//    Bone* bone = _currentAnimation->FindBone(nodeName);
-//    if (bone)
-//    {
-//      // Update the bone's local transform
-//      bone->Update(_currentTime);
-//      // Get the node's updated local transform
-//      nodeTransform = bone->GetLocalTransform();
-//    }
-//
-//    // Hierarchical transformation
-//    XMMATRIX globalTransform = nodeTransform * parentTransform;
-//
-//    // Store the final bone transform
-//    const auto& boneInfoMap = _currentAnimation->GetBoneInfoMap();
-//    auto it = boneInfoMap.find(nodeName);
-//    if (it != boneInfoMap.end())
-//    {
-//      const BoneInfo& boneInfo = it->second;
-//      int index = boneInfo.id;
-//      XMMATRIX offset = boneInfo.offset;
-//      // Apply the bone offset from the origin.
-//      _finalBoneTransforms[index] = XMMatrixTranspose(offset * globalTransform);
-//    }
-//
-//    // Recursively calculate the child bones' model transform.
-//    for (int i = 0; i < node->numChildren; ++i)
-//    {
-//      CalculateBoneTransform(&node->children[i], globalTransform);
-//    }
-//  }
-//
-//  const std::vector<XMMATRIX>& GetFinalBoneTransforms() const
-//  {
-//    return _finalBoneTransforms;
-//  }
+  using VariableName = std::string;
+  using VariableValue = std::any;
+  using AnimationVariables = std::unordered_map<VariableName, std::any>;
+  using StateRegistry = std::vector<AnimationState*>;
+
+  AnimationVariables _variables;
+  StateRegistry _animationStates;
+  AnimationState* _currState;
+
+  Animation* _currentAnimation{nullptr};
+
+public:
+  // Skeletal animation
+  const SkeletonData* skeleton{nullptr};
+  std::vector<XMMATRIX> finalBoneTransforms;
+
+  AnimatorComponent(class GameObject* owner) : ComponentBase{owner} {}
+
+	void BineSkeleton(SkeletonHandle skeletonHandle) {
+    skeleton = &AccessSkeletonData(skeletonHandle);
+
+		finalBoneTransforms.resize(skeleton->bones.size());
+	}
+
+	void UnbindSkeleton() { skeleton = nullptr; }
+
+	
+	void UpdateAnimation(float dt);
+
+  /*void PlayAnimation(Animation* animation)
+  {
+    _currentAnimation = animation;
+    _currentTime = 0.f;
+  }*/
+
+	//
+  void Toggle();
+  void SetState(AnimationState* state);
+
+  // Animation Controller Variable Modifiers
+  template <typename T>
+  bool DeclareVariable(VariableName var, const T& init = T{})
+  {
+    auto it = _variables.find(var);
+    if (it != _variables.end())
+    {
+      return false;
+    }
+    _variables.insert({var, std::any(init)});
+    return true;
+  }
+
+  template <typename T>
+  bool SetVariable(VariableName var, const T& val, bool toggle = false)
+  {
+    // Check if the variable exists first.
+    auto it = _variables.find(var);
+    if (it == _variables.end())
+    { // Variable not found
+      // TODO: need to log.
+      return false;
+    }
+
+    // Change the value of the variable
+    try
+    { // Type check
+      T& v = std::any_cast<T&>(it->second);
+      v = val;
+
+      // If toggle is true, the current state reacts to
+      // the variable changes.
+      if (toggle)
+        Toggle();
+      return true;
+    }
+    catch (const std::bad_any_cast& e)
+    {
+      // TODO: need to log.
+      return false;
+    }
+  }
+
+  template <typename T>
+  T& GetVariable(VariableName var)
+  {
+    // Check if the variable exists.
+    auto it = _variables.find(var);
+    if (it == _variables.end())
+    {
+      throw std::invalid_argument("Animator: Variable doesn't exist!");
+    }
+
+    // Type check
+    T& v = std::any_cast<T&>(it->second); // < reference
+    return v;
+  }
 
 };

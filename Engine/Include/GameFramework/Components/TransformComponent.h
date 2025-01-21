@@ -9,6 +9,7 @@
 class TransformComponent : public ComponentBase
 {
 public:
+  // TODO: Transform hierarchy
   TransformComponent* parent;
   std::vector<TransformComponent*> children;
 

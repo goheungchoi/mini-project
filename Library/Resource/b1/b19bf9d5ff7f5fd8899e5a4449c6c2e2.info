@@ -1,0 +1,27 @@
+{
+    "uuid": "b19bf9d5ff7f5fd8899e5a4449c6c2e2",
+    "import_path": "Models\\Box\\Material0.mat",
+    "resource_type": "model",
+    "details": {
+        "name": "Material0",
+        "albedo_factor": [
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "albedo_texture": "",
+        "metallic_factor": 0.0,
+        "roughness_factor": 0.5,
+        "metallic_roughness_texture": "",
+        "normal_texture": "",
+        "occlusion_texture": "",
+        "emissive_factor": 0.0,
+        "emissive_texture": "",
+        "alpha_mode": "AlphaMode_kOpaque",
+        "alpha_cutoff": 0.0,
+        "double_sided": false
+    }
+}

@@ -35,7 +35,7 @@ struct KeyScaling
   float timeStamp;
 };
 
-struct AnimationChannel
+struct AnimationChannelData
 {
   int boneId; // The id of the bone if it's a skeletal animation's key frame. Otherwise, -1.
   std::string nodeName;	// The name of the node (or bone) influenced by this key frame.
@@ -57,6 +57,6 @@ struct AnimationData
 
 	XMMATRIX globalInverseTransform;
 
-  std::vector<AnimationChannel> animationChannels;
+  std::vector<AnimationChannelData> animationChannels;
 };
 

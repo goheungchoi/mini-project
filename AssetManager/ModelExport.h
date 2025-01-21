@@ -111,6 +111,7 @@ class ModelExporter
   struct SkeletonNode
   {
     std::string name;
+    aiMatrix4x4 transform;
     
 		int level;
     int parent;

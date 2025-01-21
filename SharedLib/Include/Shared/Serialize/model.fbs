@@ -73,6 +73,7 @@ table Bone {
 
 table SkeletonNode {
   name: string;
+  transform: Matrix;
 
   level: int;
   parent: int;
