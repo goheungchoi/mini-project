@@ -88,7 +88,7 @@ void DX11Renderer::DrawMesh(MeshHandle handle)
   {
     throw std::exception("buffer not registered");
   }
-  _passMgr->ClassfyPass(buffer->second);
+  _passMgr->ClassifyPass(buffer->second);
 }
 
 void DX11Renderer::EndDraw() {}
@@ -281,14 +281,21 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                       specularIBLPath);
 }
 #ifdef _DEBUG
-void DX11Renderer::DrawDebugSphere() 
+void DX11Renderer::DrawDebugSphere(Matrix world, Color color) 
 {
-  
+  _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Sphere, world, color);
 }
 
-void DX11Renderer::DrawDebugBox() {}
+void DX11Renderer::DrawDebugBox(Matrix world, Color color)
+{
+  _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Box, world, color);
+}
 
-void DX11Renderer::DrawDebugCylinder() {}
+void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
+{
+  _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
+}
+
 #endif
 void DX11Renderer::BeginImGuiDraw()
 {

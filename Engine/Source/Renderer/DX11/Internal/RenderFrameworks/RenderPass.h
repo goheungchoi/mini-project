@@ -6,6 +6,7 @@
 #include "../RenderFrameworks/Shader.h"
 #include "../RenderFrameworks/ShadowPass.h"
 #include "../Resources/ConstantBuffer.h"
+#include "../Resources/GeometryPrimitive.h"
 #include "../Resources/PipeLineState.h"
 #include "../Resources/Sampler.h"
 #include "../Resources/SkyBox.h"
@@ -32,6 +33,7 @@ private:
   vector<vector<MeshBuffer*>> _opaqueMesh;
   vector<vector<MeshBuffer*>> _shadowMesh;
   SkyBox* _skyBox = nullptr;
+  GeometryPrimitive* _geometry = nullptr;
   // Constant Buffer
   MeshConstantBuffer* _CB;
   FrameConstantBuffer* _frameCB;
@@ -66,6 +68,7 @@ public:
     _shadow = new ShadowPass(_device, 8192, 8192);
     _deffered = new DefferedPass(width, height, _device);
     _skyBox = new SkyBox(_device);
+    _geometry = new GeometryPrimitive(_device);
     ID3D11DeviceContext* dc = _device->GetImmContext();
     dc->VSSetConstantBuffers(
         1, 1,
@@ -99,6 +102,7 @@ public:
     SAFE_RELEASE(_shadow);
     SAFE_RELEASE(_pso);
     SAFE_RELEASE(_skyBox);
+    SAFE_RELEASE(_geometry);
   }
 
 public:
@@ -112,7 +116,7 @@ public:
   {
     _mainLight = mainLight;
   }
-  void ClassfyPass(MeshBuffer* buff)
+  void ClassifyPass(MeshBuffer* buff)
   {
     if (buff->flags & RenderPassType::kOpaquePass)
     {
@@ -152,145 +156,23 @@ public:
     _pso->ClearBackBufferDSV();
     _pso->SetMainRS();
     // Shadow pass
-    _shadow->Prepare();
-    dc->IASetInputLayout(_vShaders.find("Shadow")->second->layout.Get());
-    dc->VSSetShader(_vShaders.find("Shadow")->second->shader.Get(), nullptr, 0);
-    dc->PSSetShader(nullptr, nullptr, 0);
-
-    std::ranges::for_each(_shadowMesh[0], [this, dc](MeshBuffer* buffer) {
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
-      _CB->UpdateContantBuffer(world, MeshCBType::World);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
-    });
-
-    /*std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& pair) {
-      const auto& [z, buffer] = pair;
-
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
-      _CB->UpdateContantBuffer(world, MeshCBType::World);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
-    });*/
-    _pso->SetCullNone();
-    std::ranges::for_each(_shadowMesh[1], [this, dc](MeshBuffer* buffer) {
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
-      _CB->UpdateContantBuffer(world, MeshCBType::World);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
-    });
-
-    /*std::ranges::for_each(_transparentMeshes[1], [this, dc](const auto& pair) {
-      const auto& [z, buffer] = pair;
-
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
-      _CB->UpdateContantBuffer(world, MeshCBType::World);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
-    });*/
-    //---------------------------------------,-----------------------------------------------//
+    this->DrawShadow(dc);
+    //--------------------------------------------------------------------------------------//
     // Deferred pass
-    // skybox
-    _pso->SetBlendOnEnable(false);
-    _pso->SetMainViewPort();
-    _pso->SetMainRS();
-    _deffered->Prepare(_pso->_backBuffer);
-    dc->IASetInputLayout(_vShaders.find("SkyBox")->second->layout.Get());
-    dc->VSSetShader(_vShaders.find("SkyBox")->second->shader.Get(), nullptr, 0);
-    dc->PSSetShader(_pShaders.find("SkyBox")->second->shader.Get(), nullptr, 0);
-    Constant::World world = {_skyBox->GetMesh()->world.Transpose()};
-    _CB->UpdateContantBuffer(world, MeshCBType::World);
-    _skyBox->Render();
-    // Deferred meshes
-    dc->IASetInputLayout(_vShaders.find("Default")->second->layout.Get());
-    dc->VSSetShader(_vShaders.find("Default")->second->shader.Get(), nullptr,
-                    0);
-    dc->PSSetShader(_pShaders.find("Deffered")->second->shader.Get(), nullptr,
-                    0);
-    std::ranges::for_each(_opaqueMesh[0], [this, dc](MeshBuffer* buffer) {
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
-      _CB->UpdateContantBuffer(world, MeshCBType::World);
-      Constant::PixelData data = {.alphaCutoff = buffer->material->alphaCutoff};
-      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
-      buffer->material->PSSetResourceViews(_device);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
-    });
-    _pso->SetCullNone();
-    std::ranges::for_each(_opaqueMesh[1], [this, dc](MeshBuffer* buffer) {
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
-      _CB->UpdateContantBuffer(world, MeshCBType::World);
-      Constant::PixelData data = {.alphaCutoff = buffer->material->alphaCutoff};
-      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
-      buffer->material->PSSetResourceViews(_device);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
-    });
-    _pso->ClearBackBufferRTV();
-    _pso->TurnZBufferOff();
-    dc->IASetInputLayout(_vShaders.find("Quad")->second->layout.Get());
-    dc->VSSetShader(_vShaders.find("Quad")->second->shader.Get(), nullptr, 0);
-    dc->PSSetShader(_pShaders.find("Quad")->second->shader.Get(), nullptr, 0);
-    _pso->SetBackBuffer();
-    _shadow->SetDepthSRV();
-    _deffered->QuadDraw();
-    _deffered->ClearRenderTargets();
-    //--------------------------------------------------------------------------------------//
-    // Transparent pass -> Forward rendering
-    _pso->SetBlendOnEnable(true);
-    _pso->SetMainRS();
-    dc->IASetInputLayout(_vShaders.find("Default")->second->layout.Get());
-    dc->VSSetShader(_vShaders.find("Default")->second->shader.Get(), nullptr,
-                    0);
-    dc->PSSetShader(_pShaders.find("Transparency")->second->shader.Get(),
-                    nullptr, 0);
-    _pso->TurnZBufferOn();
-    std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& pair) {
-      const auto& [z, buffer] = pair;
+    this->DrawDeffered(dc);
 
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
-      _CB->UpdateContantBuffer(world, MeshCBType::World);
-      buffer->material->PSSetResourceViews(_device);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
-    });
-    _pso->SetCullNone();
-    std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& pair) {
-      const auto& [z, buffer] = pair;
-
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
-      _CB->UpdateContantBuffer(world, MeshCBType::World);
-      buffer->material->PSSetResourceViews(_device);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
-    });
     //--------------------------------------------------------------------------------------//
-    // wireFrame pass -> Forward rendering
-    
+    // Transparent pass -> Forward renderin
+    this->DrawTransparency(dc);
+
+//--------------------------------------------------------------------------------------//
+// wireFrame pass -> Forward rendering
+#ifdef _DEBUG
+    this->DrawGeometryPrimitveWireFrame(dc);
+#endif
+
     // 처리후 클리어
-    std::ranges::for_each(_opaqueMesh,
-                          [](std::vector<MeshBuffer*>& vec) { vec.clear(); });
-    std::ranges::for_each(_transparentMeshes,
-        [](map<pair<float, int>, MeshBuffer*, greater<std::pair<float, int>>>&
-               map) { map.clear(); });
-    std::ranges::for_each(_shadowMesh,
-                          [](std::vector<MeshBuffer*>& vec) { vec.clear(); });
+    this->Clear();
 
     // max값 초기화
     max = std::numeric_limits<int>::max();
@@ -367,6 +249,12 @@ public:
     macros = {{"SkyBox", "1"}, {nullptr, nullptr}};
     _pShaders.insert(
         {"SkyBox", _compiler->CompilePixelShader(macros, "skybox_ps_main")});
+#ifdef _DEBUG
+    macros.clear();
+    macros = {{"WireFrame", "1"}, {nullptr, nullptr}};
+    _pShaders.insert({"WireFrame", _compiler->CompilePixelShader(
+                                       macros, "wire_frame_ps_main")});
+#endif
   }
   void CreateSamplers()
   {
@@ -426,6 +314,32 @@ public:
     // SWTODO : _shadow ->update 변수 처리하기.
     _shadow->UpdateVarialbe();
   }
+
+private:
+  vector<pair<Matrix, Color>> _spheres;
+  vector<pair<Matrix, Color>> _boxes;
+  vector<pair<Matrix, Color>> _cylinders;
+
+public:
+  void ClassifyGeometryPrimitive(Geometry::Type type, Matrix world, Color color)
+  {
+    switch (type)
+    {
+    case Geometry::Type::Box:
+      _boxes.push_back({world, color});
+      break;
+    case Geometry::Type::Sphere:
+      _spheres.push_back({world, color});
+      break;
+    case Geometry::Type::Cylinder:
+      _cylinders.push_back({world, color});
+      break;
+    case Geometry::Type::End:
+      break;
+    default:
+      break;
+    }
+  }
 #endif
 
 private:
@@ -435,5 +349,183 @@ private:
     sam->type = type;
     _device->GetDevice()->CreateSamplerState(&desc, sam->state.GetAddressOf());
     _samplers.push_back(sam);
+  }
+#ifdef _DEBUG
+  void DrawGeometryPrimitveWireFrame(ID3D11DeviceContext* dc)
+  {
+    _pso->SetWireFrame();
+    dc->PSSetShader(_pShaders["WireFrame"]->shader.Get(), nullptr, 0);
+    // box
+    dc->IASetVertexBuffers(
+        0, 1, _geometry->box.buffer->vertexBuffer.GetAddressOf(),
+        &(_geometry->box.buffer->stride), &(_geometry->box.buffer->offset));
+    dc->IASetIndexBuffer(_geometry->box.buffer->indexBuffer.Get(),
+                         DXGI_FORMAT_R32_UINT, 0);
+    std::ranges::for_each(_boxes, [this, dc](const auto& pair) {
+      const auto& [first, second] = pair;
+      Constant::World world = {first.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {.color = second};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
+      dc->DrawIndexed(_geometry->box.buffer->nIndices, 0, 0);
+    });
+    // sphere
+    dc->IASetVertexBuffers(
+        0, 1, _geometry->sphere.buffer->vertexBuffer.GetAddressOf(),
+        &(_geometry->sphere.buffer->stride),
+        &(_geometry->sphere.buffer->offset));
+    dc->IASetIndexBuffer(_geometry->sphere.buffer->indexBuffer.Get(),
+                         DXGI_FORMAT_R32_UINT, 0);
+    std::ranges::for_each(_spheres, [this, dc](const auto& pair) {
+      const auto& [first, second] = pair;
+      Constant::World world = {first.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {.color = second};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
+      dc->DrawIndexed(_geometry->sphere.buffer->nIndices, 0, 0);
+    });
+    // cylinder
+    dc->IASetVertexBuffers(
+        0, 1, _geometry->cylinder.buffer->vertexBuffer.GetAddressOf(),
+        &(_geometry->cylinder.buffer->stride),
+        &(_geometry->cylinder.buffer->offset));
+    dc->IASetIndexBuffer(_geometry->cylinder.buffer->indexBuffer.Get(),
+                         DXGI_FORMAT_R32_UINT, 0);
+    std::ranges::for_each(_cylinders, [this, dc](const auto& pair) {
+      const auto& [first, second] = pair;
+      Constant::World world = {first.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {.color = second};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
+      dc->DrawIndexed(_geometry->cylinder.buffer->nIndices, 0, 0);
+    });
+  }
+#endif
+
+  void DrawShadow(ID3D11DeviceContext* dc)
+  {
+    _shadow->Prepare();
+    dc->IASetInputLayout(_vShaders["Shadow"]->layout.Get());
+    dc->VSSetShader(_vShaders["Shadow"]->shader.Get(), nullptr, 0);
+    dc->PSSetShader(nullptr, nullptr, 0);
+
+    std::ranges::for_each(_shadowMesh[0], [this, dc](MeshBuffer* buffer) {
+      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
+                             &(buffer->stride), &(buffer->offset));
+      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {buffer->world.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      dc->DrawIndexed(buffer->nIndices, 0, 0);
+    });
+    _pso->SetCullNone();
+    std::ranges::for_each(_shadowMesh[1], [this, dc](MeshBuffer* buffer) {
+      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
+                             &(buffer->stride), &(buffer->offset));
+      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {buffer->world.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      dc->DrawIndexed(buffer->nIndices, 0, 0);
+    });
+  }
+
+  void DrawDeffered(ID3D11DeviceContext* dc)
+  {
+    // skybox
+    _pso->SetBlendOnEnable(false);
+    _pso->SetMainViewPort();
+    _pso->SetMainRS();
+    _deffered->Prepare(_pso->_backBuffer);
+    dc->IASetInputLayout(_vShaders["SkyBox"]->layout.Get());
+    dc->VSSetShader(_vShaders["SkyBox"]->shader.Get(), nullptr, 0);
+    dc->PSSetShader(_pShaders["SkyBox"]->shader.Get(), nullptr, 0);
+    Constant::World world = {_skyBox->GetMesh()->world.Transpose()};
+    _CB->UpdateContantBuffer(world, MeshCBType::World);
+    _skyBox->Render();
+    // Deferred meshes
+    dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
+    dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
+    dc->PSSetShader(_pShaders["Deffered"]->shader.Get(), nullptr, 0);
+    std::ranges::for_each(_opaqueMesh[0], [this, dc](MeshBuffer* buffer) {
+      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
+                             &(buffer->stride), &(buffer->offset));
+      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {buffer->world.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {.alphaCutoff = buffer->material->alphaCutoff};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
+      buffer->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(buffer->nIndices, 0, 0);
+    });
+    _pso->SetCullNone();
+    std::ranges::for_each(_opaqueMesh[1], [this, dc](MeshBuffer* buffer) {
+      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
+                             &(buffer->stride), &(buffer->offset));
+      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {buffer->world.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {.alphaCutoff = buffer->material->alphaCutoff};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
+      buffer->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(buffer->nIndices, 0, 0);
+    });
+    _pso->ClearBackBufferRTV();
+    _pso->TurnZBufferOff();
+    dc->IASetInputLayout(_vShaders["Quad"]->layout.Get());
+    dc->VSSetShader(_vShaders["Quad"]->shader.Get(), nullptr, 0);
+    dc->PSSetShader(_pShaders["Quad"]->shader.Get(), nullptr, 0);
+    _pso->SetBackBuffer();
+    _shadow->SetDepthSRV();
+    _deffered->QuadDraw();
+    _deffered->ClearRenderTargets();
+  }
+
+  void DrawTransparency(ID3D11DeviceContext* dc)
+  {
+    _pso->SetBlendOnEnable(true);
+    _pso->SetMainRS();
+    dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
+    dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
+    dc->PSSetShader(_pShaders["Transparency"]->shader.Get(), nullptr, 0);
+    _pso->TurnZBufferOn();
+    std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& pair) {
+      const auto& [z, buffer] = pair;
+
+      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
+                             &(buffer->stride), &(buffer->offset));
+      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {buffer->world.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      buffer->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(buffer->nIndices, 0, 0);
+    });
+    _pso->SetCullNone();
+    std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& pair) {
+      const auto& [z, buffer] = pair;
+
+      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
+                             &(buffer->stride), &(buffer->offset));
+      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {buffer->world.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      buffer->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(buffer->nIndices, 0, 0);
+    });
+  }
+
+  void Clear()
+  {
+    std::ranges::for_each(_opaqueMesh,
+                          [](std::vector<MeshBuffer*>& vec) { vec.clear(); });
+    std::ranges::for_each(
+        _transparentMeshes,
+        [](map<pair<float, int>, MeshBuffer*, greater<std::pair<float, int>>>&
+               map) { map.clear(); });
+    std::ranges::for_each(_shadowMesh,
+                          [](std::vector<MeshBuffer*>& vec) { vec.clear(); });
+#ifdef _DEBUG
+    _spheres.clear();
+    _boxes.clear();
+    _cylinders.clear();
+#endif
   }
 };
