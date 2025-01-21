@@ -142,6 +142,7 @@
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="ICharacterController.h" />
+    <ClInclude Include="ICollisionEvent.h" />
     <ClInclude Include="IPhyjixEngine.h" />
     <ClInclude Include="IPhyjixWorld.h" />
     <ClInclude Include="IRigidBody.h" />
@@ -156,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="CharacterController.cpp" />
     <ClCompile Include="ICharacterController.cpp" />
+    <ClCompile Include="ICollisionEvent.cpp" />
     <ClCompile Include="IPhyjixEngine.cpp" />
     <ClCompile Include="IPhyjixWorld.cpp" />
     <ClCompile Include="IRigidBody.cpp" />

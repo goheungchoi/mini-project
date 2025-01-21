@@ -1,69 +1,36 @@
 #include "pch.h"
 #include "PhyjixEventHandler.h"
 
-void PhyjixEventHandler::SetOnCCD(Event callback)
+void PhyjixEventHandler::onContact(const PxContactPairHeader& pairHeader,
+                                   const PxContactPair* pairs, PxU32 nbPairs)
 {
-	onCCDCallback = callback;
+  for (PxU32 i = 0; i < nbPairs; i++)
+  {
+    const PxContactPair& cp = pairs[i];
+    ICollisionEvent* actor0 =
+        static_cast<ICollisionEvent*>(pairHeader.actors[0]->userData);
+    ICollisionEvent* actor1 =
+        static_cast<ICollisionEvent*>(pairHeader.actors[1]->userData);
+    IRigidBody* rigidbody0 =
+        static_cast<IRigidBody*>(pairHeader.actors[0]->userData);
+    IRigidBody* rigidbody1 =
+        static_cast<IRigidBody*>(pairHeader.actors[1]->userData);
+
+    if (cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND)
+    {
+      actor0->OnCollisionEnter(rigidbody1);
+      actor1->OnCollisionEnter(rigidbody0);
+    }
+    if (cp.events & PxPairFlag::eNOTIFY_TOUCH_LOST)
+    {
+      actor0->OnCollisionExit(rigidbody1);
+      actor1->OnCollisionExit(rigidbody0);
+    }
+  }
 }
 
-void PhyjixEventHandler::SetOnCollisionEnter(Event callback)
-{
-	onCollisionEnterCallback = callback;
-}
+void PhyjixEventHandler::onTrigger(PxTriggerPair* pairs, PxU32 count) {}
 
-void PhyjixEventHandler::SetOnCollisionExit(Event callback)
-{
-	onCollisionExitCallback = callback;
-}
+void PhyjixEventHandler::onWake(PxActor** pActor, PxU32) {}
 
-void PhyjixEventHandler::SetOnTrigger(Event callback)
-{
-	onTriggerCallback = callback;
-}
-
-void PhyjixEventHandler::SetOnAwake(Event callback)
-{
-	onAwakeCallback = callback;
-}
-
-void PhyjixEventHandler::SetOnSleep(Event callback)
-{
-	onSleepCallback = callback;
-}
-
-void PhyjixEventHandler::onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs)
-{
-	for (PxU32 i = 0; i < nbPairs; i++)
-	{
-		const PxContactPair& cp = pairs[i];
-		if (cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND)
-			if (onCollisionEnterCallback)
-				onCollisionEnterCallback(pairHeader.actors[0], pairHeader.actors[1]);
-		if (cp.events & PxPairFlag::eNOTIFY_TOUCH_LOST)
-			if (onCollisionExitCallback)
-				onCollisionExitCallback(pairHeader.actors[0], pairHeader.actors[1]);
-
-	}
-}
-
-void PhyjixEventHandler::onTrigger(PxTriggerPair* pairs, PxU32 count)
-{
-}
-
-void PhyjixEventHandler::onWake(PxActor** pActor, PxU32)
-{
-}
-
-void PhyjixEventHandler::onSleep(PxActor**, PxU32)
-{
-}
-
-void PhyjixEventHandler::onCCDContactModify(PxContactModifyPair* const pairs, PxU32 count)
-{
-}
-
-void PhyjixEventHandler::registerWithScene(PxScene* scene)
-{
-	scene->setSimulationEventCallback(this);
-	scene->setCCDContactModifyCallback(this);
-}
+void PhyjixEventHandler::onSleep(PxActor**, PxU32) {}

@@ -211,6 +211,7 @@
 		<ClInclude Include="Include\GameFramework\Components\Animation\Animation.h" />
 		<ClInclude Include="Include\GameFramework\Components\Animation\AnimationState.h" />
 		<ClInclude Include="Include\GameFramework\Components\Animation\AnimatorComponent.h" />
+		<ClInclude Include="Include\GameFramework\Components\Colliders\RigidbodyComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\ComponentBase.h" />
 		<ClInclude Include="Include\GameFramework\Components\LightComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\MeshComponent.h" />
@@ -236,6 +237,7 @@
 		<ClCompile Include="Source\GameFramework\Components\Animation\Animation.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\Animation\AnimationState.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\Animation\AnimatorComonent.cpp" />
+		<ClCompile Include="Source\GameFramework\Components\Colliders\RigidbodyComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\ComponentBase.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\LightComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\MeshComponent.cpp" />
