@@ -280,7 +280,16 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
   _passMgr->SetSkyBox(envPath, specularBRDFPath, diffuseIrrPath,
                       specularIBLPath);
 }
+#ifdef _DEBUG
+void DX11Renderer::DrawDebugSphere() 
+{
+  
+}
 
+void DX11Renderer::DrawDebugBox() {}
+
+void DX11Renderer::DrawDebugCylinder() {}
+#endif
 void DX11Renderer::BeginImGuiDraw()
 {
   ImGui_ImplDX11_NewFrame();

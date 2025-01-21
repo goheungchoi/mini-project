@@ -62,6 +62,11 @@ public:
   //   1. you can delete meshes render pass type.
   // * Param1 : own meshHandle
   // */
+  #ifdef _DEBUG
+  virtual void DrawDebugSphere() = 0;
+  virtual void DrawDebugBox() = 0;
+  virtual void DrawDebugCylinder() = 0;
+  #endif
   virtual void DeleteShadow(MeshHandle handle) = 0;
 
   virtual void BindPipeline() = 0;

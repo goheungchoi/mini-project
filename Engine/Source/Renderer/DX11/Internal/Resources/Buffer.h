@@ -45,7 +45,7 @@ struct MeshBuffer
   UINT stride;
   UINT offset;
   UINT nIndices;
-  Matrix world;
+  Matrix world=Matrix::Identity;
   Material* material=nullptr;
   RenderPassFlags flags = 0;
 };
