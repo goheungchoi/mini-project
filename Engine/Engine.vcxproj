@@ -214,6 +214,7 @@
 		<ClInclude Include="Include\GameFramework\Components\ComponentBase.h" />
 		<ClInclude Include="Include\GameFramework\Components\LightComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\MeshComponent.h" />
+		<ClInclude Include="Include\GameFramework\Components\RigidbodyComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\SkeletalMeshComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\TerrainComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\TransformComponent.h" />
@@ -239,6 +240,7 @@
 		<ClCompile Include="Source\GameFramework\Components\ComponentBase.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\LightComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\MeshComponent.cpp" />
+		<ClCompile Include="Source\GameFramework\Components\RigidbodyComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\SkeletalMeshComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\TerrainComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\TransformComponent.cpp" />
