@@ -23,8 +23,9 @@ protected:
   virtual void Render() override;
 
 private:
+  bool bCameraMove{false};
   Camera* _camera;
-  Light::DirectionalLight _mainLight;
+  DirectionalLight _mainLight;
   IRenderer* _renderer;
   Vector4 eye;
   Vector4 at;
