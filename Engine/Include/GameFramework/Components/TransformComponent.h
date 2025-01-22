@@ -10,8 +10,8 @@ class TransformComponent : public ComponentBase
 {
 public:
   // TODO: Transform hierarchy
-  TransformComponent* parent;
-  std::vector<TransformComponent*> children;
+  TransformComponent* parent{nullptr};
+  std::list<TransformComponent*> children;
 
   XMVECTOR scaling{};
   XMVECTOR quaterion{};	// Rotation in quaternion
@@ -22,6 +22,18 @@ public:
   XMMATRIX globalTransform{};
   
 	TransformComponent(class GameObject* owner) : ComponentBase(owner) {}
+
+  void AddChild(TransformComponent* component)
+  {
+    component->parent = this;
+    children.push_back(component);
+  }
+
+  void RemoveChild(TransformComponent* component)
+  {
+    component->parent = nullptr;
+    children.remove(component);
+  }
 
 	XMVECTOR GetLocalRight() { 
 		return XMVector3Rotate(MathUtil::kRight, quaterion);

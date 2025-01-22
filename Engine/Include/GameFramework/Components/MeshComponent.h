@@ -13,6 +13,7 @@ public:
 
 	MeshComponent(class GameObject* owner) : ComponentBase(owner) {}
 
+  void SetHandle(MeshHandle handle) { this->handle = handle; }
 	MeshHandle GetHandle() { return handle; }
   void SetVisible(bool visible) { isVisible = visible; }
   void SetCastShadow(bool shadow) { bCastShadow = shadow; }

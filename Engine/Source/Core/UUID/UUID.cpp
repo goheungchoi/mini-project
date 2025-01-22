@@ -50,7 +50,10 @@ std::string xUUID::ToString(bool separated /* = false */) {
   return s;
 }
 
-bool xUUID::operator==(const xUUID& other) const { return false; }
+bool xUUID::operator==(const xUUID& other) const
+{
+  return memcmp(byte, other.byte, kNumBytes) == 0;
+}
 
 bool xUUID::IsValidUUIDString(const std::string& uuid) {
   return uuids::uuid::is_valid_uuid(uuid);

@@ -1,10 +1,17 @@
 #include "GameEngine/GameEngine.h"
-#include "Core/Time/TimeSystem.h"
+
 #include "WindowManager/WindowManager.h"
+#include "Core/Time/TimeSystem.h"
 #include "Core/Input/InputSystem.h"
 
-void GameEngine::Initialize()
+constexpr float kFixedRate{1.f / 60.f};
+
+void GameEngine::Initialize(UINT screenWidth, UINT screenHeight, const std::wstring& title)
 {
+  // 윈도우 생성
+  _hwnd = WindowManager::GetInstance()->CreateWinApp(screenWidth, screenHeight,
+                                                     title.c_str());
+
     // 윈도우 크기 조정 이벤트 관련 함수들 설정
   WindowManager::GetInstance()->SetWindowEventCallbacks(_hwnd,
       [this]() -> bool { return this->OnActivated(); },
@@ -111,6 +118,7 @@ void GameEngine::Run()
     else
     {
       TimeSystem::Update();
+      FixedUpdate(kFixedRate);
       InputSystem::GetInstance()->Update(TimeSystem::GetDeltaTime());
       Update(TimeSystem::GetDeltaTime());
       Render();

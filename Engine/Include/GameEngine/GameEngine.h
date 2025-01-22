@@ -1,7 +1,6 @@
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
-#include <windows.h>
+#include "Core/Common.h"
 
 class GameEngine
 {
@@ -10,7 +9,8 @@ public:
   ~GameEngine() = default;
 
 public:
-  virtual void Initialize();
+  virtual void Initialize(UINT screenWidth, UINT screenHeight,
+                          const std::wstring& title);
   virtual void Execute();
   virtual void Shutdown();
 

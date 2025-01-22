@@ -6,12 +6,58 @@ using namespace DirectX::SimpleMath;
 
 #include <cmath>
 #include <numbers>
+#include <algorithm>
 
 namespace MathUtil
 {
 constexpr XMVECTOR kRight{1.f, 0.f, 0.f, 0.f};
 constexpr XMVECTOR kUp{0.f, 1.f, 0.f, 0.f};
 constexpr XMVECTOR kFront{0.f, 0.f, 1.f, 0.f};
+
+// Function to rotate a vector towards a target vector
+inline XMVECTOR RotateVectorToward(
+    const XMVECTOR& source, // The source vector to rotate
+    const XMVECTOR& target, // The target vector to rotate toward
+    float maxAngleStep      // Maximum angular step in radians
+)
+{
+  // Normalize the source and target vectors
+  XMVECTOR normalizedSource = XMVector3Normalize(source);
+  XMVECTOR normalizedTarget = XMVector3Normalize(target);
+
+  // Compute the dot product to determine the cosine of the angle between the
+  // vectors
+  float dotProduct =
+      XMVectorGetX(XMVector3Dot(normalizedSource, normalizedTarget));
+
+  // Clamp the dot product to avoid precision issues (values slightly out of
+  // [-1, 1])
+  dotProduct = std::clamp(dotProduct, -1.0f, 1.0f);
+
+  // Calculate the actual angle between the vectors
+  float angleBetween = acosf(dotProduct);
+
+  // If the angle is less than or equal to the step, return the target vector
+  if (angleBetween <= maxAngleStep)
+  {
+    return normalizedTarget;
+  }
+
+  // Calculate the rotation axis (perpendicular vector)
+  XMVECTOR rotationAxis = XMVector3Cross(normalizedSource, normalizedTarget);
+
+  // Normalize the rotation axis
+  rotationAxis = XMVector3Normalize(rotationAxis);
+
+  // Create a quaternion representing the step rotation
+  float angleToRotate = maxAngleStep;
+  XMVECTOR quaternion = XMQuaternionRotationAxis(rotationAxis, angleToRotate);
+
+  // Rotate the source vector by the quaternion
+  XMVECTOR rotatedVector = XMVector3Rotate(normalizedSource, quaternion);
+
+  return rotatedVector;
+}
 
 struct AABB
 {

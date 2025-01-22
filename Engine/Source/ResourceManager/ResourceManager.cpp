@@ -127,6 +127,22 @@ static const SkeletonData& __AccessSkeletonData__(SkeletonHandle handle)
 }
 static void __UnloadSkeleton__(SkeletonHandle handle) {}
 
+// Animation
+static AnimationHandle __LoadAnimation__(const std::string& path)
+{
+  Handle animationHandle = _m().animationPool.Load(path.c_str(), &_pools());
+  if (_m().animationPool.IsValidHandle(animationHandle))
+  {
+    return animationHandle;
+  }
+  return AnimationHandle();
+}
+static const AnimationData& __AccessAnimationData__(AnimationHandle handle)
+{
+  return _m().animationPool.AccessResourceData(handle);
+}
+static void __UnloadAnimation__(AnimationHandle handle) {}
+
 static ResourceType __GetResourceType__(const Handle& handle) {
   // TODO:
 	return ResourceType::kUnknown;
@@ -167,6 +183,10 @@ const ResourceManager* GetResourceManager() {
 			.LoadSkeleton = __LoadSkeleton__,
 			.AccessSkeletonData = __AccessSkeletonData__,
       .UnloadSkeleton = __UnloadSkeleton__,
+
+      .LoadAnimation = __LoadAnimation__,
+      .AccessAnimationData = __AccessAnimationData__,
+      .UnloadAnimation = __UnloadAnimation__,
 
       .GetResourceType = __GetResourceType__,
       .IsValidHandle = __IsValidHandle__,
