@@ -1,6 +1,6 @@
 #pragma once
-#include "physx/PxPhysicsAPI.h"
 #include "IRigidBody.h"
+
 #include "ICollisionEvent.h"
 #include "IPhyjixWorld.h"
 using namespace physx;
@@ -16,29 +16,20 @@ public:
             const DirectX::SimpleMath::Vector3& size, ColliderShape shape,
             BOOL isStatic, BOOL isKinematic, PhyjixWorld* world);
   ~RigidBody();
-  //PxActor* GetActor() const;
-
 
 // IRigidBody을(를) 통해 상속됨
-  void SetCollisionEvent(eCollisionEventType collisiontype, IRigidBody* other, std::function<void(void)> event) override;
-  void SetLinVelocity(DirectX::SimpleMath::Vector3 vel) override;
-  void SetMaxLinVelocity(float vel) override;
-  void SetAngVelocity(DirectX::SimpleMath::Vector3 vel) override;
-  void SetMaxAngVelocity(float vel) override;
-  DirectX::SimpleMath::Vector3 GetLinVelocity() override;
-  float GetMaxLinVelocity() override;
-  DirectX::SimpleMath::Vector3 GetAngVelocity() override;
-  float GetMaxAngVelocity() override;
-  void EnableCollision() override;
-  void DisableCollision() override;
-  void EnableGravity() override;
-  void DisableGravity() override;
-  void WakeUp() override;
-  void Sleep() override;
-  ColliderShape GetColliderShapeType() override;
+  void SetCollisionEvent(eCollisionEventType collisiontype, IRigidBody* other,
+                         std::function<void(void)> event) override;
 
+  void SetPosition(const DirectX::SimpleMath::Vector3& position) override;
+  DirectX::SimpleMath::Vector3 GetPosition() const override;
 
+  void SetRotation(const DirectX::SimpleMath::Vector4& rotation) override;
+  DirectX::SimpleMath::Vector4 GetRotation() const override;
 
+  void ApplyForce(const DirectX::SimpleMath::Vector3& force) override;
+
+  PxRigidActor* GetActor() const;
 
   // ICollisionEvent을(를) 통해 상속됨
   void OnCollisionEnter(IRigidBody* other) override;
@@ -47,17 +38,11 @@ public:
   void OnWake() override;
   void OnSleep() override;
 
-  PxRigidActor* _actor = nullptr;
-
 private:
+  PxRigidActor* _actor = nullptr;
   PhyjixWorld* _world = nullptr;
   PxShape* _defaultShape = nullptr;
-  ColliderShape shape;
-
-  //test
   PxShape* _nonElasticShape = nullptr;
-
-
 
   std::unordered_map<IRigidBody*, std::function<void(void)>> CollisionEnterEventMap;
   std::unordered_map<IRigidBody*, std::function<void(void)>> CollisionExitEventMap;
@@ -65,7 +50,8 @@ private:
   std::vector<std::function<void(void)>> WakeEventMap;
   std::vector<std::function<void(void)>> SleepEventMap;
 
-  PxRigidDynamic* GetDynamicActor();
+
+
 
 
 };

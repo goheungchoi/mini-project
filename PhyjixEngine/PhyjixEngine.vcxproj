@@ -70,9 +70,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Label="Vcpkg">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -142,17 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CharacterController.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="CharacterController.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="ICharacterController.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="ICharacterController.h" />
     <ClInclude Include="ICollisionEvent.h" />
     <ClInclude Include="IPhyjixEngine.h" />
     <ClInclude Include="IPhyjixWorld.h" />
     <ClInclude Include="IRigidBody.h" />
+    <ClInclude Include="ISoftBody.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PhyjixEngine.h" />
     <ClInclude Include="PhyjixEventHandler.h" />
@@ -167,6 +161,7 @@
     <ClCompile Include="IPhyjixEngine.cpp" />
     <ClCompile Include="IPhyjixWorld.cpp" />
     <ClCompile Include="IRigidBody.cpp" />
+    <ClCompile Include="ISoftBody.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

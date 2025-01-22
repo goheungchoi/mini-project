@@ -14,19 +14,12 @@ static ModelHandle modelHandle3;
 static ModelHandle modelHandle4;
 void GameApp::Initialize()
 {
-  _phyjixEngine->Initialize();
-  _phyjixWorld = _phyjixEngine->CreateWorld();
-  _phyjixWorld->CreateDefaultGround();
-
   // 윈도우 생성
   _hwnd =
       WindowManager::GetInstance()->CreateWinApp(1920, 1080, L"MiniProject");
   _renderer = new DX11Renderer;
   Super::Initialize();
   _renderer->Init_Win32(1920, 1080, nullptr, &_hwnd);
-
-
-
 #ifdef RenderTest
 #endif // RenderTest
   modelHandle = LoadModel("Models\\FlightHelmet\\FlightHelmet.gltf");
@@ -64,10 +57,6 @@ void GameApp::Initialize()
 
   _camera->SetPosition({0, 0, -50, 1});
   at = Vector4::Zero;
-
-
-
-
 }
 
 void GameApp::Execute()
@@ -88,7 +77,7 @@ void GameApp::FixedUpdate(float deltaTime) {}
 
 void GameApp::Update(float deltaTime)
 {
-  _phyjixEngine->Update(deltaTime);
+
   // 'Q' 누르면 Down
   if (INPUT->IsKeyPress(Key::Q))
   {

@@ -3,8 +3,6 @@
 #include "GameEngine/GameEngine.h"
 #include "../../Engine/Source/Renderer/IRenderer.h"
 #include "Core/Camera/Camera.h"
-#include "../../PhyjixEngine/IPhyjixEngine.h"
-#include "../../PhyjixEngine/IPhyjixWorld.h"
 class GameApp : public GameEngine
 {
 	using Super = GameEngine;
@@ -31,10 +29,4 @@ private:
   Vector4 at;
 
   bool _bCameraMove = false;
-
-
-  IPhyjixEngine* _phyjixEngine = nullptr;
-  IPhyjixWorld* _phyjixWorld = nullptr;
-
-
 };
