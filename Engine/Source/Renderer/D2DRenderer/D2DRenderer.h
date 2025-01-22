@@ -8,17 +8,18 @@ class D2DRenderer    // D2D.ver
 {
 public:
   D2DRenderer() = default;
-  ~D2DRenderer() = default;
+  ~D2DRenderer();
 
 public:
   bool Init(Device* device, SwapChain* swapChain);
   void CreateD2DRenderTarget();
+  void UnInit();
 
   void Draw();
   void BeginDraw();
   void EndDraw();
 
-  ID2D1Bitmap1* ConvertDDSToD2DBitmap1(TextureData data);
+  //ID2D1Bitmap1* ConvertDDSToD2DBitmap1(TextureData data);
 
 public:
   Font* _pFont = nullptr;
@@ -29,8 +30,7 @@ private:
   SwapChain* _pSwapChain = nullptr;
 
   IDXGIDevice* _pDXGIDevice = nullptr;
-  IDXGISurface* _pIDXGISurface =
-      nullptr; // Direct3D와 Direct2D 간의 데이터 교환을 가능하게 해줌
+  IDXGISurface* _pIDXGISurface = nullptr;
 
   ID2D1Device* _pD2D1Device = nullptr;
   ID2D1Factory1* _pD2DFactory = nullptr;
