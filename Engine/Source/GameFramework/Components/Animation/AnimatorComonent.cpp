@@ -40,6 +40,11 @@
         {
           std::string nodeName = child->GetOwner()->name;
           std::string skeletalNodeName = skeleton->nodes[index + 1].name;
+          if (nodeName != skeletalNodeName)
+          {
+            throw std::runtime_error("Node name mismatch!");
+          }
+
           if (skeleton->nodes[++index].boneId >= 0)
             child->globalTransform = finalBoneTransforms[boneId++];
         }

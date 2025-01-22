@@ -9,6 +9,8 @@ class AnimationChannel
 public:
   XMMATRIX localTransform{};
 
+  AnimationChannel() = default;
+
   AnimationChannel(const AnimationChannelData* data)
       : data{data}
   {}
@@ -182,7 +184,9 @@ class Animation
 {
   const AnimationData* data{nullptr};
 
-  std::vector<AnimationChannel> channels;
+  
+  std::unordered_map<BoneId, AnimationChannel> boneChannels;
+  std::unordered_map<std::string, AnimationChannel> nodeChannels;
   std::unordered_map<BoneId, uint32_t> boneIndexMap;
   std::unordered_map<std::string, uint32_t> nodeIndexMap;
 
@@ -198,7 +202,8 @@ public:
   {
     data = &AccessAnimationData(handle);
 
-    channels.reserve(data->animationChannels.size());
+    boneChannels.reserve(data->animationChannels.size());
+    nodeChannels.reserve(data->animationChannels.size());
     boneIndexMap.reserve(data->animationChannels.size());
     nodeIndexMap.reserve(data->animationChannels.size());
 
@@ -207,17 +212,18 @@ public:
     {
       boneIndexMap[channel.boneId] = index;
       nodeIndexMap[channel.nodeName] = index;
-      channels.emplace_back(&channel);
+      boneChannels.emplace(channel.boneId, &channel);
+      nodeChannels.emplace(channel.nodeName, &channel);
     }
   }
 
-  const std::vector<AnimationChannel> GetChannels() const { return channels; }
+  // const std::vector<AnimationChannel> GetChannels() const { return channels; }
 
   const AnimationChannel* FindChannel(const std::string& nodeName) const
   {
-    if (auto it = nodeIndexMap.find(nodeName); it != nodeIndexMap.end())
+    if (auto it = nodeChannels.find(nodeName); it != nodeChannels.end())
     {
-      return &channels[it->second];
+      return &(it->second);
     }
     else
     {
@@ -260,51 +266,55 @@ public:
     _currentAnimTime += GetTicksPerSecond() * dt;
     _currentAnimTime = fmod(_currentAnimTime, GetDuration());
 
-    for (auto& channel : channels)
+    /*for (auto& channel : channels)
     {
       channel.Update(_currentAnimTime);
-    }
+    }*/
   }
 
   void UpdateBoneTransforms(float dt, const SkeletonData* skeleton,
                             std::vector<XMMATRIX>& finalBoneTransforms)
   {
+    std::vector<XMMATRIX> globalMatrices(finalBoneTransforms.size());
+
     _currentAnimTime += GetTicksPerSecond() * dt;
     _currentAnimTime = fmod(_currentAnimTime, GetDuration());
-
+    // _currentAnimTime = 0.f;
 		// Update the channels first
-    for (auto& channel : channels)
+    for (auto& [_, channel] : boneChannels)
     {
       channel.Update(_currentAnimTime);
     }
 
 		// The root node is always identity.
-		finalBoneTransforms[0] = XMMatrixIdentity();
     // Update the bone transforms of the skeleton
-		for (uint32_t i = 1; i < skeleton->nodes.size(); ++i)
+		for (uint32_t i = 0; i < skeleton->nodes.size(); ++i)
     {
       const SkeletonNode& node = skeleton->nodes[i];
       if (node.boneId < 0)
         continue;
 
 			// Check if this bone is in the current animation.
-      XMMATRIX nodeTransform{node.transform};
-      if (auto it = boneIndexMap.find(node.boneId); it != boneIndexMap.end())
+      XMMATRIX nodeTransform{XMMatrixTranspose(node.transform)};
+      if (auto it = boneChannels.find(node.boneId); it != boneChannels.end())
       {
-        uint32_t idx = it->second;
+        // uint32_t idx = it->second;
 				// Get the bone's local transformation.
-        nodeTransform = channels[idx].GetLocalTransform();
+        nodeTransform = it->second.GetLocalTransform();
       }
 
 			// Hierarchical transformation.
 			const SkeletonNode& parentNode = skeleton->nodes[node.parent];
       XMMATRIX globalTransform = nodeTransform;
       if (parentNode.boneId >= 0)
-        globalTransform *= finalBoneTransforms[parentNode.boneId];
+        // globalTransform = nodeTransform * parentTransform
+        globalTransform *= globalMatrices[parentNode.boneId];
+
+      globalMatrices[node.boneId] = globalTransform;
 
 			// Update it's final bone transformation.
 			finalBoneTransforms[node.boneId] =
-          skeleton->bones[node.boneId].inverseBindMatrix * globalTransform;
+          XMMatrixTranspose(skeleton->bones[node.boneId].inverseBindMatrix) * globalTransform;
 		}
   }
 

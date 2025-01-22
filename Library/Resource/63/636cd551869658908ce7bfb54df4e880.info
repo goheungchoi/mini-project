@@ -1,0 +1,636 @@
+{
+    "uuid": "636cd551869658908ce7bfb54df4e880",
+    "import_path": "Models\\SkinningTest\\SkinningTest.fbx",
+    "resource_type": "model",
+    "details": {
+        "name": "",
+        "nodes": [
+            {
+                "name": "RootNode",
+                "idx": 0,
+                "level": 0,
+                "parent": -1,
+                "first_child": 1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:Hips",
+                "idx": 1,
+                "level": 1,
+                "parent": 0,
+                "first_child": 4,
+                "next_sibling": 2,
+                "meshes": []
+            },
+            {
+                "name": "Beta_Surface",
+                "idx": 2,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 3,
+                "meshes": [
+                    "Models\\SkinningTest\\Beta_Surface0.mesh"
+                ]
+            },
+            {
+                "name": "Beta_Joints",
+                "idx": 3,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": [
+                    "Models\\SkinningTest\\Beta_Joints0.mesh"
+                ]
+            },
+            {
+                "name": "mixamorig:Spine",
+                "idx": 4,
+                "level": 2,
+                "parent": 1,
+                "first_child": 7,
+                "next_sibling": 5,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightUpLeg",
+                "idx": 5,
+                "level": 2,
+                "parent": 1,
+                "first_child": 60,
+                "next_sibling": 6,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftUpLeg",
+                "idx": 6,
+                "level": 2,
+                "parent": 1,
+                "first_child": 64,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:Spine1",
+                "idx": 7,
+                "level": 3,
+                "parent": 4,
+                "first_child": 8,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:Spine2",
+                "idx": 8,
+                "level": 4,
+                "parent": 7,
+                "first_child": 9,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:Neck",
+                "idx": 9,
+                "level": 5,
+                "parent": 8,
+                "first_child": 12,
+                "next_sibling": 10,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightShoulder",
+                "idx": 10,
+                "level": 5,
+                "parent": 8,
+                "first_child": 14,
+                "next_sibling": 11,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftShoulder",
+                "idx": 11,
+                "level": 5,
+                "parent": 8,
+                "first_child": 37,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:Head",
+                "idx": 12,
+                "level": 6,
+                "parent": 9,
+                "first_child": 13,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:HeadTop_End",
+                "idx": 13,
+                "level": 7,
+                "parent": 12,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightArm",
+                "idx": 14,
+                "level": 6,
+                "parent": 10,
+                "first_child": 15,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightForeArm",
+                "idx": 15,
+                "level": 7,
+                "parent": 14,
+                "first_child": 16,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHand",
+                "idx": 16,
+                "level": 8,
+                "parent": 15,
+                "first_child": 17,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandThumb1",
+                "idx": 17,
+                "level": 9,
+                "parent": 16,
+                "first_child": 22,
+                "next_sibling": 18,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandIndex1",
+                "idx": 18,
+                "level": 9,
+                "parent": 16,
+                "first_child": 25,
+                "next_sibling": 19,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandMiddle1",
+                "idx": 19,
+                "level": 9,
+                "parent": 16,
+                "first_child": 28,
+                "next_sibling": 20,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandRing1",
+                "idx": 20,
+                "level": 9,
+                "parent": 16,
+                "first_child": 31,
+                "next_sibling": 21,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandPinky1",
+                "idx": 21,
+                "level": 9,
+                "parent": 16,
+                "first_child": 34,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandThumb2",
+                "idx": 22,
+                "level": 10,
+                "parent": 17,
+                "first_child": 23,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandThumb3",
+                "idx": 23,
+                "level": 11,
+                "parent": 22,
+                "first_child": 24,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandThumb4",
+                "idx": 24,
+                "level": 12,
+                "parent": 23,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandIndex2",
+                "idx": 25,
+                "level": 10,
+                "parent": 18,
+                "first_child": 26,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandIndex3",
+                "idx": 26,
+                "level": 11,
+                "parent": 25,
+                "first_child": 27,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandIndex4",
+                "idx": 27,
+                "level": 12,
+                "parent": 26,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandMiddle2",
+                "idx": 28,
+                "level": 10,
+                "parent": 19,
+                "first_child": 29,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandMiddle3",
+                "idx": 29,
+                "level": 11,
+                "parent": 28,
+                "first_child": 30,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandMiddle4",
+                "idx": 30,
+                "level": 12,
+                "parent": 29,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandRing2",
+                "idx": 31,
+                "level": 10,
+                "parent": 20,
+                "first_child": 32,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandRing3",
+                "idx": 32,
+                "level": 11,
+                "parent": 31,
+                "first_child": 33,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandRing4",
+                "idx": 33,
+                "level": 12,
+                "parent": 32,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandPinky2",
+                "idx": 34,
+                "level": 10,
+                "parent": 21,
+                "first_child": 35,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandPinky3",
+                "idx": 35,
+                "level": 11,
+                "parent": 34,
+                "first_child": 36,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightHandPinky4",
+                "idx": 36,
+                "level": 12,
+                "parent": 35,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftArm",
+                "idx": 37,
+                "level": 6,
+                "parent": 11,
+                "first_child": 38,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftForeArm",
+                "idx": 38,
+                "level": 7,
+                "parent": 37,
+                "first_child": 39,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHand",
+                "idx": 39,
+                "level": 8,
+                "parent": 38,
+                "first_child": 40,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandThumb1",
+                "idx": 40,
+                "level": 9,
+                "parent": 39,
+                "first_child": 45,
+                "next_sibling": 41,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandIndex1",
+                "idx": 41,
+                "level": 9,
+                "parent": 39,
+                "first_child": 48,
+                "next_sibling": 42,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandMiddle1",
+                "idx": 42,
+                "level": 9,
+                "parent": 39,
+                "first_child": 51,
+                "next_sibling": 43,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandRing1",
+                "idx": 43,
+                "level": 9,
+                "parent": 39,
+                "first_child": 54,
+                "next_sibling": 44,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandPinky1",
+                "idx": 44,
+                "level": 9,
+                "parent": 39,
+                "first_child": 57,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandThumb2",
+                "idx": 45,
+                "level": 10,
+                "parent": 40,
+                "first_child": 46,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandThumb3",
+                "idx": 46,
+                "level": 11,
+                "parent": 45,
+                "first_child": 47,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandThumb4",
+                "idx": 47,
+                "level": 12,
+                "parent": 46,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandIndex2",
+                "idx": 48,
+                "level": 10,
+                "parent": 41,
+                "first_child": 49,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandIndex3",
+                "idx": 49,
+                "level": 11,
+                "parent": 48,
+                "first_child": 50,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandIndex4",
+                "idx": 50,
+                "level": 12,
+                "parent": 49,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandMiddle2",
+                "idx": 51,
+                "level": 10,
+                "parent": 42,
+                "first_child": 52,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandMiddle3",
+                "idx": 52,
+                "level": 11,
+                "parent": 51,
+                "first_child": 53,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandMiddle4",
+                "idx": 53,
+                "level": 12,
+                "parent": 52,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandRing2",
+                "idx": 54,
+                "level": 10,
+                "parent": 43,
+                "first_child": 55,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandRing3",
+                "idx": 55,
+                "level": 11,
+                "parent": 54,
+                "first_child": 56,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandRing4",
+                "idx": 56,
+                "level": 12,
+                "parent": 55,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandPinky2",
+                "idx": 57,
+                "level": 10,
+                "parent": 44,
+                "first_child": 58,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandPinky3",
+                "idx": 58,
+                "level": 11,
+                "parent": 57,
+                "first_child": 59,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftHandPinky4",
+                "idx": 59,
+                "level": 12,
+                "parent": 58,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightLeg",
+                "idx": 60,
+                "level": 3,
+                "parent": 5,
+                "first_child": 61,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightFoot",
+                "idx": 61,
+                "level": 4,
+                "parent": 60,
+                "first_child": 62,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightToeBase",
+                "idx": 62,
+                "level": 5,
+                "parent": 61,
+                "first_child": 63,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:RightToe_End",
+                "idx": 63,
+                "level": 6,
+                "parent": 62,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftLeg",
+                "idx": 64,
+                "level": 3,
+                "parent": 6,
+                "first_child": 65,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftFoot",
+                "idx": 65,
+                "level": 4,
+                "parent": 64,
+                "first_child": 66,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftToeBase",
+                "idx": 66,
+                "level": 5,
+                "parent": 65,
+                "first_child": 67,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "mixamorig:LeftToe_End",
+                "idx": 67,
+                "level": 6,
+                "parent": 66,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": []
+            }
+        ],
+        "meshes": [
+            "Models\\SkinningTest\\Beta_Joints0.mesh",
+            "Models\\SkinningTest\\Beta_Surface0.mesh"
+        ],
+        "materials": [
+            "Models\\SkinningTest\\Beta_HighLimbsGeoSG30.mat",
+            "Models\\SkinningTest\\Beta_Joints_MAT10.mat"
+        ],
+        "textures": [],
+        "skeleton": "Models\\SkinningTest\\RootNode.skel"
+    }
+}
