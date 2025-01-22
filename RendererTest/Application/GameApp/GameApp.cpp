@@ -1,10 +1,10 @@
 #include "GameApp.h"
 #include "../../Engine/Source/Renderer/DX11/DX11Renderer.h"
 #include "Core/Input/InputSystem.h"
+#include "GameFramework/Level/Level.h"
+#include "GameFramework/World/World.h"
 #include "ResourceManager/ResourceManager.h"
 #include "WindowManager/WindowManager.h"
-#include "GameFramework/World/World.h"
-#include "GameFramework/Level/Level.h"
 
 #include "GameFramework/Components/Animation/Animation.h"
 #include "GameFramework/Components/Animation/AnimationState.h"
@@ -19,7 +19,6 @@ static ModelHandle modelHandle;
 static ModelHandle modelHandle2;
 static ModelHandle modelHandle3;
 static ModelHandle modelHandle4;
-
 
 static ModelHandle skinningTest;
 
@@ -63,57 +62,55 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _renderer->CreateSkyBox(
       "Textures/BakerEnv.dds", "Textures/BakerSpecularBRDF_LUT.dds",
       "Textures/BakerDiffuseIrradiance.dds", "Textures/BakerSpecularIBL.dds");
-  std::ranges::for_each(modelData.meshes, [&](MeshHandle meshHandle) {
-    _renderer->CreateMesh(meshHandle);
-    _renderer->AddShadow(meshHandle);
-  });
+  //std::ranges::for_each(modelData.meshes, [&](MeshHandle meshHandle) {
+  //  _renderer->CreateMesh(meshHandle);
+  //  _renderer->AddShadow(meshHandle);
+  //});
   std::ranges::for_each(modelData2.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
     _renderer->AddShadow(meshHandle);
-    });
-  std::ranges::for_each(modelData3.meshes, [&](MeshHandle meshHandle) {
-    _renderer->CreateMesh(meshHandle);
   });
-  std::ranges::for_each(modelData4.meshes, [&](MeshHandle meshHandle) {
-    _renderer->CreateMesh(meshHandle);
-    _renderer->AddShadow(meshHandle);
-  });
+  //std::ranges::for_each(modelData3.meshes, [&](MeshHandle meshHandle) {
+  //  _renderer->CreateMesh(meshHandle);
+  //});
+  //std::ranges::for_each(modelData4.meshes, [&](MeshHandle meshHandle) {
+  //  _renderer->CreateMesh(meshHandle);
+  //  _renderer->AddShadow(meshHandle);
+  //});
   _camera = new Camera(1920, 1080);
   _mainLight.direction = Vector4(0.f, -1.f, 1.f, 0.f);
   _mainLight.radiance = Vector4(1.f, 1.f, 1.f, 1.f);
 
-
   _camera->SetPosition({0, 0, -50, 1});
   at = Vector4::Zero;
-  
-  
+
   myWorld = new World();
   myLevel = myWorld->CreateLevel<Level>("Test Level");
 
-
   skinningTest = LoadModel("Models\\SkinningTest\\SkinningTest.gltf");
 
-root = myLevel->CreateGameObjectFromModel<GameObject>(
-    "Models\\SkinningTest\\SkinningTest.gltf");
+  root = myLevel->CreateGameObjectFromModel<GameObject>(
+      "Models\\SkinningTest\\SkinningTest.gltf");
 
-animSkeletal1 =
-    (*root->childrens.begin())->GetComponent<SkeletalMeshComponent>();
-animSkeletal2 = (*std::next(root->childrens.begin()))
-                    ->GetComponent<SkeletalMeshComponent>();
+  animSkeletal1 =
+      (*root->childrens.begin())->GetComponent<SkeletalMeshComponent>();
+  animSkeletal2 = (*std::next(root->childrens.begin()))
+                      ->GetComponent<SkeletalMeshComponent>();
 
-const ModelData& skinningData = AccessModelData(skinningTest);
+  const ModelData& skinningData = AccessModelData(skinningTest);
 
-for (auto animHandle : skinningData.animations)
-{
-  anim1 = new Animation(animHandle, true);
-}
+  for (auto animHandle : skinningData.animations)
+  {
+    anim1 = new Animation(animHandle, true);
+  }
 
-animState1 = new AnimationState(anim1);
+  animState1 = new AnimationState(anim1);
 
-animComponent1 = root->CreateComponent<AnimatorComponent>();
-animComponent1->BineSkeleton(skinningData.skeleton);
-
-animComponent1->SetState(animState1);
+  animComponent1 = root->CreateComponent<AnimatorComponent>();
+  animComponent1->BineSkeleton(skinningData.skeleton);
+  
+  animComponent1->SetState(animState1);
+  _renderer->CreateMesh(animSkeletal1->GetHandle());
 }
 
 void GameApp::Execute()
@@ -193,7 +190,6 @@ void GameApp::Update(float deltaTime)
     }
   }
 
-
   animComponent1->UpdateAnimation(deltaTime);
 
   animSkeletal1->UpdateBoneTransforms();
@@ -204,13 +200,12 @@ void GameApp::Render()
 {
   Matrix view = _camera->GetViewTransform();
   Matrix projection = _camera->GetProjectionMatrix();
-  _renderer->BeginFrame(_camera->GetPosition(), view, projection,
-                        _mainLight);
+  _renderer->BeginFrame(_camera->GetPosition(), view, projection, _mainLight);
   if (ImGui::Begin("main Light"))
   {
     float _mainLightDir[3] = {_mainLight.direction.x, _mainLight.direction.y,
                               _mainLight.direction.z};
-    ImGui::SliderFloat3("direction", _mainLightDir, -1.f,1.f);
+    ImGui::SliderFloat3("direction", _mainLightDir, -1.f, 1.f);
     _mainLight.direction.x = _mainLightDir[0];
     _mainLight.direction.y = _mainLightDir[1];
     _mainLight.direction.z = _mainLightDir[2];
@@ -220,7 +215,6 @@ void GameApp::Render()
   Matrix world = Matrix::Identity;
   Matrix scale = Matrix::CreateScale(100.f);
   Matrix translate = Matrix::CreateTranslation(Vector3(0.f, -50.f, 0.0f));
-  
 
   world *= scale;
   world *= translate;
@@ -236,33 +230,32 @@ void GameApp::Render()
 
   Matrix world3 = Matrix::Identity;
   Matrix scale3 = Matrix::CreateScale(20.f);
-  Matrix translate3 = Matrix::CreateTranslation(Vector3(100.f, 0.f,.0f));
+  Matrix translate3 = Matrix::CreateTranslation(Vector3(100.f, 0.f, .0f));
   world3 *= scale3;
   world3 *= translate3;
 
   Matrix world4 = Matrix::Identity;
-  //Matrix scale4 = Matrix::CreateScale(0.5f);
+  // Matrix scale4 = Matrix::CreateScale(0.5f);
   Matrix translate4 = Matrix::CreateTranslation(Vector3(0.f, -100.f, .0f));
-  //world4 *= scale4;
+  // world4 *= scale4;
   world4 *= translate4;
-  std::ranges::for_each(AccessModelData(modelHandle).meshes,
+ /* std::ranges::for_each(AccessModelData(modelHandle).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world);
                           _renderer->DrawMesh(meshHandle);
                         });
   _renderer->DrawDebugCylinder(
       Matrix::CreateScale(35.f) *
-          Matrix::CreateFromQuaternion(
-              Quaternion::CreateFromAxisAngle(Vector3(1.f, 0.f, 0.f),
-                                              XMConvertToRadians(90.f)))*
+          Matrix::CreateFromQuaternion(Quaternion::CreateFromAxisAngle(
+              Vector3(1.f, 0.f, 0.f), XMConvertToRadians(90.f))) *
           Matrix::CreateTranslation(Vector3(0.f, -10.f, 0.0f)),
-      Color(0.f, 1.f, 0.f));
+      Color(0.f, 1.f, 0.f));*/
   std::ranges::for_each(AccessModelData(modelHandle2).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world2);
                           _renderer->DrawMesh(meshHandle);
                         });
-  std::ranges::for_each(AccessModelData(modelHandle3).meshes,
+ /* std::ranges::for_each(AccessModelData(modelHandle3).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world3);
                           _renderer->DrawMesh(meshHandle);
@@ -271,19 +264,19 @@ void GameApp::Render()
       Matrix::CreateScale(30.f) *
           Matrix::CreateTranslation(Vector3(100.f, 0.f, .0f)),
       Color(1.f, 0.f, 0.f));
-  _renderer->DrawDebugBox(Matrix::CreateScale({230.f,50.f,50.f})
-                          *Matrix::CreateTranslation(-180.f, 0.f, 0.0f)
-                          , Color(0.f, 0.f, 1.f));
+  _renderer->DrawDebugBox(Matrix::CreateScale({230.f, 50.f, 50.f}) *
+                              Matrix::CreateTranslation(-180.f, 0.f, 0.0f),
+                          Color(0.f, 0.f, 1.f));
   std::ranges::for_each(AccessModelData(modelHandle4).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world4);
                           _renderer->DrawMesh(meshHandle);
-                        });
+                        });*/
 
- /* animSkeletal1->boneTransforms;
-  _renderer
-      ->BeginDraw(animSkeletal1->GetHandle(), )
-  animSkeletal1*/
+  animSkeletal1->boneTransforms;
+  _renderer->BeginDraw(animSkeletal1->GetHandle(),
+                       animSkeletal1->GetOwner()->transform->globalTransform);
+  _renderer->DrawMesh(animSkeletal1->GetHandle(),animSkeletal1->boneTransforms);
 
 #endif // RenderTest
   _renderer->EndFrame();

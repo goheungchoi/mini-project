@@ -83,15 +83,21 @@ void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
   {
     throw std::exception("buffer not registered");
   }
+  
   buffer->second->world = world;
 }
 
-void DX11Renderer::DrawMesh(MeshHandle handle)
+void DX11Renderer::DrawMesh(MeshHandle handle,
+                          vector<DirectX::XMMATRIX> boneTransforms)
 {
   auto buffer = _storage->meshMap.find(handle);
   if (buffer == _storage->meshMap.end())
   {
     throw std::exception("buffer not registered");
+  }
+  if (!boneTransforms.empty())
+  {
+    buffer->second->boneMatirx = boneTransforms;
   }
   _passMgr->ClassifyPass(buffer->second);
 }
@@ -184,16 +190,16 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
       }
       UINT size = sizeof(uint32_t) * boneWeightsBuffer.size();
       meshBuffer->boneIDBuffer = _device->CreateDataBuffer(
-          boneIndicesBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE);
-      meshBuffer->boneIDSrv =
-          _device->CreateStructuredSRV(meshBuffer->boneIDBuffer.Get(), size);
+          boneIndicesBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE,sizeof(uint32_t));
+      meshBuffer->boneIDSrv = _device->CreateStructuredSRV(
+          meshBuffer->boneIDBuffer.Get(), boneIndicesBuffer.size());
       
       size = sizeof(float) * boneWeightsBuffer.size();
       meshBuffer->boneWeightsBuffer = _device->CreateDataBuffer(
-          boneWeightsBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE);
-      meshBuffer->boneIDSrv =
-          _device->CreateStructuredSRV(meshBuffer->boneWeightsBuffer.Get(), size);
-      
+          boneWeightsBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE,
+          sizeof(float));
+      meshBuffer->boneWeightsSrv =
+          _device->CreateStructuredSRV(meshBuffer->boneWeightsBuffer.Get(), boneWeightsBuffer.size());
     }
     // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함.??
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
@@ -218,7 +224,7 @@ bool DX11Renderer::DestroyMesh()
   // delete mesh
   for (auto& mesh : _storage->meshMap)
   {
-    delete mesh.second;
+    SAFE_RELEASE( mesh.second);
   }
   _storage->meshMap.clear();
   return false;

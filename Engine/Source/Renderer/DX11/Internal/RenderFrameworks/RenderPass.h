@@ -78,6 +78,10 @@ public:
         2, 1,
         _CB->_constantBuffers[static_cast<UINT>(MeshCBType::PixelData)]
             .GetAddressOf());
+    dc->VSSetConstantBuffers(
+        3, 1,
+        _CB->_constantBuffers[static_cast<UINT>(MeshCBType::BoneMatrix)]
+            .GetAddressOf());
     dc->VSSetConstantBuffers(0, 1, _frameCB->_constantBuffer.GetAddressOf());
     dc->PSSetConstantBuffers(0, 1, _frameCB->_constantBuffer.GetAddressOf());
     _transparentMeshes.resize(2);
@@ -460,6 +464,10 @@ private:
     std::ranges::for_each(_opaqueMesh[0], [this, dc](MeshBuffer* buffer) {
       if (buffer->flags & RenderPassType::kSkinning)
       {
+        Constant::BoneMatrix boneMat = {};
+        std::copy(buffer->boneMatirx.begin(),buffer->boneMatirx.end(),boneMat.matrix);
+        
+        _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
         dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
         dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
         dc->VSSetShaderResources(15, 1, buffer->boneIDSrv.GetAddressOf());

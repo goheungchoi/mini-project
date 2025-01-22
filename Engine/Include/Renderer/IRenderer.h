@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include "Core/Handle/ResourceHandle.h"
-
+#include "Core/Common.h"
 #include "Core/Types/LightTypes.h"
-
+using namespace std;
 /**
  * @brief 
  * 1. call AddRenderPass() per mesh at initialize
@@ -39,7 +39,9 @@ public:
    * @brief call per mesh
    * @param handle : mesh handle owned by mesh
    */
-  virtual void DrawMesh(MeshHandle handle) = 0;
+  virtual void DrawMesh(MeshHandle handle,
+                        vector<DirectX::XMMATRIX> boneTransforms =
+                                               vector<DirectX::XMMATRIX>()) = 0;
   /**
    * @brief still working on it....
    */
