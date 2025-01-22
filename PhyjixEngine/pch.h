@@ -16,10 +16,13 @@
 #include <physx/PxPhysicsAPI.h>
 #include <physx/PxPhysics.h>
 #include "physx/PxSimulationEventCallback.h"
-using namespace physx;
+
 
 
 #include <directxtk/simplemath.h>
+#include "IRigidBody.h"
+#include "IPhyjixWorld.h"
+#include "IPhyjixEngine.h"
 #include "PhyjixUtil.h"
 #include "CharacterController.h"
 #include "RigidBody.h"
