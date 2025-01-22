@@ -19,7 +19,7 @@ RigidBody::RigidBody(PxPhysics* physics,
   else
     _actor = physics->createRigidStatic(transform);
 
-
+  shape = cShape;
   switch (cShape)
   {
   case ColliderShape::eCubeCollider:
@@ -64,38 +64,10 @@ RigidBody::~RigidBody()
     _actor->release();
 }
 
-void RigidBody::SetPosition(const DirectX::SimpleMath::Vector3& position)
-{
-  _actor->setGlobalPose(PxTransform(PhyjixUtil::VecToPxVec(position)));
-}
-
-DirectX::SimpleMath::Vector3 RigidBody::GetPosition() const
-{
-  return PhyjixUtil::PxVecToVec(_actor->getGlobalPose().p);
-}
-
-void RigidBody::SetRotation(const DirectX::SimpleMath::Vector4& rotation)
-{
-  _actor->setGlobalPose(PxTransform(rotation.x, rotation.x, rotation.x,
-                                    PxQuatT<float>(rotation.w)));
-}
-
-DirectX::SimpleMath::Vector4 RigidBody::GetRotation() const
-{
-  return DirectX::SimpleMath::Vector4(
-      _actor->getGlobalPose().q.x, _actor->getGlobalPose().q.y,
-      _actor->getGlobalPose().q.z, _actor->getGlobalPose().q.w);
-}
-
-void RigidBody::ApplyForce(const DirectX::SimpleMath::Vector3& force)
-{
-  static_cast<PxRigidDynamic*>(_actor)->addForce(PhyjixUtil::VecToPxVec(force));
-}
-
-PxRigidActor* RigidBody::GetActor() const
-{
-  return _actor;
-}
+//PxActor* RigidBody::GetActor() const
+//{
+//  return _actor;
+//}
 
 void RigidBody::OnCollisionEnter(IRigidBody* other) 
 {
@@ -133,9 +105,12 @@ void RigidBody::OnSleep()
   }
 }
 
-void RigidBody::SetCollisionEvent(eCollisionEventType collisiontype,
-                                  IRigidBody* other,
-                                  std::function<void(void)> event)
+PxRigidDynamic* RigidBody::GetDynamicActor()
+{
+  return static_cast<PxRigidDynamic*>(_actor);
+}
+
+void RigidBody::SetCollisionEvent(eCollisionEventType collisiontype, IRigidBody* other, std::function<void(void)> event)
 {
     switch (collisiontype)
     {
@@ -155,4 +130,96 @@ void RigidBody::SetCollisionEvent(eCollisionEventType collisiontype,
       SleepEventMap.push_back(event);
       break;
   }
+}
+
+void RigidBody::SetLinVelocity(DirectX::SimpleMath::Vector3 vel)
+{
+  GetDynamicActor()->setLinearVelocity(PhyjixUtil::VecToPxVec(vel));
+}
+
+void RigidBody::SetMaxLinVelocity(float vel)
+{
+  GetDynamicActor()->setMaxLinearVelocity(vel);
+}
+
+void RigidBody::SetAngVelocity(DirectX::SimpleMath::Vector3 vel)
+{
+  GetDynamicActor()->setAngularVelocity(PhyjixUtil::VecToPxVec(vel));
+}
+
+void RigidBody::SetMaxAngVelocity(float vel)
+{
+  GetDynamicActor()->setMaxAngularVelocity(vel);
+}
+
+DirectX::SimpleMath::Vector3 RigidBody::GetLinVelocity()
+{
+  return PhyjixUtil::PxVecToVec(GetDynamicActor()->getLinearVelocity());
+}
+
+float RigidBody::GetMaxLinVelocity()
+{
+  return GetDynamicActor()->getMaxLinearVelocity();
+  
+}
+
+DirectX::SimpleMath::Vector3 RigidBody::GetAngVelocity()
+{
+  return PhyjixUtil::PxVecToVec(GetDynamicActor()->getAngularVelocity());
+  
+}
+
+float RigidBody::GetMaxAngVelocity()
+{
+  return GetDynamicActor()->getMaxAngularVelocity();
+}
+
+void RigidBody::EnableCollision()
+{
+  PxShape* shape = nullptr;
+  PxU32 shapeCount = GetDynamicActor()->getNbShapes();
+  if (shapeCount > 0)
+  {
+    GetDynamicActor()->getShapes(&shape, 1, 0);
+    if (shape)
+      shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+  }
+}
+
+void RigidBody::DisableCollision()
+{
+  PxShape* shape = nullptr;
+  PxU32 shapeCount = GetDynamicActor()->getNbShapes();
+  if (shapeCount > 0)
+  {
+    GetDynamicActor()->getShapes(&shape, 1, 0);
+    if (shape)
+      shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+  }
+}
+
+void RigidBody::EnableGravity()
+{
+  _actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, false);
+}
+
+void RigidBody::DisableGravity()
+{
+  _actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+}
+
+void RigidBody::WakeUp()
+{
+  GetDynamicActor()->wakeUp();
+}
+
+void RigidBody::Sleep()
+{
+  GetDynamicActor()->putToSleep();
+}
+
+ColliderShape RigidBody::GetColliderShapeType()
+{
+  return shape;
+  
 }

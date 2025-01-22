@@ -1,5 +1,6 @@
 #pragma once
-
+#include "physx/PxPhysicsAPI.h"
+using namespace physx;
 class IPhyjixWorld;
 class IPhyjixEngine
 {

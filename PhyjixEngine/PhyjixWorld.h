@@ -1,12 +1,11 @@
 #pragma once
-// #include "physx/PxPhysicsAPI.h"
-// #include "physx/PxPhysics.h"
+#include "physx/PxPhysics.h"
+#include "physx/PxPhysicsAPI.h"
 using namespace physx;
 
 #include "IPhyjixWorld.h"
-class ICharacterController;
 class IRigidBody;
-
+class PhyjixEventHandler;
 class PhyjixWorld : public IPhyjixWorld
 {
 public:
@@ -42,6 +41,4 @@ private:
   PxMaterial* mMaterial = nullptr;
 
   PxFilterFlags _customfiltershader;
-
-
 };

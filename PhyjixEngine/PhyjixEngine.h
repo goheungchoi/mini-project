@@ -1,9 +1,9 @@
 #pragma once
-//#include "physx/PxPhysicsAPI.h"
-//#include "physx/PxPhysics.h"
+#include "physx/PxPhysicsAPI.h"
+#include "physx/PxPhysics.h"
+using namespace physx;
 
 #include "IPhyjixEngine.h"
-using namespace physx;
 class PhyjixEngine : public IPhyjixEngine
 {
 public:
