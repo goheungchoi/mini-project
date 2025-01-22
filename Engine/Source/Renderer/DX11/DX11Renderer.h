@@ -1,5 +1,5 @@
 #pragma once
-#include "../IRenderer.h"
+#include "Renderer/IRenderer.h"
 struct ResourceStorage;
 #ifdef _DEBUG
 class DebugLayer;
@@ -21,7 +21,7 @@ public:
   bool Cleanup() override;
   void ResizeScreen(unsigned int width, unsigned int height) override;
   void BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
-                  Light::DirectionalLight mainLight) override;
+                  DirectionalLight mainLight) override;
   void BeginDraw(MeshHandle handle, Matrix world) override;
   void DrawMesh(MeshHandle handle) override;
   void EndDraw() override;

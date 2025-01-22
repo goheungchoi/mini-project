@@ -21,6 +21,7 @@ public:
   virtual void Toggle(AnimatorComponent*);
   virtual void Enter(AnimatorComponent*);
 
-	void Update(AnimatorComponent* controller, float dt);
+  Animation* GetAnimation() { return _animation; }
+
   void AddAnimationStateDependency(const StateName&, AnimationState*);
 };

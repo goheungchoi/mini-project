@@ -2,8 +2,11 @@
 #include "../DX11/Internal/Device.h"
 #include "../DX11/Internal/SwapChain.h"
 
-bool D2DRenderer::Init()
+bool D2DRenderer::Init(Device* device, SwapChain* swapChain)
 {
+  _pDevice = device;
+  _pSwapChain = swapChain;
+
   // IDXGIDevice 생성
   HR_T(_pDevice->GetDevice()->QueryInterface(__uuidof(IDXGIDevice),
                                              (void**)&_pDXGIDevice));
@@ -100,7 +103,7 @@ Font::~Font() {
 void Font::Init()
 {
   CreateIDWriteFactory();
-  CreateTextFormat(L"Cooper", 32.0f);
+  CreateTextFormat(L"맑은 고딕", 32.0f);
 }
 
 void Font::UnInit()
@@ -114,34 +117,54 @@ void Font::CreateIDWriteFactory()
                            reinterpret_cast<IUnknown**>(&pDWriteFactory)));
 }
 
-void Font::CreateTextFormat(std::wstring _fontName, float _size)
+void Font::CreateTextFormat(std::wstring fontName, float size, UINT fontWeight,
+                            UINT textAlignment, UINT paragraphAlignment)
 {
   IDWriteTextFormat* pTextFormat;
 
   HR_T(pDWriteFactory->CreateTextFormat(
-      _fontName.c_str(), // 글꼴 이름
-      NULL,      // 글꼴 컬렉션 (NULL은 시스템 기본 사용)
-      DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL,
+      fontName.c_str(), // 글꼴 이름
+      NULL,              // 글꼴 컬렉션 (NULL은 시스템 기본 사용)
+      static_cast<DWRITE_FONT_WEIGHT>(fontWeight), DWRITE_FONT_STYLE_NORMAL,
       DWRITE_FONT_STRETCH_NORMAL,
-      _size, // 글꼴 크기
-      L"",   // 로케일
+      size, // 글꼴 크기
+      L"ko-KR", // 로케일
       &pTextFormat));
 
-  // 텍스트를 수평 및 수직으로 중앙에 맞춥니다.
-  pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-  pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+  // 텍스트 정렬
+  pTextFormat->SetTextAlignment(static_cast<DWRITE_TEXT_ALIGNMENT>(textAlignment));
+  pTextFormat->SetParagraphAlignment(
+      static_cast<DWRITE_PARAGRAPH_ALIGNMENT>(paragraphAlignment));
 
-  _TextFormats.insert({_fontName, pTextFormat});
+  _TextFormats.insert({fontName, pTextFormat});
 }
 
-void Font::TextDraw(const wchar_t* format, D2D1_RECT_F _rect,
-                    D2D1_COLOR_F _color, ...)
+void Font::TextDraw(const wchar_t* format, Vector4 rect,
+                    const std::wstring& fontName, Color color)
 {
   // 텍스트 그리기
+                                //  left,    top,  right, bottom
+  D2D1_RECT_F _rect = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
+
+  D2D1_COLOR_F _color = D2D1::ColorF(color.x, color.y, color.z, color.w);
+
   _pBrush->SetColor(_color);
 
-  auto txtformat = _TextFormats[0];
+  IDWriteTextFormat* txtformat = FindFont(fontName);
+  
+  _pD2D1DeviceContext->DrawText(format, lstrlen(format) + 1, txtformat, _rect,
+                                _pBrush);
+}
 
-  _pD2D1DeviceContext->DrawText(format, // 텍스트 내용
-                                lstrlen(format) + 1, txtformat, _rect, _pBrush);
+
+IDWriteTextFormat* Font::FindFont(const std::wstring& fontName)
+{
+  auto iter = _TextFormats.find(fontName);
+
+  if (iter != _TextFormats.end())
+  {
+    return iter->second;
+  }
+
+  return nullptr;
 }

@@ -7,6 +7,10 @@
 //use comptr
 #include <wrl.h>
 
+// Screen extent
+constexpr UINT kScreenWidth{1920};
+constexpr UINT kScreenHeight{1080};
+
 #include <iostream>
 #include <typeindex>
 #include <typeinfo>

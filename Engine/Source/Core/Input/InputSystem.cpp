@@ -80,17 +80,17 @@ bool InputSystem::IsKeyPress(DirectX::Keyboard::Keys key) const
   return _keyboardState.IsKeyDown(key);
 }
 
-bool InputSystem::IsKeyPress(Input::MouseState mouseState) const
+bool InputSystem::IsKeyPress(MouseState mouseState) const
 {
   // 마우스 버튼이 눌렸는지 확인
   switch (mouseState)
   {
-  case Input::LB:
+  case LB:
     return _mouseTracker.leftButton == DirectX::Mouse::ButtonStateTracker::HELD;
-  case Input::RB:
+  case RB:
     return _mouseTracker.rightButton ==
            DirectX::Mouse::ButtonStateTracker::HELD;
-  case Input::WM:
+  case WM:
     return _mouseTracker.middleButton ==
            DirectX::Mouse::ButtonStateTracker::HELD;
   default:
@@ -104,18 +104,18 @@ bool InputSystem::IsKeyDown(DirectX::Keyboard::Keys key) const
   return _keyboardTracker.IsKeyPressed(key);
 }
 
-bool InputSystem::IsKeyDown(Input::MouseState mouseState) const
+bool InputSystem::IsKeyDown(MouseState mouseState) const
 {
   // 마우스 버튼이 이번 프레임에서 눌렸는지 확인
   switch (mouseState)
   {
-  case Input::LB:
+  case LB:
     return _mouseTracker.leftButton ==
            DirectX::Mouse::ButtonStateTracker::PRESSED;
-  case Input::RB:
+  case RB:
     return _mouseTracker.rightButton ==
            DirectX::Mouse::ButtonStateTracker::PRESSED;
-  case Input::WM:
+  case WM:
     return _mouseTracker.middleButton ==
            DirectX::Mouse::ButtonStateTracker::PRESSED;
   default:
@@ -128,17 +128,17 @@ bool InputSystem::IsKeyUp(DirectX::Keyboard::Keys key) const
   return _keyboardTracker.IsKeyReleased(key);
 }
 
-bool InputSystem::IsKeyUp(Input::MouseState mouseState) const
+bool InputSystem::IsKeyUp(MouseState mouseState) const
 {
   switch (mouseState)
   {
-  case Input::LB:
+  case LB:
     return _mouseTracker.leftButton ==
            DirectX::Mouse::ButtonStateTracker::RELEASED;
-  case Input::RB:
+  case RB:
     return _mouseTracker.rightButton ==
            DirectX::Mouse::ButtonStateTracker::RELEASED;
-  case Input::WM:
+  case WM:
     return _mouseTracker.middleButton ==
            DirectX::Mouse::ButtonStateTracker::RELEASED;
   default:
@@ -146,16 +146,16 @@ bool InputSystem::IsKeyUp(Input::MouseState mouseState) const
   }
 }
 
-bool InputSystem::IsMouseWheel(Input::MouseState mouseState) const
+bool InputSystem::IsMouseWheel(MouseState mouseState) const
 {
   switch (mouseState)
   {
-  case Input::WHDN:
+  case WHDN:
     if (_prevMouseState.scrollWheelValue > _mouseState.scrollWheelValue)
       return true; // 휠 다운
     break;
 
-  case Input::WHUP:
+  case WHUP:
     if (_prevMouseState.scrollWheelValue < _mouseState.scrollWheelValue)
       return true; // 휠 업
     break;

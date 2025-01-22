@@ -52,7 +52,7 @@ private:
   PipeLine* _pso = nullptr;
   ShaderCompiler* _compiler = nullptr;
   Renderer::Camera _camera;
-  Light::DirectionalLight _mainLight;
+  DirectionalLight _mainLight;
   int max = std::numeric_limits<int>::max();
 
 public:
@@ -112,7 +112,7 @@ public:
     _camera.projection = projection;
     _camera.eye = eye;
   }
-  void SetMainLightDir(Light::DirectionalLight mainLight)
+  void SetMainLightDir(DirectionalLight mainLight)
   {
     _mainLight = mainLight;
   }
