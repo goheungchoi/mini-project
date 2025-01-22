@@ -21,7 +21,7 @@ static void ProcessAnimation(AnimationData& animation,
   {
     const auto* flatChannel = flatAnimation->animationChannels()->operator[](i);
 
-		AnimationChannel channel{.boneId = flatChannel->boneId(),
+		AnimationChannelData channel{.boneId = flatChannel->boneId(),
                              .nodeName = flatChannel->nodeName()->c_str(),
 
                              .numKeyPositions = flatChannel->numKeyPositions(),

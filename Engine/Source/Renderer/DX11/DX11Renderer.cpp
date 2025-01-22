@@ -88,7 +88,7 @@ void DX11Renderer::DrawMesh(MeshHandle handle)
   {
     throw std::exception("buffer not registered");
   }
-  _passMgr->ClassfyPass(buffer->second);
+  _passMgr->ClassifyPass(buffer->second);
 }
 
 void DX11Renderer::EndDraw() {}
@@ -142,6 +142,7 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
     MeshBuffer* meshBuffer = new MeshBuffer;
 
     MeshData meshData = AccessMeshData(handle);
+    
     // material
     {
       meshBuffer->material = new Material;
@@ -162,6 +163,27 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
         break;
       }
       }
+    }
+    if (!meshData.bones.empty())
+    {
+      std::vector<uint32_t> boneIndicesBuffer; 
+      std::vector<float> boneWeightsBuffer; 
+      meshBuffer->flags |= RenderPassType::kSkinning;
+      for (const auto& vertexBoneData : meshData.vertices)
+      {
+        for (size_t i = 0; i < 8; ++i)
+        {
+          boneIndicesBuffer.push_back(meshData.boneIds[i]);
+          boneWeightsBuffer.push_back(meshData.boneWeights[i]);
+        }
+      }
+      UINT size = sizeof(uint32_t) * boneWeightsBuffer.size();
+      meshBuffer->boneIDBuffer = _device->CreateDataBuffer(
+          boneIndicesBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE);
+
+      size = sizeof(float) * boneWeightsBuffer.size();
+      meshBuffer->boneWeightsBuffer = _device->CreateDataBuffer(
+          boneWeightsBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE);
     }
     // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함.??
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
@@ -280,7 +302,23 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
   _passMgr->SetSkyBox(envPath, specularBRDFPath, diffuseIrrPath,
                       specularIBLPath);
 }
+#ifdef _DEBUG
+void DX11Renderer::DrawDebugSphere(Matrix world, Color color) 
+{
+  _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Sphere, world, color);
+}
 
+void DX11Renderer::DrawDebugBox(Matrix world, Color color)
+{
+  _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Box, world, color);
+}
+
+void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
+{
+  _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
+}
+
+#endif
 void DX11Renderer::BeginImGuiDraw()
 {
   ImGui_ImplDX11_NewFrame();

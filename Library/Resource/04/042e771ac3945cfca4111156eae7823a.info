@@ -1,0 +1,25 @@
+{
+    "uuid": "042e771ac3945cfca4111156eae7823a",
+    "import_path": "Models\\Chr_Test\\Cube.0020.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Cube.0020",
+        "bounding_box": [
+            [
+                -0.9814807772636414,
+                -1.230831503868103,
+                -10.604619979858398
+            ],
+            [
+                0.9814807772636414,
+                0.8559633493423462,
+                -8.358491897583008
+            ]
+        ],
+        "num_vertices": 1184,
+        "num_indices": 1776,
+        "material": "Models\\Chr_Test\\DefaultMaterial0.mat",
+        "bones": [],
+        "bone_weights": []
+    }
+}

@@ -62,6 +62,26 @@ public:
   //   1. you can delete meshes render pass type.
   // * Param1 : own meshHandle
   // */
+  #ifdef _DEBUG
+  /**
+   * @brief draw Sphere wireFrame, it's only work on debug
+   * @param world world Matirx
+   * @param color color
+   */
+  virtual void DrawDebugSphere(Matrix world, Color color) = 0;
+  /**
+   * @brief draw Sphere wireFrame, it's only work on debug
+   * @param world world Matirx
+   * @param color color
+   */
+  virtual void DrawDebugBox(Matrix world, Color color) = 0;
+  /**
+   * @brief draw Sphere wireFrame, it's only work on debug
+   * @param world world Matirx
+   * @param color color
+   */
+  virtual void DrawDebugCylinder(Matrix world, Color color) = 0;
+  #endif
   virtual void DeleteShadow(MeshHandle handle) = 0;
 
   virtual void BindPipeline() = 0;

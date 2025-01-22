@@ -1,6 +1,8 @@
 #pragma once
 #include "../Common.h"
 #include "../Device.h"
+#include "Core/Common.h"
+#include "Shared/Config/Config.h"
 struct VertexShader
 {
   ComPtr<ID3D11VertexShader> shader;
@@ -22,7 +24,8 @@ public:
   ~ShaderCompiler() {}
 
 public:
-  VertexShader* CompileVertexShader(const std::vector<D3D_SHADER_MACRO>& macros,LPCSTR entryPoint)
+  VertexShader* CompileVertexShader(const std::vector<D3D_SHADER_MACRO>& macros,
+                                    LPCSTR entryPoint)
   {
     VertexShader* pShader = new VertexShader();
     DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
@@ -38,10 +41,12 @@ public:
 #endif
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
-    HR_T(D3DCompileFromFile(
-        L"../Engine/Source/Renderer/DX11/Shader/DX11Shader.hlsl", macros.data(),
-        D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "vs_5_0", shaderFlags, 0,
-        &shaderBlob, &errorBlob));
+    std::wstring filename = L"/DX11Shader.hlsl";
+    std::wstring shaderPath =
+        Utility::convertToUTF16(ns::kShaderDir) + filename;
+    HR_T(D3DCompileFromFile(shaderPath.c_str(), macros.data(),
+                            D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint,
+                            "vs_5_0", shaderFlags, 0, &shaderBlob, &errorBlob));
     HR_T(_device->GetDevice()->CreateVertexShader(
         shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
         pShader->shader.GetAddressOf()));
@@ -79,10 +84,12 @@ public:
     // Disable optimizations to further improve shader debugging
     shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
+    std::wstring filename = L"/DX11Shader.hlsl";
+    std::wstring shaderPath =
+        Utility::convertToUTF16(ns::kShaderDir) + filename;
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
-    HR_T(D3DCompileFromFile(
-        L"../Engine/Source/Renderer/DX11/Shader/DX11Shader.hlsl", macros.data(),
+    HR_T(D3DCompileFromFile(shaderPath.c_str(), macros.data(),
         D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "ps_5_0", shaderFlags, 0,
         &shaderBlob, &errorBlob));
     HR_T(_device->GetDevice()->CreatePixelShader(

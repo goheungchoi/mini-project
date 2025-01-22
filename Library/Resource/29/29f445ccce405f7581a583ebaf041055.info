@@ -1,0 +1,25 @@
+{
+    "uuid": "29f445ccce405f7581a583ebaf041055",
+    "import_path": "Models\\Chr_Test\\Cylinder.0010.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Cylinder.0010",
+        "bounding_box": [
+            [
+                -4.326716423034668,
+                -0.9008815884590149,
+                -8.931975364685059
+            ],
+            [
+                4.326716423034668,
+                0.6447204947471619,
+                0.019800599664449692
+            ]
+        ],
+        "num_vertices": 3794,
+        "num_indices": 5658,
+        "material": "Models\\Chr_Test\\DefaultMaterial1.mat",
+        "bones": [],
+        "bone_weights": []
+    }
+}

@@ -24,12 +24,14 @@ struct Frame
 struct World
 {
   Matrix world;
+  Color color;
 };
 
 struct PixelData
 {
-  float alphaCutoff;
+  float alphaCutoff=0.f;
   Vector3 padding1{};
+  Color color;
 };
 } // namespace Constant
 
@@ -45,7 +47,9 @@ struct MeshBuffer
   UINT stride;
   UINT offset;
   UINT nIndices;
-  Matrix world;
+  ComPtr<ID3D11Buffer> boneIDBuffer;
+  ComPtr<ID3D11Buffer> boneWeightsBuffer;
+  Matrix world=Matrix::Identity;
   Material* material=nullptr;
   RenderPassFlags flags = 0;
 };

@@ -42,7 +42,11 @@ public:
   bool DestoryComputeEffect() override;
   void CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                     LPCSTR diffuseIrrPath, LPCSTR specularIBLPath) override;
-
+  #ifdef _DEBUG
+  void DrawDebugSphere(Matrix world, Color color) override;
+  void DrawDebugBox(Matrix world, Color color) override;
+  void DrawDebugCylinder(Matrix world, Color color) override;
+  #endif
 public:
 	// Render ImGui graphical interface.
   void BeginImGuiDraw();

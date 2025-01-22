@@ -149,6 +149,24 @@ public:
     _device->GetImmContext()->IASetPrimitiveTopology(
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     _device->GetImmContext()->DrawIndexed(_frame->_indexCount, 0, 0);
+    #ifdef _DEBUG
+    if (ImGui::Begin("Deffered"))
+    {
+      ImTextureID imgID = (ImTextureID)(uintptr_t)_renderTargetSRVs[0].Get();
+      ImGui::Image(imgID, ImVec2(240, 135));
+      imgID = (ImTextureID)(uintptr_t)_renderTargetSRVs[1].Get();
+      ImGui::Image(imgID, ImVec2(240, 135));
+      imgID = (ImTextureID)(uintptr_t)_renderTargetSRVs[2].Get();
+      ImGui::Image(imgID, ImVec2(240, 135));
+      imgID = (ImTextureID)(uintptr_t)_renderTargetSRVs[3].Get();
+      ImGui::Image(imgID, ImVec2(240, 135));
+      imgID = (ImTextureID)(uintptr_t)_renderTargetSRVs[4].Get();
+      ImGui::Image(imgID, ImVec2(240, 135));
+
+    }
+    ImGui::End();
+    #endif
+    
   }
   void ClearRenderTargets()
   {

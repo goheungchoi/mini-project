@@ -63,6 +63,9 @@ xUUID GenerateRandomUUID() {
 }
 
 xUUID GenerateUUIDFromName(const std::string& name) {
+  if (name.empty())
+    return xUUID();
+
   static uuids::uuid_name_generator gen(
       uuids::uuid::from_string("47183823-2574-4bfd-b411-99ed177d3e43").value());
   const uuids::uuid id = gen(name);

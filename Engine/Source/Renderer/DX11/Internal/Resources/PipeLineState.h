@@ -29,7 +29,9 @@ private:
 public:
   BackBuffer* _backBuffer = nullptr;
   OutputMerger* _om = nullptr;
-  Rasterizer* _rs = nullptr;
+  Rasterizer* _rsDefault = nullptr;
+  Rasterizer* _rsWireFrame = nullptr;
+  Rasterizer* _rsCullNone = nullptr;
   float _clearColor[4];
   float _clearColor2[4] = {0.2f, 0.2f, 0.2f, 1.f};
 
@@ -80,8 +82,11 @@ public:
     // Output Merger End
     //
     // 2.Rasterizer Start
-    _rs = new Rasterizer;
-    _rs->viewPort = {.TopLeftX = 0.f,
+    // defulat
+    _rsDefault = new Rasterizer;
+    _rsCullNone = new Rasterizer;
+    _rsWireFrame = new Rasterizer;
+    _rsDefault->viewPort = {.TopLeftX = 0.f,
                      .TopLeftY = 0.f,
                      .Width = static_cast<float>(width),
                      .Height = static_cast<float>(height),
@@ -91,16 +96,28 @@ public:
         CreateRaterizerDesc(D3D11_FILL_SOLID, D3D11_CULL_BACK, false, 0, 0.f,
                             0.f, true, false, false, true);
     HR_T(_device->GetDevice()->CreateRasterizerState(
-        &rasterizerDesc, _rs->rasterizerState.GetAddressOf()));
-    _device->GetImmContext()->RSSetState(_rs->rasterizerState.Get());
-    _device->GetImmContext()->RSSetViewports(1, &_rs->viewPort);
+        &rasterizerDesc, _rsDefault->rasterizerState.GetAddressOf()));
+    // wireFrame
+    rasterizerDesc =
+        CreateRaterizerDesc(D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, false, 0, 0.f,
+                            0.f, true, false, false, true);
+    HR_T(_device->GetDevice()->CreateRasterizerState(
+        &rasterizerDesc, _rsWireFrame->rasterizerState.GetAddressOf()));
+    // cull none
+    rasterizerDesc =
+        CreateRaterizerDesc(D3D11_FILL_SOLID, D3D11_CULL_NONE, false, 0, 0.f,
+                            0.f, true, false, false, true);
+    HR_T(_device->GetDevice()->CreateRasterizerState(
+        &rasterizerDesc, _rsCullNone->rasterizerState.GetAddressOf()));
+    _device->GetImmContext()->RSSetState(_rsDefault->rasterizerState.Get());
+    _device->GetImmContext()->RSSetViewports(1, &_rsDefault->viewPort);
     // Rasterizer End
   }
   ~PipeLine()
   {
     SAFE_RELEASE(_backBuffer);
     SAFE_RELEASE(_om);
-    SAFE_RELEASE(_rs);
+    SAFE_RELEASE(_rsDefault);
   }
 
 public:
@@ -112,7 +129,6 @@ public:
   }
   void ClearBackBufferDSV()
   {
-
     _device->GetImmContext()->ClearDepthStencilView(_backBuffer->mainDSV.Get(),
                                                     D3D11_CLEAR_DEPTH, 1.f, 0);
   }
@@ -133,12 +149,24 @@ public:
   }
   void SetMainViewPort() 
   {
-    _device->GetImmContext()->RSSetViewports(1, &_rs->viewPort);
+    _device->GetImmContext()->RSSetViewports(1, &_rsDefault->viewPort);
   }
   void SetBackBuffer()
   {
     _device->GetImmContext()->OMSetRenderTargets(
         1, _backBuffer->mainRTV.GetAddressOf(), _backBuffer->mainDSV.Get());
+  }
+  void SetMainRS()
+  {
+    _device->GetImmContext()->RSSetState(_rsDefault->rasterizerState.Get());
+  }
+  void SetWireFrame()
+  {
+    _device->GetImmContext()->RSSetState(_rsWireFrame->rasterizerState.Get());
+  }
+  void SetCullNone()
+  {
+    _device->GetImmContext()->RSSetState(_rsCullNone->rasterizerState.Get());
   }
   void TurnZBufferOn()
   {

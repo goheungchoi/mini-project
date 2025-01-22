@@ -19,6 +19,7 @@ public:
     UINT deviceFlags = 0;
 #ifdef _DEBUG
     deviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+    deviceFlags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #endif // _DEBUG
     const D3D_FEATURE_LEVEL featurelevel[] = {
         D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
@@ -59,7 +60,7 @@ public:
    *buffer Type -> index,vertex
    */
   ComPtr<ID3D11Buffer> CreateDataBuffer(const void* data, UINT size,
-                                        D3D11_BIND_FLAG bufferType) const
+                                        D3D11_BIND_FLAG bufferType,UINT structSize=0) const
   {
     D3D11_SUBRESOURCE_DATA bufferData{};
     bufferData.pSysMem = data;
@@ -67,7 +68,7 @@ public:
     ComPtr<ID3D11Buffer> buffer;
     const D3D11_SUBRESOURCE_DATA* bufferDataPtr = data ? &bufferData : nullptr;
     D3D11_BUFFER_DESC desc;
-    desc = CreateBufferDesc(size, D3D11_USAGE_DEFAULT, bufferType);
+    desc = CreateBufferDesc(size, D3D11_USAGE_DEFAULT, bufferType, structSize);
     HR_T(_device->CreateBuffer(&desc, bufferDataPtr, buffer.GetAddressOf()));
     return buffer;
   }
