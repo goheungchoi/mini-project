@@ -2,6 +2,11 @@
 #include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/SwapChain.h"
 
+D2DRenderer::~D2DRenderer()
+{
+  UnInit();
+}
+
 bool D2DRenderer::Init(Device* device, SwapChain* swapChain)
 {
   _pDevice = device;
@@ -61,6 +66,22 @@ void D2DRenderer::CreateD2DRenderTarget()
   _pD2D1DeviceContext->SetTarget(_pID2D1Bitmap);
 }
 
+void D2DRenderer::UnInit()
+{
+  SAFE_RELEASE(_pFont);
+  Com::SAFE_RELEASE(_pBrush);
+  Com::SAFE_RELEASE(_pID2D1Bitmap);
+  Com::SAFE_RELEASE(_pD2D1DeviceContext);
+  Com::SAFE_RELEASE(_pD2DFactory);
+  Com::SAFE_RELEASE(_pD2D1Device);
+  Com::SAFE_RELEASE(_pIDXGISurface);
+  Com::SAFE_RELEASE(_pDXGIDevice);
+
+  _pDevice = nullptr;
+  _pSwapChain = nullptr;
+
+}
+
 void D2DRenderer::Draw() {
 
 }
@@ -75,12 +96,6 @@ void D2DRenderer::EndDraw()
   _pD2D1DeviceContext->EndDraw();
 }
 
-ID2D1Bitmap1* D2DRenderer::ConvertDDSToD2DBitmap1(TextureData data)
-{
-  return nullptr;
-}
-
-
 
 
 
@@ -88,16 +103,17 @@ ID2D1Bitmap1* D2DRenderer::ConvertDDSToD2DBitmap1(TextureData data)
 ////////////////////// Font Engine //////////////////////////
 /// </summary>
 
-
-
 Font::Font(ID2D1DeviceContext* pD2D1DeviceContext, ID2D1SolidColorBrush* pBrush)
 {
+  _pD2D1DeviceContext = pD2D1DeviceContext;
+  _pBrush = pBrush;
+
   Init();
 }
 
-Font::~Font() {
-
-
+Font::~Font()
+{
+  UnInit();
 }
 
 void Font::Init()
@@ -108,7 +124,21 @@ void Font::Init()
 
 void Font::UnInit()
 {
+  for (auto& pair : _TextFormats)
+  {
+    if (pair.second)
+    {
+      Com::SAFE_RELEASE(pair.second);
+    }
+  }
 
+  _TextFormats.clear();
+
+  // IDWriteFactory ÆÄ±«
+  Com::SAFE_RELEASE(pDWriteFactory);
+
+  _pD2D1DeviceContext = nullptr;
+  _pBrush = nullptr;
 }
 
 void Font::CreateIDWriteFactory()

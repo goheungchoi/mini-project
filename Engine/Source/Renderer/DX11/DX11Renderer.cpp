@@ -60,6 +60,9 @@ bool DX11Renderer::Cleanup()
   ImGui_ImplDX11_Shutdown();
   ImGui_ImplWin32_Shutdown();
   ImGui::DestroyContext();
+
+  SAFE_RELEASE(_d2dRenderer);
+
   return false;
 }
 
@@ -74,6 +77,8 @@ void DX11Renderer::BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
   BeginImGuiDraw();
   _passMgr->UpdateVariable();
 #endif
+
+  _d2dRenderer->BeginDraw();
 }
 
 void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
@@ -105,6 +110,9 @@ void DX11Renderer::EndFrame()
 #ifdef _DEBUG
   DrawImGui();
 #endif
+
+  _d2dRenderer->EndDraw();
+
   _swapChain->GetSwapChain()->Present(0, 0);
 }
 
@@ -349,6 +357,20 @@ void DX11Renderer::DrawImGui()
   // Rendering
   ImGui::Render();
   ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}
+
+void DX11Renderer::CreateTextFormat(std::wstring fontName, float size,
+                                    UINT fontWeight, UINT textAlignment,
+                                    UINT paragraphAlignment)
+{
+  _d2dRenderer->_pFont->CreateTextFormat(fontName, size, fontWeight,
+                                         textAlignment, paragraphAlignment);
+}
+
+void DX11Renderer::TextDraw(const wchar_t* format, Vector4 rect,
+                            const std::wstring& fontName, Color color)
+{
+  _d2dRenderer->_pFont->TextDraw(format, rect, fontName, color);
 }
 
 void DX11Renderer::CreateEngineShader()
