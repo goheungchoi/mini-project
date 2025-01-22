@@ -1,0 +1,25 @@
+{
+    "uuid": "388c1ff59f735fd3aa5413430a04b6a3",
+    "import_path": "Models\\Enemy01\\Cube.0030.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Cube.0030",
+        "bounding_box": [
+            [
+                -0.8653432726860046,
+                0.42838940024375916,
+                -0.2770109474658966
+            ],
+            [
+                0.8653432726860046,
+                2.084230422973633,
+                0.19364608824253082
+            ]
+        ],
+        "num_vertices": 2503,
+        "num_indices": 9792,
+        "material": "Models\\Enemy01\\Material.0011.mat",
+        "bones": [],
+        "bone_weights": []
+    }
+}

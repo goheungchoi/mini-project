@@ -1,0 +1,76 @@
+{
+    "uuid": "452a97035314515d9589a3f818f85f07",
+    "import_path": "Models\\Enemy01\\untitled.fbx",
+    "resource_type": "model",
+    "details": {
+        "name": "",
+        "nodes": [
+            {
+                "name": "RootNode",
+                "idx": 0,
+                "level": 0,
+                "parent": -1,
+                "first_child": 1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "Circle",
+                "idx": 1,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 2,
+                "meshes": [
+                    "Models\\Enemy01\\Circle0.mesh"
+                ]
+            },
+            {
+                "name": "Cube",
+                "idx": 2,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 3,
+                "meshes": [
+                    "Models\\Enemy01\\Cube.0020.mesh"
+                ]
+            },
+            {
+                "name": "Cube.002",
+                "idx": 3,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 4,
+                "meshes": [
+                    "Models\\Enemy01\\Cube.0030.mesh"
+                ]
+            },
+            {
+                "name": "Cylinder.009",
+                "idx": 4,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": [
+                    "Models\\Enemy01\\Cylinder.0160.mesh"
+                ]
+            }
+        ],
+        "meshes": [
+            "Models\\Enemy01\\Circle0.mesh",
+            "Models\\Enemy01\\Cube.0020.mesh",
+            "Models\\Enemy01\\Cube.0030.mesh",
+            "Models\\Enemy01\\Cylinder.0160.mesh"
+        ],
+        "materials": [
+            "Models\\Enemy01\\Material.0010.mat",
+            "Models\\Enemy01\\Material.0011.mat",
+            "Models\\Enemy01\\Material.0020.mat",
+            "Models\\Enemy01\\Material.0012.mat"
+        ],
+        "textures": []
+    }
+}

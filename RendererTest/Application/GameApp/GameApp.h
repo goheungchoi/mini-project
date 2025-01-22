@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameEngine/GameEngine.h"
-#include "../../Engine/Source/Renderer/IRenderer.h"
+#include "Renderer/IRenderer.h"
 #include "Core/Camera/Camera.h"
 class GameApp : public GameEngine
 {
@@ -12,7 +12,8 @@ public:
   ~GameApp() = default;
 
 public:
-  virtual void Initialize() override;
+  virtual void Initialize(UINT screenWidth, UINT screenHeight,
+                          const std::wstring& title) override;
   virtual void Execute() override;
   virtual void Shutdown() override;
 

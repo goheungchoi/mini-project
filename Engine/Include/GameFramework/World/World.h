@@ -1,40 +1,59 @@
 #pragma once
 
+#include "Core/Common.h"
+
 #include "GameFramework/Level/Level.h"
+
+#include "Renderer/IRenderer.h"
 
 class World
 {
-protected:
-  std::map<std::string, Level*> levelList;
-  Level* nextLevel{nullptr};
-  Level* currentLevel{nullptr};
+private:
 
-  class CameraComponent* mainCamera{nullptr};
+  IRenderer* _renderer;
 
   // UI System
-  // class Canvas* canvas = nullptr;
+  // class Canvas* _canvas = nullptr;
 
   // EffectSystem
-  // EffectSystem effectSystem;
+  // EffectSystem _effectSystem;
 
   // Collision System
-  // CollisionSystem collisionSystem;
+  // CollisionSystem _collisionSystem;
+
+  class Camera* _defaultCamera;
 
 public:
-  World() {}
-  virtual ~World() {}
+  std::map<std::string, Level*> _levelMap;
+  Level* _nextLevel{nullptr};
+  Level* _currentLevel{nullptr};
+
+  bool bCameraMove{true};
+  class Camera* mainCamera{nullptr};
+
+  World() = default;
+  virtual ~World() = default;
+
+  void Initialize(HWND hwnd, const std::wstring& title);
+  void Cleanup();
+
+  static World* CreateWorld(HWND hwnd, const std::wstring& title);
+
 
 	template <LevelType T>
   T* CreateLevel(const std::string& name)
   {
     T* pLevel = new T(this, name);
-    levelList.insert({name, pLevel});
+    _levelMap.insert({name, pLevel});
     return pLevel;
   }
 
-	void ChangeScene() { /* TODO: */ }
-  void SetNextScene(std::string next) { /* TODO: */ }
-  Level* GetCurrentLevel() { return currentLevel; }
+	void ChangeLevel() { /* TODO: */ }
+  void AddLevel(const std::string& level) { /* TODO: */ }
+  Level* GetCurrentLevel() { return _currentLevel; }
+
+  void SetMainCamera(class Camera* camera);
+  void FixCameraPosition(bool fixed);
 
   XMVECTOR ScreenToWorldPosition(XMVECTOR position);
 
@@ -117,5 +136,16 @@ public:
   //	// TODO
   //	return false;
   // }
+
+  void BeginPlay();
+  void EndPlay();
+
+  void ProcessInput(float dt);
+  void FixedUpdate(float dt);
+  void PreUpdate(float dt);
+  void Update(float dt);
+  void PostUpdate(float dt);
+
+  void Render();
 
 };

@@ -8,11 +8,56 @@
 #include <imgui_impl_win32.h>
 #define RenderTest
 
-static ModelHandle modelHandle;
-static ModelHandle modelHandle2;
-static ModelHandle modelHandle3;
-static ModelHandle modelHandle4;
-void GameApp::Initialize()
+//static ModelHandle modelHandle;
+//static ModelHandle modelHandle2;
+//static ModelHandle modelHandle3;
+//static ModelHandle modelHandle4;
+//
+//
+//static ModelHandle skinningTest;
+//
+//static GameObject* root;
+//
+//static Animation* anim1;
+//static AnimationState* animState1;
+//static AnimatorComponent* animComponent1;
+//
+//static SkeletalMeshComponent* animSkeletal1;
+//static SkeletalMeshComponent* animSkeletal2;
+
+//  skinningTest = LoadModel("Models\\SkinningTest\\SkinningTest.gltf");
+//
+//root = myLevel->CreateGameObjectFromModel<GameObject>(
+//    "Models\\SkinningTest\\SkinningTest.gltf");
+//
+//animSkeletal1 =
+//    (*root->childrens.begin())->GetComponent<SkeletalMeshComponent>();
+//animSkeletal2 = (*std::next(root->childrens.begin()))
+//                    ->GetComponent<SkeletalMeshComponent>();
+//
+//const ModelData& skinningData = AccessModelData(skinningTest);
+//
+//for (auto animHandle : skinningData.animations)
+//{
+//  anim1 = new Animation(animHandle, true);
+//}
+//
+//animState1 = new AnimationState(anim1);
+//
+//animComponent1 = root->CreateComponent<AnimatorComponent>();
+//animComponent1->BineSkeleton(skinningData.skeleton);
+//
+//animComponent1->SetState(animState1);
+
+//void GameApp::FixedUpdate(float deltaTime)
+//{
+//  animComponent1->UpdateAnimation(deltaTime);
+//
+//  animSkeletal1->UpdateBoneTransforms();
+//  animSkeletal2->UpdateBoneTransforms();
+//}
+
+void GameApp::Initialize(const std::wstring& title)
 {
   // 윈도우 생성
   _hwnd =

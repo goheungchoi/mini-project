@@ -43,6 +43,15 @@ public:
 	void SetName(const std::string& name) { this->name = name; }
   const std::string& GetName() const { return name; }
 
+  const XMMATRIX& GetLocalTransform() const
+  {
+    return transform->localTransform;
+  }
+  const XMMATRIX& GetWorldTransform() const 
+  { 
+    return transform->globalTransform; 
+  }
+
   void AddChild(GameObject* gameObject)
   {
     gameObject->parent = this;

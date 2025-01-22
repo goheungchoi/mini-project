@@ -174,6 +174,8 @@ public:
     return res;
   }
 
+  const std::list<GameObject*>& GetGameObjectList() { return gameObjects; }
+
 public:
   std::list<GameObject*> gameObjects;
 
