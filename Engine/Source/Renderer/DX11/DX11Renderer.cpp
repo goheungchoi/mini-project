@@ -196,13 +196,15 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
       std::vector<uint32_t> boneIndicesBuffer; 
       std::vector<float> boneWeightsBuffer; 
       meshBuffer->flags |= RenderPassType::kSkinning;
+      size_t index = 0;
       for (const auto& vertexBoneData : meshData.vertices)
       {
         for (size_t i = 0; i < 8; ++i)
         {
-          boneIndicesBuffer.push_back(meshData.boneIds[i]);
-          boneWeightsBuffer.push_back(meshData.boneWeights[i]);
-        }
+          boneIndicesBuffer.push_back(meshData.boneIds[index]);
+          boneWeightsBuffer.push_back(meshData.boneWeights[index]);
+          ++index;
+				}
       }
       UINT size = sizeof(uint32_t) * boneIndicesBuffer.size();
       meshBuffer->boneIDBuffer = _device->CreateDataBuffer(

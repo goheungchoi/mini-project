@@ -1151,12 +1151,16 @@ void ModelExporter::ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
   }
 
   // Match the weights to the bone array.
+  size_t i = 0;
   for (auto& vertexWeights : geoMesh.vertexBoneWeights)
   {
     for (VertexBoneWeight& weight : vertexWeights)
     {
+      if (i == 10000)
+        continue;
       weight.boneId = boneIndexMap[weight.boneId];
-    }
+      ++i;
+		}
   }
 }
 
