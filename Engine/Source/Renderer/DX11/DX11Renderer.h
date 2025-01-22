@@ -1,5 +1,5 @@
 #pragma once
-#include "../IRenderer.h"
+#include "Renderer/IRenderer.h"
 struct ResourceStorage;
 #ifdef _DEBUG
 class DebugLayer;
@@ -9,6 +9,7 @@ class SwapChain;
 class PipeLine;
 class RenderPassManager;
 class SkyBox;
+class D2DRenderer;
 class DX11Renderer : public IRenderer
 {
 public:
@@ -21,9 +22,10 @@ public:
   bool Cleanup() override;
   void ResizeScreen(unsigned int width, unsigned int height) override;
   void BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
-                  Light::DirectionalLight mainLight) override;
+                  DirectionalLight mainLight) override;
   void BeginDraw(MeshHandle handle, Matrix world) override;
-  void DrawMesh(MeshHandle handle) override;
+  void DrawMesh(MeshHandle handle, vector<DirectX::XMMATRIX> boneTransforms =
+                                       vector<DirectX::XMMATRIX>()) override;
   void EndDraw() override;
   void EndFrame() override;
   void AddShadow(MeshHandle handle) override;
@@ -42,11 +44,24 @@ public:
   bool DestoryComputeEffect() override;
   void CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                     LPCSTR diffuseIrrPath, LPCSTR specularIBLPath) override;
-
+  #ifdef _DEBUG
+  void DrawDebugSphere(Matrix world, Color color) override;
+  void DrawDebugBox(Matrix world, Color color) override;
+  void DrawDebugCylinder(Matrix world, Color color) override;
+  #endif
 public:
 	// Render ImGui graphical interface.
   void BeginImGuiDraw();
   void DrawImGui();
+
+// D2D Renderer
+  virtual void CreateTextFormat(std::wstring fontName, float size,
+                                UINT fontWeight = 400, UINT textAlignment = 2,
+                                UINT paragraphAlignment = 2) override;
+
+  virtual void TextDraw(const wchar_t* format, Vector4 rect,
+                        const std::wstring& fontName = L"¸¼Àº °íµñ",
+                        Color color = Color(0.0f, 0.0f, 0.0f, 1.0f)) override;
 
 private:
   void CreateEngineShader();
@@ -62,4 +77,6 @@ private:
 #endif // _DEBUG
   ResourceStorage* _storage = nullptr;
   RenderPassManager* _passMgr = nullptr;
+
+  D2DRenderer* _d2dRenderer = nullptr;
 };

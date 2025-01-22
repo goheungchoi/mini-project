@@ -25,7 +25,12 @@ public:
   {
     xUUID uuid = GenerateUUIDFromName(path);
 
-		// Check if the asset is already loaded
+    if (uuid.IsNil())
+    {
+      return Handle::kInvalidHandle;
+    }
+
+    // Check if the asset is already loaded
     if (auto it = _uuidMap.find(uuid); it == _uuidMap.end())
     {
       // Need to load a new resource

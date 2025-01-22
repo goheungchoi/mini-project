@@ -785,14 +785,18 @@ struct SkeletonNode FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SkeletonNodeBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_NAME = 4,
-    VT_LEVEL = 6,
-    VT_PARENT = 8,
-    VT_FIRSTCHILD = 10,
-    VT_NEXTSIBLING = 12,
-    VT_BONEID = 14
+    VT_TRANSFORM = 6,
+    VT_LEVEL = 8,
+    VT_PARENT = 10,
+    VT_FIRSTCHILD = 12,
+    VT_NEXTSIBLING = 14,
+    VT_BONEID = 16
   };
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  const GameResource::Matrix *transform() const {
+    return GetStruct<const GameResource::Matrix *>(VT_TRANSFORM);
   }
   int32_t level() const {
     return GetField<int32_t>(VT_LEVEL, 0);
@@ -813,6 +817,7 @@ struct SkeletonNode FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
+           VerifyField<GameResource::Matrix>(verifier, VT_TRANSFORM, 4) &&
            VerifyField<int32_t>(verifier, VT_LEVEL, 4) &&
            VerifyField<int32_t>(verifier, VT_PARENT, 4) &&
            VerifyField<int32_t>(verifier, VT_FIRSTCHILD, 4) &&
@@ -828,6 +833,9 @@ struct SkeletonNodeBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
     fbb_.AddOffset(SkeletonNode::VT_NAME, name);
+  }
+  void add_transform(const GameResource::Matrix *transform) {
+    fbb_.AddStruct(SkeletonNode::VT_TRANSFORM, transform);
   }
   void add_level(int32_t level) {
     fbb_.AddElement<int32_t>(SkeletonNode::VT_LEVEL, level, 0);
@@ -858,6 +866,7 @@ struct SkeletonNodeBuilder {
 inline ::flatbuffers::Offset<SkeletonNode> CreateSkeletonNode(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
+    const GameResource::Matrix *transform = nullptr,
     int32_t level = 0,
     int32_t parent = 0,
     int32_t firstChild = 0,
@@ -869,6 +878,7 @@ inline ::flatbuffers::Offset<SkeletonNode> CreateSkeletonNode(
   builder_.add_firstChild(firstChild);
   builder_.add_parent(parent);
   builder_.add_level(level);
+  builder_.add_transform(transform);
   builder_.add_name(name);
   return builder_.Finish();
 }
@@ -876,6 +886,7 @@ inline ::flatbuffers::Offset<SkeletonNode> CreateSkeletonNode(
 inline ::flatbuffers::Offset<SkeletonNode> CreateSkeletonNodeDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *name = nullptr,
+    const GameResource::Matrix *transform = nullptr,
     int32_t level = 0,
     int32_t parent = 0,
     int32_t firstChild = 0,
@@ -885,6 +896,7 @@ inline ::flatbuffers::Offset<SkeletonNode> CreateSkeletonNodeDirect(
   return GameResource::CreateSkeletonNode(
       _fbb,
       name__,
+      transform,
       level,
       parent,
       firstChild,

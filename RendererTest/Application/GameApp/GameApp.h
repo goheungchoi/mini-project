@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameEngine/GameEngine.h"
-#include "../../Engine/Source/Renderer/IRenderer.h"
+#include "Renderer/IRenderer.h"
 #include "Core/Camera/Camera.h"
 class GameApp : public GameEngine
 {
@@ -12,7 +12,8 @@ public:
   ~GameApp() = default;
 
 public:
-  virtual void Initialize() override;
+  virtual void Initialize(UINT screenWidth, UINT screenHeight,
+                          const std::wstring& title) override;
   virtual void Execute() override;
   virtual void Shutdown() override;
 
@@ -22,8 +23,9 @@ protected:
   virtual void Render() override;
 
 private:
+  bool bCameraMove{false};
   Camera* _camera;
-  Light::DirectionalLight _mainLight;
+  DirectionalLight _mainLight;
   IRenderer* _renderer;
   Vector4 eye;
   Vector4 at;

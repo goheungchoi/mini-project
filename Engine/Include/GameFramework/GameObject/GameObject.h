@@ -7,13 +7,6 @@
 #include "GameFramework/Components/SkeletalMeshComponent.h"
 #include "GameFramework/Components/TransformComponent.h"
 
-#include "GameFramework/Components/Colliders/ColliderComponent.h"
-#include "GameFramework/Components/Colliders/BoxColliderComponent.h"
-#include "GameFramework/Components/Colliders/CapsuleColliderComponent.h"
-#include "GameFramework/Components/Colliders/MeshColliderComponent.h"
-#include "GameFramework/Components/Colliders/SphereColliderComponent.h"
-
-#include "GameFramework/Types/OverlapInfo.h"
 
 class GameObject
 {
@@ -21,33 +14,56 @@ protected:
   class World* world = nullptr;
 
 public:
+  std::string tag;
   std::string name;
 	
   GameObject* parent;
-  std::vector<GameObject*> childrens;
+  std::list<GameObject*> childrens;
 
 	using ComponentRegistry = std::unordered_map<std::type_index, class ComponentBase*>;
   ComponentRegistry components;
 
 	/* Properties */
   bool bNeedTransformUpdate{false};
-	class TransformComponent* transform{nullptr};
+	TransformComponent* transform{nullptr};
 
 	EStatus status{EStatus_Awake};
   bool isActive{false};
 
 	GameObject(class World* world) : world{world} {
-    CreateComponent<TransformComponent>();
+    transform = CreateComponent<TransformComponent>();
 	}
 
 	void SetWorld(class World* world) { this->world = world; }
-  class World* GetWorld() { return world; }
+  class World* GetWorld() const { return world; }
+
+  void SetTag(const std::string& tag) { this->tag = tag; }
+  const std::string& GetTag() const { return tag; }
 
 	void SetName(const std::string& name) { this->name = name; }
   const std::string& GetName() const { return name; }
 
-	void AddChild(GameObject* gameObject);
-  void RemoveChild(GameObject* gameObject);
+  const XMMATRIX& GetLocalTransform() const
+  {
+    return transform->localTransform;
+  }
+  const XMMATRIX& GetWorldTransform() const 
+  { 
+    return transform->globalTransform; 
+  }
+
+  void AddChild(GameObject* gameObject)
+  {
+    gameObject->parent = this;
+    childrens.push_back(gameObject);
+    transform->AddChild(gameObject->transform);
+  }
+  void RemoveChild(GameObject* gameObject)
+  {
+    gameObject->parent = nullptr;
+    childrens.remove(gameObject);
+    transform->RemoveChild(gameObject->transform);
+  }
 
 	void SetActive(bool active)
   {
@@ -72,56 +88,11 @@ public:
 
 	// Transformation 
 
-
-	// Collision Event
-  void NotifyBeginOverlap(GameObject* other, const OverlapInfo& overlap)
-  {
-    OnBeginOverlap(other, overlap);
-  }
-  void NotifyOverlap(GameObject* other, const OverlapInfo& overlap)
-  {
-    OnOverlap(other, overlap);
-  }
-  void NotifyEndOverlap(GameObject* other, const OverlapInfo& overlap)
-  {
-    OnEndOverlap(other, overlap);
-  }
-  void NotifyBlockingHit(ColliderComponent* myComp,
-                         ColliderComponent* otherComp, bool bSelfMoved,
-                         const HitResult& hitResult)
-  {
-		// TODO:
-    // OnHit(myComp, otherComp, bSelfMoved, hitResult);
-  }
-
-	/**
-   * @brief ClickComponent Evnet
-   */
   virtual void OnBeginCursorOver() {};
   virtual void OnEndCursorOver() {};
   virtual void OnClicked() {};
   virtual void OnPressed() {};
 
-		/**
-   * @brief
-   * @param other
-   * @param overlap
-   */
-  virtual void OnBeginOverlap(GameObject* other, const OverlapInfo& overlap) {}
-
-  /**
-   * @brief
-   * @param other
-   * @param overlap
-   */
-  virtual void OnOverlap(GameObject* other, const OverlapInfo& overlap) {}
-
-  /**
-   * @brief
-   * @param other
-   * @param overlap
-   */
-  virtual void OnEndOverlap(GameObject* other, const OverlapInfo& overlap) {}
 
 	virtual void FixedUpdate(float fixedRate);
   virtual void PreUpdate(float dt);

@@ -12,6 +12,7 @@
 struct SkeletonNode
 {
   std::string name;
+  XMMATRIX transform;
 
   int level;
   int parent;

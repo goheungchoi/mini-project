@@ -21,7 +21,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance,
   _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 	GameApp app;
-	app.Initialize();
+  app.Initialize(1920, 1080, L"RenderTest");
 	app.Execute();
 	app.Shutdown();
 

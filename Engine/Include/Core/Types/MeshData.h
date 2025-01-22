@@ -14,6 +14,7 @@ struct Vertex
   Vector3 bitangent;
   Vector2 uv;
   Vector4 color;
+
 };
 
 using Index = uint32_t;

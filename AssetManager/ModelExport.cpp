@@ -1002,6 +1002,7 @@ void ModelExporter::ExtractSkeleton(const aiScene* scene) {
   // Start from the root node and progress recursively.
   SkeletonNode skeletonNode;
   skeletonNode.name = scene->mRootNode->mName.C_Str();
+  skeletonNode.transform = aiMatrix4x4();
   skeletonNode.level = 0;
   skeletonNode.parent = -1;
   skeletonNode.myIndex = 0;
@@ -1025,10 +1026,6 @@ void ModelExporter::ProcessSkeletonNode(Skeleton& skeleton,
   int count = 0;
   for (int i = 0; i < node->mNumChildren; ++i)
   {
-    // Exclude the mesh nodes
-    if (node->mChildren[i]->mNumMeshes > 0)
-      continue;
-
     if (count == 0)
     {
       parentSkeletonNode.firstChild = skeleton.nodes.size();
@@ -1037,27 +1034,34 @@ void ModelExporter::ProcessSkeletonNode(Skeleton& skeleton,
 		// Create a skeleton node.
     SkeletonNode skeletonNode;
     skeletonNode.name = node->mChildren[i]->mName.C_Str();
+    skeletonNode.transform = node->mChildren[i]->mTransformation;
     skeletonNode.level = parentSkeletonNode.level + 1;
     skeletonNode.parent = parentSkeletonNode.myIndex;
-    skeletonNode.myIndex = skeleton.nodes.size();
+    skeletonNode.myIndex = skeleton.nodes.size(); // Node index
     skeletonNode.firstChild = -1;
     skeletonNode.nextSibling = skeletonNode.myIndex + 1;
+    skeletonNode.boneId = -1;
     
+    // Check if it's a bone node
+    if (node->mChildren[i]->mNumMeshes <= 0)
+    {
+      // Create a bone.
+      Bone bone;
+      bone.id = skeleton.bones.size();  // Bone index
+      bone.name = node->mChildren[i]->mName.C_Str();
 
-		// Create a bone.
-		Bone bone;
-    bone.id = skeleton.bones.size();
-    bone.name = node->mChildren[i]->mName.C_Str();
+      // Map the name of the node and the bone id
+      skeleton.boneNameIdMap[bone.name] = bone.id;
 
-		// Set the skeleton node's bone id.
-    skeletonNode.boneId = bone.id;
+      // Set the skeleton node's bone id.
+      skeletonNode.boneId = bone.id;
+
+      // Add the bone.
+      skeleton.bones.push_back(bone);
+    }
 
 		skeleton.nodes.push_back(skeletonNode);
-    skeleton.bones.push_back(bone);
-
-		// Map the name of the node and the bone id
-    skeleton.boneNameIdMap[skeletonNode.name] = skeletonNode.boneId;
-
+    
     ++count;
   }
 
@@ -1068,9 +1072,9 @@ void ModelExporter::ProcessSkeletonNode(Skeleton& skeleton,
   count = 0;
   for (int i = 0; i < node->mNumChildren; ++i)
   {
-    // Exclude the mesh nodes
-    if (node->mChildren[i]->mNumMeshes > 0)
-      continue;
+    //// Exclude the mesh nodes
+    //if (node->mChildren[i]->mNumMeshes > 0)
+    //  continue;
 
     int childIndex = parentSkeletonNode.firstChild + count;
     ProcessSkeletonNode(skeleton, skeleton.nodes[childIndex],
@@ -1095,7 +1099,7 @@ void ModelExporter::ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
     weightVector.reserve(kMaxBoneInfluences);
 	}
 
-  // Process vertices.
+  // Process bone influences
   for (uint32_t boneIdx = 0; boneIdx < mesh->mNumBones; ++boneIdx)
   {
     aiBone* currBone = mesh->mBones[boneIdx];
@@ -1109,7 +1113,7 @@ void ModelExporter::ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
     geoMesh.bones[boneIdx] = bone;
 
 		// Retrieve the influences of the bone to vertices
-    uint32_t numWeights = std::min(currBone->mNumWeights, kMaxBoneInfluences);
+    uint32_t numWeights = currBone->mNumWeights;
 		auto* vertexWeights = currBone->mWeights;
     for (uint32_t weightIdx = 0; weightIdx < numWeights; ++weightIdx)
     {
@@ -1117,6 +1121,42 @@ void ModelExporter::ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
       float weight = vertexWeights[weightIdx].mWeight;
       geoMesh.vertexBoneWeights[vertexId].push_back({bone.id, weight});
 		}
+  }
+
+  // Post-process bone influence info for optimization
+  for (auto& boneWeights : geoMesh.vertexBoneWeights)
+  {
+    // Sort the bone weights in decreasing order.
+    std::sort(boneWeights.begin(), boneWeights.end(),
+              [](const VertexBoneWeight& lhs, const VertexBoneWeight& rhs) {
+                return lhs.weight > rhs.weight;
+              });
+
+    // Clamp out the size of the vertex bone weights.
+    if (boneWeights.size() > kMaxBoneInfluences)
+    {
+      boneWeights.erase(boneWeights.begin() + kMaxBoneInfluences,
+                        boneWeights.end());
+    }
+  }
+
+  // Sort the bone array, so that the root node comes first.
+  std::sort(geoMesh.bones.begin(), geoMesh.bones.end(), [](const Bone& lhs, const Bone& rhs) { return lhs.id < rhs.id; });
+
+  std::unordered_map<BoneId, uint32_t> boneIndexMap;
+  uint32_t index = 0;
+  for (Bone& bone : geoMesh.bones)
+  {
+    boneIndexMap[bone.id] = index++;
+  }
+
+  // Match the weights to the bone array.
+  for (auto& vertexWeights : geoMesh.vertexBoneWeights)
+  {
+    for (VertexBoneWeight& weight : vertexWeights)
+    {
+      weight.boneId = boneIndexMap[weight.boneId];
+    }
   }
 }
 
@@ -1148,9 +1188,15 @@ void ModelExporter::ExportSkeleton(Skeleton& skeleton) {
   {
     auto node_name = builder.CreateString(node.name);
 
+		auto node_transform = GameResource::Matrix(
+        node.transform[0][0], node.transform[0][1], node.transform[0][2], node.transform[0][3], 
+				node.transform[1][0], node.transform[1][1], node.transform[1][2], node.transform[1][3], 
+				node.transform[2][0], node.transform[2][1], node.transform[2][2], node.transform[2][3],
+        node.transform[3][0], node.transform[3][1], node.transform[3][2], node.transform[3][3]);
+
 		auto node_offset = GameResource::CreateSkeletonNode(
-        builder, node_name, node.level, node.parent, node.firstChild,
-        node.nextSibling, node.boneId);
+        builder, node_name, &node_transform, node.level, node.parent,
+        node.firstChild, node.nextSibling, node.boneId);
 
 		nodes.push_back(node_offset);
   }
@@ -1292,7 +1338,7 @@ void ModelExporter::ProcessAnimationChannel(AnimationChannel& animChannel,
 	// Read positions
   animChannel.numKeyPositions = channel->mNumPositionKeys;
   animChannel.keyPositions.resize(animChannel.numKeyPositions);
-  for (int posIdx = 0; posIdx < animChannel.numKeyPositions; ++posIdx)
+  for (uint32_t posIdx = 0; posIdx < animChannel.numKeyPositions; ++posIdx)
   {
     aiVector3D aiPosition = channel->mPositionKeys[posIdx].mValue;
     float timeStamp = channel->mPositionKeys[posIdx].mTime;
@@ -1306,7 +1352,7 @@ void ModelExporter::ProcessAnimationChannel(AnimationChannel& animChannel,
   // Read rotations
   animChannel.numKeyRotations = channel->mNumRotationKeys;
   animChannel.keyRotations.resize(animChannel.numKeyRotations);
-  for (int rotIdx = 0; rotIdx < animChannel.numKeyRotations; ++rotIdx)
+  for (uint32_t rotIdx = 0; rotIdx < animChannel.numKeyRotations; ++rotIdx)
   {
     aiQuaternion aiOrientation = channel->mRotationKeys[rotIdx].mValue;
     aiOrientation.Normalize();
@@ -1322,7 +1368,7 @@ void ModelExporter::ProcessAnimationChannel(AnimationChannel& animChannel,
   // Read scales
   animChannel.numKeyScalings = channel->mNumScalingKeys;
   animChannel.keyScalings.resize(animChannel.numKeyScalings);
-  for (int scaleIdx = 0; scaleIdx < animChannel.numKeyScalings;
+  for (uint32_t scaleIdx = 0; scaleIdx < animChannel.numKeyScalings;
        ++scaleIdx)
   {
     aiVector3D aiScale = channel->mScalingKeys[scaleIdx].mValue;

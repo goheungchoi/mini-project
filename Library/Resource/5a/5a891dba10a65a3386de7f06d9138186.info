@@ -1,0 +1,25 @@
+{
+    "uuid": "5a891dba10a65a3386de7f06d9138186",
+    "import_path": "Models\\Enemy01\\Circle0.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Circle0",
+        "bounding_box": [
+            [
+                -0.3723410964012146,
+                1.2581555843353271,
+                -0.2004336416721344
+            ],
+            [
+                0.3723410964012146,
+                1.9657894372940063,
+                0.15180110931396484
+            ]
+        ],
+        "num_vertices": 697,
+        "num_indices": 2412,
+        "material": "Models\\Enemy01\\Material.0010.mat",
+        "bones": [],
+        "bone_weights": []
+    }
+}

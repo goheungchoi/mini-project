@@ -177,6 +177,9 @@
 	<ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\PhyjixEngine\PhyjixEngine.vcxproj">
+			<Project>{9ded1277-e637-41f3-9448-24c93051d5ce}</Project>
+		</ProjectReference>
 		<ProjectReference Include="..\SharedLib\SharedLib.vcxproj">
 			<Project>{d67b80c2-6ba8-46ef-b896-0b6004a06416}</Project>
 		</ProjectReference>
@@ -197,6 +200,7 @@
 		<ClInclude Include="Include\Core\Types\AnimationData.h" />
 		<ClInclude Include="Include\Core\Types\BoneData.h" />
 		<ClInclude Include="Include\Core\Types\LightData.h" />
+		<ClInclude Include="Include\Core\Types\LightTypes.h" />
 		<ClInclude Include="Include\Core\Types\MaterialData.h" />
 		<ClInclude Include="Include\Core\Types\MeshData.h" />
 		<ClInclude Include="Include\Core\Types\ModelData.h" />
@@ -209,25 +213,20 @@
 		<ClInclude Include="Include\GameEngine\GameEngine.h" />
 		<ClInclude Include="Include\GameFramework\Common.h" />
 		<ClInclude Include="Include\GameFramework\Components\Animation\Animation.h" />
+		<ClInclude Include="Include\GameFramework\Components\Animation\AnimationState.h" />
 		<ClInclude Include="Include\GameFramework\Components\Animation\AnimatorComponent.h" />
-		<ClInclude Include="Include\GameFramework\Components\Colliders\BoxColliderComponent.h" />
-		<ClInclude Include="Include\GameFramework\Components\Colliders\CapsuleColliderComponent.h" />
-		<ClInclude Include="Include\GameFramework\Components\Colliders\ColliderComponent.h" />
-		<ClInclude Include="Include\GameFramework\Components\Colliders\MeshColliderComponent.h" />
-		<ClInclude Include="Include\GameFramework\Components\Colliders\SphereColliderComponent.h" />
-		<ClInclude Include="Include\GameFramework\Components\CollisionComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\ComponentBase.h" />
 		<ClInclude Include="Include\GameFramework\Components\LightComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\MeshComponent.h" />
+		<ClInclude Include="Include\GameFramework\Components\RigidbodyComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\SkeletalMeshComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\TerrainComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\TransformComponent.h" />
 		<ClInclude Include="Include\GameFramework\GameObject\GameObject.h" />
 		<ClInclude Include="Include\GameFramework\Level\Level.h" />
 		<ClInclude Include="Include\GameFramework\Systems\RenderSystem.h" />
-		<ClInclude Include="Include\GameFramework\Types\HitResult.h" />
-		<ClInclude Include="Include\GameFramework\Types\OverlapInfo.h" />
 		<ClInclude Include="Include\GameFramework\World\World.h" />
+		<ClInclude Include="Include\Renderer\IRenderer.h" />
 		<ClInclude Include="Include\ResourceManager\ResourceManager.h" />
 		<ClInclude Include="Include\WinApp\WinApp.h" />
 		<ClInclude Include="Include\WindowManager\WindowManager.h" />
@@ -241,24 +240,22 @@
 		<ClCompile Include="Source\Core\Utils\ShaderCompiler.cpp" />
 		<ClCompile Include="Source\GameEngine\GameEngine.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\Animation\Animation.cpp" />
+		<ClCompile Include="Source\GameFramework\Components\Animation\AnimationState.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\Animation\AnimatorComonent.cpp" />
-		<ClCompile Include="Source\GameFramework\Components\Colliders\BoxColliderComponent.cpp" />
-		<ClCompile Include="Source\GameFramework\Components\Colliders\CapsuleColliderComponent.cpp" />
-		<ClCompile Include="Source\GameFramework\Components\Colliders\ColliderComponent.cpp" />
-		<ClCompile Include="Source\GameFramework\Components\Colliders\MeshColliderComponent.cpp" />
-		<ClCompile Include="Source\GameFramework\Components\Colliders\SphereColliderComponent.cpp" />
-		<ClCompile Include="Source\GameFramework\Components\CollisionComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\ComponentBase.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\LightComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\MeshComponent.cpp" />
+		<ClCompile Include="Source\GameFramework\Components\RigidbodyComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\SkeletalMeshComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\TerrainComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\TransformComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\GameObject\GameObject.cpp" />
 		<ClCompile Include="Source\GameFramework\Level\Level.cpp" />
 		<ClCompile Include="Source\GameFramework\Systems\RenderSystem.cpp" />
-		<ClCompile Include="Source\GameFramework\Types\HitResult.cpp" />
 		<ClCompile Include="Source\GameFramework\World\World.cpp" />
+		<ClInclude Include="Source\Renderer\D2DRenderer\Common.h" />
+		<ClCompile Include="Source\Renderer\D2DRenderer\D2DRenderer.cpp" />
+		<ClInclude Include="Source\Renderer\D2DRenderer\D2DRenderer.h" />
 		<ClCompile Include="Source\Renderer\DX11\DX11Renderer.cpp" />
 		<ClInclude Include="Source\Renderer\DX11\DX11Renderer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Common.h" />
@@ -276,6 +273,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\ResourceStorage.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Buffer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\ConstantBuffer.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\GeometryPrimitive.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Image.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Material.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\PipeLineState.h" />
@@ -285,7 +283,6 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\Types.h" />
 		<None Include="Source\Renderer\DX11\Shader\DX11Shader.hlsl" />
 		<None Include="Source\Renderer\DX11\Shader\utility.hlsli" />
-		<ClInclude Include="Source\Renderer\IRenderer.h" />
 		<ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\AnimationResourcePool.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\MaterialResourcePool.cpp" />

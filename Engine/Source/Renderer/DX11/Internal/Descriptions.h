@@ -2,17 +2,22 @@
 #include "Common.h"
 
 using namespace Microsoft::WRL;
-D3D11_BUFFER_DESC CreateBufferDesc(UINT byteWidth, D3D11_USAGE usage,
-                                   UINT bindFlag)
+inline D3D11_BUFFER_DESC CreateBufferDesc(UINT size, D3D11_USAGE usage,
+                                   D3D11_BIND_FLAG bindFlags,
+                                   UINT structureStride = 0) 
 {
   D3D11_BUFFER_DESC desc{};
-  desc.ByteWidth = byteWidth;
   desc.Usage = usage;
-  desc.BindFlags = bindFlag;
+  desc.ByteWidth = size;
+  desc.BindFlags = bindFlags;
+  desc.CPUAccessFlags =
+      (usage == D3D11_USAGE_DYNAMIC) ? D3D11_CPU_ACCESS_WRITE : 0;
+  desc.MiscFlags =
+      structureStride > 0 ? D3D11_RESOURCE_MISC_BUFFER_STRUCTURED : 0;
+  desc.StructureByteStride = structureStride;
   return desc;
 }
-
-DXGI_SWAP_CHAIN_DESC CreateSwapChainDesc(
+inline DXGI_SWAP_CHAIN_DESC CreateSwapChainDesc(
     UINT width, UINT height, DXGI_FORMAT format, DXGI_USAGE usage,
     UINT bufferCount, UINT sampleDescCount, UINT sampleQuality,
     HWND outputWindow, BOOL windowed, DXGI_SWAP_EFFECT swapEffect, UINT flags)
@@ -31,7 +36,7 @@ DXGI_SWAP_CHAIN_DESC CreateSwapChainDesc(
   desc.OutputWindow = outputWindow;
   return desc;
 }
-void CreateInputLayoutDesc(
+inline void CreateInputLayoutDesc(
     std::vector<D3D11_INPUT_ELEMENT_DESC>& inputLayoutDesc,
   const std::vector<uint8_t>& vsData,
                            const size_t& vsSize)
@@ -159,7 +164,7 @@ void CreateInputLayoutDesc(
 //   return inputLayoutDesc;
 // }
 
-D3D11_TEXTURE2D_DESC CreateTexture2DDesc(UINT width, UINT height,
+inline D3D11_TEXTURE2D_DESC CreateTexture2DDesc(UINT width, UINT height,
                                          DXGI_FORMAT format, UINT miplevels,
                                          UINT bindFlag, UINT arraysize)
 {
@@ -182,7 +187,7 @@ D3D11_TEXTURE2D_DESC CreateTexture2DDesc(UINT width, UINT height,
   }
   return desc;
 }
-D3D11_RASTERIZER_DESC CreateRaterizerDesc(
+inline D3D11_RASTERIZER_DESC CreateRaterizerDesc(
     D3D11_FILL_MODE fillMode, // 채우기 모드
     D3D11_CULL_MODE cullMode, // 컬링 모드
     BOOL isCounterclockwise, INT DepthBias, FLOAT DepthBiasClamp,
@@ -205,7 +210,8 @@ D3D11_RASTERIZER_DESC CreateRaterizerDesc(
   return desc;
 }
 
-D3D11_DEPTH_STENCIL_DESC CreateDepthStencilDesc(BOOL depthEnable,
+inline D3D11_DEPTH_STENCIL_DESC CreateDepthStencilDesc(
+    BOOL depthEnable,
                                                 D3D11_DEPTH_WRITE_MASK mask,
                                                 D3D11_COMPARISON_FUNC func,
                                                 BOOL stencilEnable)
@@ -219,7 +225,7 @@ D3D11_DEPTH_STENCIL_DESC CreateDepthStencilDesc(BOOL depthEnable,
   return desc;
 }
 
-D3D11_RENDER_TARGET_BLEND_DESC CreateRTBlendDesc(BOOL blendEnable)
+inline D3D11_RENDER_TARGET_BLEND_DESC CreateRTBlendDesc(BOOL blendEnable)
 {
   D3D11_RENDER_TARGET_BLEND_DESC rtBlendDesc = {};
   rtBlendDesc.BlendEnable = blendEnable;    // 블렌딩 활성화

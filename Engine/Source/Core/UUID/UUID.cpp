@@ -50,7 +50,10 @@ std::string xUUID::ToString(bool separated /* = false */) {
   return s;
 }
 
-bool xUUID::operator==(const xUUID& other) const { return false; }
+bool xUUID::operator==(const xUUID& other) const
+{
+  return memcmp(byte, other.byte, kNumBytes) == 0;
+}
 
 bool xUUID::IsValidUUIDString(const std::string& uuid) {
   return uuids::uuid::is_valid_uuid(uuid);
@@ -63,6 +66,9 @@ xUUID GenerateRandomUUID() {
 }
 
 xUUID GenerateUUIDFromName(const std::string& name) {
+  if (name.empty())
+    return xUUID();
+
   static uuids::uuid_name_generator gen(
       uuids::uuid::from_string("47183823-2574-4bfd-b411-99ed177d3e43").value());
   const uuids::uuid id = gen(name);

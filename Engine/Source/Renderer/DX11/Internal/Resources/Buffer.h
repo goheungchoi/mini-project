@@ -11,7 +11,7 @@ namespace Constant
 {
 struct Frame
 {
-  Light::DirectionalLight mainDirectionalLight;
+  DirectionalLight mainDirectionalLight;
   Vector4 cameraPosition;
   Matrix view;
   Matrix projection;
@@ -24,12 +24,18 @@ struct Frame
 struct World
 {
   Matrix world;
+  Color color;
 };
 
 struct PixelData
 {
-  float alphaCutoff;
+  float alphaCutoff=0.f;
   Vector3 padding1{};
+  Color color;
+};
+struct BoneMatrix
+{
+  XMMATRIX matrix[128] = {};
 };
 } // namespace Constant
 
@@ -45,7 +51,12 @@ struct MeshBuffer
   UINT stride;
   UINT offset;
   UINT nIndices;
-  Matrix world;
+  ComPtr<ID3D11Buffer> boneIDBuffer;
+  ComPtr<ID3D11Buffer> boneWeightsBuffer;
+  ComPtr<ID3D11ShaderResourceView> boneIDSrv;
+  ComPtr<ID3D11ShaderResourceView> boneWeightsSrv;
+  Matrix world=Matrix::Identity;
+  std::vector<XMMATRIX> boneMatirx = std::vector<XMMATRIX>();
   Material* material=nullptr;
   RenderPassFlags flags = 0;
 };
