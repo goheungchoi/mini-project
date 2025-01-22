@@ -13,22 +13,19 @@
 #include <vector>
 #include <unordered_map>
 #include <functional>
-#include <physx/PxPhysicsAPI.h>
-#include <physx/PxPhysics.h>
+#include "directxtk/simplemath.h"
+#include "physx/PxPhysicsAPI.h"
+#include "physx/PxPhysics.h"
 #include "physx/PxSimulationEventCallback.h"
 
-
-
-#include <directxtk/simplemath.h>
-#include "IRigidBody.h"
-#include "IPhyjixWorld.h"
-#include "IPhyjixEngine.h"
 #include "PhyjixUtil.h"
-#include "CharacterController.h"
 #include "RigidBody.h"
-#include "PhyjixEventHandler.h"
 #include "PhyjixWorld.h"
+#include "PhyjixEventHandler.h"
 #include "PhyjixEngine.h"
+#include "CharacterController.h"
+
+
 
 
 #endif //PCH_H

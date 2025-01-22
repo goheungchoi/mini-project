@@ -1,49 +1,49 @@
 #include "pch.h"
 #include "RigidBody.h"
-
-RigidBody::RigidBody(PxPhysics* physics,
+RigidBody::RigidBody(physx::PxPhysics* physics,
                      const DirectX::SimpleMath::Vector3& position,
                      const DirectX::SimpleMath::Vector3& size,
                      ColliderShape cShape, BOOL isStatic, BOOL isKinematic,
                      PhyjixWorld* world)
 {
   _world = world;
-  PxTransform transform(PhyjixUtil::VecToPxVec(position));
-
+  physx::PxTransform transform(PhyjixUtil::VecToPxVec(position));
+  isStatic = isStatic;
   if (!isStatic)
   {
     _actor = physics->createRigidDynamic(transform);
     if (isKinematic)
-      static_cast<PxRigidDynamic*>(_actor)->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+      static_cast<physx::PxRigidDynamic*>(_actor)->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
   }
   else
     _actor = physics->createRigidStatic(transform);
 
   shape = cShape;
+  physx::PxMaterial* material = physics->createMaterial(0.5f, 0.5f, 0.f);
   switch (cShape)
   {
   case ColliderShape::eCubeCollider:
     _defaultShape =
-        physics->createShape(PxBoxGeometry(size.x, size.y, size.z),
-                             *physics->createMaterial(0.5f, 0.5f, 0.6f));
+        physics->createShape(physx::PxBoxGeometry(size.x, size.y, size.z),
+                             *material);
     _nonElasticShape =
-        physics->createShape(PxBoxGeometry(size.x, size.y, size.z),
-                             *physics->createMaterial(0.5f, 0.5f, 0.0f));
+        physics->createShape(physx::PxBoxGeometry(size.x, size.y, size.z),
+                             *material);
     break;
 
   case ColliderShape::eSphereCollider:
     _defaultShape = physics->createShape(
-        PxSphereGeometry(size.x), *physics->createMaterial(0.5f, 0.5f, 0.6f));
+        physx::PxSphereGeometry(size.x), *physics->createMaterial(0.5f, 0.5f, 0.6f));
     _nonElasticShape = physics->createShape(
-        PxSphereGeometry(size.x), *physics->createMaterial(0.5f, 0.5f, 0.6f));
+        physx::PxSphereGeometry(size.x), *physics->createMaterial(0.5f, 0.5f, 0.6f));
     break;
 
   case ColliderShape::eCapsuleCollider:
     _defaultShape =
-        physics->createShape(PxCapsuleGeometry(size.x, size.y),
+        physics->createShape(physx::PxCapsuleGeometry(size.x, size.y),
                              *physics->createMaterial(0.5f, 0.5f, 0.6f));
     _nonElasticShape =
-        physics->createShape(PxCapsuleGeometry(size.x, size.y),
+        physics->createShape(physx::PxCapsuleGeometry(size.x, size.y),
                              *physics->createMaterial(0.5f, 0.5f, 0.6f));
     break;
   }
@@ -105,9 +105,9 @@ void RigidBody::OnSleep()
   }
 }
 
-PxRigidDynamic* RigidBody::GetDynamicActor()
+physx::PxRigidDynamic* RigidBody::GetDynamicActor()
 {
-  return static_cast<PxRigidDynamic*>(_actor);
+  return static_cast<physx::PxRigidDynamic*>(_actor);
 }
 
 void RigidBody::SetCollisionEvent(eCollisionEventType collisiontype, IRigidBody* other, std::function<void(void)> event)
@@ -176,36 +176,36 @@ float RigidBody::GetMaxAngVelocity()
 
 void RigidBody::EnableCollision()
 {
-  PxShape* shape = nullptr;
-  PxU32 shapeCount = GetDynamicActor()->getNbShapes();
+  physx::PxShape* shape = nullptr;
+  physx::PxU32 shapeCount = GetDynamicActor()->getNbShapes();
   if (shapeCount > 0)
   {
     GetDynamicActor()->getShapes(&shape, 1, 0);
     if (shape)
-      shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+      shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
   }
 }
 
 void RigidBody::DisableCollision()
 {
-  PxShape* shape = nullptr;
-  PxU32 shapeCount = GetDynamicActor()->getNbShapes();
+  physx::PxShape* shape = nullptr;
+  physx::PxU32 shapeCount = GetDynamicActor()->getNbShapes();
   if (shapeCount > 0)
   {
     GetDynamicActor()->getShapes(&shape, 1, 0);
     if (shape)
-      shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+      shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
   }
 }
 
 void RigidBody::EnableGravity()
 {
-  _actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, false);
+  _actor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, false);
 }
 
 void RigidBody::DisableGravity()
 {
-  _actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+  _actor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, true);
 }
 
 void RigidBody::WakeUp()
@@ -217,6 +217,23 @@ void RigidBody::Sleep()
 {
   GetDynamicActor()->putToSleep();
 }
+
+DirectX::SimpleMath::Vector3 RigidBody::GetWorldPosition()
+{
+  if (isStatic)
+      return PhyjixUtil::PxVecToVec(static_cast<physx::PxRigidStatic*>(_actor)->getGlobalPose().p);
+  else
+  return PhyjixUtil::PxVecToVec(GetDynamicActor()->getGlobalPose().p);
+}
+
+DirectX::SimpleMath::Vector4 RigidBody::GetWorldRotation()
+{
+  if (isStatic)
+    return PhyjixUtil::PxQuatToVec(
+        static_cast<physx::PxRigidStatic*>(_actor)->getGlobalPose().q);
+  return PhyjixUtil::PxQuatToVec(GetDynamicActor()->getGlobalPose().q);
+}
+
 
 ColliderShape RigidBody::GetColliderShapeType()
 {

@@ -1,13 +1,20 @@
 {
-  "dependencies": [
-    "directxtk",
-    "fmt",
-    {
-			"name": "imgui",
-			"features": [
-				"dx11-binding",
-				"win32-binding"
-			]
-		}
-  ]
+    "dependencies": [
+        "directxtk",
+        "physx",
+        "fmt",
+        {
+            "name": "imgui",
+            "features": [
+                "dx11-binding",
+                "win32-binding"
+            ]
+        }
+    ],
+    "overrides": [
+        {
+            "name": "physx",
+            "version": "5.5.0"
+        }
+    ]
 }

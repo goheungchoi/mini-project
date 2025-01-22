@@ -1,7 +1,5 @@
 #pragma once
 #include "IPhyjixWorld.h"
-#include "physx/PxPhysicsAPI.h"
-using namespace physx;
 enum class eCollisionEventType
 {
   eCollisionEnter,
@@ -40,6 +38,9 @@ public:
 
   virtual void WakeUp() = 0;
   virtual void Sleep() = 0;
+
+  virtual DirectX::SimpleMath::Vector3 GetWorldPosition() = 0;
+  virtual DirectX::SimpleMath::Vector4 GetWorldRotation() = 0;
 
   virtual ColliderShape GetColliderShapeType() = 0;
 
