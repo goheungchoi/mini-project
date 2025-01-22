@@ -109,12 +109,8 @@ public:
 
   
   // D2D Renderer
-  virtual void CreateTextFormat(std::wstring fontName, float size,
-                                UINT fontWeight = 400, UINT textAlignment = 2,
-                                UINT paragraphAlignment = 2) = 0;
-
-    virtual void TextDraw(const wchar_t* format, Vector4 rect,
-                        const std::wstring& fontName = L"맑은 고딕",
-                        Color color = Color(0.0f, 0.0f, 0.0f, 1.0f)) = 0;
+  virtual void TextDraw(const wchar_t* format, Vector4 rect,
+                        const std::wstring& fontName = L"Agency FB",
+                        Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) = 0;
 
 };

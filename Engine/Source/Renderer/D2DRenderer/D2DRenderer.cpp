@@ -1,7 +1,6 @@
 #include "D2DRenderer.h"
 #include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/SwapChain.h"
-
 D2DRenderer::~D2DRenderer()
 {
   UnInit();
@@ -119,6 +118,7 @@ Font::~Font()
 void Font::Init()
 {
   CreateIDWriteFactory();
+  CreateTextFormat(L"Agency FB", 100.0f);
   CreateTextFormat(L"∏º¿∫ ∞ÌµÒ", 32.0f);
 }
 
@@ -147,10 +147,12 @@ void Font::CreateIDWriteFactory()
                            reinterpret_cast<IUnknown**>(&pDWriteFactory)));
 }
 
-void Font::CreateTextFormat(std::wstring fontName, float size, UINT fontWeight,
+void Font::CreateTextFormat(const std::wstring& fontName, float size, UINT fontWeight,
                             UINT textAlignment, UINT paragraphAlignment)
 {
   IDWriteTextFormat* pTextFormat;
+
+  //const wchar_t* formatName = L"∏º¿∫ ∞ÌµÒ";
 
   HR_T(pDWriteFactory->CreateTextFormat(
       fontName.c_str(), // ±€≤√ ¿Ã∏ß
