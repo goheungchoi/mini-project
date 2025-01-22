@@ -442,8 +442,8 @@ private:
     _CB->UpdateContantBuffer(world, MeshCBType::World);
     _skyBox->Render();
     // Deferred meshes
-    dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
-    dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
+    dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
+    dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
     dc->PSSetShader(_pShaders["Deffered"]->shader.Get(), nullptr, 0);
     std::ranges::for_each(_opaqueMesh[0], [this, dc](MeshBuffer* buffer) {
       dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
@@ -483,8 +483,8 @@ private:
   {
     _pso->SetBlendOnEnable(true);
     _pso->SetMainRS();
-    dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
-    dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
+    dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
+    dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
     dc->PSSetShader(_pShaders["Transparency"]->shader.Get(), nullptr, 0);
     _pso->TurnZBufferOn();
     std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& pair) {

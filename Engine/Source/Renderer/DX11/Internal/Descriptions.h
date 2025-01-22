@@ -2,16 +2,21 @@
 #include "Common.h"
 
 using namespace Microsoft::WRL;
-D3D11_BUFFER_DESC CreateBufferDesc(UINT byteWidth, D3D11_USAGE usage,
-                                   UINT bindFlag)
+D3D11_BUFFER_DESC CreateBufferDesc(UINT size, D3D11_USAGE usage,
+                                   D3D11_BIND_FLAG bindFlags,
+                                   UINT structureStride = 0) 
 {
   D3D11_BUFFER_DESC desc{};
-  desc.ByteWidth = byteWidth;
   desc.Usage = usage;
-  desc.BindFlags = bindFlag;
+  desc.ByteWidth = size;
+  desc.BindFlags = bindFlags;
+  desc.CPUAccessFlags =
+      (usage == D3D11_USAGE_DYNAMIC) ? D3D11_CPU_ACCESS_WRITE : 0;
+  desc.MiscFlags =
+      structureStride > 0 ? D3D11_RESOURCE_MISC_BUFFER_STRUCTURED : 0;
+  desc.StructureByteStride = structureStride;
   return desc;
 }
-
 DXGI_SWAP_CHAIN_DESC CreateSwapChainDesc(
     UINT width, UINT height, DXGI_FORMAT format, DXGI_USAGE usage,
     UINT bufferCount, UINT sampleDescCount, UINT sampleQuality,

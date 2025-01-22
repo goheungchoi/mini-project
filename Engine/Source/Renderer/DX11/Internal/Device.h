@@ -60,7 +60,7 @@ public:
    *buffer Type -> index,vertex
    */
   ComPtr<ID3D11Buffer> CreateDataBuffer(const void* data, UINT size,
-                                        D3D11_BIND_FLAG bufferType) const
+                                        D3D11_BIND_FLAG bufferType,UINT structSize=0) const
   {
     D3D11_SUBRESOURCE_DATA bufferData{};
     bufferData.pSysMem = data;
@@ -68,7 +68,7 @@ public:
     ComPtr<ID3D11Buffer> buffer;
     const D3D11_SUBRESOURCE_DATA* bufferDataPtr = data ? &bufferData : nullptr;
     D3D11_BUFFER_DESC desc;
-    desc = CreateBufferDesc(size, D3D11_USAGE_DEFAULT, bufferType);
+    desc = CreateBufferDesc(size, D3D11_USAGE_DEFAULT, bufferType, structSize);
     HR_T(_device->CreateBuffer(&desc, bufferDataPtr, buffer.GetAddressOf()));
     return buffer;
   }

@@ -47,6 +47,8 @@ struct MeshBuffer
   UINT stride;
   UINT offset;
   UINT nIndices;
+  ComPtr<ID3D11Buffer> boneIDBuffer;
+  ComPtr<ID3D11Buffer> boneWeightsBuffer;
   Matrix world=Matrix::Identity;
   Material* material=nullptr;
   RenderPassFlags flags = 0;
