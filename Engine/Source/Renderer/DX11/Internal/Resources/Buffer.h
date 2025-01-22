@@ -11,7 +11,7 @@ namespace Constant
 {
 struct Frame
 {
-  Light::DirectionalLight mainDirectionalLight;
+  DirectionalLight mainDirectionalLight;
   Vector4 cameraPosition;
   Matrix view;
   Matrix projection;

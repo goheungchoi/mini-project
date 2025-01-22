@@ -14,9 +14,7 @@ class AnimatorComponent : public ComponentBase
 
   AnimationVariables _variables;
   StateRegistry _animationStates;
-  AnimationState* _currState;
-
-  Animation* _currentAnimation{nullptr};
+  AnimationState* _currState{nullptr};
 
 public:
   // Skeletal animation

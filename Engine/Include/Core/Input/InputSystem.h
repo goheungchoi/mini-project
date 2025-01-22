@@ -8,20 +8,17 @@
 
 using Key = DirectX::Keyboard::Keys;
 
-namespace Input
+// 마우스 상태를 나타내는 열거형
+enum MouseState
 {
-	// 마우스 상태를 나타내는 열거형
-	enum MouseState
-	{
-	  LB,
-	  RB,
-	  WM,
-	  END,
-	  WHUP,
-	  WHDN
-	};
+	LB,
+	RB,
+	WM,
+	END,
+	WHUP,
+	WHDN
+};
 
-} // namespace Input
 
 class InputSystem
 {
@@ -48,16 +45,16 @@ public:
 
   // 키, 마우스, 패드 상태 확인 함수
   bool IsKeyPress(DirectX::Keyboard::Keys key) const;
-  bool IsKeyPress(Input::MouseState mouseState) const;
+  bool IsKeyPress(MouseState mouseState) const;
 
   bool IsKeyDown(DirectX::Keyboard::Keys key) const;
-  bool IsKeyDown(Input::MouseState mouseState) const;
+  bool IsKeyDown(MouseState mouseState) const;
 
   bool IsKeyUp(DirectX::Keyboard::Keys key) const;
-  bool IsKeyUp(Input::MouseState mouseState) const;
+  bool IsKeyUp(MouseState mouseState) const;
 
   // 마우스 휠 확인 함수
-  bool IsMouseWheel(Input::MouseState mouseState) const;
+  bool IsMouseWheel(MouseState mouseState) const;
 
   // 마우스 이동 값 가져오기
   Vector2 GetMouseDelta() const;
@@ -81,4 +78,4 @@ private:
   bool _handleOut = false;
 };
 
-#define INPUT InputSystem::GetInstance()
+#define Input (*InputSystem::GetInstance())

@@ -61,7 +61,7 @@ bool DX11Renderer::Cleanup()
 void DX11Renderer::ResizeScreen(unsigned int width, unsigned int height) {}
 
 void DX11Renderer::BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
-                              Light::DirectionalLight mainLight)
+                              DirectionalLight mainLight)
 {
   _passMgr->SetCamera(cameraPos, view, projection);
   _passMgr->SetMainLightDir(mainLight);

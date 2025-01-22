@@ -197,6 +197,7 @@
 		<ClInclude Include="Include\Core\Types\AnimationData.h" />
 		<ClInclude Include="Include\Core\Types\BoneData.h" />
 		<ClInclude Include="Include\Core\Types\LightData.h" />
+		<ClInclude Include="Include\Core\Types\LightTypes.h" />
 		<ClInclude Include="Include\Core\Types\MaterialData.h" />
 		<ClInclude Include="Include\Core\Types\MeshData.h" />
 		<ClInclude Include="Include\Core\Types\ModelData.h" />
@@ -222,6 +223,7 @@
 		<ClInclude Include="Include\GameFramework\Level\Level.h" />
 		<ClInclude Include="Include\GameFramework\Systems\RenderSystem.h" />
 		<ClInclude Include="Include\GameFramework\World\World.h" />
+		<ClInclude Include="Include\Renderer\IRenderer.h" />
 		<ClInclude Include="Include\ResourceManager\ResourceManager.h" />
 		<ClInclude Include="Include\WinApp\WinApp.h" />
 		<ClInclude Include="Include\WindowManager\WindowManager.h" />
@@ -278,7 +280,6 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\Types.h" />
 		<None Include="Source\Renderer\DX11\Shader\DX11Shader.hlsl" />
 		<None Include="Source\Renderer\DX11\Shader\utility.hlsli" />
-		<ClInclude Include="Source\Renderer\IRenderer.h" />
 		<ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\AnimationResourcePool.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\MaterialResourcePool.cpp" />

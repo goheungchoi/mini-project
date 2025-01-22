@@ -19,6 +19,9 @@ static ResourcePool<MaterialData>* materialPool;
 } // namespace
 
 static void ProcessMesh(MeshData& mesh, const GameResource::Mesh* geoMesh) {
+  // Get name
+  mesh.name = geoMesh->name()->c_str();
+
 	// Get AABB
   mesh.boundingBox.min = {geoMesh->aabb()->min().x(),
                           geoMesh->aabb()->min().y(),
