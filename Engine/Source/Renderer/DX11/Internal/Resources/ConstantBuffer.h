@@ -12,6 +12,7 @@ enum class MeshCBType
 {
   World,
   PixelData,
+  BoneMatrix,
   End
 };
 
@@ -44,7 +45,10 @@ private:
 
 public:
   /**
-   * @brief slot0 : currentWVP
+   * @brief 
+   * slot0 : world
+   * slot1 : pixeldata
+   * slot2 : boneMatirx
    */
   std::vector<ComPtr<ID3D11Buffer>> _constantBuffers;
 
@@ -57,6 +61,8 @@ public:
         _device->CreateConstantBuffer<Constant::World>();
     _constantBuffers[static_cast<UINT>(MeshCBType::PixelData)] =
         _device->CreateConstantBuffer<Constant::PixelData>();
+    _constantBuffers[static_cast<UINT>(MeshCBType::BoneMatrix)] =
+        _device->CreateConstantBuffer<Constant::BoneMatrix>();
   }
   ~MeshConstantBuffer() = default;
 
