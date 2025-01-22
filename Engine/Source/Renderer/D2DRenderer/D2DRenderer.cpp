@@ -1,0 +1,147 @@
+#include "D2DRenderer.h"
+#include "../DX11/Internal/Device.h"
+#include "../DX11/Internal/SwapChain.h"
+
+bool D2DRenderer::Init()
+{
+  // IDXGIDevice 생성
+  HR_T(_pDevice->GetDevice()->QueryInterface(__uuidof(IDXGIDevice),
+                                             (void**)&_pDXGIDevice));
+
+  // Direct2D 팩토리 생성
+  HR_T(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &_pD2DFactory));
+
+  // DXGI 디바이스를 사용하여 Direct2D 디바이스를 생성
+  HR_T(_pD2DFactory->CreateDevice(_pDXGIDevice, &_pD2D1Device));
+
+  // ID2D1DeviceContext 생성
+  HR_T(_pD2D1Device->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
+                                          &_pD2D1DeviceContext));
+
+  // brush 생성
+  HR_T(_pD2D1DeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black),
+                                              &_pBrush));
+
+  CreateD2DRenderTarget();
+
+  // Font 초기화
+  _pFont = new Font(_pD2D1DeviceContext, _pBrush);
+
+  return true;
+}
+
+void D2DRenderer::CreateD2DRenderTarget()
+{
+  // 현재 창의 DPI(1인치당 픽셀의 개수) 설정 가져오기
+  float dpiX, dpiY;
+  UINT dpi = GetDpiForWindow(_pSwapChain->GetWindowHandle());
+  dpiX = static_cast<float>(dpi);
+  dpiY = static_cast<float>(dpi);
+
+  // DXGI 표면 가져오기
+  // Microsoft::WRL::ComPtr<IDXGISurface> dxgiSurface;
+  HR_T(_pSwapChain->GetSwapChain()->GetBuffer(0, IID_PPV_ARGS(&_pIDXGISurface)));
+
+  // Direct2D 비트맵 속성 정의
+  D2D1_BITMAP_PROPERTIES1 bitmapProperties = D2D1::BitmapProperties1(
+      D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+      D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+      dpiX,
+      dpiY); // DXGI_FORMAT_UNKNOWN을 사용하면 Direct2D가 적합한 포맷을 자동으로
+             // 선택함.
+
+  // DXGI 표면을 기반으로 Direct2D 비트맵 생성
+  HR_T(_pD2D1DeviceContext->CreateBitmapFromDxgiSurface(
+      _pIDXGISurface, &bitmapProperties, &_pID2D1Bitmap));
+
+  // 비트맵을 DeviceContext의 렌더 타겟으로 설정
+  _pD2D1DeviceContext->SetTarget(_pID2D1Bitmap);
+}
+
+void D2DRenderer::Draw() {
+
+}
+
+void D2DRenderer::BeginDraw()
+{
+  _pD2D1DeviceContext->BeginDraw();
+}
+
+void D2DRenderer::EndDraw()
+{
+  _pD2D1DeviceContext->EndDraw();
+}
+
+ID2D1Bitmap1* D2DRenderer::ConvertDDSToD2DBitmap1(TextureData data)
+{
+  return nullptr;
+}
+
+
+
+
+
+/// <summary>
+////////////////////// Font Engine //////////////////////////
+/// </summary>
+
+
+
+Font::Font(ID2D1DeviceContext* pD2D1DeviceContext, ID2D1SolidColorBrush* pBrush)
+{
+  Init();
+}
+
+Font::~Font() {
+
+
+}
+
+void Font::Init()
+{
+  CreateIDWriteFactory();
+  CreateTextFormat(L"Cooper", 32.0f);
+}
+
+void Font::UnInit()
+{
+
+}
+
+void Font::CreateIDWriteFactory()
+{
+  HR_T(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory),
+                           reinterpret_cast<IUnknown**>(&pDWriteFactory)));
+}
+
+void Font::CreateTextFormat(std::wstring _fontName, float _size)
+{
+  IDWriteTextFormat* pTextFormat;
+
+  HR_T(pDWriteFactory->CreateTextFormat(
+      _fontName.c_str(), // 글꼴 이름
+      NULL,      // 글꼴 컬렉션 (NULL은 시스템 기본 사용)
+      DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL,
+      DWRITE_FONT_STRETCH_NORMAL,
+      _size, // 글꼴 크기
+      L"",   // 로케일
+      &pTextFormat));
+
+  // 텍스트를 수평 및 수직으로 중앙에 맞춥니다.
+  pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+  pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+
+  _TextFormats.insert({_fontName, pTextFormat});
+}
+
+void Font::TextDraw(const wchar_t* format, D2D1_RECT_F _rect,
+                    D2D1_COLOR_F _color, ...)
+{
+  // 텍스트 그리기
+  _pBrush->SetColor(_color);
+
+  auto txtformat = _TextFormats[0];
+
+  _pD2D1DeviceContext->DrawText(format, // 텍스트 내용
+                                lstrlen(format) + 1, txtformat, _rect, _pBrush);
+}

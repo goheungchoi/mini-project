@@ -239,8 +239,6 @@
 		<ClCompile Include="Source\Core\UUID\UUID.cpp" />
 		<ClCompile Include="Source\Core\Utils\IOUtils.cpp" />
 		<ClCompile Include="Source\Core\Utils\ShaderCompiler.cpp" />
-		<ClCompile Include="Source\FactoryManager\FactoryManager.cpp" />
-		<ClInclude Include="Source\FactoryManager\FactoryManager.h" />
 		<ClCompile Include="Source\GameEngine\GameEngine.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\Animation\Animation.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\Animation\AnimatorComonent.cpp" />
@@ -261,6 +259,9 @@
 		<ClCompile Include="Source\GameFramework\Systems\RenderSystem.cpp" />
 		<ClCompile Include="Source\GameFramework\Types\HitResult.cpp" />
 		<ClCompile Include="Source\GameFramework\World\World.cpp" />
+		<ClInclude Include="Source\Renderer\D2DRenderer\Common.h" />
+		<ClCompile Include="Source\Renderer\D2DRenderer\D2DRenderer.cpp" />
+		<ClInclude Include="Source\Renderer\D2DRenderer\D2DRenderer.h" />
 		<ClCompile Include="Source\Renderer\DX11\DX11Renderer.cpp" />
 		<ClInclude Include="Source\Renderer\DX11\DX11Renderer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Common.h" />

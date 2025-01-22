@@ -31,6 +31,13 @@ void GameApp::Initialize()
 
 
   _renderer->Init_Win32(1280, 720, nullptr, &_hwnd);
+
+
+  // auto handle = LoadTexture("..");
+  //const TextureData& textureData = AccessTextureData(handle);
+  //textureData.ddsData.data();
+
+
 #ifdef ClientTest
 #endif // RenderTest
   modelHandle = LoadModel("Models\\FlightHelmet\\FlightHelmet.gltf");
