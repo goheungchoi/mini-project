@@ -6,6 +6,7 @@
 #include "Internal/Resources/Material.h"
 #include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
+#include "Renderer/D2DRenderer/D2DRenderer.h"
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
@@ -35,6 +36,10 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
 #ifdef _DEBUG
   InitImGui();
 #endif
+
+  _d2dRenderer = new D2DRenderer;
+  _d2dRenderer->Init(_device, _swapChain);
+
   return true;
 }
 

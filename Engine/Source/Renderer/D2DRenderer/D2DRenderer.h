@@ -21,7 +21,7 @@ public:
   ID2D1Bitmap1* ConvertDDSToD2DBitmap1(TextureData data);
 
 public:
-  Font* _pFont;
+  Font* _pFont = nullptr;
 
 
 private:

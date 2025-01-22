@@ -1,6 +1,6 @@
 #include "D2DRenderer.h"
-#include "../DX11/Internal/Device.h"
-#include "../DX11/Internal/SwapChain.h"
+#include "Renderer/DX11/Internal/Device.h"
+#include "Renderer/DX11/Internal/SwapChain.h"
 
 bool D2DRenderer::Init(Device* device, SwapChain* swapChain)
 {

@@ -9,6 +9,7 @@ class SwapChain;
 class PipeLine;
 class RenderPassManager;
 class SkyBox;
+class D2DRenderer;
 class DX11Renderer : public IRenderer
 {
 public:
@@ -66,4 +67,6 @@ private:
 #endif // _DEBUG
   ResourceStorage* _storage = nullptr;
   RenderPassManager* _passMgr = nullptr;
+
+  D2DRenderer* _d2dRenderer = nullptr;
 };
