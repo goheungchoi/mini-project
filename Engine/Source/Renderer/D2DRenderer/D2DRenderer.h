@@ -52,17 +52,18 @@ public:
   void UnInit();
 
   void CreateIDWriteFactory();
+
+  void TextDraw(const wchar_t* format, Vector4 rect,
+                const std::wstring& fontName = L"Agency FB",
+                Color color = Color(1.0f, 0.0f, 1.0f, 1.0f));
+
+private:
   void CreateTextFormat(
-      std::wstring fontName, float size,
+      const std::wstring& fontName, float size,
       UINT fontWeight = DWRITE_FONT_WEIGHT_REGULAR,
       UINT textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER,
       UINT paragraphAlignment = DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
-  void TextDraw(const wchar_t* format, Vector4 rect,
-                const std::wstring& fontName = L"¸¼Àº °íµñ",
-                Color color = Color(0.0f, 0.0f, 0.0f, 1.0f));
-
-private:
   IDWriteTextFormat* FindFont(const std::wstring& fontName);
 
 

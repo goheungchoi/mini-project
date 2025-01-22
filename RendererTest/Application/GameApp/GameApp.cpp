@@ -87,14 +87,14 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   myWorld = new World();
   myLevel = myWorld->CreateLevel<Level>("Test Level");
 
-  skinningTest = LoadModel("Models\\SkinningTest\\SkinningTest.gltf");
+  skinningTest = LoadModel("Models\\SkinningTest\\SkinningTest.fbx");
 
   root = myLevel->CreateGameObjectFromModel<GameObject>(
-      "Models\\SkinningTest\\SkinningTest.gltf");
+      "Models\\SkinningTest\\SkinningTest.fbx");
 
   animSkeletal1 =
-      (*root->childrens.begin())->GetComponent<SkeletalMeshComponent>();
-  animSkeletal2 = (*std::next(root->childrens.begin()))
+      (*std::next(root->childrens.begin()))->GetComponent<SkeletalMeshComponent>();
+  animSkeletal2 = (*std::next(std::next(root->childrens.begin())))
                       ->GetComponent<SkeletalMeshComponent>();
 
   const ModelData& skinningData = AccessModelData(skinningTest);
