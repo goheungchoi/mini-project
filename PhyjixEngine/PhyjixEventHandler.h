@@ -1,5 +1,8 @@
 #pragma once
-//#include "physx/PxPhysics.h"
+#include "physx/PxPhysics.h"
+#include "physx/PxPhysicsAPI.h"
+using namespace physx;
+
 class PhyjixEventHandler : public PxSimulationEventCallback
 {
 public:

@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "physx/PxPhysicsAPI.h"
 
 namespace PhyjixUtil
 {

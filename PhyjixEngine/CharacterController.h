@@ -1,4 +1,6 @@
 #pragma once
+#include "physx/PxPhysicsAPI.h"
+using namespace physx;
 #include "ICharacterController.h"
 class CharacterController : public ICharacterController
 {
