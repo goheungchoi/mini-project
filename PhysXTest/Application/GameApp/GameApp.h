@@ -1,8 +1,12 @@
 #pragma once
-
 #include "Core/Camera/Camera.h"
 #include "GameEngine/GameEngine.h"
+#include "GameFramework/GameObject/GameObject.h"
 #include "Renderer/IRenderer.h"
+class IPhyjixEngine;
+class IPhyjixWorld;
+class RigidbodyComponent;
+
 class GameApp : public GameEngine
 {
   using Super = GameEngine;
@@ -29,6 +33,16 @@ private:
   IRenderer* _renderer;
   Vector4 eye;
   Vector4 at;
+
+  IPhyjixEngine* _phyjixEngine;
+  IPhyjixWorld* _phyjixWorld;
+
+
+  GameObject* testobject = nullptr;
+  RigidbodyComponent* testrigidbody = nullptr;
+
+    GameObject* testobject2 = nullptr;
+  RigidbodyComponent* testrigidbody2 = nullptr;
 
   bool _bCameraMove = false;
 };

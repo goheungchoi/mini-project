@@ -13,7 +13,7 @@ bool PhyjixEngine::Initialize()
 	_pvd->connect(*_transport, physx::PxPvdInstrumentationFlag::eALL);
 #endif
 #ifdef _DEBUG
-	_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, PxTolerancesScale(),true, _pvd);
+	_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, physx::PxTolerancesScale(),true, _pvd);
 
 #else
 	_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, PxTolerancesScale());
@@ -22,7 +22,7 @@ bool PhyjixEngine::Initialize()
 
 	if (!_pPhysics) return false;
 
-	_pDispatcher = PxDefaultCpuDispatcherCreate(2);
+	_pDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
 
 
 

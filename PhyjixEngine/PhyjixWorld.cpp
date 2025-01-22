@@ -1,12 +1,27 @@
 #include "pch.h"
 #include "PhyjixWorld.h"
 
-PhyjixWorld::PhyjixWorld(PxPhysics* physics, PxDefaultCpuDispatcher* dispatcher)
+PhyjixWorld::PhyjixWorld(physx::PxPhysics* physics, physx::PxDefaultCpuDispatcher* dispatcher)
 {
-  PxSceneDesc sceneDesc(physics->getTolerancesScale());
+  physx::PxSceneDesc sceneDesc(physics->getTolerancesScale());
   sceneDesc.cpuDispatcher = dispatcher;
-  sceneDesc.gravity = PxVec3(0, -98.f, 0);
-  sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
+  sceneDesc.gravity = physx::PxVec3(0, -9.8f, 0);
+  sceneDesc.filterShader =
+      [](physx::PxFilterObjectAttributes attributes0,
+         physx::PxFilterData filterData0,
+         physx::PxFilterObjectAttributes attributes1,
+         physx::PxFilterData filterData1, physx::PxPairFlags& pairFlags,
+         const void* constantBlock,
+         physx::PxU32 constantBlockSize) -> physx::PxFilterFlags {
+    pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT |
+                physx::PxPairFlag::eTRIGGER_DEFAULT |
+                physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
+    return physx::PxFilterFlag::eDEFAULT;
+  };
+  _eventhandler = new PhyjixEventHandler();
+  sceneDesc.simulationEventCallback = _eventhandler;
+
+
 
   _scene = physics->createScene(sceneDesc);
   _physics = physics;
@@ -21,19 +36,13 @@ PhyjixWorld::PhyjixWorld(PxPhysics* physics, PxDefaultCpuDispatcher* dispatcher)
     pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES,
                                true);
   }
-  sceneDesc.filterShader =
-      [](PxFilterObjectAttributes attributes0, PxFilterData filterData0,
-         PxFilterObjectAttributes attributes1, PxFilterData filterData1,
-         PxPairFlags& pairFlags, const void* constantBlock,
-         PxU32 constantBlockSize) -> physx::PxFilterFlags {
-    pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT |
-                physx::PxPairFlag::eTRIGGER_DEFAULT |
-                physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
-    return physx::PxFilterFlag::eDEFAULT;
-  };
 
-  _eventhandler = new PhyjixEventHandler();
-  sceneDesc.simulationEventCallback = _eventhandler;
+
+
+
+
+
+
 }
 
 PhyjixWorld::~PhyjixWorld()
@@ -67,8 +76,8 @@ void PhyjixWorld::RemoveRigidBody(IRigidBody* body)
 ICharacterController* PhyjixWorld::CreateCharacterController(
     const DirectX::SimpleMath::Vector3& position, float radius, float height)
 {
-  PxCapsuleControllerDesc desc;
-  desc.position = PxExtendedVec3(position.x, position.y, position.z);
+  physx::PxCapsuleControllerDesc desc;
+  desc.position = physx::PxExtendedVec3(position.x, position.y, position.z);
   desc.radius = radius;
   desc.height = height;
   desc.material = mMaterial;
@@ -115,10 +124,17 @@ void PhyjixWorld::Update(float deltaTime)
   //}
 }
 
+IRigidBody* PhyjixWorld::GetGroundActor()
+{
+  return static_cast<IRigidBody*>(groundrigidbody);
+}
+
 void PhyjixWorld::CreateDefaultGround()
 {
   mMaterial = _physics->createMaterial(0.5f, 0.5f, 0.f);
   groundPlane =
       PxCreatePlane(*_physics, physx::PxPlane(0, 1, 0, 50), *mMaterial);
-  _scene->addActor(*groundPlane);
+  groundrigidbody = new RigidBody(_physics,{0, 0, 0}, {1, 1, 1}, ColliderShape::eCubeCollider, true, false,this);
+  groundrigidbody->_actor = groundPlane;
+  _scene->addActor(*groundrigidbody->_actor);
 }

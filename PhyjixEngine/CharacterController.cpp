@@ -14,7 +14,7 @@ void CharacterController::Initialize(physx::PxControllerManager* manager, const 
 {
     m_manager = manager;
     m_controller = m_manager->createController(desc);
-    m_MoveDirection = PxExtendedVec3(0, 0, 0);
+    m_MoveDirection = physx::PxExtendedVec3(0, 0, 0);
 }
 
 void CharacterController::Release()
