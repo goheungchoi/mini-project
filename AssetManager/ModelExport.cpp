@@ -1355,7 +1355,7 @@ void ModelExporter::ProcessAnimationChannel(AnimationChannel& animChannel,
   for (uint32_t rotIdx = 0; rotIdx < animChannel.numKeyRotations; ++rotIdx)
   {
     aiQuaternion aiOrientation = channel->mRotationKeys[rotIdx].mValue;
-    aiOrientation.Normalize();
+    // aiOrientation.Normalize();
     float timeStamp = channel->mRotationKeys[rotIdx].mTime;
 
 		KeyRotation rot{.orientation = {aiOrientation.x, aiOrientation.y,

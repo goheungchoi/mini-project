@@ -34,13 +34,6 @@ static SkeletalMeshComponent* animSkeletal2;
 static World* myWorld;
 static Level* myLevel;
 
-void GameApp::FixedUpdate(float deltaTime)
-{
-  animComponent1->UpdateAnimation(deltaTime);
-
-  animSkeletal1->UpdateBoneTransforms();
-  animSkeletal2->UpdateBoneTransforms();
-}
 
 void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
                          const std::wstring& title)
@@ -111,6 +104,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   
   animComponent1->SetState(animState1);
   _renderer->CreateMesh(animSkeletal1->GetHandle());
+  _renderer->CreateMesh(animSkeletal2->GetHandle());
 }
 
 void GameApp::Execute()
@@ -125,6 +119,14 @@ void GameApp::Shutdown()
   delete _camera;
   delete _renderer;
   Super::Shutdown();
+}
+
+void GameApp::FixedUpdate(float deltaTime)
+{
+  /*animComponent1->UpdateAnimation(deltaTime);
+
+  animSkeletal1->UpdateBoneTransforms();
+  animSkeletal2->UpdateBoneTransforms();*/
 }
 
 void GameApp::Update(float deltaTime)
@@ -277,6 +279,12 @@ void GameApp::Render()
   _renderer->BeginDraw(animSkeletal1->GetHandle(),
                        animSkeletal1->GetOwner()->transform->globalTransform);
   _renderer->DrawMesh(animSkeletal1->GetHandle(),animSkeletal1->boneTransforms);
+
+  animSkeletal2->boneTransforms;
+  _renderer->BeginDraw(animSkeletal2->GetHandle(),
+                       animSkeletal2->GetOwner()->transform->globalTransform);
+  _renderer->DrawMesh(animSkeletal2->GetHandle(),
+                      animSkeletal2->boneTransforms);
 
 #endif // RenderTest
   _renderer->EndFrame();
