@@ -71,8 +71,10 @@ struct VS_INPUT
     float2 uv : TEXCOORD;
     float4 color : COLOR;
 #ifdef SKINNING
-    uint4 blendIndicies : BLENDINDICES;
-    float4 blendWeights : BLENDWEIGHT;
+    uint4 bonIndex0 :BLENDINDICES0;
+    uint4 bonIndex1 :BLENDINDICES1;
+    float4 boneWeight0 : BLENDWEIGHT0;
+    float4 boneWeight1 : BLENDWEIGHT1;
 #endif
 };
 

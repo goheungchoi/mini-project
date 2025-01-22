@@ -22,6 +22,9 @@ Texture2D deferredMaterial : register(t12);
 Texture2D deferredEmissive : register(t13);
 Texture2D deferredShadowPosition : register(t14);
 
+//skinning
+StructuredBuffer<uint> boneIDBuffer : register(t15);
+StructuredBuffer<float> boneWeightBuffer : register(t16);
 struct DirectionalLight
 {
     float4 direction;
@@ -51,9 +54,6 @@ cbuffer Frame : register(b0)
 cbuffer World : register(b1)
 {
     Matrix world;
-#ifdef SKINNING
-    Matrix matrixPalleteArray[127]; 
-#endif
 };
 
 cbuffer PixelData : register(b2)
@@ -61,6 +61,11 @@ cbuffer PixelData : register(b2)
     float alphaCutoff;
     float3 padding1;
     float4 color;
+}
+
+cbuffer BoneMatrix : register(b3)
+{
+    Matrix boneMatrix[127];
 }
 
 struct VS_INPUT
@@ -71,10 +76,7 @@ struct VS_INPUT
     float3 biTangent : BINORMAL;
     float2 uv : TEXCOORD;
     float4 color : COLOR;
-#ifdef SKINNING
-    uint4 blendIndicies : BLENDINDICES;
-    float4 blendWeights : BLENDWEIGHT;
-#endif
+    uint vertexID : SV_VertexID;
 };
 
 struct PS_INPUT
@@ -278,11 +280,36 @@ PS_INPUT vs_main(VS_INPUT input)
 {
     PS_INPUT output = (PS_INPUT) 0;
     float4x4 matWolrd = world;
-#ifdef SKINNING
-    matWolrd = mul(input.blendWeights.x, matrixPalleteArray[input.blendIndicies.x]);
-    matWolrd += mul(input.blendWeights.y, matrixPalleteArray[input.blendIndicies.y]);
-    matWolrd += mul(input.blendWeights.z, matrixPalleteArray[input.blendIndicies.z]);
-    matWolrd += mul(input.blendWeights.w, matrixPalleteArray[input.blendIndicies.w]);
+#ifdef Skinning
+    uint4 boneIndices0 = uint4(boneIDBuffer[input.vertexID * 8 + 0],
+                               boneIDBuffer[input.vertexID * 8 + 1],
+                               boneIDBuffer[input.vertexID * 8 + 2],
+                               boneIDBuffer[input.vertexID * 8 + 3]);
+    uint4 boneIndices1 = uint4(boneIDBuffer[input.vertexID * 8 + 4],
+                               boneIDBuffer[input.vertexID * 8 + 5],
+                               boneIDBuffer[input.vertexID * 8 + 6],
+                               boneIDBuffer[input.vertexID * 8 + 7]);
+
+    float4 boneWeights0 = float4(boneWeightBuffer[input.vertexID * 8 + 0],
+                                 boneIDBuffer[input.vertexID * 8 + 1],
+                                 boneIDBuffer[input.vertexID * 8 + 2],
+                                 boneIDBuffer[input.vertexID * 8 + 3]);
+    float4 boneWeights1 = float4(boneIDBuffer[input.vertexID * 8 + 4],
+                                 boneIDBuffer[input.vertexID * 8 + 5],
+                                 boneIDBuffer[input.vertexID * 8 + 6],
+                                 boneIDBuffer[input.vertexID * 8 + 7]);
+    [unroll]
+    for (int i = 0; i < 4; ++i)
+    {
+        matWolrd += boneWeights0[i] * boneMatrix[boneIndices0[i]];
+    }
+
+    // Apply skinning for next 4 bones
+    [unroll]
+    for (int i = 0; i < 4; ++i)
+    {
+        matWolrd += boneWeights1[i] * boneMatrix[boneIndices1[i]];
+    }
 #endif
     
     output.position = mul(input.position, matWolrd);
@@ -449,8 +476,41 @@ float4 skybox_ps_main(SKYBOX_PS_INPUT input):SV_Target0
 PS_INPUT shadow_vs_main(VS_INPUT input)
 {
     PS_INPUT output = (PS_INPUT) 0;
+       
     float4 pos = input.position;
-    pos = mul(pos, world);
+    float4x4 matWolrd = world;
+#ifdef Skinning
+    uint4 boneIndices0 = uint4(boneIDBuffer[input.vertexID * 8 + 0],
+                               boneIDBuffer[input.vertexID * 8 + 1],
+                               boneIDBuffer[input.vertexID * 8 + 2],
+                               boneIDBuffer[input.vertexID * 8 + 3]);
+    uint4 boneIndices1 = uint4(boneIDBuffer[input.vertexID * 8 + 4],
+                               boneIDBuffer[input.vertexID * 8 + 5],
+                               boneIDBuffer[input.vertexID * 8 + 6],
+                               boneIDBuffer[input.vertexID * 8 + 7]);
+
+    float4 boneWeights0 = float4(boneWeightBuffer[input.vertexID * 8 + 0],
+                                 boneIDBuffer[input.vertexID * 8 + 1],
+                                 boneIDBuffer[input.vertexID * 8 + 2],
+                                 boneIDBuffer[input.vertexID * 8 + 3]);
+    float4 boneWeights1 = float4(boneIDBuffer[input.vertexID * 8 + 4],
+                                 boneIDBuffer[input.vertexID * 8 + 5],
+                                 boneIDBuffer[input.vertexID * 8 + 6],
+                                 boneIDBuffer[input.vertexID * 8 + 7]);
+    [unroll]
+    for (int i = 0; i < 4; ++i)
+    {
+        matWolrd += boneWeights0[i] * boneMatrix[boneIndices0[i]];
+    }
+
+    // Apply skinning for next 4 bones
+    [unroll]
+    for (int i = 0; i < 4; ++i)
+    {
+        matWolrd += boneWeights1[i] * boneMatrix[boneIndices1[i]];
+    }
+#endif    
+    pos = mul(pos, matWolrd);
     pos = mul(pos, shadowView);
     pos = mul(pos, shadowProjection);
     output.position = pos;
