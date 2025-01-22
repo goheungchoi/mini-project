@@ -36,6 +36,7 @@ void GameApp::Initialize()
       "Textures/BakerDiffuseIrradiance.dds", "Textures/BakerSpecularIBL.dds");
   std::ranges::for_each(modelData.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
+    _renderer->AddShadow(meshHandle);
   });
   std::ranges::for_each(modelData2.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
@@ -46,6 +47,7 @@ void GameApp::Initialize()
   });
   std::ranges::for_each(modelData4.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
+    _renderer->AddShadow(meshHandle);
   });
   _camera = new Camera(1920, 1080);
   _mainLight.direction = Vector4(0.f, -1.f, 1.f, 0.f);
@@ -188,6 +190,13 @@ void GameApp::Render()
                           _renderer->BeginDraw(meshHandle, world);
                           _renderer->DrawMesh(meshHandle);
                         });
+  _renderer->DrawDebugCylinder(
+      Matrix::CreateScale(35.f) *
+          Matrix::CreateFromQuaternion(
+              Quaternion::CreateFromAxisAngle(Vector3(1.f, 0.f, 0.f),
+                                              XMConvertToRadians(90.f)))*
+          Matrix::CreateTranslation(Vector3(0.f, -10.f, 0.0f)),
+      Color(0.f, 1.f, 0.f));
   std::ranges::for_each(AccessModelData(modelHandle2).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world2);
@@ -198,11 +207,19 @@ void GameApp::Render()
                           _renderer->BeginDraw(meshHandle, world3);
                           _renderer->DrawMesh(meshHandle);
                         });
+  _renderer->DrawDebugSphere(
+      Matrix::CreateScale(30.f) *
+          Matrix::CreateTranslation(Vector3(100.f, 0.f, .0f)),
+      Color(1.f, 0.f, 0.f));
+  _renderer->DrawDebugBox(Matrix::CreateScale({230.f,50.f,50.f})
+                          *Matrix::CreateTranslation(-180.f, 0.f, 0.0f)
+                          , Color(0.f, 0.f, 1.f));
   std::ranges::for_each(AccessModelData(modelHandle4).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world4);
                           _renderer->DrawMesh(meshHandle);
                         });
+
 
 
 #endif // RenderTest

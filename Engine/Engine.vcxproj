@@ -176,12 +176,12 @@
 	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 	<ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\SharedLib\SharedLib.vcxproj">
-			<Project>{d67b80c2-6ba8-46ef-b896-0b6004a06416}</Project>
-		</ProjectReference>
-	</ItemGroup>
-	<ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharedLib\SharedLib.vcxproj">
+      <Project>{d67b80c2-6ba8-46ef-b896-0b6004a06416}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
 		<ClCompile Include="External\nvpro\nv_dds.cpp" />
 		<ClInclude Include="External\nvpro\nv_dds.h" />
 		<ClCompile Include="External\nvpro\texture_formats.cpp" />
@@ -214,6 +214,7 @@
 		<ClInclude Include="Include\GameFramework\Components\ComponentBase.h" />
 		<ClInclude Include="Include\GameFramework\Components\LightComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\MeshComponent.h" />
+		<ClInclude Include="Include\GameFramework\Components\RigidbodyComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\SkeletalMeshComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\TerrainComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\TransformComponent.h" />
@@ -239,6 +240,7 @@
 		<ClCompile Include="Source\GameFramework\Components\ComponentBase.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\LightComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\MeshComponent.cpp" />
+		<ClCompile Include="Source\GameFramework\Components\RigidbodyComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\SkeletalMeshComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\TerrainComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\TransformComponent.cpp" />
@@ -263,6 +265,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\ResourceStorage.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Buffer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\ConstantBuffer.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\GeometryPrimitive.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Image.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Material.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\PipeLineState.h" />
@@ -285,5 +288,5 @@
 		<ClInclude Include="Source\ResourceManager\ResourcePool\Utils.h" />
 		<ClCompile Include="Source\WinApp\WinApp.cpp" />
 		<ClCompile Include="Source\WindowManager\WindowManager.cpp" />
-	</ItemGroup>
+  </ItemGroup>
 </Project>

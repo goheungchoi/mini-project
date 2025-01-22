@@ -128,7 +128,9 @@ private:
 public:
   float alphaCutoff = 0.f;
   AlphaMode alphaMode;
-
+  float metallicFactor = 0.f;
+  float roughnessFactor = 0.f;
+  bool doubleSided = false;
 public:
   Material() {}
   ~Material()

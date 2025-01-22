@@ -18,7 +18,16 @@ namespace Light
     Vector4 intensity;
   };
 }
-
+namespace Geometry
+{
+  enum class Type
+  {
+    Box,
+    Sphere,
+    Cylinder,
+    End,
+  };
+}
 enum RenderPassType : uint8_t
 {
   None = 0,       
@@ -26,5 +35,6 @@ enum RenderPassType : uint8_t
   kTransparentPass = 1 << 1, // 0000 0010
   kShadowPass = 1 << 2,       // 0000 0100
   kLightPass = 1 << 3,       // 0000 0100
+  kWireFrame = 1 << 4,         // 0000 1000
 };
 using RenderPassFlags = uint8_t;

@@ -19,6 +19,23 @@ PhyjixWorld::PhyjixWorld(PxPhysics* physics, PxDefaultCpuDispatcher* dispatcher)
         pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
         pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
     }
+    sceneDesc.filterShader = []
+    (   PxFilterObjectAttributes attributes0, PxFilterData filterData0,
+        PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+        PxPairFlags & pairFlags, const void* constantBlock,
+        PxU32 constantBlockSize) ->physx::PxFilterFlags
+    {
+      pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT |
+                  physx::PxPairFlag::eTRIGGER_DEFAULT |
+                  physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
+      return physx::PxFilterFlag::eDEFAULT;
+    };
+
+    _eventhandler = new PhyjixEventHandler();
+    sceneDesc.simulationEventCallback = _eventhandler;
+
+
+
 
 }
 
@@ -30,9 +47,11 @@ PhyjixWorld::~PhyjixWorld()
 }
 
 IRigidBody* PhyjixWorld::AddRigidBody(const DirectX::SimpleMath::Vector3& position,
-    const DirectX::SimpleMath::Vector3& size , ColliderShape cShape , bool isStatic)
+    const DirectX::SimpleMath::Vector3& size, ColliderShape cShape,
+    bool isStatic ,bool isKinematic )
 {
-    IRigidBody* physxbody = new RigidBody(_physics, position, size, cShape, isStatic, this);
+  IRigidBody* physxbody = new RigidBody(_physics, position, size, cShape,
+                                        isStatic, isKinematic, this);
 
     _scene->addActor(*(static_cast<RigidBody*>(physxbody)->GetActor()));
 	return physxbody;

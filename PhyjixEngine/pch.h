@@ -11,6 +11,7 @@
 
 #include "framework.h"
 #include <vector>
+#include <unordered_map>
 #include <functional>
 #include <physx/PxPhysicsAPI.h>
 #include <physx/PxPhysics.h>
@@ -22,6 +23,7 @@ using namespace physx;
 #include "PhyjixUtil.h"
 #include "CharacterController.h"
 #include "RigidBody.h"
+#include "PhyjixEventHandler.h"
 #include "PhyjixWorld.h"
 #include "PhyjixEngine.h"
 

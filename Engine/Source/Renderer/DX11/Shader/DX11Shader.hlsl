@@ -456,3 +456,11 @@ PS_INPUT shadow_vs_main(VS_INPUT input)
     return output;
 }
 #endif
+
+//---------------------------define WireFrame--------------------------------------------
+#ifdef WireFrame
+float4 wire_frame_ps_main(VS_INPUT input) : SV_Target0
+{
+    return input.color;
+}
+#endif

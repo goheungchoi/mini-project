@@ -60,6 +60,7 @@ cbuffer PixelData : register(b2)
 {
     float alphaCutoff;
     float3 padding1;
+    float4 color;
 }
 
 struct VS_INPUT
@@ -454,5 +455,12 @@ PS_INPUT shadow_vs_main(VS_INPUT input)
     pos = mul(pos, shadowProjection);
     output.position = pos;
     return output;
+}
+#endif
+//---------------------------define WireFrame--------------------------------------------
+#ifdef WireFrame
+float4 wire_frame_ps_main(PS_INPUT input) : SV_Target0
+{
+    return color;
 }
 #endif
