@@ -7,6 +7,7 @@
 #include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
 #include "Renderer/D2DRenderer/D2DRenderer.h"
+//#define USED2D
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
@@ -36,9 +37,13 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
 #ifdef _DEBUG
   InitImGui();
 #endif
-
+#ifdef  USED2D
   _d2dRenderer = new D2DRenderer;
   _d2dRenderer->Init(_device, _swapChain);
+
+
+#endif //  USED2D
+
 
   return true;
 }
@@ -77,8 +82,11 @@ void DX11Renderer::BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
   BeginImGuiDraw();
   _passMgr->UpdateVariable();
 #endif
+#ifdef USED2D
 
   _d2dRenderer->BeginDraw();
+
+#endif //  USED2D
 }
 
 void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
@@ -116,9 +124,9 @@ void DX11Renderer::EndFrame()
 #ifdef _DEBUG
   DrawImGui();
 #endif
-
+#ifdef USED2D
   _d2dRenderer->EndDraw();
-
+#endif
   _swapChain->GetSwapChain()->Present(0, 0);
 }
 
@@ -196,7 +204,7 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
           boneWeightsBuffer.push_back(meshData.boneWeights[i]);
         }
       }
-      UINT size = sizeof(uint32_t) * boneWeightsBuffer.size();
+      UINT size = sizeof(uint32_t) * boneIndicesBuffer.size();
       meshBuffer->boneIDBuffer = _device->CreateDataBuffer(
           boneIndicesBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE,sizeof(uint32_t));
       meshBuffer->boneIDSrv = _device->CreateStructuredSRV(

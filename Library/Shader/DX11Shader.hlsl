@@ -305,18 +305,19 @@ PS_INPUT vs_main(VS_INPUT input)
                                  boneWeightBuffer[input.vertexID * 8 + 6],
                                  boneWeightBuffer[input.vertexID * 8 + 7]);
    
-    [unroll]
-    for (int i = 0; i < 4; ++i)
-    {
-        boneTransform += boneWeights0[i] * boneMatrix[boneIndices0[i]];
-    }
+    
+    boneTransform += mul(boneWeights0.x , boneMatrix[boneIndices0.x]);
+    boneTransform += mul(boneWeights0.y , boneMatrix[boneIndices0.y]);
+    boneTransform += mul(boneWeights0.z , boneMatrix[boneIndices0.z]);
+    boneTransform += mul(boneWeights0.w , boneMatrix[boneIndices0.w]);
+  
 
-    // Apply skinning for next 4 bones
-    [unroll]
-    for (int j = 0; j < 4; ++j)
-    {
-        boneTransform += boneWeights1[j] * boneMatrix[boneIndices1[j]];
-    }
+    boneTransform += mul(boneWeights1.x, boneMatrix[boneIndices1.x]);
+    boneTransform += mul(boneWeights1.y, boneMatrix[boneIndices1.y]);
+    boneTransform += mul(boneWeights1.z, boneMatrix[boneIndices1.z]);
+    boneTransform += mul(boneWeights1.w, boneMatrix[boneIndices1.w]);
+  
+
     matWolrd = mul(matWolrd, boneTransform);
 #endif
     output.position = mul(input.position, matWolrd);
