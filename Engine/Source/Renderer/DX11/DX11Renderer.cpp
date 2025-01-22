@@ -365,14 +365,6 @@ void DX11Renderer::DrawImGui()
   ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void DX11Renderer::CreateTextFormat(std::wstring fontName, float size,
-                                    UINT fontWeight, UINT textAlignment,
-                                    UINT paragraphAlignment)
-{
-  _d2dRenderer->_pFont->CreateTextFormat(fontName, size, fontWeight,
-                                         textAlignment, paragraphAlignment);
-}
-
 void DX11Renderer::TextDraw(const wchar_t* format, Vector4 rect,
                             const std::wstring& fontName, Color color)
 {
