@@ -28,8 +28,7 @@ StructuredBuffer<float> boneWeightBuffer : register(t16);
 struct DirectionalLight
 {
     float4 direction;
-    float4 color;
-    float4 intensity;
+    float4 radiance;
 };
 struct PointLight
 {
@@ -162,7 +161,7 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     float NdotV = max(0.0,dot(normal, lightOut));
     float3 lightReflection = 2.f * NdotV * normal - lightOut;
     float3 lightIn = normalize(-mainDirectionalLight.direction.xyz);
-    float3 Lradiance = mainDirectionalLight.color.xyz * mainDirectionalLight.intensity.xyz;
+    float3 Lradiance = mainDirectionalLight.radiance.xyz * mainDirectionalLight.radiance.w;
     //pbr
     float3 lightHalf = normalize(lightIn + lightOut);
     float NdotL = max(0.0,dot(normal, lightIn));
@@ -362,7 +361,7 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     float NdotV = saturate(dot(normal, lightOut));
     float3 lightReflection = 2.f * NdotV * normal - lightOut;
     float3 lightIn = normalize(-mainDirectionalLight.direction.xyz);
-    float3 Lradiance = mainDirectionalLight.color.xyz * mainDirectionalLight.intensity.xyz;
+    float3 Lradiance = mainDirectionalLight.radiance.xyz * mainDirectionalLight.radiance.w;
     
     float3 lightHalf = normalize(lightIn + lightOut);
     float NdotL = saturate(dot(normal, lightIn));
