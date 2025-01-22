@@ -14,7 +14,7 @@ std::vector<char> ReadFile(const fs::path& filepath)
 
     if (!file.is_open())
     {
-      throw std::runtime_error("File can't be opened.");
+      throw std::runtime_error("File can't be opened: " + filepath.string());
     }
 
     // The location of the cursor tells the size of
@@ -23,7 +23,7 @@ std::vector<char> ReadFile(const fs::path& filepath)
 
     if (filesize < 0)
     {
-      throw std::runtime_error("File length is negative.");
+      throw std::runtime_error("File length is negative: " + filepath.string());
     }
 
     result.resize(filesize);
@@ -39,7 +39,7 @@ std::vector<char> ReadFile(const fs::path& filepath)
   }
   catch (const std::exception& e)
   {
-    printf("%s", e.what());
+    printf("%s\n", e.what());
     return result;
   }
 
