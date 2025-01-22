@@ -49,6 +49,8 @@ struct MeshBuffer
   UINT nIndices;
   ComPtr<ID3D11Buffer> boneIDBuffer;
   ComPtr<ID3D11Buffer> boneWeightsBuffer;
+  ComPtr<ID3D11ShaderResourceView> boneIDSrv;
+  ComPtr<ID3D11ShaderResourceView> boneWeightsSrv;
   Matrix world=Matrix::Identity;
   Material* material=nullptr;
   RenderPassFlags flags = 0;

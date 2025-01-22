@@ -180,10 +180,15 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
       UINT size = sizeof(uint32_t) * boneWeightsBuffer.size();
       meshBuffer->boneIDBuffer = _device->CreateDataBuffer(
           boneIndicesBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE);
-
+      meshBuffer->boneIDSrv =
+          _device->CreateStructuredSRV(meshBuffer->boneIDBuffer.Get(), size);
+      
       size = sizeof(float) * boneWeightsBuffer.size();
       meshBuffer->boneWeightsBuffer = _device->CreateDataBuffer(
           boneWeightsBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE);
+      meshBuffer->boneIDSrv =
+          _device->CreateStructuredSRV(meshBuffer->boneWeightsBuffer.Get(), size);
+      
     }
     // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함.??
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
