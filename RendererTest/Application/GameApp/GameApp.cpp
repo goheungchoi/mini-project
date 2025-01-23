@@ -17,7 +17,6 @@
 
 static ModelHandle modelHandle;
 static ModelHandle modelHandle2;
-static ModelHandle modelHandle3;
 static ModelHandle modelHandle4;
 
 static ModelHandle skinningTest;
@@ -45,31 +44,26 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
 #endif // RenderTest
   modelHandle = LoadModel("Models\\FlightHelmet\\FlightHelmet.gltf");
   modelHandle2 = LoadModel("Models\\Ceberus\\Ceberus.glb");
-  modelHandle3 = LoadModel("Models\\Sphere\\Sphere.obj");
   modelHandle4 = LoadModel("Models\\Sponza\\Sponza.gltf");
   ModelData modelData = AccessModelData(modelHandle);
   ModelData modelData2 = AccessModelData(modelHandle2);
-  ModelData modelData3 = AccessModelData(modelHandle3);
   ModelData modelData4 = AccessModelData(modelHandle4);
   // skybox init
   _renderer->CreateSkyBox(
       "Textures/BakerEnv.dds", "Textures/BakerSpecularBRDF_LUT.dds",
       "Textures/BakerDiffuseIrradiance.dds", "Textures/BakerSpecularIBL.dds");
-  //std::ranges::for_each(modelData.meshes, [&](MeshHandle meshHandle) {
-  //  _renderer->CreateMesh(meshHandle);
-  //  _renderer->AddShadow(meshHandle);
-  //});
+  std::ranges::for_each(modelData.meshes, [&](MeshHandle meshHandle) {
+    _renderer->CreateMesh(meshHandle);
+    _renderer->AddShadow(meshHandle);
+  });
   std::ranges::for_each(modelData2.meshes, [&](MeshHandle meshHandle) {
     _renderer->CreateMesh(meshHandle);
     _renderer->AddShadow(meshHandle);
   });
-  //std::ranges::for_each(modelData3.meshes, [&](MeshHandle meshHandle) {
-  //  _renderer->CreateMesh(meshHandle);
-  //});
-  //std::ranges::for_each(modelData4.meshes, [&](MeshHandle meshHandle) {
-  //  _renderer->CreateMesh(meshHandle);
-  //  _renderer->AddShadow(meshHandle);
-  //});
+  std::ranges::for_each(modelData4.meshes, [&](MeshHandle meshHandle) {
+    _renderer->CreateMesh(meshHandle);
+    _renderer->AddShadow(meshHandle);
+  });
   _camera = new Camera(1920, 1080);
   _mainLight.direction = Vector4(0.f, -1.f, 1.f, 0.f);
   _mainLight.radiance = Vector4(1.f, 1.f, 1.f, 1.f);
@@ -104,7 +98,9 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   
   animComponent1->SetState(animState1);
   _renderer->CreateMesh(animSkeletal1->GetHandle());
+  _renderer->AddShadow(animSkeletal1->GetHandle());
   _renderer->CreateMesh(animSkeletal2->GetHandle());
+  _renderer->AddShadow(animSkeletal2->GetHandle());
 }
 
 void GameApp::Execute()
@@ -192,7 +188,7 @@ void GameApp::Update(float deltaTime)
     }
   }
 
-  animComponent1->UpdateAnimation(deltaTime/1000);
+  animComponent1->UpdateAnimation(deltaTime);
 
   animSkeletal1->UpdateBoneTransforms();
   animSkeletal2->UpdateBoneTransforms();
@@ -241,7 +237,7 @@ void GameApp::Render()
   Matrix translate4 = Matrix::CreateTranslation(Vector3(0.f, -100.f, .0f));
   // world4 *= scale4;
   world4 *= translate4;
- /* std::ranges::for_each(AccessModelData(modelHandle).meshes,
+  std::ranges::for_each(AccessModelData(modelHandle).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world);
                           _renderer->DrawMesh(meshHandle);
@@ -251,43 +247,29 @@ void GameApp::Render()
           Matrix::CreateFromQuaternion(Quaternion::CreateFromAxisAngle(
               Vector3(1.f, 0.f, 0.f), XMConvertToRadians(90.f))) *
           Matrix::CreateTranslation(Vector3(0.f, -10.f, 0.0f)),
-      Color(0.f, 1.f, 0.f));*/
+      Color(0.f, 1.f, 0.f));
   std::ranges::for_each(AccessModelData(modelHandle2).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world2);
                           _renderer->DrawMesh(meshHandle);
                         });
- /* std::ranges::for_each(AccessModelData(modelHandle3).meshes,
-                        [&](MeshHandle meshHandle) {
-                          _renderer->BeginDraw(meshHandle, world3);
-                          _renderer->DrawMesh(meshHandle);
-                        });
-  _renderer->DrawDebugSphere(
-      Matrix::CreateScale(30.f) *
-          Matrix::CreateTranslation(Vector3(100.f, 0.f, .0f)),
-      Color(1.f, 0.f, 0.f));
-  _renderer->DrawDebugBox(Matrix::CreateScale({230.f, 50.f, 50.f}) *
-                              Matrix::CreateTranslation(-180.f, 0.f, 0.0f),
-                          Color(0.f, 0.f, 1.f));
+
   std::ranges::for_each(AccessModelData(modelHandle4).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world4);
                           _renderer->DrawMesh(meshHandle);
-                        });*/
-
-  _renderer->BeginDraw(animSkeletal1->GetHandle(),
-                       animSkeletal1->GetOwner()->transform->globalTransform);
+                        });
+  Matrix skelworld1 = Matrix::Identity * Matrix::CreateScale(0.6f) *
+                      Matrix::CreateTranslation(100.f, -30.f, 0.f);
+  Matrix skelworld2 = Matrix::Identity * Matrix::CreateScale(0.6f)*
+                      Matrix::CreateTranslation(100.f, -30.f, 0.f);
+  _renderer->BeginDraw(animSkeletal1->GetHandle(), skelworld1);
   _renderer->DrawMesh(animSkeletal1->GetHandle(),animSkeletal1->boneTransforms);
-  _renderer->BeginDraw(animSkeletal2->GetHandle(),
-                       animSkeletal2->GetOwner()->transform->globalTransform);
+  _renderer->BeginDraw(animSkeletal2->GetHandle(), skelworld2);
   _renderer->DrawMesh(animSkeletal2->GetHandle(),
                       animSkeletal2->boneTransforms);
 
-  animSkeletal2->boneTransforms;
-  _renderer->BeginDraw(animSkeletal2->GetHandle(),
-                       animSkeletal2->GetOwner()->transform->globalTransform);
-  _renderer->DrawMesh(animSkeletal2->GetHandle(),
-                      animSkeletal2->boneTransforms);
+
 
 #endif // RenderTest
   _renderer->EndFrame();
