@@ -9,7 +9,7 @@ enum EStatus
   EStatus_Awake,
   EStatus_Inactive,
   EStatus_Active,
-  EStatus_Destroy,
-  EStatus_Cleanup
+  EStatus_Cleanup,
+  EStatus_Destroyed
 };
 

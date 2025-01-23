@@ -2,6 +2,8 @@
 
 #include "Core/Common.h"
 
+constexpr float kFixedRate{1.f / 60.f};
+
 class GameEngine
 {
 public:
@@ -15,8 +17,9 @@ public:
   virtual void Shutdown();
 
 protected:
-  virtual void FixedUpdate(float deltaTime) = 0;
-  virtual void Update(float deltaTime) = 0;
+  virtual void ProcessInput(float dt) = 0;
+  virtual void FixedUpdate(float dt) = 0;
+  virtual void Update(float dt) = 0;
   virtual void Render() = 0;
 
   virtual bool OnActivated();
@@ -27,7 +30,7 @@ protected:
 
 private:
   // Main Loop
-  void Run();
+  virtual void Run();
 
 protected:
   HWND _hwnd{};

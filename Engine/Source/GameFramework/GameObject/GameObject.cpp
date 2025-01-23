@@ -1,9 +1,31 @@
 #include "GameFramework/GameObject/GameObject.h"
 
-void GameObject::FixedUpdate(float fixedRate) {}
+#include "GameFramework/World/World.h"
 
-void GameObject::PreUpdate(float dt) {}
+void GameObject::SetGameObjectTag(const std::string& tag)
+{
+  this->tag = tag;
+  world->RegisterGameObjectTag(this);
+}
 
-void GameObject::Update(float dt) {}
+void GameObject::SetName(const std::string& name)
+{
+  this->name = name;
+  world->RegisterGameObjectName(this);
+}
 
-void GameObject::PostUpdate(float dt) {}
+GameObject* GameObject::Clone()
+{
+  /* TODO: */
+  return nullptr;
+}
+
+void GameObject::RegisterMeshComponentToWorld(MeshComponent* meshComp) {
+  world->RegisterMeshComponent(meshComp);
+}
+
+void GameObject::RegisterMeshComponentToWorld(
+    SkeletalMeshComponent* skeletalMeshComp)
+{
+  world->RegisterMeshComponent(skeletalMeshComp);
+}

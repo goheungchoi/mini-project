@@ -113,14 +113,16 @@ public:
   void RotateAroundXAxis(float degrees)
   {
     pitch += rotationSpeed * XMConvertToRadians(degrees);
-    std::cout << pitch << std::endl;
+    pitch = std::clamp(pitch, -MathUtil::kHalfPi_f + MathUtil::kEpsilon_f,
+                       MathUtil::kHalfPi_f - MathUtil::kEpsilon_f);
   }
   void RotateAroundYAxis(float degrees)
   {
     yaw += rotationSpeed * XMConvertToRadians(degrees);
   }
 
-  void LookAt(XMVECTOR point) {
+  void LookAt(XMVECTOR point)
+  {
     // Calculate the direction vector from the camera to the target point
     XMVECTOR direction = XMVectorSubtract(point, position);
     direction = XMVector3Normalize(direction);
@@ -150,9 +152,9 @@ public:
     // Translation
     position += downUpMove * UP;
     downUpMove = 0.f;
-    position +=  leftRightMove * right;
+    position += leftRightMove * right;
     leftRightMove = 0.f;
-    position +=  backForwardMove * forward;
+    position += backForwardMove * forward;
     backForwardMove = 0.f;
 
     return XMMatrixLookToLH(position, forward, UP);
