@@ -192,7 +192,7 @@ void GameApp::Update(float deltaTime)
     }
   }
 
-  animComponent1->UpdateAnimation(deltaTime);
+  animComponent1->UpdateAnimation(deltaTime/1000);
 
   animSkeletal1->UpdateBoneTransforms();
   animSkeletal2->UpdateBoneTransforms();
@@ -275,10 +275,13 @@ void GameApp::Render()
                           _renderer->DrawMesh(meshHandle);
                         });*/
 
-  animSkeletal1->boneTransforms;
   _renderer->BeginDraw(animSkeletal1->GetHandle(),
                        animSkeletal1->GetOwner()->transform->globalTransform);
   _renderer->DrawMesh(animSkeletal1->GetHandle(),animSkeletal1->boneTransforms);
+  _renderer->BeginDraw(animSkeletal2->GetHandle(),
+                       animSkeletal2->GetOwner()->transform->globalTransform);
+  _renderer->DrawMesh(animSkeletal2->GetHandle(),
+                      animSkeletal2->boneTransforms);
 
   animSkeletal2->boneTransforms;
   _renderer->BeginDraw(animSkeletal2->GetHandle(),
