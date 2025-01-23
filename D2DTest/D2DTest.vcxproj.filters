@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<ItemGroup>
+		<Filter Include="Application">
+			<UniqueIdentifier>{42C0CCFC-5D70-4047-9D8E-6EC19E54A953}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Application\GameApp">
+			<UniqueIdentifier>{C9304F05-A080-40D5-8624-9865237D3D39}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Contents\GameObjects">
+			<UniqueIdentifier>{D0DA3195-0C6C-4362-93F6-FDEF8E880514}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Contents">
+			<UniqueIdentifier>{018F55D2-B5C8-4AC7-9AF3-C7D4982591F1}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Contents\AnimationStates">
+			<UniqueIdentifier>{639056C9-B9A4-4138-83C1-147FB2D11E1B}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Contents\Levels">
+			<UniqueIdentifier>{6C443D0D-F9E9-4F05-94D6-36AB63D503B9}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="Application\GameApp\GameApp.h">
+			<Filter>Application\GameApp</Filter>
+		</ClInclude>
+		<ClCompile Include="Application\GameApp\GameApp.cpp">
+			<Filter>Application\GameApp</Filter>
+		</ClCompile>
+		<ClCompile Include="Application\WinMain.cpp">
+			<Filter>Application</Filter>
+		</ClCompile>
+		<None Include="imgui.ini" />
+		<ClInclude Include="Contents\GameObjects\TestGameObject.h">
+			<Filter>Contents\GameObjects</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Levels\TestLevel.h">
+			<Filter>Contents\Levels</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\AnimationStates\TestAnimationState.h">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClInclude>
+	</ItemGroup>
+</Project>

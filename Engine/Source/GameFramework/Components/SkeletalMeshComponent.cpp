@@ -4,6 +4,12 @@
 
 #include "GameFramework/GameObject/GameObject.h"
 
+#include "GameFramework/World/World.h"
+
+void SkeletalMeshComponent::RegisterMeshToWorld() {
+  GetOwner()->GetWorld()->RegisterMeshComponent(this);
+}
+
 void SkeletalMeshComponent::UpdateBoneTransforms()
 {
   if (!rootBone)

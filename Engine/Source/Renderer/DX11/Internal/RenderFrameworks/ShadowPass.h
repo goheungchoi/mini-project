@@ -106,7 +106,7 @@ public:
       right.z, up.z, forward.z, 0.0f,
       x, y, z, 1.0f);
 
-    Projection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV2, 1,
+    Projection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, 1,
                                                    _nearPlane, _farPlane);
   }
   void Prepare()

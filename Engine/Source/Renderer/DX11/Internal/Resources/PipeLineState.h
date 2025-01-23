@@ -10,7 +10,7 @@ struct BackBuffer
   ComPtr<ID3D11DepthStencilView> mainDSV;
 };
 class PipeLine
-{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+{
 private:
   struct OutputMerger
   {
@@ -87,11 +87,11 @@ public:
     _rsCullNone = new Rasterizer;
     _rsWireFrame = new Rasterizer;
     _rsDefault->viewPort = {.TopLeftX = 0.f,
-                     .TopLeftY = 0.f,
-                     .Width = static_cast<float>(width),
-                     .Height = static_cast<float>(height),
-                     .MinDepth = 0.f,
-                     .MaxDepth = 1.f};
+                            .TopLeftY = 0.f,
+                            .Width = static_cast<float>(width),
+                            .Height = static_cast<float>(height),
+                            .MinDepth = 0.f,
+                            .MaxDepth = 1.f};
     D3D11_RASTERIZER_DESC rasterizerDesc =
         CreateRaterizerDesc(D3D11_FILL_SOLID, D3D11_CULL_BACK, false, 0, 0.f,
                             0.f, true, false, false, true);
@@ -99,8 +99,8 @@ public:
         &rasterizerDesc, _rsDefault->rasterizerState.GetAddressOf()));
     // wireFrame
     rasterizerDesc =
-        CreateRaterizerDesc(D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, false, 0, 0.f,
-                            0.f, true, false, false, true);
+        CreateRaterizerDesc(D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, false, 0,
+                            0.f, 0.f, true, false, false, true);
     HR_T(_device->GetDevice()->CreateRasterizerState(
         &rasterizerDesc, _rsWireFrame->rasterizerState.GetAddressOf()));
     // cull none
@@ -147,7 +147,7 @@ public:
     _device->GetImmContext()->OMSetBlendState(_om->blentState.Get(),
                                               blendFactor, 0xFFFFFFFF);
   }
-  void SetMainViewPort() 
+  void SetMainViewPort()
   {
     _device->GetImmContext()->RSSetViewports(1, &_rsDefault->viewPort);
   }
@@ -168,6 +168,7 @@ public:
   {
     _device->GetImmContext()->RSSetState(_rsCullNone->rasterizerState.Get());
   }
+  D3D11_VIEWPORT GetMainViewPort() { return _rsDefault->viewPort; }
   void TurnZBufferOn()
   {
     _device->GetImmContext()->OMSetDepthStencilState(

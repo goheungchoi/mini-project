@@ -1,10 +1,11 @@
 #include "GameEngine/GameEngine.h"
 
 #include "WindowManager/WindowManager.h"
+
 #include "Core/Time/TimeSystem.h"
 #include "Core/Input/InputSystem.h"
 
-constexpr float kFixedRate{1.f / 60.f};
+
 
 void GameEngine::Initialize(UINT screenWidth, UINT screenHeight, const std::wstring& title)
 {

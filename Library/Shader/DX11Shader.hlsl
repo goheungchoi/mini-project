@@ -188,7 +188,7 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     float3 specularIBL = (F0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
         //¥ı«œ±‚
     
-    ambientLighting += (IBLdiffuse + specularIBL)*0.2;
+    ambientLighting += (IBLdiffuse + specularIBL)*0.1;
     //ambientLighting += 0;
     
     
@@ -278,7 +278,7 @@ DEFFERED_PS_OUT ps_main(PS_INPUT input)
 PS_INPUT vs_main(VS_INPUT input)
 {
     PS_INPUT output = (PS_INPUT) 0;
-    float4x4 matWolrd = world;
+    float4x4 matWolrd;
 #ifdef Skinning
    matrix boneTransform =  matrix(
      0.f, 0.f, 0.f, 0.f,
@@ -304,12 +304,11 @@ PS_INPUT vs_main(VS_INPUT input)
                                  boneWeightBuffer[input.vertexID * 8 + 5],
                                  boneWeightBuffer[input.vertexID * 8 + 6],
                                  boneWeightBuffer[input.vertexID * 8 + 7]);
-   
-    
-    boneTransform += mul(boneWeights0.x , boneMatrix[boneIndices0.x]);
-    boneTransform += mul(boneWeights0.y , boneMatrix[boneIndices0.y]);
-    boneTransform += mul(boneWeights0.z , boneMatrix[boneIndices0.z]);
-    boneTransform += mul(boneWeights0.w , boneMatrix[boneIndices0.w]);
+  
+    boneTransform += mul(boneWeights0.x, boneMatrix[boneIndices0.x]);
+    boneTransform += mul(boneWeights0.y, boneMatrix[boneIndices0.y]);
+    boneTransform += mul(boneWeights0.z, boneMatrix[boneIndices0.z]);
+    boneTransform += mul(boneWeights0.w, boneMatrix[boneIndices0.w]);
   
 
     boneTransform += mul(boneWeights1.x, boneMatrix[boneIndices1.x]);
@@ -318,12 +317,19 @@ PS_INPUT vs_main(VS_INPUT input)
     boneTransform += mul(boneWeights1.w, boneMatrix[boneIndices1.w]);
   
 
-    matWolrd = mul(matWolrd, boneTransform);
-#endif
+    matWolrd =  boneTransform;
+    float4 totlaPos = mul(input.position, boneTransform);
+    matrix wvp = mul(world, view);
+    wvp = mul(wvp, projection);
+    output.position = mul(totlaPos, wvp);
+    output.worldPosition = mul(totlaPos, world);
+    #else
+    matWolrd = world;
     output.position = mul(input.position, matWolrd);
     output.worldPosition = output.position;
     output.position = mul(output.position, view);
     output.position = mul(output.position, projection);
+#endif
     output.worldNormal = normalize(mul(normalize(input.normal), (float3x3) matWolrd));
     output.worldTangent = normalize(mul(normalize(input.tangent), (float3x3) matWolrd));
     output.worldBitangent = normalize(mul(normalize(input.biTangent), (float3x3) matWolrd));
@@ -375,7 +381,7 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     float3 lightHalf = normalize(lightIn + lightOut);
     float NdotL = saturate(dot(normal, lightIn));
     float NDotH = saturate(dot(normal, lightHalf));
-    float3 F = FresnelFactor(max(0.0, dot(lightHalf, lightOut)), f0);
+    float3 F = FresnelFactor(max(0.0,  dot(lightHalf, lightOut)), f0);
     float D = NormalDistributionFunction(normal, lightHalf, max(0.01, roughness));
     float G = GAFDirect(normal, lightOut, lightIn, roughness);
     float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metallic);
@@ -403,7 +409,7 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
         ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
     }
     
-    ambientLighting += (IBLdiffuse + specularIBL);
+    ambientLighting += (IBLdiffuse + specularIBL)*0.1;
 
     float currShadowDepth = input.positionShadow.z / input.positionShadow.w;
     float2 uv = input.positionShadow.xy / input.positionShadow.w;
@@ -486,9 +492,8 @@ PS_INPUT shadow_vs_main(VS_INPUT input)
     PS_INPUT output = (PS_INPUT) 0;
        
     float4 pos = input.position;
-    float4x4 matWolrd = world;
 #ifdef Skinning
-     matrix boneTransform =  matrix(
+   matrix boneTransform =  matrix(
      0.f, 0.f, 0.f, 0.f,
      0.f, 0.f, 0.f, 0.f,
      0.f, 0.f, 0.f, 0.f,
@@ -512,12 +517,11 @@ PS_INPUT shadow_vs_main(VS_INPUT input)
                                  boneWeightBuffer[input.vertexID * 8 + 5],
                                  boneWeightBuffer[input.vertexID * 8 + 6],
                                  boneWeightBuffer[input.vertexID * 8 + 7]);
-   
-    
-    boneTransform += mul(boneWeights0.x , boneMatrix[boneIndices0.x]);
-    boneTransform += mul(boneWeights0.y , boneMatrix[boneIndices0.y]);
-    boneTransform += mul(boneWeights0.z , boneMatrix[boneIndices0.z]);
-    boneTransform += mul(boneWeights0.w , boneMatrix[boneIndices0.w]);
+  
+    boneTransform += mul(boneWeights0.x, boneMatrix[boneIndices0.x]);
+    boneTransform += mul(boneWeights0.y, boneMatrix[boneIndices0.y]);
+    boneTransform += mul(boneWeights0.z, boneMatrix[boneIndices0.z]);
+    boneTransform += mul(boneWeights0.w, boneMatrix[boneIndices0.w]);
   
 
     boneTransform += mul(boneWeights1.x, boneMatrix[boneIndices1.x]);
@@ -525,10 +529,9 @@ PS_INPUT shadow_vs_main(VS_INPUT input)
     boneTransform += mul(boneWeights1.z, boneMatrix[boneIndices1.z]);
     boneTransform += mul(boneWeights1.w, boneMatrix[boneIndices1.w]);
   
-
-    matWolrd = mul(matWolrd, boneTransform);
-#endif    
-    pos = mul(pos, matWolrd);
+    pos = mul(pos, boneTransform);
+#endif
+    pos = mul(pos, world);
     pos = mul(pos, shadowView);
     pos = mul(pos, shadowProjection);
     output.position = pos;

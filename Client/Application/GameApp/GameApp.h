@@ -1,9 +1,6 @@
 #pragma once
 
 #include "GameEngine/GameEngine.h"
-#include "Renderer/IRenderer.h"
-#include "Core/Camera/Camera.h"
-#include "GameFramework/World/World.h"
 
 class GameApp : public GameEngine
 {
@@ -21,6 +18,7 @@ public:
 
 protected:
   virtual void FixedUpdate(float deltaTime) override;
+  virtual void ProcessInput(float dt) override;
   virtual void Update(float deltaTime) override;
   virtual void Render() override;
 
@@ -31,5 +29,8 @@ protected:
   virtual bool OnWindowResized() override;
 
 private:
-  World* _world;
+  virtual void Run() override;
+
+private:
+  class World* _world;
 };

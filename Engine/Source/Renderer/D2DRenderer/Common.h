@@ -15,10 +15,13 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "DirectXTK.lib")
+
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <d3d11shader.h>
 #include "directxtk/SimpleMath.h"
+#include "directxtk/SpriteBatch.h"
 
 #include <wrl.h>
 
@@ -26,3 +29,4 @@
 using namespace DirectX::SimpleMath;
 
 #include <unordered_map>
+#include  <memory>

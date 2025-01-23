@@ -15,6 +15,7 @@ public:
 
   void SetHandle(MeshHandle handle) { this->handle = handle; }
 	MeshHandle GetHandle() { return handle; }
+  void RegisterMeshToWorld();
   void SetVisible(bool visible) { isVisible = visible; }
   void SetCastShadow(bool shadow) { bCastShadow = shadow; }
 };

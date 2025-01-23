@@ -1,23 +1,23 @@
-#include "GameApp.h"
-#include "../../Engine/Source/Renderer/DX11/DX11Renderer.h"
+ï»¿#include "GameApp.h"
+
 #include "Core/Input/InputSystem.h"
+#include "Core/Time/TimeSystem.h"
 #include "ResourceManager/ResourceManager.h"
 #include "WindowManager/WindowManager.h"
 
-#include "GameFramework/World/World.h"
+#include "Contents/Levels/TestLevel.h"
 #include "GameFramework/Level/Level.h"
+#include "GameFramework/World/World.h"
 
-#include "GameFramework/Components/Animation/Animation.h"
-#include "GameFramework/Components/Animation/AnimationState.h"
-#include "GameFramework/Components/Animation/AnimatorComponent.h"
+static TestLevel* testLevel;
 
 void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
                          const std::wstring& title)
 {
   Super::Initialize(screenWidth, screenHeight, title);
-  
-  // µğ¹ö±×¿ë ÄÜ¼ÖÃ¢ »ı¼º *Debug*
-  bool bUseConsole = true; // ÀÌ°Å true·Î ¹Ù²Ù¸é ÄÜ¼ÖÃ¢ ¶ä.
+
+  // ë””ë²„ê·¸ìš© ì½˜ì†”ì°½ ìƒì„± *Debug*
+  bool bUseConsole = true; // ì´ê±° trueë¡œ ë°”ê¾¸ë©´ ì½˜ì†”ì°½ ëœ¸.
   if (bUseConsole)
   {
     AllocConsole();
@@ -25,8 +25,13 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
     freopen_s(&_tempFile, "CONOUT$", "w", stdout);
   }
 
-  
+  _world = World::CreateWorld(_hwnd, title);
 
+  testLevel = new TestLevel();
+
+  _world->AddLevel(testLevel);
+  _world->PrepareChangeLevel("Test Level");
+  _world->CommitLevelChange();
 }
 
 void GameApp::Execute()
@@ -40,33 +45,44 @@ void GameApp::Shutdown()
   Super::Shutdown();
 }
 
-void GameApp::FixedUpdate(float deltaTime) {
-
+void GameApp::ProcessInput(float dt)
+{
+  _world->ProcessInput(dt);
 }
 
-void GameApp::Update(float deltaTime)
+void GameApp::FixedUpdate(float fixedRate)
 {
+  _world->FixedUpdate(fixedRate);
+  _world->PhysicsUpdate(fixedRate);
+}
 
+void GameApp::Update(float dt)
+{
+  _world->ProcessInput(dt);
+  _world->PreUpdate(dt);
+  _world->Update(dt);
+  _world->AnimationUpdate(dt);
+  _world->PostUpdate(dt);
 }
 
 void GameApp::Render()
 {
-
+  _world->RenderGameObjects();
+  _world->RenderUI();
 }
 
 bool GameApp::OnActivated()
 {
-  // TODO: °ÔÀÓÀÌ È°¼ºÈ­µÈ À©µµ¿ì°¡ µË´Ï´Ù.
+  // TODO: ê²Œì„ì´ í™œì„±í™”ëœ ìœˆë„ìš°ê°€ ë©ë‹ˆë‹¤.
 
   std::cout << "GameApp::OnActivated()" << std::endl;
-
 
   return true;
 }
 
 bool GameApp::OnDeactivated()
 {
-  // TODO: °ÔÀÓÀÌ ¹é±×¶ó¿îµå À©µµ¿ì·Î ÀüÈ¯µË´Ï´Ù.
+  // TODO: ê²Œì„ì´ ë°±ê·¸ë¼ìš´ë“œ ìœˆë„ìš°ë¡œ ì „í™˜ë©ë‹ˆë‹¤.
 
   std::cout << "GameApp::OnDeactivated()" << std::endl;
 
@@ -75,7 +91,7 @@ bool GameApp::OnDeactivated()
 
 bool GameApp::OnSuspending()
 {
-  // TODO: °ÔÀÓÀÌ ÀıÀü ¸ğµå·Î ÀüÈ¯µË´Ï´Ù(¶Ç´Â ÃÖ¼ÒÈ­µË´Ï´Ù).
+  // TODO: ê²Œì„ì´ ì ˆì „ ëª¨ë“œë¡œ ì „í™˜ë©ë‹ˆë‹¤(ë˜ëŠ” ìµœì†Œí™”ë©ë‹ˆë‹¤).
 
   std::cout << "GameApp::OnSuspending()" << std::endl;
 
@@ -84,7 +100,7 @@ bool GameApp::OnSuspending()
 
 bool GameApp::OnResuming()
 {
-  // TODO: °ÔÀÓÀÌ ÀıÀü ¸ğµå¿¡¼­ º¹±Í(¶Ç´Â ÃÖ¼ÒÈ­ º¹±Í)ÇÕ´Ï´Ù.
+  // TODO: ê²Œì„ì´ ì ˆì „ ëª¨ë“œì—ì„œ ë³µê·€(ë˜ëŠ” ìµœì†Œí™” ë³µê·€)í•©ë‹ˆë‹¤.
 
   std::cout << "GameApp::OnResuming()" << std::endl;
 
@@ -93,9 +109,72 @@ bool GameApp::OnResuming()
 
 bool GameApp::OnWindowResized()
 {
-  // TODO: °ÔÀÓ À©µµ¿ì Å©±â°¡ Á¶Á¤µË´Ï´Ù.
+  // TODO: ê²Œì„ ìœˆë„ìš° í¬ê¸°ê°€ ì¡°ì •ë©ë‹ˆë‹¤.
 
   std::cout << "GameApp::OnWindowResized()" << std::endl;
 
   return true;
+}
+
+void GameApp::Run()
+{
+  TimeSystem::Reset();
+
+  double dt = 0.0;               // ë¸íƒ€ íƒ€ì„
+  double dtThreshole = 0.25;     // ìµœëŒ€ ë¸íƒ€ íƒ€ì„
+  double fixedRate = kFixedRate; // í”½ìŠ¤ íƒ€ì„
+  double accumulator = 0.0;      // í”½ìŠ¤ íƒ€ì„ íŠ¸ë ˆí‚¹
+
+  // Main Loop
+  MSG msg = {};
+  bool bQuit = false;
+
+  while (!bQuit)
+  {
+    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+    {
+      if (msg.message == WM_QUIT)
+      {
+        bQuit = true;
+        break;
+      }
+
+      TranslateMessage(&msg);
+      DispatchMessage(&msg);
+    }
+    else
+    {
+      TimeSystem::Update();
+
+      dt = TimeSystem::GetDeltaTime();
+
+      InputSystem::GetInstance()->Update(dt);
+
+      if (_world->changingLevel)
+        continue;
+
+      _world->InitialStage();
+
+      // ê²Œì„ ë£¨í”„ ì†Œìš©ëŒì´ë¥¼ ë°©ì–´í•˜ê¸° ìœ„í•´ ë¸íƒ€íƒ€ì„ì´ ì¼ì •ì‹œê°„ ì´ìƒ ë„˜ì–´ê°€ë©´
+      // í”½ìŠ¤ í•©ë‹ˆë‹¤.
+      dtThreshole = 0.25 * dt;
+      if (dt > dtThreshole)
+        dt = dtThreshole; // Clamp the frame time
+
+      // í”„ë ˆì„ íƒ€ì„ì„ ëˆ„ì í•´ì„œ í”½ìŠ¤ íƒ€ì„ì„ ì¶”ì í•©ë‹ˆë‹¤.
+      accumulator += dt;
+      // ì¼ì • ì‹œê°„ë§ˆë‹¤ í”½ìŠ¤ ì—…ë°ì´íŠ¸ë¥¼ ì‹¤í–‰í•©ë‹ˆë‹¤.
+      fixedRate = kFixedRate * dt; // ìŠ¤ì¼€ì¼ ëœ í”½ìŠ¤ íƒ€ì„
+      while (accumulator >= fixedRate)
+      {
+        FixedUpdate(fixedRate); // Update physics at a fixed rate
+        accumulator -= fixedRate;
+      }
+
+      Update(dt);
+      Render();
+
+      _world->CleanupStage();
+    }
+  }
 }

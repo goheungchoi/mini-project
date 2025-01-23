@@ -349,6 +349,7 @@ public:
     }
   }
 #endif
+  D3D11_VIEWPORT GetMainViewport() { return _pso->GetMainViewPort(); }
 
 private:
   void MakeSampler(D3D11_SAMPLER_DESC desc, SamplerType type)
@@ -418,15 +419,20 @@ private:
     std::ranges::for_each(_shadowMesh[0], [this, dc](MeshBuffer* buffer) {
       if (buffer->flags & RenderPassType::kSkinning)
       {
-        dc->IASetInputLayout(_vShaders["Shadow"]->layout.Get());
-        dc->VSSetShader(_vShaders["Shadow"]->shader.Get(), nullptr, 0);
+        Constant::BoneMatrix boneMat = {};
+        std::copy(buffer->boneMatirx.begin(), buffer->boneMatirx.end(),
+                  boneMat.matrix);
+
+        _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
+        dc->IASetInputLayout(_vShaders["SkinningShadow"]->layout.Get());
+        dc->VSSetShader(_vShaders["SkinningShadow"]->shader.Get(), nullptr, 0);
         dc->VSSetShaderResources(15, 1, buffer->boneIDSrv.GetAddressOf());
         dc->VSSetShaderResources(16, 1, buffer->boneWeightsSrv.GetAddressOf());
       }
       else
       {
-        dc->IASetInputLayout(_vShaders["SkinningShadow"]->layout.Get());
-        dc->VSSetShader(_vShaders["SkinningShadow"]->shader.Get(), nullptr, 0);
+        dc->IASetInputLayout(_vShaders["Shadow"]->layout.Get());
+        dc->VSSetShader(_vShaders["Shadow"]->shader.Get(), nullptr, 0);
       }
       dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
                              &(buffer->stride), &(buffer->offset));
@@ -522,6 +528,11 @@ private:
       const auto& [z, buffer] = pair;
       if (buffer->flags & RenderPassType::kSkinning)
       {
+        Constant::BoneMatrix boneMat = {};
+        std::copy(buffer->boneMatirx.begin(), buffer->boneMatirx.end(),
+                  boneMat.matrix);
+
+        _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
         dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
         dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
         dc->VSSetShaderResources(15, 1, buffer->boneIDSrv.GetAddressOf());
