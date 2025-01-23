@@ -2,6 +2,8 @@
 
 #include "Core/Math/MathUtils.h"
 
+#include <iostream>
+
 /**
  * @brief Camera class
  */
@@ -104,15 +106,19 @@ public:
   void MultiplyRotationSpeed(float m) { this->rotationSpeed *= m; }
   float GetRotationSpeed() const { return rotationSpeed; }
 
-  void MoveDownUp(float move) { downUpMove += move; }
-  void MoveLeftRight(float move) { leftRightMove += move; }
-  void MoveBackForward(float move) { backForwardMove += move; }
+  void MoveDownUp(float move) { downUpMove += moveSpeed * move; }
+  void MoveLeftRight(float move) { leftRightMove += moveSpeed * move; }
+  void MoveBackForward(float move) { backForwardMove += moveSpeed * move; }
 
   void RotateAroundXAxis(float degrees)
   {
-    pitch += XMConvertToRadians(degrees);
+    pitch += rotationSpeed * XMConvertToRadians(degrees);
+    std::cout << pitch << std::endl;
   }
-  void RotateAroundYAxis(float degrees) { yaw += XMConvertToRadians(degrees); }
+  void RotateAroundYAxis(float degrees)
+  {
+    yaw += rotationSpeed * XMConvertToRadians(degrees);
+  }
 
   void LookAt(XMVECTOR point) {
     // Calculate the direction vector from the camera to the target point
@@ -137,17 +143,16 @@ public:
   XMMATRIX GetViewTransform()
   {
     // Rotation
-    XMMATRIX rotation = XMMatrixRotationRollPitchYaw(pitch * rotationSpeed,
-                                                     yaw * rotationSpeed, roll);
+    XMMATRIX rotation = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
     right = XMVector3TransformCoord(RIGHT, rotation);
     forward = XMVector3TransformCoord(FORWARD, rotation);
 
     // Translation
-    position += moveSpeed * downUpMove * UP;
+    position += downUpMove * UP;
     downUpMove = 0.f;
-    position += moveSpeed * leftRightMove * right;
+    position +=  leftRightMove * right;
     leftRightMove = 0.f;
-    position += moveSpeed * backForwardMove * forward;
+    position +=  backForwardMove * forward;
     backForwardMove = 0.f;
 
     return XMMatrixLookToLH(position, forward, UP);
