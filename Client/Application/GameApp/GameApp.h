@@ -1,10 +1,8 @@
 #pragma once
 
+#include "Core/Camera/Camera.h"
 #include "GameEngine/GameEngine.h"
 #include "Renderer/IRenderer.h"
-#include "Core/Camera/Camera.h"
-#include "GameFramework/World/World.h"
-
 class GameApp : public GameEngine
 {
   using Super = GameEngine;
@@ -31,5 +29,13 @@ protected:
   virtual bool OnWindowResized() override;
 
 private:
-  World* _world;
+  bool bCameraMove{false};
+  Camera* _camera;
+  DirectionalLight _mainLight;
+  IRenderer* _renderer;
+  Vector4 eye;
+  Vector4 at;
+
+  bool _bCameraMove = false;
 };
+
