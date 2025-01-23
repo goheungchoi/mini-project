@@ -2,8 +2,6 @@
 #include "physx/PxPhysicsAPI.h"
 #include "IRigidBody.h"
 #include "ICollisionEvent.h"
-#include "IPhyjixWorld.h"
-using namespace physx;
 
 class PhyjixWorld;
 class RigidBody : public IRigidBody, public ICollisionEvent
@@ -12,7 +10,7 @@ class RigidBody : public IRigidBody, public ICollisionEvent
   using CollisionEvent = std::function<void(RigidBody* self, RigidBody* other)>;
 
 public:
-  RigidBody(PxPhysics* physics, const DirectX::SimpleMath::Vector3& position,
+  RigidBody(physx::PxPhysics* physics, const DirectX::SimpleMath::Vector3& position,
             const DirectX::SimpleMath::Vector3& size, ColliderShape shape,
             BOOL isStatic, BOOL isKinematic, PhyjixWorld* world);
   ~RigidBody();
@@ -35,10 +33,10 @@ public:
   void DisableGravity() override;
   void WakeUp() override;
   void Sleep() override;
+  DirectX::SimpleMath::Vector3 GetWorldPosition() override;
+  DirectX::SimpleMath::Vector4 GetWorldRotation() override;
+
   ColliderShape GetColliderShapeType() override;
-
-
-
 
   // ICollisionEvent을(를) 통해 상속됨
   void OnCollisionEnter(IRigidBody* other) override;
@@ -47,17 +45,16 @@ public:
   void OnWake() override;
   void OnSleep() override;
 
-  PxRigidActor* _actor = nullptr;
+  physx::PxRigidActor* _actor = nullptr;
 
 private:
+  bool isStatic = false;
   PhyjixWorld* _world = nullptr;
-  PxShape* _defaultShape = nullptr;
+  physx::PxShape* _defaultShape = nullptr;
   ColliderShape shape;
 
   //test
-  PxShape* _nonElasticShape = nullptr;
-
-
+  physx::PxShape* _nonElasticShape = nullptr;
 
   std::unordered_map<IRigidBody*, std::function<void(void)>> CollisionEnterEventMap;
   std::unordered_map<IRigidBody*, std::function<void(void)>> CollisionExitEventMap;
@@ -65,7 +62,8 @@ private:
   std::vector<std::function<void(void)>> WakeEventMap;
   std::vector<std::function<void(void)>> SleepEventMap;
 
-  PxRigidDynamic* GetDynamicActor();
+  physx::PxRigidDynamic* GetDynamicActor();
 
+public:
 
 };

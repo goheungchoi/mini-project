@@ -2,7 +2,6 @@
 #include "ComponentBase.h"
 #include "TransformComponent.h"
 #include "../../PhyjixEngine/RigidBody.h"
-using namespace physx;
 
 // component which controls the movement and simulate collision via physx;
 // TransformComponent is effected and controlled by this component;
@@ -36,6 +35,7 @@ public:
   void EnableDebugDraw();
   void DisableDebugDraw();
   BOOL GetDebugDrawFlag() { return _bDebugDrawFlag; };
+  IRigidBody* GetRigidBody() { return _rigidbody; };
 #endif
 
 

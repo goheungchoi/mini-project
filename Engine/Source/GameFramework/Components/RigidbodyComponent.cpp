@@ -58,7 +58,7 @@ void RigidbodyComponent::DisableGravity()
 {
   _rigidbody->DisableGravity();
 }
-
+#ifdef _DEBUG
 void RigidbodyComponent::EnableDebugDraw()
 {
   _bDebugDrawFlag = true;
@@ -68,7 +68,7 @@ void RigidbodyComponent::DisableDebugDraw()
 {
   _bDebugDrawFlag = false;
 }
-
+#endif
 TransformComponent* RigidbodyComponent::GetTransformComponent()
 {
   return GetOwner()->transform;

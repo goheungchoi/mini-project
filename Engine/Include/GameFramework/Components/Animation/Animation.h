@@ -279,7 +279,7 @@ public:
 
     _currentAnimTime += GetTicksPerSecond() * dt;
     _currentAnimTime = fmod(_currentAnimTime, GetDuration());
-    // _currentAnimTime = 0.f;
+    // _currentAnimTime = 30.f;
 		// Update the channels first
     for (auto& [_, channel] : boneChannels)
     {
@@ -300,6 +300,11 @@ public:
       {
         // uint32_t idx = it->second;
 				// Get the bone's local transformation.
+        if (it->second.GetBoneID() != node.boneId)
+        {
+          throw std::exception("");
+        }
+
         nodeTransform = it->second.GetLocalTransform();
       }
 

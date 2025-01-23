@@ -1151,12 +1151,16 @@ void ModelExporter::ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
   }
 
   // Match the weights to the bone array.
+  size_t i = 0;
   for (auto& vertexWeights : geoMesh.vertexBoneWeights)
   {
     for (VertexBoneWeight& weight : vertexWeights)
     {
+      if (i == 10000)
+        continue;
       weight.boneId = boneIndexMap[weight.boneId];
-    }
+      ++i;
+		}
   }
 }
 
@@ -1355,7 +1359,7 @@ void ModelExporter::ProcessAnimationChannel(AnimationChannel& animChannel,
   for (uint32_t rotIdx = 0; rotIdx < animChannel.numKeyRotations; ++rotIdx)
   {
     aiQuaternion aiOrientation = channel->mRotationKeys[rotIdx].mValue;
-    aiOrientation.Normalize();
+    // aiOrientation.Normalize();
     float timeStamp = channel->mRotationKeys[rotIdx].mTime;
 
 		KeyRotation rot{.orientation = {aiOrientation.x, aiOrientation.y,

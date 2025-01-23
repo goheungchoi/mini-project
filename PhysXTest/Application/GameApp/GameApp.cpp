@@ -1,6 +1,9 @@
 #include "GameApp.h"
+
+#include "../../../PhyjixEngine/PhyjixWorld.h"
 #include "../../Engine/Source/Renderer/DX11/DX11Renderer.h"
 #include "Core/Input/InputSystem.h"
+#include "GameFramework/Components/RigidbodyComponent.h"
 #include "GameFramework/Level/Level.h"
 #include "GameFramework/World/World.h"
 #include "ResourceManager/ResourceManager.h"
@@ -13,6 +16,11 @@
 #include <imgui.h>
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
+
+#include "../../PhyjixEngine/IPhyjixEngine.h"
+#include "../../PhyjixEngine/PhyjixEngine.h"
+#include "../../PhyjixEngine/IPhyjixWorld.h"
+
 #define RenderTest
 
 static ModelHandle modelHandle;
@@ -45,6 +53,11 @@ void GameApp::FixedUpdate(float deltaTime)
 void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
                          const std::wstring& title)
 {
+  _phyjixEngine = new PhyjixEngine();
+  _phyjixEngine->Initialize();
+  _phyjixWorld = _phyjixEngine->CreateWorld();
+  _phyjixWorld->CreateDefaultGround();
+
   _renderer = new DX11Renderer;
   Super::Initialize(screenWidth, screenHeight, title);
   _renderer->Init_Win32(screenWidth, screenHeight, nullptr, &_hwnd);
@@ -110,6 +123,33 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   animComponent1->BineSkeleton(skinningData.skeleton);
 
   animComponent1->SetState(animState1);
+  testobject2 = new GameObject(myWorld);
+  testobject2->CreateComponent<RigidbodyComponent>();
+  testrigidbody2 = testobject2->GetComponent<RigidbodyComponent>();
+  testrigidbody2->Initialize({0,10,0}, {10,10,10},
+                            ColliderShape::eCubeCollider, true, false,
+                            static_cast<PhyjixWorld*>(_phyjixWorld));
+  testrigidbody2->EnableDebugDraw();
+ 
+
+  testobject = new GameObject(myWorld);
+  testobject->CreateComponent<RigidbodyComponent>();
+  testrigidbody = testobject->GetComponent<RigidbodyComponent>();
+  testrigidbody->Initialize({0, 100, 0}, {10, 10, 10},
+                            ColliderShape::eCubeCollider, false, false,
+                            static_cast<PhyjixWorld*>(_phyjixWorld));
+  testrigidbody->EnableDebugDraw();
+  testrigidbody->SetCollisionEvent(testrigidbody2->GetRigidBody(),
+                                   eCollisionEventType::eCollisionEnter, [&]() 
+                                   {
+                                     testrigidbody->DisableDebugDraw();
+                                     testrigidbody2->DisableDebugDraw();
+                                   });
+
+
+
+
+
 }
 
 void GameApp::Execute()
@@ -128,6 +168,7 @@ void GameApp::Shutdown()
 
 void GameApp::Update(float deltaTime)
 {
+  _phyjixEngine->Update(deltaTime);
   // _camera->LookAt({10, 0, 0, 1});
   // 'Q' ´©¸£¸é Down
   if (Input.IsKeyPress(Key::Q))
@@ -159,6 +200,14 @@ void GameApp::Update(float deltaTime)
   {
     _camera->MoveBackForward(-deltaTime * 6);
   }
+  if (Input.IsKeyPress(Key::T))
+  {
+    /*if (testrigidbody->GetDebugDrawFlag())
+      testrigidbody->DisableDebugDraw();
+    else
+      testrigidbody->EnableDebugDraw();*/
+    testrigidbody->DisableGravity();
+  } 
 
   if (Input.IsKeyDown(MouseState::RB))
   {
@@ -193,10 +242,13 @@ void GameApp::Update(float deltaTime)
 
   animSkeletal1->UpdateBoneTransforms();
   animSkeletal2->UpdateBoneTransforms();
+
+
 }
 
 void GameApp::Render()
 {
+  
   Matrix view = _camera->GetViewTransform();
   Matrix projection = _camera->GetProjectionMatrix();
   _renderer->BeginFrame(_camera->GetPosition(), view, projection, _mainLight);
@@ -243,12 +295,7 @@ void GameApp::Render()
                           _renderer->BeginDraw(meshHandle, world);
                           _renderer->DrawMesh(meshHandle);
                         });
-  _renderer->DrawDebugCylinder(
-      Matrix::CreateScale(35.f) *
-          Matrix::CreateFromQuaternion(Quaternion::CreateFromAxisAngle(
-              Vector3(1.f, 0.f, 0.f), XMConvertToRadians(90.f))) *
-          Matrix::CreateTranslation(Vector3(0.f, -10.f, 0.0f)),
-      Color(0.f, 1.f, 0.f));
+
   std::ranges::for_each(AccessModelData(modelHandle2).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world2);
@@ -259,18 +306,31 @@ void GameApp::Render()
                           _renderer->BeginDraw(meshHandle, world3);
                           _renderer->DrawMesh(meshHandle);
                         });
-  _renderer->DrawDebugSphere(
-      Matrix::CreateScale(30.f) *
-          Matrix::CreateTranslation(Vector3(100.f, 0.f, .0f)),
-      Color(1.f, 0.f, 0.f));
-  _renderer->DrawDebugBox(Matrix::CreateScale({230.f, 50.f, 50.f}) *
-                              Matrix::CreateTranslation(-180.f, 0.f, 0.0f),
-                          Color(0.f, 0.f, 1.f));
+
+
   std::ranges::for_each(AccessModelData(modelHandle4).meshes,
                         [&](MeshHandle meshHandle) {
                           _renderer->BeginDraw(meshHandle, world4);
                           _renderer->DrawMesh(meshHandle);
                         });
+  if (testrigidbody->GetDebugDrawFlag())
+  {
+    _renderer->DrawDebugBox(Matrix::CreateScale({20, 20, 20}) * 
+        Matrix::CreateFromQuaternion(
+                testrigidbody->GetRigidBody()->GetWorldRotation()) *
+                                Matrix::CreateTranslation(testrigidbody->GetRigidBody()->GetWorldPosition()),
+                            Color(1, 1, 0));
+  }
+  if (testrigidbody2->GetDebugDrawFlag())
+  {
+    _renderer->DrawDebugBox(
+        Matrix::CreateScale({20, 20, 20}) *
+            Matrix::CreateFromQuaternion(
+                testrigidbody2->GetRigidBody()->GetWorldRotation()) *
+            Matrix::CreateTranslation(
+                testrigidbody2->GetRigidBody()->GetWorldPosition()),
+        Color(1, 0, 1));
+  }
 
   /* animSkeletal1->boneTransforms;
    _renderer

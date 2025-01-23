@@ -1,6 +1,4 @@
 #pragma once
-#include "physx/PxPhysicsAPI.h"
-using namespace physx;
 class IRigidBody;
 class ICharacterController;
 
@@ -30,7 +28,7 @@ public:
   virtual void UpdateCharacterControllers(float deltaTime) = 0;
 
   virtual void CreateDefaultGround() = 0;
-
+  virtual IRigidBody* GetGroundActor() = 0;
   // physics update
   virtual void Update(float deltaTime) = 0;
 };
