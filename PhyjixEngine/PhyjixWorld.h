@@ -1,16 +1,16 @@
 #pragma once
-// #include "physx/PxPhysicsAPI.h"
-// #include "physx/PxPhysics.h"
-using namespace physx;
-
+#include "physx/PxPhysicsAPI.h"
 #include "IPhyjixWorld.h"
-class ICharacterController;
+
+class RigidBody;
 class IRigidBody;
+class PhyjixEventHandler;
 
 class PhyjixWorld : public IPhyjixWorld
 {
 public:
-  PhyjixWorld(PxPhysics* physics, PxDefaultCpuDispatcher* dispatcher);
+  PhyjixWorld(physx::PxPhysics* physics,
+              physx::PxDefaultCpuDispatcher* dispatcher);
   ~PhyjixWorld();
 
   void CreateDefaultGround() override;
@@ -27,21 +27,21 @@ public:
   void UpdateCharacterControllers(float deltaTime);
 
   void Update(float deltaTime) override;
+  IRigidBody* GetGroundActor() override;
 
 private:
   float elapsedTimer = 0.f;
-  PxScene* _scene = nullptr;
-  PxPhysics* _physics = nullptr;
+  physx::PxScene* _scene = nullptr;
+  physx::PxPhysics* _physics = nullptr;
   PhyjixEventHandler* _eventhandler = nullptr;
 
-  PxControllerManager* _controllerManager = nullptr;
+  physx::PxControllerManager* _controllerManager = nullptr;
   std::vector<ICharacterController*> _characterControllers;
 
-  PxPvdSceneClient* pvdClient = nullptr;
-  PxRigidStatic* groundPlane = nullptr;
-  PxMaterial* mMaterial = nullptr;
+  physx::PxPvdSceneClient* pvdClient = nullptr;
+  RigidBody* groundrigidbody = nullptr;
+  physx::PxRigidStatic* groundPlane = nullptr;
 
-  PxFilterFlags _customfiltershader;
-
+  physx::PxMaterial* mMaterial = nullptr;
 
 };

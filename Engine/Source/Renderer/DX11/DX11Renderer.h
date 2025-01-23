@@ -9,6 +9,7 @@ class SwapChain;
 class PipeLine;
 class RenderPassManager;
 class SkyBox;
+class D2DRenderer;
 class DX11Renderer : public IRenderer
 {
 public:
@@ -23,7 +24,8 @@ public:
   void BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
                   DirectionalLight mainLight) override;
   void BeginDraw(MeshHandle handle, Matrix world) override;
-  void DrawMesh(MeshHandle handle) override;
+  void DrawMesh(MeshHandle handle, vector<DirectX::XMMATRIX> boneTransforms =
+                                       vector<DirectX::XMMATRIX>()) override;
   void EndDraw() override;
   void EndFrame() override;
   void AddShadow(MeshHandle handle) override;
@@ -52,6 +54,11 @@ public:
   void BeginImGuiDraw();
   void DrawImGui();
 
+// D2D Renderer
+  void TextDraw(const wchar_t* format, Vector4 rect,
+                const std::wstring& fontName = L"Agency FB",
+                Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) override;
+
 private:
   void CreateEngineShader();
 
@@ -66,4 +73,6 @@ private:
 #endif // _DEBUG
   ResourceStorage* _storage = nullptr;
   RenderPassManager* _passMgr = nullptr;
+
+  D2DRenderer* _d2dRenderer = nullptr;
 };

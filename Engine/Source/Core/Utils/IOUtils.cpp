@@ -23,7 +23,7 @@ std::vector<char> ReadFile(const fs::path& filepath)
 
     if (filesize < 0)
     {
-      throw std::runtime_error("File length is negative." + filepath.string());
+      throw std::runtime_error("File length is negative: " + filepath.string());
     }
 
     result.resize(filesize);

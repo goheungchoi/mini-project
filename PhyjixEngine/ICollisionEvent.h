@@ -1,6 +1,6 @@
 #pragma once
+
 #include "IRigidBody.h"
-#include <physx/PxPhysics.h>
 class ICollisionEvent
 {
 public:

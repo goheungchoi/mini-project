@@ -78,6 +78,10 @@ public:
         2, 1,
         _CB->_constantBuffers[static_cast<UINT>(MeshCBType::PixelData)]
             .GetAddressOf());
+    dc->VSSetConstantBuffers(
+        3, 1,
+        _CB->_constantBuffers[static_cast<UINT>(MeshCBType::BoneMatrix)]
+            .GetAddressOf());
     dc->VSSetConstantBuffers(0, 1, _frameCB->_constantBuffer.GetAddressOf());
     dc->PSSetConstantBuffers(0, 1, _frameCB->_constantBuffer.GetAddressOf());
     _transparentMeshes.resize(2);
@@ -233,6 +237,10 @@ public:
     macros = {{"Shadow", "1"}, {nullptr, nullptr}};
     _vShaders.insert(
         {"Shadow", _compiler->CompileVertexShader(macros, "shadow_vs_main")});
+    macros.clear();
+    macros = {{"Shadow", "1"}, {"Skinning", "1"} ,{nullptr, nullptr}};
+    _vShaders.insert(
+        {"SkinningShadow", _compiler->CompileVertexShader(macros, "shadow_vs_main")});
     // ps
     macros = {{"Deffered", "1"}, {nullptr, nullptr}};
     _pShaders.insert(
@@ -341,6 +349,7 @@ public:
     }
   }
 #endif
+  D3D11_VIEWPORT GetMainViewport() { return _pso->GetMainViewPort(); }
 
 private:
   void MakeSampler(D3D11_SAMPLER_DESC desc, SamplerType type)
@@ -405,11 +414,26 @@ private:
   void DrawShadow(ID3D11DeviceContext* dc)
   {
     _shadow->Prepare();
-    dc->IASetInputLayout(_vShaders["Shadow"]->layout.Get());
-    dc->VSSetShader(_vShaders["Shadow"]->shader.Get(), nullptr, 0);
     dc->PSSetShader(nullptr, nullptr, 0);
 
     std::ranges::for_each(_shadowMesh[0], [this, dc](MeshBuffer* buffer) {
+      if (buffer->flags & RenderPassType::kSkinning)
+      {
+        Constant::BoneMatrix boneMat = {};
+        std::copy(buffer->boneMatirx.begin(), buffer->boneMatirx.end(),
+                  boneMat.matrix);
+
+        _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
+        dc->IASetInputLayout(_vShaders["SkinningShadow"]->layout.Get());
+        dc->VSSetShader(_vShaders["SkinningShadow"]->shader.Get(), nullptr, 0);
+        dc->VSSetShaderResources(15, 1, buffer->boneIDSrv.GetAddressOf());
+        dc->VSSetShaderResources(16, 1, buffer->boneWeightsSrv.GetAddressOf());
+      }
+      else
+      {
+        dc->IASetInputLayout(_vShaders["Shadow"]->layout.Get());
+        dc->VSSetShader(_vShaders["Shadow"]->shader.Get(), nullptr, 0);
+      }
       dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
                              &(buffer->stride), &(buffer->offset));
       dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
@@ -442,10 +466,24 @@ private:
     _CB->UpdateContantBuffer(world, MeshCBType::World);
     _skyBox->Render();
     // Deferred meshes
-    dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
-    dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
     dc->PSSetShader(_pShaders["Deffered"]->shader.Get(), nullptr, 0);
     std::ranges::for_each(_opaqueMesh[0], [this, dc](MeshBuffer* buffer) {
+      if (buffer->flags & RenderPassType::kSkinning)
+      {
+        Constant::BoneMatrix boneMat = {};
+        std::copy(buffer->boneMatirx.begin(),buffer->boneMatirx.end(),boneMat.matrix);
+        
+        _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
+        dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
+        dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
+        dc->VSSetShaderResources(15, 1, buffer->boneIDSrv.GetAddressOf());
+        dc->VSSetShaderResources(16, 1, buffer->boneWeightsSrv.GetAddressOf());
+      } 
+      else
+      {
+        dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
+        dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
+      }
       dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
                              &(buffer->stride), &(buffer->offset));
       dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
@@ -483,13 +521,28 @@ private:
   {
     _pso->SetBlendOnEnable(true);
     _pso->SetMainRS();
-    dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
-    dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
+    
     dc->PSSetShader(_pShaders["Transparency"]->shader.Get(), nullptr, 0);
     _pso->TurnZBufferOn();
     std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& pair) {
       const auto& [z, buffer] = pair;
+      if (buffer->flags & RenderPassType::kSkinning)
+      {
+        Constant::BoneMatrix boneMat = {};
+        std::copy(buffer->boneMatirx.begin(), buffer->boneMatirx.end(),
+                  boneMat.matrix);
 
+        _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
+        dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
+        dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
+        dc->VSSetShaderResources(15, 1, buffer->boneIDSrv.GetAddressOf());
+        dc->VSSetShaderResources(16, 1, buffer->boneWeightsSrv.GetAddressOf());
+      }
+      else
+      {
+        dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
+        dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
+      }
       dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
                              &(buffer->stride), &(buffer->offset));
       dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);

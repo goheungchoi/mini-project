@@ -1,9 +1,7 @@
 #pragma once
+#include "physx/PxPhysicsAPI.h"
 #include "IRigidBody.h"
-
 #include "ICollisionEvent.h"
-#include "IPhyjixWorld.h"
-using namespace physx;
 
 class PhyjixWorld;
 class RigidBody : public IRigidBody, public ICollisionEvent
@@ -12,24 +10,33 @@ class RigidBody : public IRigidBody, public ICollisionEvent
   using CollisionEvent = std::function<void(RigidBody* self, RigidBody* other)>;
 
 public:
-  RigidBody(PxPhysics* physics, const DirectX::SimpleMath::Vector3& position,
+  RigidBody(physx::PxPhysics* physics, const DirectX::SimpleMath::Vector3& position,
             const DirectX::SimpleMath::Vector3& size, ColliderShape shape,
             BOOL isStatic, BOOL isKinematic, PhyjixWorld* world);
   ~RigidBody();
+  //PxActor* GetActor() const;
+
 
 // IRigidBody을(를) 통해 상속됨
-  void SetCollisionEvent(eCollisionEventType collisiontype, IRigidBody* other,
-                         std::function<void(void)> event) override;
+  void SetCollisionEvent(eCollisionEventType collisiontype, IRigidBody* other, std::function<void(void)> event) override;
+  void SetLinVelocity(DirectX::SimpleMath::Vector3 vel) override;
+  void SetMaxLinVelocity(float vel) override;
+  void SetAngVelocity(DirectX::SimpleMath::Vector3 vel) override;
+  void SetMaxAngVelocity(float vel) override;
+  DirectX::SimpleMath::Vector3 GetLinVelocity() override;
+  float GetMaxLinVelocity() override;
+  DirectX::SimpleMath::Vector3 GetAngVelocity() override;
+  float GetMaxAngVelocity() override;
+  void EnableCollision() override;
+  void DisableCollision() override;
+  void EnableGravity() override;
+  void DisableGravity() override;
+  void WakeUp() override;
+  void Sleep() override;
+  DirectX::SimpleMath::Vector3 GetWorldPosition() override;
+  DirectX::SimpleMath::Vector4 GetWorldRotation() override;
 
-  void SetPosition(const DirectX::SimpleMath::Vector3& position) override;
-  DirectX::SimpleMath::Vector3 GetPosition() const override;
-
-  void SetRotation(const DirectX::SimpleMath::Vector4& rotation) override;
-  DirectX::SimpleMath::Vector4 GetRotation() const override;
-
-  void ApplyForce(const DirectX::SimpleMath::Vector3& force) override;
-
-  PxRigidActor* GetActor() const;
+  ColliderShape GetColliderShapeType() override;
 
   // ICollisionEvent을(를) 통해 상속됨
   void OnCollisionEnter(IRigidBody* other) override;
@@ -38,11 +45,16 @@ public:
   void OnWake() override;
   void OnSleep() override;
 
+  physx::PxRigidActor* _actor = nullptr;
+
 private:
-  PxRigidActor* _actor = nullptr;
+  bool isStatic = false;
   PhyjixWorld* _world = nullptr;
-  PxShape* _defaultShape = nullptr;
-  PxShape* _nonElasticShape = nullptr;
+  physx::PxShape* _defaultShape = nullptr;
+  ColliderShape shape;
+
+  //test
+  physx::PxShape* _nonElasticShape = nullptr;
 
   std::unordered_map<IRigidBody*, std::function<void(void)>> CollisionEnterEventMap;
   std::unordered_map<IRigidBody*, std::function<void(void)>> CollisionExitEventMap;
@@ -50,8 +62,8 @@ private:
   std::vector<std::function<void(void)>> WakeEventMap;
   std::vector<std::function<void(void)>> SleepEventMap;
 
+  physx::PxRigidDynamic* GetDynamicActor();
 
-
-
+public:
 
 };

@@ -177,6 +177,9 @@
 	<ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\PhyjixEngine\PhyjixEngine.vcxproj">
+			<Project>{9ded1277-e637-41f3-9448-24c93051d5ce}</Project>
+		</ProjectReference>
 		<ProjectReference Include="..\SharedLib\SharedLib.vcxproj">
 			<Project>{d67b80c2-6ba8-46ef-b896-0b6004a06416}</Project>
 		</ProjectReference>

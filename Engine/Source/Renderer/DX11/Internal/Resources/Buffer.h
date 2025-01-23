@@ -33,6 +33,10 @@ struct PixelData
   Vector3 padding1{};
   Color color;
 };
+struct BoneMatrix
+{
+  XMMATRIX matrix[128] = {};
+};
 } // namespace Constant
 
 struct MeshBuffer
@@ -49,7 +53,10 @@ struct MeshBuffer
   UINT nIndices;
   ComPtr<ID3D11Buffer> boneIDBuffer;
   ComPtr<ID3D11Buffer> boneWeightsBuffer;
+  ComPtr<ID3D11ShaderResourceView> boneIDSrv;
+  ComPtr<ID3D11ShaderResourceView> boneWeightsSrv;
   Matrix world=Matrix::Identity;
+  std::vector<XMMATRIX> boneMatirx = std::vector<XMMATRIX>();
   Material* material=nullptr;
   RenderPassFlags flags = 0;
 };

@@ -8,23 +8,21 @@ class D2DRenderer    // D2D.ver
 {
 public:
   D2DRenderer() = default;
-  ~D2DRenderer() = default;
+  ~D2DRenderer();
 
 public:
-  bool Init();
+  bool Init(Device* device, SwapChain* swapChain);
   void CreateD2DRenderTarget();
+  void UnInit();
 
   void Draw();
   void BeginDraw();
   void EndDraw();
 
-  void SetDevice(Device* device) { _pDevice = device; }
-  void SetSwapChain(SwapChain* swapChain) { _pSwapChain = swapChain; }
-
-  ID2D1Bitmap1* ConvertDDSToD2DBitmap1(TextureData data);
+  //ID2D1Bitmap1* ConvertDDSToD2DBitmap1(TextureData data);
 
 public:
-  Font* _pFont;
+  Font* _pFont = nullptr;
 
 
 private:
@@ -32,8 +30,7 @@ private:
   SwapChain* _pSwapChain = nullptr;
 
   IDXGIDevice* _pDXGIDevice = nullptr;
-  IDXGISurface* _pIDXGISurface =
-      nullptr; // Direct3D와 Direct2D 간의 데이터 교환을 가능하게 해줌
+  IDXGISurface* _pIDXGISurface = nullptr;
 
   ID2D1Device* _pD2D1Device = nullptr;
   ID2D1Factory1* _pD2DFactory = nullptr;
@@ -55,9 +52,19 @@ public:
   void UnInit();
 
   void CreateIDWriteFactory();
-  void CreateTextFormat(std::wstring _fontName, float _size);
-  void TextDraw(const wchar_t* format, D2D1_RECT_F _rect,
-                D2D1_COLOR_F _color = D2D1::ColorF(D2D1::ColorF::Black), ...);
+
+  void TextDraw(const wchar_t* format, Vector4 rect,
+                const std::wstring& fontName = L"Agency FB",
+                Color color = Color(1.0f, 0.0f, 1.0f, 1.0f));
+
+private:
+  void CreateTextFormat(
+      const std::wstring& fontName, float size,
+      UINT fontWeight = DWRITE_FONT_WEIGHT_REGULAR,
+      UINT textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER,
+      UINT paragraphAlignment = DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+
+  IDWriteTextFormat* FindFont(const std::wstring& fontName);
 
 
 public:

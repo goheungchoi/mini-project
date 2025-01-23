@@ -82,6 +82,20 @@ public:
                                vsdata.data(), vsdata.size(),layout.GetAddressOf());
     return layout;
   }
+  ComPtr<ID3D11ShaderResourceView> CreateStructuredSRV(ID3D11Buffer* buffer, UINT elementCount)
+  {
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+    srvDesc.Format =
+        DXGI_FORMAT_UNKNOWN; // Structured Buffer의 경우 UNKNOWN으로 설정
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+    srvDesc.Buffer.FirstElement = 0;
+    srvDesc.Buffer.NumElements = elementCount;
+
+    ComPtr<ID3D11ShaderResourceView> srv;
+    HR_T(_device->CreateShaderResourceView(buffer, &srvDesc,
+                                           srv.GetAddressOf()));
+    return srv;
+  }
 
 public:
   ID3D11Device* GetDevice() { return _device.Get(); }

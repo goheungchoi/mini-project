@@ -51,3 +51,16 @@ void SAFE_RELEASE(T& p)
     p = nullptr;
   }
 }
+
+namespace Com
+{
+    template <typename T>
+    void SAFE_RELEASE(T* p)
+    {
+      if (p)
+      {
+        p->Release();
+        p = nullptr;
+      }
+    }
+}

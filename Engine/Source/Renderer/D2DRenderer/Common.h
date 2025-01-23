@@ -23,5 +23,6 @@
 #include <wrl.h>
 
 #include "Core/Types/TextureData.h"
+using namespace DirectX::SimpleMath;
 
 #include <unordered_map>

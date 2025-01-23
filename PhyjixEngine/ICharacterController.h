@@ -1,6 +1,4 @@
 #pragma once
-#include "physx/PxPhysicsAPI.h"
-
 class ICharacterController
 {
 public:

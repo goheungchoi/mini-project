@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include "Core/Handle/ResourceHandle.h"
-
+#include "Core/Common.h"
 #include "Core/Types/LightTypes.h"
-
+using namespace std;
 /**
  * @brief 
  * 1. call AddRenderPass() per mesh at initialize
@@ -39,7 +39,9 @@ public:
    * @brief call per mesh
    * @param handle : mesh handle owned by mesh
    */
-  virtual void DrawMesh(MeshHandle handle) = 0;
+  virtual void DrawMesh(MeshHandle handle,
+                        vector<DirectX::XMMATRIX> boneTransforms =
+                                               vector<DirectX::XMMATRIX>()) = 0;
   /**
    * @brief still working on it....
    */
@@ -106,4 +108,11 @@ public:
 
   virtual void CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                             LPCSTR diffuseIrrPath, LPCSTR specularIBLPath) = 0;
+
+  
+  // D2D Renderer
+  virtual void TextDraw(const wchar_t* format, Vector4 rect,
+                        const std::wstring& fontName = L"Agency FB",
+                        Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) = 0;
+
 };

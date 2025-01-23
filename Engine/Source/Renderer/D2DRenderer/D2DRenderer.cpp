@@ -1,30 +1,37 @@
-#include "D2DRenderer.h"
-#include "../DX11/Internal/Device.h"
-#include "../DX11/Internal/SwapChain.h"
-
-bool D2DRenderer::Init()
+Ôªø#include "D2DRenderer.h"
+#include "Renderer/DX11/Internal/Device.h"
+#include "Renderer/DX11/Internal/SwapChain.h"
+D2DRenderer::~D2DRenderer()
 {
-  // IDXGIDevice ª˝º∫
+  UnInit();
+}
+
+bool D2DRenderer::Init(Device* device, SwapChain* swapChain)
+{
+  _pDevice = device;
+  _pSwapChain = swapChain;
+
+  // IDXGIDevice ÏÉùÏÑ±
   HR_T(_pDevice->GetDevice()->QueryInterface(__uuidof(IDXGIDevice),
                                              (void**)&_pDXGIDevice));
 
-  // Direct2D ∆—≈‰∏Æ ª˝º∫
+  // Direct2D Ìå©ÌÜ†Î¶¨ ÏÉùÏÑ±
   HR_T(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &_pD2DFactory));
 
-  // DXGI µπŸ¿ÃΩ∫∏¶ ªÁøÎ«œø© Direct2D µπŸ¿ÃΩ∫∏¶ ª˝º∫
+  // DXGI ÎîîÎ∞îÏù¥Ïä§Î•º ÏÇ¨Ïö©ÌïòÏó¨ Direct2D ÎîîÎ∞îÏù¥Ïä§Î•º ÏÉùÏÑ±
   HR_T(_pD2DFactory->CreateDevice(_pDXGIDevice, &_pD2D1Device));
 
-  // ID2D1DeviceContext ª˝º∫
+  // ID2D1DeviceContext ÏÉùÏÑ±
   HR_T(_pD2D1Device->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
                                           &_pD2D1DeviceContext));
 
-  // brush ª˝º∫
+  // brush ÏÉùÏÑ±
   HR_T(_pD2D1DeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black),
                                               &_pBrush));
 
   CreateD2DRenderTarget();
 
-  // Font √ ±‚»≠
+  // Font Ï¥àÍ∏∞Ìôî
   _pFont = new Font(_pD2D1DeviceContext, _pBrush);
 
   return true;
@@ -32,30 +39,46 @@ bool D2DRenderer::Init()
 
 void D2DRenderer::CreateD2DRenderTarget()
 {
-  // «ˆ¿Á √¢¿« DPI(1¿Œƒ°¥Á «»ºø¿« ∞≥ºˆ) º≥¡§ ∞°¡Æø¿±‚
+  // ÌòÑÏû¨ Ï∞ΩÏùò DPI(1Ïù∏ÏπòÎãπ ÌîΩÏÖÄÏùò Í∞úÏàò) ÏÑ§Ï†ï Í∞ÄÏ†∏Ïò§Í∏∞
   float dpiX, dpiY;
   UINT dpi = GetDpiForWindow(_pSwapChain->GetWindowHandle());
   dpiX = static_cast<float>(dpi);
   dpiY = static_cast<float>(dpi);
 
-  // DXGI «•∏È ∞°¡Æø¿±‚
+  // DXGI ÌëúÎ©¥ Í∞ÄÏ†∏Ïò§Í∏∞
   // Microsoft::WRL::ComPtr<IDXGISurface> dxgiSurface;
   HR_T(_pSwapChain->GetSwapChain()->GetBuffer(0, IID_PPV_ARGS(&_pIDXGISurface)));
 
-  // Direct2D ∫Ò∆Æ∏  º”º∫ ¡§¿«
+  // Direct2D ÎπÑÌä∏Îßµ ÏÜçÏÑ± Ï†ïÏùò
   D2D1_BITMAP_PROPERTIES1 bitmapProperties = D2D1::BitmapProperties1(
       D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
       D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
       dpiX,
-      dpiY); // DXGI_FORMAT_UNKNOWN¿ª ªÁøÎ«œ∏È Direct2D∞° ¿˚«’«— ∆˜∏À¿ª ¿⁄µø¿∏∑Œ
-             // º±≈√«‘.
+      dpiY); // DXGI_FORMAT_UNKNOWNÏùÑ ÏÇ¨Ïö©ÌïòÎ©¥ Direct2DÍ∞Ä Ï†ÅÌï©Ìïú Ìè¨Îß∑ÏùÑ ÏûêÎèôÏúºÎ°ú
+             // ÏÑ†ÌÉùÌï®.
 
-  // DXGI «•∏È¿ª ±‚π›¿∏∑Œ Direct2D ∫Ò∆Æ∏  ª˝º∫
+  // DXGI ÌëúÎ©¥ÏùÑ Í∏∞Î∞òÏúºÎ°ú Direct2D ÎπÑÌä∏Îßµ ÏÉùÏÑ±
   HR_T(_pD2D1DeviceContext->CreateBitmapFromDxgiSurface(
       _pIDXGISurface, &bitmapProperties, &_pID2D1Bitmap));
 
-  // ∫Ò∆Æ∏ ¿ª DeviceContext¿« ∑ª¥ı ≈∏∞Ÿ¿∏∑Œ º≥¡§
+  // ÎπÑÌä∏ÎßµÏùÑ DeviceContextÏùò Î†åÎçî ÌÉÄÍ≤üÏúºÎ°ú ÏÑ§Ï†ï
   _pD2D1DeviceContext->SetTarget(_pID2D1Bitmap);
+}
+
+void D2DRenderer::UnInit()
+{
+  SAFE_RELEASE(_pFont);
+  Com::SAFE_RELEASE(_pBrush);
+  Com::SAFE_RELEASE(_pID2D1Bitmap);
+  Com::SAFE_RELEASE(_pD2D1DeviceContext);
+  Com::SAFE_RELEASE(_pD2DFactory);
+  Com::SAFE_RELEASE(_pD2D1Device);
+  Com::SAFE_RELEASE(_pIDXGISurface);
+  Com::SAFE_RELEASE(_pDXGIDevice);
+
+  _pDevice = nullptr;
+  _pSwapChain = nullptr;
+
 }
 
 void D2DRenderer::Draw() {
@@ -72,12 +95,6 @@ void D2DRenderer::EndDraw()
   _pD2D1DeviceContext->EndDraw();
 }
 
-ID2D1Bitmap1* D2DRenderer::ConvertDDSToD2DBitmap1(TextureData data)
-{
-  return nullptr;
-}
-
-
 
 
 
@@ -85,27 +102,43 @@ ID2D1Bitmap1* D2DRenderer::ConvertDDSToD2DBitmap1(TextureData data)
 ////////////////////// Font Engine //////////////////////////
 /// </summary>
 
-
-
 Font::Font(ID2D1DeviceContext* pD2D1DeviceContext, ID2D1SolidColorBrush* pBrush)
 {
+  _pD2D1DeviceContext = pD2D1DeviceContext;
+  _pBrush = pBrush;
+
   Init();
 }
 
-Font::~Font() {
-
-
+Font::~Font()
+{
+  UnInit();
 }
 
 void Font::Init()
 {
   CreateIDWriteFactory();
-  CreateTextFormat(L"Cooper", 32.0f);
+  CreateTextFormat(L"Agency FB", 100.0f);
+  CreateTextFormat(L"Í∂ÅÏÑú", 32.0f);
 }
 
 void Font::UnInit()
 {
+  for (auto& pair : _TextFormats)
+  {
+    if (pair.second)
+    {
+      Com::SAFE_RELEASE(pair.second);
+    }
+  }
 
+  _TextFormats.clear();
+
+  // IDWriteFactory ÌååÍ¥¥
+  Com::SAFE_RELEASE(pDWriteFactory);
+
+  _pD2D1DeviceContext = nullptr;
+  _pBrush = nullptr;
 }
 
 void Font::CreateIDWriteFactory()
@@ -114,34 +147,56 @@ void Font::CreateIDWriteFactory()
                            reinterpret_cast<IUnknown**>(&pDWriteFactory)));
 }
 
-void Font::CreateTextFormat(std::wstring _fontName, float _size)
+void Font::CreateTextFormat(const std::wstring& fontName, float size, UINT fontWeight,
+                            UINT textAlignment, UINT paragraphAlignment)
 {
   IDWriteTextFormat* pTextFormat;
 
+  //const wchar_t* formatName = L"ÎßëÏùÄ Í≥†Îîï";
+
   HR_T(pDWriteFactory->CreateTextFormat(
-      _fontName.c_str(), // ±€≤√ ¿Ã∏ß
-      NULL,      // ±€≤√ ƒ√∑∫º« (NULL¿∫ Ω√Ω∫≈€ ±‚∫ª ªÁøÎ)
-      DWRITE_FONT_WEIGHT_REGULAR, DWRITE_FONT_STYLE_NORMAL,
+      fontName.c_str(), // Í∏ÄÍº¥ Ïù¥Î¶Ñ
+      NULL,              // Í∏ÄÍº¥ Ïª¨Î†âÏÖò (NULLÏùÄ ÏãúÏä§ÌÖú Í∏∞Î≥∏ ÏÇ¨Ïö©)
+      static_cast<DWRITE_FONT_WEIGHT>(fontWeight), DWRITE_FONT_STYLE_NORMAL,
       DWRITE_FONT_STRETCH_NORMAL,
-      _size, // ±€≤√ ≈©±‚
-      L"",   // ∑Œƒ…¿œ
+      size, // Í∏ÄÍº¥ ÌÅ¨Í∏∞
+      L"ko-KR", // Î°úÏºÄÏùº
       &pTextFormat));
 
-  // ≈ÿΩ∫∆Æ∏¶ ºˆ∆Ú π◊ ºˆ¡˜¿∏∑Œ ¡ﬂæ”ø° ∏¬√‰¥œ¥Ÿ.
-  pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-  pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+  // ÌÖçÏä§Ìä∏ Ï†ïÎ†¨
+  pTextFormat->SetTextAlignment(static_cast<DWRITE_TEXT_ALIGNMENT>(textAlignment));
+  pTextFormat->SetParagraphAlignment(
+      static_cast<DWRITE_PARAGRAPH_ALIGNMENT>(paragraphAlignment));
 
-  _TextFormats.insert({_fontName, pTextFormat});
+  _TextFormats.insert({fontName, pTextFormat});
 }
 
-void Font::TextDraw(const wchar_t* format, D2D1_RECT_F _rect,
-                    D2D1_COLOR_F _color, ...)
+void Font::TextDraw(const wchar_t* format, Vector4 rect,
+                    const std::wstring& fontName, Color color)
 {
-  // ≈ÿΩ∫∆Æ ±◊∏Æ±‚
+  // ÌÖçÏä§Ìä∏ Í∑∏Î¶¨Í∏∞
+                                //  left,    top,  right, bottom
+  D2D1_RECT_F _rect = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
+
+  D2D1_COLOR_F _color = D2D1::ColorF(color.x, color.y, color.z, color.w);
+
   _pBrush->SetColor(_color);
 
-  auto txtformat = _TextFormats[0];
+  IDWriteTextFormat* txtformat = FindFont(fontName);
+  
+  _pD2D1DeviceContext->DrawText(format, lstrlen(format) + 1, txtformat, _rect,
+                                _pBrush);
+}
 
-  _pD2D1DeviceContext->DrawText(format, // ≈ÿΩ∫∆Æ ≥ªøÎ
-                                lstrlen(format) + 1, txtformat, _rect, _pBrush);
+
+IDWriteTextFormat* Font::FindFont(const std::wstring& fontName)
+{
+  auto iter = _TextFormats.find(fontName);
+
+  if (iter != _TextFormats.end())
+  {
+    return iter->second;
+  }
+
+  return nullptr;
 }

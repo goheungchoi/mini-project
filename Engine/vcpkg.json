@@ -1,42 +1,46 @@
 {
-  "dependencies": [
-    "assimp",
-    "fmt",
-    "directxtk",
-		"stduuid",
-		"taskflow",
-		"physx",
-    "flatbuffers",
-    "nlohmann-json",
-		"magic-enum",
-    {
-			"name": "imgui",
-			"features": [
-				"dx11-binding",
-				"win32-binding"
-			]
-		}
-  ],
-  "overrides": [
-    {
-      "name": "assimp",
-      "version": "5.4.3"
-    },
-    {
-      "name": "fmt",
-      "version": "11.0.2"
-    },
-    {
-      "name": "directxtk",
-      "version": "2024-10-28"
-    },
-		{
-			"name": "stduuid",
-			"version": "1.2.3"
-		},
-		{
-			"name": "taskflow",
-			"version": "3.8.0"
-		}
-  ]
+    "dependencies": [
+        "assimp",
+        "fmt",
+        "directxtk",
+        "stduuid",
+        "taskflow",
+        "physx",
+        "flatbuffers",
+        "nlohmann-json",
+        "magic-enum",
+        {
+            "name": "imgui",
+            "features": [
+                "dx11-binding",
+                "win32-binding"
+            ]
+        }
+    ],
+    "overrides": [
+        {
+            "name": "assimp",
+            "version": "5.4.3"
+        },
+        {
+            "name": "fmt",
+            "version": "11.0.2"
+        },
+        {
+            "name": "directxtk",
+            "version": "2024-10-28"
+        },
+        {
+            "name": "stduuid",
+            "version": "1.2.3"
+        },
+        {
+            "name": "physx",
+            "version": "5.5.0"
+        },
+        {
+            "name": "taskflow",
+            "version": "3.8.0"
+        }
+    ]
 }

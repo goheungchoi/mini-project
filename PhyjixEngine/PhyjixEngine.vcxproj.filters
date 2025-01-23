@@ -21,9 +21,6 @@
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="PhyjixWorld.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="CharacterController.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -39,9 +36,6 @@
     <ClInclude Include="IRigidBody.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ISoftBody.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="PhyjixEngine.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -55,6 +49,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ICollisionEvent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="PhyjixWorld.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -78,9 +75,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="IRigidBody.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ISoftBody.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="PhyjixEventHandler.cpp">
