@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/Camera/Camera.h"
 #include "GameEngine/GameEngine.h"
 
 class GameApp : public GameEngine
@@ -35,4 +34,3 @@ private:
 private:
   class World* _world;
 };
-

@@ -40,7 +40,7 @@ public:
 
   Level* _currentLevel{nullptr};
   
-  bool bCameraMove{true};
+  bool bCameraMove{false};
   class Camera* mainCamera{nullptr};
 
   static World* CreateWorld(HWND hwnd, const std::wstring& title);
