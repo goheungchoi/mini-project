@@ -4,6 +4,8 @@
 class Device;
 class SwapChain;
 class Font;
+class UIRenderer;
+
 class D2DRenderer    // D2D.ver
 {
 public:
@@ -11,7 +13,7 @@ public:
   ~D2DRenderer();
 
 public:
-  bool Init(Device* device, SwapChain* swapChain);
+  bool Init(Device* device, SwapChain* swapChain, D3D11_VIEWPORT viewport);
   void CreateD2DRenderTarget();
   void UnInit();
 
@@ -23,11 +25,12 @@ public:
 
 public:
   Font* _pFont = nullptr;
-
+  UIRenderer* _pUIRenderer = nullptr;
 
 private:
   Device* _pDevice = nullptr;
   SwapChain* _pSwapChain = nullptr;
+  D3D11_VIEWPORT _viewport{};
 
   IDXGIDevice* _pDXGIDevice = nullptr;
   IDXGISurface* _pIDXGISurface = nullptr;
@@ -48,14 +51,16 @@ public:
   ~Font();
 
 public:
+  void TextDraw(const wchar_t* format, Vector4 rect,
+                const std::wstring& fontName = L"Agency FB",
+                Color color = Color(1.0f, 0.0f, 1.0f, 1.0f));
+
+private:
   void Init();
   void UnInit();
 
   void CreateIDWriteFactory();
 
-  void TextDraw(const wchar_t* format, Vector4 rect,
-                const std::wstring& fontName = L"Agency FB",
-                Color color = Color(1.0f, 0.0f, 1.0f, 1.0f));
 
 private:
   void CreateTextFormat(
@@ -71,7 +76,26 @@ public:
   std::unordered_map<std::wstring, IDWriteTextFormat*> _TextFormats;
 
 private:
-  IDWriteFactory* pDWriteFactory = nullptr;
   ID2D1DeviceContext* _pD2D1DeviceContext = nullptr;
   ID2D1SolidColorBrush* _pBrush = nullptr;
+  IDWriteFactory* pDWriteFactory = nullptr;
+};
+
+
+
+class UIRenderer
+{
+public:
+  UIRenderer(ID3D11DeviceContext* pD3D1DeviceContext, D3D11_VIEWPORT viewport);
+  ~UIRenderer();
+
+private:
+  void Init();
+  void UnInit();
+
+  private:
+  ID3D11DeviceContext* _pD3D1DeviceContext = nullptr;
+  D3D11_VIEWPORT _viewport{};
+
+  std::unique_ptr<DirectX::SpriteBatch> spriteBatch = nullptr;
 };

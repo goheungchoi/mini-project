@@ -39,8 +39,7 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
 #endif
 #ifdef USED2D
   _d2dRenderer = new D2DRenderer;
-  _d2dRenderer->Init(_device, _swapChain);
-
+  _d2dRenderer->Init(_device, _swapChain, _passMgr->GetMainViewport());
 
 #endif //  USED2D
 
