@@ -111,6 +111,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   
   animComponent1->SetState(animState1);
   _renderer->CreateMesh(animSkeletal1->GetHandle());
+  _renderer->CreateMesh(animSkeletal2->GetHandle());
 }
 
 void GameApp::Execute()
@@ -190,7 +191,7 @@ void GameApp::Update(float deltaTime)
     }
   }
 
-  animComponent1->UpdateAnimation(deltaTime);
+  animComponent1->UpdateAnimation(deltaTime/1000);
 
   animSkeletal1->UpdateBoneTransforms();
   animSkeletal2->UpdateBoneTransforms();
@@ -273,10 +274,13 @@ void GameApp::Render()
                           _renderer->DrawMesh(meshHandle);
                         });*/
 
-  animSkeletal1->boneTransforms;
   _renderer->BeginDraw(animSkeletal1->GetHandle(),
                        animSkeletal1->GetOwner()->transform->globalTransform);
   _renderer->DrawMesh(animSkeletal1->GetHandle(),animSkeletal1->boneTransforms);
+  _renderer->BeginDraw(animSkeletal2->GetHandle(),
+                       animSkeletal2->GetOwner()->transform->globalTransform);
+  _renderer->DrawMesh(animSkeletal2->GetHandle(),
+                      animSkeletal2->boneTransforms);
 
 #endif // RenderTest
   _renderer->EndFrame();
