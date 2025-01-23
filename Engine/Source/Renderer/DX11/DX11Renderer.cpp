@@ -124,6 +124,7 @@ void DX11Renderer::EndFrame()
   DrawImGui();
 #endif
 #ifdef USED2D
+  _d2dRenderer->DrawSprites();
   _d2dRenderer->EndDraw();
 #endif
   _swapChain->GetSwapChain()->Present(0, 0);
@@ -372,6 +373,11 @@ void DX11Renderer::DrawImGui()
   // Rendering
   ImGui::Render();
   ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}
+
+void DX11Renderer::CreateSprite(LPCSTR path)
+{
+  _d2dRenderer->CreateSprite(path);
 }
 
 void DX11Renderer::TextDraw(const wchar_t* format, Vector4 rect,
