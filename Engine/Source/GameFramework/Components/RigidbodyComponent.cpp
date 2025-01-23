@@ -26,7 +26,7 @@ void RigidbodyComponent::Translate(Vector3 Force)
 
 void RigidbodyComponent::Rotate(Vector3 Torque) 
 {
-  _rigidbody->SetLinVelocity(Torque);
+  _rigidbody->SetAngVelocity(Torque);
 }
 
 void RigidbodyComponent::ClearForce()
