@@ -7,7 +7,6 @@
 #include "GameFramework/Components/SkeletalMeshComponent.h"
 #include "GameFramework/Components/TransformComponent.h"
 
-
 class GameObject
 {
 protected:
@@ -25,23 +24,56 @@ public:
 
 	/* Properties */
   bool bNeedTransformUpdate{false};
-	TransformComponent* transform{nullptr};
+	TransformComponent* transform;
+
+  bool bShouldActivate;
+  bool bShouldDeactivate;
+  bool bShouldDestroy;
 
 	EStatus status{EStatus_Awake};
   bool isActive{false};
 
 	GameObject(class World* world) : world{world} {
     transform = CreateComponent<TransformComponent>();
+    status = EStatus_Awake;
+    bShouldActivate = true;
+    bShouldDeactivate = false;
+    bShouldDestroy = false;
 	}
+
+  virtual ~GameObject() = default;
+
+  void BeginDestroy()
+  {
+    status = EStatus_Cleanup;
+
+    // Reset to initial states
+    bNeedTransformUpdate = false;
+    transform = nullptr;
+    bShouldActivate = false;
+    bShouldDeactivate = false;
+    bShouldDestroy = false;
+
+    // Clean up components.
+    for (auto [type_id, pComp] : components)
+    {
+      delete pComp;
+    }
+    components.clear();
+  }
+
+  void FinishDestroy() { status = EStatus_Destroyed; }
 
 	void SetWorld(class World* world) { this->world = world; }
   class World* GetWorld() const { return world; }
 
-  void SetTag(const std::string& tag) { this->tag = tag; }
+  void SetGameObjectTag(const std::string& tag);
   const std::string& GetTag() const { return tag; }
 
-	void SetName(const std::string& name) { this->name = name; }
+	void SetName(const std::string& name);
   const std::string& GetName() const { return name; }
+
+  /* Game Object Transform */
 
   const XMMATRIX& GetLocalTransform() const
   {
@@ -51,6 +83,8 @@ public:
   { 
     return transform->globalTransform; 
   }
+
+  /* Game Object Hierarchy */
 
   void AddChild(GameObject* gameObject)
   {
@@ -65,18 +99,25 @@ public:
     transform->RemoveChild(gameObject->transform);
   }
 
-	void SetActive(bool active)
-  {
-    isActive = active;
-    status = active ? EStatus_Active : EStatus_Inactive;
-  }
+  /* Component Management */
 
 	template <ComponentType T>
+    requires(!std::same_as<T, MeshComponent> &&
+             !std::same_as<T, SkeletalMeshComponent>)
   T* CreateComponent()
   {
     T* component = new T(this);
     components.insert({std::type_index(typeid(T)), component});
     return component;
+  }
+
+  template <ComponentType T>
+    requires(std::same_as<T, MeshComponent> || std::same_as<T, SkeletalMeshComponent>)
+  T* CreateComponent()
+  {
+    T* meshComp = new T(this); 
+    components.insert({std::type_index(typeid(T)), meshComp});
+    return meshComp;
   }
 
 	template <ComponentType T>
@@ -86,18 +127,61 @@ public:
     return (it == components.end()) ? nullptr : (T*)it->second;
   }
 
-	// Transformation 
+  template <ComponentType T>
+  bool HasComponent()
+  {
+    auto it = components.find(std::type_index(typeid(T)));
+    return it != components.end();
+  }
 
+  template <ComponentType T>
+  void RemoveComponent(){
+    if (auto it = components.find(std::type_index(typeid(T)));
+        it != components.end())
+    {
+      components.erase(it);
+    }
+  }
+
+  GameObject* Clone();
+
+	// Transformation 
   virtual void OnBeginCursorOver() {};
   virtual void OnEndCursorOver() {};
   virtual void OnClicked() {};
   virtual void OnPressed() {};
 
+  // Game loop events
+  virtual void OnAwake() {}
+  virtual void OnActivated() {}
 
-	virtual void FixedUpdate(float fixedRate);
-  virtual void PreUpdate(float dt);
-  virtual void Update(float dt);
-  virtual void PostUpdate(float dt);
+  void Activate() { 
+    if (status == EStatus_Active)
+      return;
+
+    bShouldActivate = true; 
+  }
+  void Deactivate() { 
+    if (status == EStatus_Inactive)
+      return;
+
+    bShouldDeactivate = true; 
+  }
+  void Destroy() { 
+    if (status == EStatus_Cleanup || status == EStatus_Destroyed)
+      return;
+
+    bShouldDestroy = true; 
+  }
+
+	virtual void FixedUpdate(float fixedRate) {}
+  virtual void PreUpdate(float dt) {}
+  virtual void Update(float dt) {}
+  virtual void PostUpdate(float dt) {}
+
+private:
+  void RegisterMeshComponentToWorld(MeshComponent* meshComp);
+  void RegisterMeshComponentToWorld(SkeletalMeshComponent* skeletalMeshComp);
 };
 
 template <class T>

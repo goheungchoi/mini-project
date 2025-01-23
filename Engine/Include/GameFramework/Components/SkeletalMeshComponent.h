@@ -26,6 +26,7 @@ public:
   void SetRootTransform(TransformComponent* root) { rootBone = root; }
 
   MeshHandle GetHandle() { return handle; }
+  void RegisterMeshToWorld();
   void SetVisible(bool visible) { isVisible = visible; }
   void SetCastShadow(bool shadow) { bCastShadow = shadow; }
 
@@ -40,7 +41,7 @@ public:
     TransformComponent* rootTransform = rootBone;
     transformStack.push(rootTransform);
 
-    boneTransforms[0] = rootTransform->globalTransform;
+    boneTransforms[0] = XMMatrixTranspose(rootTransform->globalTransform);
 
     uint32_t index = 0;
     while (!transformStack.empty())
@@ -50,7 +51,7 @@ public:
 
       for (auto* child : currTransform->children)
       {
-        boneTransforms[++index] = child->globalTransform;
+        boneTransforms[++index] = XMMatrixTranspose(child->globalTransform);
       }
 
       for (auto rit = currTransform->children.rbegin();

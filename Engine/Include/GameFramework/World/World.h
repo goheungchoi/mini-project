@@ -2,15 +2,17 @@
 
 #include "Core/Common.h"
 
-#include "GameFramework/Level/Level.h"
-
 #include "Renderer/IRenderer.h"
+
+#include "Core/Async/Async.h"
+
+#include "GameFramework/Level/Level.h"
 
 class World
 {
 private:
 
-  IRenderer* _renderer;
+  IRenderer* _renderer{nullptr};
 
   // UI System
   // class Canvas* _canvas = nullptr;
@@ -21,41 +23,188 @@ private:
   // Collision System
   // CollisionSystem _collisionSystem;
 
-  class Camera* _defaultCamera;
-
-public:
-  std::map<std::string, Level*> _levelMap;
-  Level* _nextLevel{nullptr};
-  Level* _currentLevel{nullptr};
-
-  bool bCameraMove{true};
-  class Camera* mainCamera{nullptr};
+  class Camera* _defaultCamera{nullptr};
 
   World() = default;
   virtual ~World() = default;
 
   void Initialize(HWND hwnd, const std::wstring& title);
-  void Cleanup();
+  
+public:
+  std::atomic_bool readyToChangeLevel{true};
+  std::atomic_bool changingLevel{false};
+  std::unordered_map<std::string, Level*> _levelMap;
+  std::unordered_map<std::string, std::future<bool>> _levelPreparedMap;
+
+  Level* _preparingLevel{nullptr};
+
+  Level* _currentLevel{nullptr};
+  
+  bool bCameraMove{true};
+  class Camera* mainCamera{nullptr};
 
   static World* CreateWorld(HWND hwnd, const std::wstring& title);
 
+  /* Asynchronously load the next level. */
+	void PrepareChangeLevel(const std::string& levelName);
+  /* Return true if the next level is loaded. */
+  bool IsLevelChangeReady();
+  /* Actually performs the level transition. */
+  void CommitLevelChange();
 
-	template <LevelType T>
-  T* CreateLevel(const std::string& name)
-  {
-    T* pLevel = new T(this, name);
-    _levelMap.insert({name, pLevel});
-    return pLevel;
-  }
-
-	void ChangeLevel() { /* TODO: */ }
-  void AddLevel(const std::string& level) { /* TODO: */ }
+  void AddLevel(Level* level);
   Level* GetCurrentLevel() { return _currentLevel; }
 
+  /**
+   * @brief Set the main camera.
+   * @param camera If nullptr, the default camera is bound. Otherwise, the
+   * inputted camera is used.
+   */
   void SetMainCamera(class Camera* camera);
-  void FixCameraPosition(bool fixed);
+  /**
+   * @brief Stop the camera movement.
+   * @param fixed 
+   */
+  void StopCameraMovement(bool fixed);
 
   XMVECTOR ScreenToWorldPosition(XMVECTOR position);
+
+  /* Game Object Management Functions */
+
+  template <GameObjectType T>
+  T* CreateGameObject()
+  {
+    T* newGameObject = new T(this);
+    _currentLevel->AddGameObject<T>(newGameObject);
+    return newGameObject;
+  }
+
+  // template <GameObjectType T>
+  GameObject* CreateGameObjectFromModel(ModelHandle modelHandle)
+  {
+    if (modelHandle.IsInvalid())
+    {
+      throw std::runtime_error("Invalid model handle!");
+    }
+
+    // TODO: Fix the logic!
+
+    const ModelData& data = AccessModelData(modelHandle);
+    bool isSkeleton = !data.skeleton.IsInvalid();
+
+    // Root game object
+    GameObject* rootGameNode = CreateGameObject<GameObject>();
+    rootGameNode->SetName(data.nodes[0].name);
+    rootGameNode->transform->globalTransform = data.nodes[0].transform;
+
+    // Create a right-sibling tree of the game objects.
+    std::vector<GameObject*> gameObjNodes;
+    gameObjNodes.resize(data.nodes.size());
+    gameObjNodes[0] = rootGameNode;
+
+    if (isSkeleton)
+    {
+      const SkeletonData& skeleton = AccessSkeletonData(data.skeleton);
+
+      std::unordered_map<BoneId, GameObject*> gameObjectBoneId;
+      std::vector<std::pair<SkeletalMeshComponent*, BoneId>>
+          skeletalMeshRootBonePair;
+
+      // Create node game objects
+      for (int i = 1; i < data.nodes.size(); ++i)
+      {
+        // Create a node game object.
+        GameObject* newNode = CreateGameObject<GameObject>();
+        newNode->SetName(data.nodes[i].name);
+        newNode->transform->globalTransform = data.nodes[i].transform;
+
+        gameObjNodes[i] = newNode;
+        gameObjectBoneId[skeleton.nodes[i].boneId] = newNode;
+
+        // Create game objects with mesh components.
+        for (MeshHandle meshHandle : data.nodes[i].meshes)
+        {
+          const MeshData& meshData = AccessMeshData(meshHandle);
+
+          if (meshData.bones.empty())
+          {
+            // Static mesh
+            MeshComponent* meshComponent =
+                newNode->CreateComponent<MeshComponent>();
+            meshComponent->SetHandle(meshHandle);
+            meshComponent->RegisterMeshToWorld();
+          }
+          else
+          {
+            // Skeletal mesh
+            SkeletalMeshComponent* skeletalMeshComponent =
+                newNode->CreateComponent<SkeletalMeshComponent>();
+            skeletalMeshComponent->SetHandle(meshHandle);
+            skeletalMeshComponent->RegisterMeshToWorld();
+
+            BoneId rootBoneNode = meshData.bones.front().id;
+            skeletalMeshRootBonePair.push_back(
+                {skeletalMeshComponent, rootBoneNode});
+          }
+        }
+
+        gameObjNodes[data.nodes[i].parent]->AddChild(newNode);
+      }
+
+      // Bine the root bones to the skeletal mesh.
+      for (auto [skeletalMesh, boneId] : skeletalMeshRootBonePair)
+      {
+        auto* gameObject = gameObjectBoneId[boneId];
+        skeletalMesh->SetRootTransform(gameObject->transform);
+      }
+    }
+    else
+    {
+      // Create node game objects.
+      for (int i = 0; i < data.nodes.size(); ++i)
+      {
+        GameObject* newNode;
+        if (i > 0)
+        {
+          newNode = CreateGameObject<GameObject>();
+          gameObjNodes[i] = newNode;
+        }
+        else
+        {
+          newNode = rootGameNode;
+        }
+
+        for (MeshHandle meshHandle : data.nodes[i].meshes)
+        {
+          const MeshData& meshData = AccessMeshData(meshHandle);
+
+          GameObject* meshNode = CreateGameObject<GameObject>();
+          meshNode->SetName(meshData.name);
+          meshNode->transform->globalTransform = data.nodes[i].transform;
+
+          MeshComponent* meshComponent =
+              meshNode->CreateComponent<MeshComponent>();
+          meshComponent->SetHandle(meshHandle);
+          meshComponent->RegisterMeshToWorld();
+
+          newNode->AddChild(meshNode);
+        }
+
+        if (data.nodes[i].parent >= 0)
+          gameObjNodes[i]->AddChild(newNode);
+      }
+    }
+
+    return rootGameNode;
+  }
+
+  void RegisterGameObjectName(GameObject* gameObject);
+  void UnregisterGameObjectName(GameObject* gameObject);
+  void RegisterGameObjectTag(GameObject* gameObject);
+  void UnregisterGameObjectTag(GameObject* gameObject);
+
+  void RegisterMeshComponent(class MeshComponent* meshComp);
+  void RegisterMeshComponent(class SkeletalMeshComponent* skeletalMeshComp);
 
   // bool CheckComponentOverlapMulti(
   //	std::vector<OverlapResult>& outOverlapResults,
@@ -137,15 +286,26 @@ public:
   //	return false;
   // }
 
-  void BeginPlay();
-  void EndPlay();
+
+
+
+
+  /* Game Loop Flow */
+  
+
+  void InitialStage();
+
+  void FixedUpdate(float fixedRate);
+  void PhysicsUpdate(float fixedRate);
 
   void ProcessInput(float dt);
-  void FixedUpdate(float dt);
   void PreUpdate(float dt);
   void Update(float dt);
+  void AnimationUpdate(float dt);
   void PostUpdate(float dt);
 
-  void Render();
+  void RenderGameObjects();
+  void RenderUI();
 
+  void CleanupStage();
 };

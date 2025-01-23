@@ -1,15 +1,15 @@
 #include "GameApp.h"
-#include "../../Engine/Source/Renderer/DX11/DX11Renderer.h"
+
+#include "Core/Time/TimeSystem.h"
 #include "Core/Input/InputSystem.h"
 #include "ResourceManager/ResourceManager.h"
 #include "WindowManager/WindowManager.h"
 
 #include "GameFramework/World/World.h"
 #include "GameFramework/Level/Level.h"
+#include "Contents/Levels/TestLevel.h"
 
-#include "GameFramework/Components/Animation/Animation.h"
-#include "GameFramework/Components/Animation/AnimationState.h"
-#include "GameFramework/Components/Animation/AnimatorComponent.h"
+static TestLevel* testLevel;
 
 void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
                          const std::wstring& title)
@@ -25,8 +25,13 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
     freopen_s(&_tempFile, "CONOUT$", "w", stdout);
   }
 
-  
+  _world = World::CreateWorld(_hwnd, title);
 
+  testLevel = new TestLevel();
+
+  _world->AddLevel(testLevel);
+  _world->PrepareChangeLevel("Test Level");
+  _world->CommitLevelChange();
 }
 
 void GameApp::Execute()
@@ -40,18 +45,28 @@ void GameApp::Shutdown()
   Super::Shutdown();
 }
 
-void GameApp::FixedUpdate(float deltaTime) {
-
+void GameApp::ProcessInput(float dt) {
+  _world->ProcessInput(dt);
 }
 
-void GameApp::Update(float deltaTime)
-{
+void GameApp::FixedUpdate(float fixedRate) {
+  _world->FixedUpdate(fixedRate);
+  _world->PhysicsUpdate(fixedRate);
+}
 
+void GameApp::Update(float dt)
+{
+  _world->ProcessInput(dt);
+  _world->PreUpdate(dt);
+  _world->Update(dt);
+  _world->AnimationUpdate(dt);
+  _world->PostUpdate(dt);
 }
 
 void GameApp::Render()
 {
-
+  _world->RenderGameObjects();
+  _world->RenderUI();
 }
 
 bool GameApp::OnActivated()
@@ -98,4 +113,68 @@ bool GameApp::OnWindowResized()
   std::cout << "GameApp::OnWindowResized()" << std::endl;
 
   return true;
+}
+
+void GameApp::Run()
+{
+  TimeSystem::Reset();
+
+  double dt = 0.0;           // 델타 타임
+  double dtThreshole = 0.25; // 최대 델타 타임
+  double fixedRate = kFixedRate;    // 픽스 타임
+  double accumulator = 0.0;         // 픽스 타임 트레킹
+
+  // Main Loop
+  MSG msg = {};
+  bool bQuit = false;
+
+  while (!bQuit)
+  {
+    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+    {
+      if (msg.message == WM_QUIT)
+      {
+        bQuit = true;
+        break;
+      }
+
+      TranslateMessage(&msg);
+      DispatchMessage(&msg);
+    }
+    else
+    {
+      TimeSystem::Update();
+      
+      dt = TimeSystem::GetDeltaTime();
+      
+      InputSystem::GetInstance()->Update(dt);
+
+      if (_world->changingLevel)
+        continue;
+
+      _world->InitialStage();
+
+      // 게임 루프 소용돌이를 방어하기 위해 델타타임이 일정시간 이상 넘어가면
+      // 픽스 합니다.
+      dtThreshole = 0.25 * dt;
+      if (dt > dtThreshole)
+        dt = dtThreshole; // Clamp the frame time
+
+
+      // 프레임 타임을 누적해서 픽스 타임을 추적합니다.
+      accumulator += dt;
+      // 일정 시간마다 픽스 업데이트를 실행합니다.
+      fixedRate = kFixedRate * dt; // 스케일 된 픽스 타임
+      while (accumulator >= fixedRate)
+      {
+        FixedUpdate(fixedRate); // Update physics at a fixed rate
+        accumulator -= fixedRate;
+      }
+      
+      Update(dt);
+      Render();
+
+      _world->CleanupStage();
+    }
+  }
 }

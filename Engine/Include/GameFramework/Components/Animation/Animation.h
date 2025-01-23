@@ -183,6 +183,7 @@ class Animation
   const AnimationData* data{nullptr};
 
   std::vector<AnimationChannel> channels;
+  std::vector<XMMATRIX> nodeTransforms;
   std::unordered_map<BoneId, uint32_t> boneIndexMap;
   std::unordered_map<std::string, uint32_t> nodeIndexMap;
 
@@ -279,9 +280,8 @@ public:
     }
 
 		// The root node is always identity.
-		finalBoneTransforms[0] = XMMatrixIdentity();
     // Update the bone transforms of the skeleton
-		for (uint32_t i = 1; i < skeleton->nodes.size(); ++i)
+		for (uint32_t i = 0; i < skeleton->nodes.size(); ++i)
     {
       const SkeletonNode& node = skeleton->nodes[i];
       if (node.boneId < 0)
