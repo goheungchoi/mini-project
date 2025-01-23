@@ -65,6 +65,8 @@ struct AABB
   XMVECTOR max;
 };
 
+constexpr float kEpsilon_f{0.000001};
+
 constexpr float kQuaterPi_f{0.25 * std::numbers::pi};
 constexpr float kHalfPi_f{0.5 * std ::numbers::pi};
 constexpr float kPi_f{std::numbers::pi_v<float>};

@@ -195,32 +195,40 @@ void World::ProcessInput(float dt)
   // 'Q' 누르면 Down
   if (Input.IsKeyPress(Key::Q))
   {
-    mainCamera->MoveDownUp(-dt * 6);
+    mainCamera->MoveDownUp(-dt);
   }
   // 'E' 누르면 Up
   if (Input.IsKeyPress(Key::E))
   {
-    mainCamera->MoveDownUp(dt * 6);
+    mainCamera->MoveDownUp(dt);
   }
   // 'A' 누르면 Left
   if (Input.IsKeyPress(Key::A))
   {
-    mainCamera->MoveLeftRight(-dt * 6);
+    mainCamera->MoveLeftRight(-dt);
   }
   // 'D' 누르면 Right
   if (Input.IsKeyPress(Key::D))
   {
-    mainCamera->MoveLeftRight(dt * 6);
+    mainCamera->MoveLeftRight(dt);
   }
   // 'W' 누르면 Forward
   if (Input.IsKeyPress(Key::W))
   {
-    mainCamera->MoveBackForward(dt * 6);
+    mainCamera->MoveBackForward(dt);
   }
   // 'S' 누르면 Backward
   if (Input.IsKeyPress(Key::S))
   {
-    mainCamera->MoveBackForward(-dt * 6);
+    mainCamera->MoveBackForward(-dt);
+  }
+  if (Input.IsKeyPress(Key::OemMinus))
+  {
+    mainCamera->AddMoveSpeed(-10);
+  }
+  if (Input.IsKeyPress(Key::OemPlus))
+  {
+    mainCamera->AddMoveSpeed(+10);
   }
 
   if (Input.IsKeyDown(MouseState::RB))
