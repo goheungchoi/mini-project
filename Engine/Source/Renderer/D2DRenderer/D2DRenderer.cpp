@@ -6,10 +6,12 @@ D2DRenderer::~D2DRenderer()
   UnInit();
 }
 
-bool D2DRenderer::Init(Device* device, SwapChain* swapChain)
+bool D2DRenderer::Init(Device* device, SwapChain* swapChain,
+                       D3D11_VIEWPORT viewport)
 {
   _pDevice = device;
   _pSwapChain = swapChain;
+  _viewport = viewport;
 
   // IDXGIDevice 생성
   HR_T(_pDevice->GetDevice()->QueryInterface(__uuidof(IDXGIDevice),
@@ -33,6 +35,7 @@ bool D2DRenderer::Init(Device* device, SwapChain* swapChain)
 
   // Font 초기화
   _pFont = new Font(_pD2D1DeviceContext, _pBrush);
+  _pUIRenderer = new UIRenderer(_pDevice->GetImmContext(), _viewport);
 
   return true;
 }
@@ -199,4 +202,29 @@ IDWriteTextFormat* Font::FindFont(const std::wstring& fontName)
   }
 
   return nullptr;
+}
+
+UIRenderer::UIRenderer(ID3D11DeviceContext* pD3D1DeviceContext,
+                       D3D11_VIEWPORT viewport)
+{
+  _pD3D1DeviceContext = pD3D1DeviceContext;
+  _viewport = viewport;
+
+  Init();
+}
+
+UIRenderer::~UIRenderer()
+{
+
+}
+
+void UIRenderer::Init()
+{
+  spriteBatch = std::make_unique<DirectX::SpriteBatch>(_pD3D1DeviceContext);
+  spriteBatch->SetViewport(_viewport);
+}
+
+void UIRenderer::UnInit()
+{
+  spriteBatch.reset();
 }
