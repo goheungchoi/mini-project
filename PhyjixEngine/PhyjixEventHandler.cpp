@@ -18,13 +18,13 @@ void PhyjixEventHandler::onContact(const physx::PxContactPairHeader& pairHeader,
   {
     const physx::PxContactPair& cp = pairs[i];
     ICollisionEvent* actor0 =
-        static_cast<ICollisionEvent*>(pairHeader.actors[0]->userData);
+        static_cast<RigidBody*>(pairHeader.actors[0]->userData);
     ICollisionEvent* actor1 =
-        static_cast<ICollisionEvent*>(pairHeader.actors[1]->userData);
+        static_cast<RigidBody*>(pairHeader.actors[1]->userData);
     IRigidBody* rigidbody0 =
-        static_cast<IRigidBody*>(pairHeader.actors[0]->userData);
+        static_cast<RigidBody*>(pairHeader.actors[0]->userData);
     IRigidBody* rigidbody1 =
-        static_cast<IRigidBody*>(pairHeader.actors[1]->userData);
+        static_cast<RigidBody*>(pairHeader.actors[1]->userData);
 
     
 
@@ -36,9 +36,10 @@ void PhyjixEventHandler::onContact(const physx::PxContactPairHeader& pairHeader,
     if (cp.events & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
     {
       actor0->OnCollisionExit(rigidbody1);
-      actor1->OnCollisionExit(rigidbody0);
+      actor1->OnCollisionExit(rigidbody0); 
     }
   }
+
 }
 
 void PhyjixEventHandler::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)

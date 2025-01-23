@@ -31,11 +31,11 @@ public:
   void DisableCollision();
   void EnableGravity();
   void DisableGravity();
+  IRigidBody* GetRigidBody() { return _rigidbody; };
 #ifdef _DEBUG
   void EnableDebugDraw();
   void DisableDebugDraw();
   BOOL GetDebugDrawFlag() { return _bDebugDrawFlag; };
-  IRigidBody* GetRigidBody() { return _rigidbody; };
 #endif
 
 
