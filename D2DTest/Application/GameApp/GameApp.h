@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Core/Camera/Camera.h"
 #include "GameEngine/GameEngine.h"
-#include "Renderer/IRenderer.h"
+
 class GameApp : public GameEngine
 {
   using Super = GameEngine;
@@ -19,6 +18,7 @@ public:
 
 protected:
   virtual void FixedUpdate(float deltaTime) override;
+  virtual void ProcessInput(float dt) override;
   virtual void Update(float deltaTime) override;
   virtual void Render() override;
 
@@ -29,13 +29,8 @@ protected:
   virtual bool OnWindowResized() override;
 
 private:
-  bool bCameraMove{false};
-  Camera* _camera;
-  DirectionalLight _mainLight;
-  IRenderer* _renderer;
-  Vector4 eye;
-  Vector4 at;
+  virtual void Run() override;
 
-  bool _bCameraMove = false;
+private:
+  class World* _world;
 };
-
