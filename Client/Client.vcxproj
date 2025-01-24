@@ -1,175 +1,375 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
-  <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-  </ItemGroup>
-  <PropertyGroup Label="Globals">
-    <VCProjectVersion>17.0</VCProjectVersion>
-    <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{4e3e8130-ef21-4f59-a945-bdbf5c5d57ee}</ProjectGuid>
-    <RootNamespace>Client</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
+	<ItemGroup Label="ProjectConfigurations">
+		<ProjectConfiguration Include="Debug|Win32">
+			<Configuration>Debug</Configuration>
+			<Platform>Win32</Platform>
+		</ProjectConfiguration>
+		<ProjectConfiguration Include="Release|Win32">
+			<Configuration>Release</Configuration>
+			<Platform>Win32</Platform>
+		</ProjectConfiguration>
+		<ProjectConfiguration Include="Debug|x64">
+			<Configuration>Debug</Configuration>
+			<Platform>x64</Platform>
+		</ProjectConfiguration>
+		<ProjectConfiguration Include="Release|x64">
+			<Configuration>Release</Configuration>
+			<Platform>x64</Platform>
+		</ProjectConfiguration>
+	</ItemGroup>
+	<PropertyGroup Label="Globals">
+		<VCProjectVersion>17.0</VCProjectVersion>
+		<Keyword>Win32Proj</Keyword>
+		<ProjectGuid>{4e3e8130-ef21-4f59-a945-bdbf5c5d57ee}</ProjectGuid>
+		<RootNamespace>Client</RootNamespace>
+		<WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+		<ConfigurationType>Application</ConfigurationType>
+		<UseDebugLibraries>true</UseDebugLibraries>
+		<PlatformToolset>v143</PlatformToolset>
+		<CharacterSet>Unicode</CharacterSet>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+		<ConfigurationType>Application</ConfigurationType>
+		<UseDebugLibraries>false</UseDebugLibraries>
+		<PlatformToolset>v143</PlatformToolset>
+		<WholeProgramOptimization>true</WholeProgramOptimization>
+		<CharacterSet>Unicode</CharacterSet>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+		<ConfigurationType>Application</ConfigurationType>
+		<UseDebugLibraries>true</UseDebugLibraries>
+		<PlatformToolset>v143</PlatformToolset>
+		<CharacterSet>Unicode</CharacterSet>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+		<ConfigurationType>Application</ConfigurationType>
+		<UseDebugLibraries>false</UseDebugLibraries>
+		<PlatformToolset>v143</PlatformToolset>
+		<WholeProgramOptimization>true</WholeProgramOptimization>
+		<CharacterSet>Unicode</CharacterSet>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+	<ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="Shared">
+	<ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+	<ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+	</ImportGroup>
+	<ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+	</ImportGroup>
+	<ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+	</ImportGroup>
+	<ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+	</ImportGroup>
+	<PropertyGroup Label="UserMacros" />
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+		<SourcePath>$(ProjectDir);$(SourcePath)</SourcePath>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+		<SourcePath>$(ProjectDir);$(SourcePath)</SourcePath>
+	</PropertyGroup>
+	<PropertyGroup Label="Vcpkg">
+		<VcpkgEnableManifest>true</VcpkgEnableManifest>
+	</PropertyGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+		<ClCompile>
+			<WarningLevel>Level3</WarningLevel>
+			<SDLCheck>true</SDLCheck>
+			<PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<ConformanceMode>true</ConformanceMode>
+		</ClCompile>
+		<Link>
+			<SubSystem>Console</SubSystem>
+			<GenerateDebugInformation>true</GenerateDebugInformation>
+		</Link>
+		<PreBuildEvent>
+			<Command>generate-filters.exe</Command>
+		</PreBuildEvent>
+	</ItemDefinitionGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+		<ClCompile>
+			<WarningLevel>Level3</WarningLevel>
+			<FunctionLevelLinking>true</FunctionLevelLinking>
+			<IntrinsicFunctions>true</IntrinsicFunctions>
+			<SDLCheck>true</SDLCheck>
+			<PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<ConformanceMode>true</ConformanceMode>
+		</ClCompile>
+		<Link>
+			<SubSystem>Console</SubSystem>
+			<EnableCOMDATFolding>true</EnableCOMDATFolding>
+			<OptimizeReferences>true</OptimizeReferences>
+			<GenerateDebugInformation>true</GenerateDebugInformation>
+		</Link>
+		<PreBuildEvent>
+			<Command>generate-filters.exe</Command>
+		</PreBuildEvent>
+	</ItemDefinitionGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<ClCompile>
+			<WarningLevel>Level3</WarningLevel>
+			<SDLCheck>true</SDLCheck>
+			<PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<ConformanceMode>true</ConformanceMode>
+			<LanguageStandard>stdcpp20</LanguageStandard>
+			<MultiProcessorCompilation>true</MultiProcessorCompilation>
+			<AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+		</ClCompile>
+		<Link>
+			<SubSystem>Windows</SubSystem>
+			<GenerateDebugInformation>true</GenerateDebugInformation>
+		</Link>
+		<PreBuildEvent>
+			<Command>generate-filters.exe -E vcpkg.json vcpkg-configuration.json vcpkg_installed</Command>
+		</PreBuildEvent>
+	</ItemDefinitionGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<ClCompile>
+			<WarningLevel>Level3</WarningLevel>
+			<FunctionLevelLinking>true</FunctionLevelLinking>
+			<IntrinsicFunctions>true</IntrinsicFunctions>
+			<SDLCheck>true</SDLCheck>
+			<PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<ConformanceMode>true</ConformanceMode>
+			<LanguageStandard>stdcpp20</LanguageStandard>
+			<MultiProcessorCompilation>true</MultiProcessorCompilation>
+			<AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+		</ClCompile>
+		<Link>
+			<SubSystem>Windows</SubSystem>
+			<EnableCOMDATFolding>true</EnableCOMDATFolding>
+			<OptimizeReferences>true</OptimizeReferences>
+			<GenerateDebugInformation>true</GenerateDebugInformation>
+		</Link>
+		<PreBuildEvent>
+			<Command>generate-filters.exe -E vcpkg.json vcpkg-configuration.json vcpkg_installed</Command>
+		</PreBuildEvent>
+	</ItemDefinitionGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Engine\Engine.vcxproj">
+			<Project>{90243d6a-5389-4b95-ad97-4a024514af62}</Project>
+		</ProjectReference>
+	</ItemGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+	<ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
-    <SourcePath>$(ProjectDir);$(SourcePath)</SourcePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
-    <SourcePath>$(ProjectDir);$(SourcePath)</SourcePath>
-  </PropertyGroup>
-  <PropertyGroup Label="Vcpkg">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-    <PreBuildEvent>
-      <Command>generate-filters.exe</Command>
-    </PreBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-    <PreBuildEvent>
-      <Command>generate-filters.exe</Command>
-    </PreBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-    <PreBuildEvent>
-      <Command>generate-filters.exe -E vcpkg.json vcpkg-configuration.json vcpkg_installed</Command>
-    </PreBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-    <PreBuildEvent>
-      <Command>generate-filters.exe -E vcpkg.json vcpkg-configuration.json vcpkg_installed</Command>
-    </PreBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Engine\Engine.vcxproj">
-      <Project>{90243d6a-5389-4b95-ad97-4a024514af62}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
-  <ItemGroup>
-    <ClCompile Include="Application\GameApp\GameApp.cpp" />
-    <ClInclude Include="Application\GameApp\GameApp.h" />
-    <ClCompile Include="Application\WinMain.cpp" />
-    <ClInclude Include="Contents\AnimationStates\TestAnimationState.h" />
-    <ClInclude Include="Contents\GameObjects\TestGameObject.h" />
-    <ClInclude Include="Contents\Levels\TestLevel.h" />
-    <None Include="imgui.ini" />
-  </ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="Application\GameApp\GameApp.cpp" />
+		<ClInclude Include="Application\GameApp\GameApp.h" />
+		<ClCompile Include="Application\WinMain.cpp" />
+		<ClInclude Include="Contents\AnimationStates\TestAnimationState.h" />
+		<ClInclude Include="Contents\GameObjects\TestGameObject.h" />
+		<ClInclude Include="Contents\Levels\TestLevel.h" />
+		<None Include="imgui.ini" />
+		<None Include="vcpkg-configuration.json" />
+		<None Include="vcpkg.json" />
+		<None Include="vcpkg_installed\x64-windows\vcpkg\info\directxmath_2024-10-15_x64-windows.list" />
+		<None Include="vcpkg_installed\x64-windows\vcpkg\info\directxtk_2024-10-28_x64-windows.list" />
+		<None Include="vcpkg_installed\x64-windows\vcpkg\info\fmt_11.0.2_x64-windows.list" />
+		<None Include="vcpkg_installed\x64-windows\vcpkg\info\imgui_1.91.5_x64-windows.list" />
+		<None Include="vcpkg_installed\x64-windows\vcpkg\info\taskflow_3.8.0_x64-windows.list" />
+		<None Include="vcpkg_installed\x64-windows\vcpkg\info\vcpkg-cmake-config_2024-05-23_x64-windows.list" />
+		<None Include="vcpkg_installed\x64-windows\vcpkg\info\vcpkg-cmake_2024-04-23_x64-windows.list" />
+		<None Include="vcpkg_installed\x64-windows\vcpkg\status" />
+		<None Include="vcpkg_installed\x64-windows\vcpkg\vcpkg-lock.json" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxmath\DirectXCollision.h" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\include\directxmath\DirectXCollision.inl" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxmath\DirectXColors.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxmath\DirectXMath.h" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\include\directxmath\DirectXMathConvert.inl" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\include\directxmath\DirectXMathMatrix.inl" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\include\directxmath\DirectXMathMisc.inl" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\include\directxmath\DirectXMathVector.inl" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxmath\DirectXPackedVector.h" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\include\directxmath\DirectXPackedVector.inl" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\BufferHelpers.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\CommonStates.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\DDSTextureLoader.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\DirectXHelpers.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\Effects.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\GamePad.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\GeometricPrimitive.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\GraphicsMemory.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\Keyboard.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\Model.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\Mouse.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\PostProcess.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\PrimitiveBatch.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\ScreenGrab.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\SimpleMath.h" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\SimpleMath.inl" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\SpriteBatch.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\SpriteFont.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\VertexTypes.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\directxtk\WICTextureLoader.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\args.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\base.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\chrono.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\color.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\compile.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\core.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\format-inl.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\format.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\os.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\ostream.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\printf.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\ranges.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\std.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\fmt\xchar.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\imconfig.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\imgui.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\imgui_impl_dx11.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\imgui_impl_win32.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\imgui_internal.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\imgui_stdlib.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\imstb_rectpack.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\imstb_textedit.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\imstb_truetype.h" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\algorithm\data_pipeline.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\algorithm\find.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\algorithm\for_each.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\algorithm\launch.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\algorithm\partitioner.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\algorithm\pipeline.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\algorithm\reduce.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\algorithm\scan.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\algorithm\sort.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\algorithm\transform.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\async.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\async_task.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\atomic_notifier.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\declarations.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\environment.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\error.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\executor.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\flow_builder.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\freelist.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\graph.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\nonblocking_notifier.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\observer.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\semaphore.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\task.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\taskflow.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\topology.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\tsq.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\core\worker.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\algorithm\find.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\algorithm\for_each.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\algorithm\matmul.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\algorithm\merge.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\algorithm\reduce.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\algorithm\scan.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\algorithm\sort.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\algorithm\transform.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\algorithm\transpose.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cuda_capturer.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cuda_device.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cuda_error.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cuda_execution_policy.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cuda_graph.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cuda_memory.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cuda_meta.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cuda_object.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cuda_optimizer.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cuda_stream.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cuda_task.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\cuda\cudaflow.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\dsl\connection.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\dsl\dsl.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\dsl\meta_macro.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\dsl\task_analyzer.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\dsl\task_dsl.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\dsl\task_trait.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\dsl\tuple_utils.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\dsl\type_list.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\sycl\algorithm\reduce.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\sycl\algorithm\sycl_for_each.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\sycl\algorithm\sycl_transform.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\sycl\sycl_execution_policy.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\sycl\sycl_graph.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\sycl\sycl_meta.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\sycl\sycl_task.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\sycl\syclflow.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\taskflow.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\iterator.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\latch.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\macros.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\math.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\mpmc.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\object_pool.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\os.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\serializer.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\singleton.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\small_vector.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\stream.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\traits.hpp" />
+		<ClInclude Include="vcpkg_installed\x64-windows\x64-windows\include\taskflow\utility\uuid.hpp" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\lib\DirectXTK.lib" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\lib\fmt.lib" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\lib\imgui.lib" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\lib\pkgconfig\DirectXMath.pc" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\lib\pkgconfig\DirectXTK.pc" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\lib\pkgconfig\fmt.pc" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxmath\DirectXMath-targets.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxmath\copyright" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxmath\directxmath-config-version.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxmath\directxmath-config.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxmath\usage" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxmath\vcpkg.spdx.json" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxmath\vcpkg_abi_info.txt" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxtk\DirectXTK-targets-debug.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxtk\DirectXTK-targets-release.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxtk\DirectXTK-targets.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxtk\copyright" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxtk\directxtk-config-version.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxtk\directxtk-config.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxtk\usage" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxtk\vcpkg.spdx.json" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\directxtk\vcpkg_abi_info.txt" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\fmt\copyright" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\fmt\fmt-config-version.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\fmt\fmt-config.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\fmt\fmt-targets-debug.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\fmt\fmt-targets-release.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\fmt\fmt-targets.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\fmt\usage" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\fmt\vcpkg.spdx.json" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\fmt\vcpkg_abi_info.txt" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\imgui\copyright" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\imgui\imgui-config.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\imgui\imgui-targets-debug.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\imgui\imgui-targets-release.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\imgui\imgui-targets.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\imgui\vcpkg.spdx.json" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\imgui\vcpkg_abi_info.txt" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\pkgconfig\DirectXMath.pc" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\taskflow\TaskflowConfig.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\taskflow\TaskflowConfigVersion.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\taskflow\TaskflowTargets.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\taskflow\copyright" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\taskflow\vcpkg.spdx.json" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\taskflow\vcpkg_abi_info.txt" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake-config\copyright" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake-config\vcpkg-port-config.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake-config\vcpkg.spdx.json" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake-config\vcpkg_abi_info.txt" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake-config\vcpkg_cmake_config_fixup.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake\copyright" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake\vcpkg-port-config.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake\vcpkg.spdx.json" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake\vcpkg_abi_info.txt" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake\vcpkg_cmake_build.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake\vcpkg_cmake_configure.cmake" />
+		<None Include="vcpkg_installed\x64-windows\x64-windows\share\vcpkg-cmake\vcpkg_cmake_install.cmake" />
+	</ItemGroup>
 </Project>

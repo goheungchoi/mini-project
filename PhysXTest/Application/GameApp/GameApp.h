@@ -1,12 +1,6 @@
 #pragma once
-#include "Core/Camera/Camera.h"
+
 #include "GameEngine/GameEngine.h"
-#include "GameFramework/GameObject/GameObject.h"
-#include "Renderer/IRenderer.h"
-struct PhyjixRay;
-class IPhyjixEngine;
-class IPhyjixWorld;
-class RigidbodyComponent;
 
 class GameApp : public GameEngine
 {
@@ -24,29 +18,19 @@ public:
 
 protected:
   virtual void FixedUpdate(float deltaTime) override;
+  virtual void ProcessInput(float dt) override;
   virtual void Update(float deltaTime) override;
   virtual void Render() override;
 
+  virtual bool OnActivated() override;
+  virtual bool OnDeactivated() override;
+  virtual bool OnSuspending() override;
+  virtual bool OnResuming() override;
+  virtual bool OnWindowResized() override;
+
 private:
-  bool bCameraMove{false};
-  Camera* _camera;
-  DirectionalLight _mainLight;
-  IRenderer* _renderer;
-  Vector4 eye;
-  Vector4 at;
+  virtual void Run() override;
 
-  IPhyjixEngine* _phyjixEngine;
-  IPhyjixWorld* _phyjixWorld;
-
-
-  GameObject* testobject = nullptr;
-  RigidbodyComponent* testrigidbody = nullptr;
-
-  GameObject* testobject2 = nullptr;
-  RigidbodyComponent* testrigidbody2 = nullptr;
-
-  PhyjixRay* ray;
-  Color debugcolor;
-
-  bool _bCameraMove = false;
+private:
+  class World* _world;
 };

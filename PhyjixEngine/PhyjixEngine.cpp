@@ -24,6 +24,14 @@ bool PhyjixEngine::Initialize()
 
 	_pDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
 
+  physx::PxCudaContextManagerDesc cudacmdesc;
+  _cudaContextManager = PxCreateCudaContextManager(*_pFoundation, cudacmdesc, PxGetProfilerCallback());
+  _pPhysics->createPBDParticleSystem(*_cudaContextManager, 96);
+
+  //blood effect test
+  physx::PxPBDMaterial* pbdmat = _pPhysics->createPBDMaterial(0.2f,0.1f,0.1f,5.0f,0.5f,0.07f,0.05f,0.2f,0.8f,0.3f,1.f);
+  const physx::PxU32 particlePhase = _particleSystem->createPhase(pbdmat,physx::PxParticlePhaseFlags(physx::PxParticlePhaseFlag::eParticlePhaseFluid | physx::PxParticlePhaseFlag::eParticlePhaseSelfCollide));
+
 
 
 	return true;

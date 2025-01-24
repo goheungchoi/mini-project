@@ -7,6 +7,7 @@
 #include "Core/Async/Async.h"
 
 #include "GameFramework/Level/Level.h"
+#include "../../PhyjixEngine/pch.h"
 
 class World
 {
@@ -21,7 +22,15 @@ public:
   // EffectSystem _effectSystem;
 
   // Collision System
-  // CollisionSystem _collisionSystem;
+  IPhyjixEngine* _phyjixEngine;
+  IPhyjixWorld* _phyjixWorld;
+
+
+
+
+
+
+
 
   class Camera* _defaultCamera{nullptr};
 

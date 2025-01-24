@@ -1,14 +1,21 @@
 {
-  "dependencies": [
-    "fmt",
+	"dependencies": [
+		"fmt",
 		"directxtk",
+		"physx",
 		"taskflow",
-    {
+		{
 			"name": "imgui",
 			"features": [
 				"dx11-binding",
 				"win32-binding"
 			]
 		}
-  ]
+	],
+	"overrides": [
+		{
+			"name": "physx",
+			"version": "5.5.0"
+		}
+	]
 }

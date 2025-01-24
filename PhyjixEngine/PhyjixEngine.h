@@ -18,6 +18,9 @@ private:
   physx::PxDefaultErrorCallback _defaultErrorCallback;
   physx::PxTolerancesScale _toleranceScale;
   physx::PxDefaultCpuDispatcher* _pDispatcher = nullptr;
+  physx::PxCudaContextManager* _cudaContextManager = nullptr;
+  physx::PxPBDParticleSystem* _particleSystem = nullptr;
+
 	std::vector<IPhyjixWorld*> _worlds;
 	UINT _currentWorldIndex = 0;
 

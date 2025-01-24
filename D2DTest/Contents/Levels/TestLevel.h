@@ -3,7 +3,7 @@
 #include "GameFramework/World/World.h"
 #include "GameFramework/Level/Level.h"
 #include "Contents/GameObjects/TestGameObject.h"
-//#define USED2D
+#define USED2D
 
 class TestLevel : public Level
 {

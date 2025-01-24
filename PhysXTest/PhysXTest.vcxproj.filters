@@ -1,23 +1,44 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-	<ItemGroup>
-		<Filter Include="Application\GameApp">
-			<UniqueIdentifier>{E71983FC-CBDD-494A-BA7A-8A0C74A6ACCA}</UniqueIdentifier>
-		</Filter>
-		<Filter Include="Application">
-			<UniqueIdentifier>{497DFD7A-173F-4145-B439-DD8351AA163C}</UniqueIdentifier>
-		</Filter>
-	</ItemGroup>
-	<ItemGroup>
-		<ClInclude Include="Application\GameApp\GameApp.h">
-			<Filter>Application\GameApp</Filter>
-		</ClInclude>
-		<ClCompile Include="Application\WinMain.cpp">
-			<Filter>Application</Filter>
-		</ClCompile>
-		<ClCompile Include="Application\GameApp\GameApp.cpp">
-			<Filter>Application\GameApp</Filter>
-		</ClCompile>
-		<None Include="imgui.ini" />
-	</ItemGroup>
+  <ItemGroup>
+    <Filter Include="Application\GameApp">
+      <UniqueIdentifier>{E71983FC-CBDD-494A-BA7A-8A0C74A6ACCA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{497DFD7A-173F-4145-B439-DD8351AA163C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{212BA160-BB20-4331-8954-82BE3A31B069}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\AnimationStates">
+      <UniqueIdentifier>{9B057DB5-F341-4BC3-9E0A-E6E952E8BA72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Levels">
+      <UniqueIdentifier>{4831C77A-A808-40D0-BB7A-DF32DC036D0D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\GameObjects">
+      <UniqueIdentifier>{1C70602C-14C0-4CC7-BF5C-44456DF18510}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application\GameApp\GameApp.h">
+      <Filter>Application\GameApp</Filter>
+    </ClInclude>
+    <ClCompile Include="Application\WinMain.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\GameApp\GameApp.cpp">
+      <Filter>Application\GameApp</Filter>
+    </ClCompile>
+    <None Include="imgui.ini" />
+    <ClInclude Include="Contents\GameObjects\TestGameObject.h">
+      <Filter>Contents\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Contents\Levels\TestLevel.h">
+      <Filter>Contents\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Contents\AnimationStates\TestAnimationState.h">
+      <Filter>Contents\AnimationStates</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

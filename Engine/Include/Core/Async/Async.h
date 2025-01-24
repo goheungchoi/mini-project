@@ -4,6 +4,7 @@
 
 #include <thread>
 #include <atomic>
+#include <future>
 #include "taskflow/taskflow.hpp"
 
 namespace async

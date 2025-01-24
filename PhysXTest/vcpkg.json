@@ -3,6 +3,7 @@
         "directxtk",
         "physx",
         "fmt",
+        "taskflow",
         {
             "name": "imgui",
             "features": [
