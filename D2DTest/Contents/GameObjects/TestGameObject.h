@@ -7,10 +7,8 @@ class TestGameObject : public GameObject
 
 public:
 	
-	TestGameObject(World* world) : GameObject(world) {}
-
-
-	void OnRender();
+	TestGameObject(World* world);
+	void OnRender() override;
 
 };
 
