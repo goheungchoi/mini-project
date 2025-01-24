@@ -17,8 +17,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetManager", "AssetManage
 		{D67B80C2-6BA8-46EF-B896-0B6004A06416} = {D67B80C2-6BA8-46EF-B896-0B6004A06416}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RendererTest", "RendererTest\RendererTest.vcxproj", "{0365267F-2B64-4AA9-82B9-04360FC0EC5D}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SharedLib", "SharedLib\SharedLib.vcxproj", "{D67B80C2-6BA8-46EF-B896-0B6004A06416}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhyjixEngine", "PhyjixEngine\PhyjixEngine.vcxproj", "{9DED1277-E637-41F3-9448-24C93051D5CE}"
@@ -26,6 +24,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysXTest", "PhysXTest\PhysXTest.vcxproj", "{83884BBC-C7FD-404C-B3A2-0CB33309C263}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "D2DTest", "D2DTest\D2DTest.vcxproj", "{1697F3C2-D637-4480-9639-C284B9281204}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderTest", "RenderTest\RenderTest.vcxproj", "{3678597E-E60B-411A-B4AD-61774FE9A0ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,14 +67,6 @@ Global
 		{0D914B36-F7B8-4020-ADC6-82CB46E2E88A}.Release|x64.Build.0 = Release|x64
 		{0D914B36-F7B8-4020-ADC6-82CB46E2E88A}.Release|x86.ActiveCfg = Release|x64
 		{0D914B36-F7B8-4020-ADC6-82CB46E2E88A}.Release|x86.Build.0 = Release|x64
-		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Debug|x64.ActiveCfg = Debug|x64
-		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Debug|x64.Build.0 = Debug|x64
-		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Debug|x86.ActiveCfg = Debug|Win32
-		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Debug|x86.Build.0 = Debug|Win32
-		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Release|x64.ActiveCfg = Release|x64
-		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Release|x64.Build.0 = Release|x64
-		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Release|x86.ActiveCfg = Release|Win32
-		{0365267F-2B64-4AA9-82B9-04360FC0EC5D}.Release|x86.Build.0 = Release|Win32
 		{D67B80C2-6BA8-46EF-B896-0B6004A06416}.Debug|x64.ActiveCfg = Debug|x64
 		{D67B80C2-6BA8-46EF-B896-0B6004A06416}.Debug|x64.Build.0 = Debug|x64
 		{D67B80C2-6BA8-46EF-B896-0B6004A06416}.Debug|x86.ActiveCfg = Debug|Win32
@@ -107,6 +99,14 @@ Global
 		{1697F3C2-D637-4480-9639-C284B9281204}.Release|x64.Build.0 = Release|x64
 		{1697F3C2-D637-4480-9639-C284B9281204}.Release|x86.ActiveCfg = Release|Win32
 		{1697F3C2-D637-4480-9639-C284B9281204}.Release|x86.Build.0 = Release|Win32
+		{3678597E-E60B-411A-B4AD-61774FE9A0ED}.Debug|x64.ActiveCfg = Debug|x64
+		{3678597E-E60B-411A-B4AD-61774FE9A0ED}.Debug|x64.Build.0 = Debug|x64
+		{3678597E-E60B-411A-B4AD-61774FE9A0ED}.Debug|x86.ActiveCfg = Debug|Win32
+		{3678597E-E60B-411A-B4AD-61774FE9A0ED}.Debug|x86.Build.0 = Debug|Win32
+		{3678597E-E60B-411A-B4AD-61774FE9A0ED}.Release|x64.ActiveCfg = Release|x64
+		{3678597E-E60B-411A-B4AD-61774FE9A0ED}.Release|x64.Build.0 = Release|x64
+		{3678597E-E60B-411A-B4AD-61774FE9A0ED}.Release|x86.ActiveCfg = Release|Win32
+		{3678597E-E60B-411A-B4AD-61774FE9A0ED}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

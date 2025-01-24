@@ -1,0 +1,13 @@
+{
+    "import_path": "C:\\Users\\user\\Desktop\\svn\\Team_Rebellion\\5_Project\\mini-project\\Asset\\Textures\\Test_CombatUI_1.png",
+    "resource_type": "texture",
+    "details": {
+        "is_normal": false,
+        "is_cube": false,
+        "color_space": "kSRGB",
+        "alpha_mode": "kOpaque",
+        "format": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB",
+        "mipmap": false,
+        "mipmapCount": 1
+    }
+}
