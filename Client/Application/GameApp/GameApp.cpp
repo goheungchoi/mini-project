@@ -157,7 +157,7 @@ void GameApp::Run()
 
       // 게임 루프 소용돌이를 방어하기 위해 델타타임이 일정시간 이상 넘어가면
       // 픽스 합니다.
-      dtThreshole = 0.25 * dt;
+      dtThreshole = 0.25;
       if (dt > dtThreshole)
         dt = dtThreshole; // Clamp the frame time
 

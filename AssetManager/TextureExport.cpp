@@ -57,9 +57,6 @@ DXGI_FORMAT todx(ImageFormat format, bool srgb)
   case ImageFormat::R8G8_UINT:
     return DXGI_FORMAT_R8G8_UINT;
   case ImageFormat::R8G8B8A8_UINT:
-    if (srgb)
-      return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-    else
       return DXGI_FORMAT_R8G8B8A8_UNORM;
   case ImageFormat::R16_FLOAT:
     return DXGI_FORMAT_R16_FLOAT;
@@ -1019,19 +1016,30 @@ bool exportTextureFromMemory(const std::vector<char>& input,
           dataByteSize = width * height * requiredChannels;
         }
         nv_dds::Image dds;
-        dds.allocate();
-        dds.subresource().create(dataByteSize, image);
+        nv_dds::ErrorWithText err = dds.allocate();
+        if (err)
+        {
+          return false;
+        }
+        err = dds.subresource().create(dataByteSize, image);
+        if (err)
+        {
+          return false;
+        }
         dds.mip0Width = width;
         dds.mip0Height = height;
         dds.mip0Depth = 1;
-        dds.dxgiFormat =
-            todx(options.format, data.colorSpace == ColorSpace::kSRGB);
-        dds.alphaMode = data.alphaMode == nvtt::AlphaMode_None
-                            ? nv_dds::DDS_ALPHA_MODE_OPAQUE
-                            : nv_dds::DDS_ALPHA_MODE_STRAIGHT;
+        dds.dxgiFormat = todx(options.format, false);
+        dds.resourceDimension = nv_dds::ResourceDimension::eTexture2D;
+        dds.alphaMode = 0;
         dds.isNormal = data.isNormalMap;
 
-        dds.writeToFile(exportPath.c_str(), {.useDx10HeaderIfPossible = true});
+        err = dds.writeToFile(exportPath.c_str(),
+                           {.useDx10HeaderIfPossible = true});
+        if (err)
+        {
+          return false;
+        }
 
         stbi_image_free(image);
 

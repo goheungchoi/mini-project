@@ -346,10 +346,6 @@ void World::PostUpdate(float dt)
   // Update hierarchical transforms
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (gameObject->name == "c_pos")
-    {
-      int a = 1;
-    }
     auto* transform = gameObject->transform;
     if (transform->bNeedUpdateGlobalTransform)
     {
@@ -360,7 +356,7 @@ void World::PostUpdate(float dt)
     }
   }
 
-  // Update skeletal mesh transforms
+  // Update skeletal mesh vertex transforms
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
     if (!(gameObject->status == EStatus_Active))
@@ -397,6 +393,7 @@ void World::RenderGameObjects() {
   ImGui::End();
   #endif
 
+  // Rendering stage
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
     if (!gameObject->status == EStatus_Active)
@@ -404,6 +401,7 @@ void World::RenderGameObjects() {
 
     gameObject->OnRender();
 
+    // Draw static mesh
     if (auto* meshComp = gameObject->GetComponent<MeshComponent>();
         meshComp)
     {
@@ -412,14 +410,14 @@ void World::RenderGameObjects() {
       _renderer->BeginDraw(handle, XMMatrixIdentity()/*transform*XMMatrixScaling(100.f,100.f,100.f)*/);
       _renderer->DrawMesh(handle);
     }
+    // Draw skeletal mesh
     else if (auto* meshComp = gameObject->GetComponent<SkeletalMeshComponent>();
              meshComp)
     {
-      // TODO:
       auto handle = meshComp->GetHandle();
       const auto& transform = gameObject->GetWorldTransform();
-      _renderer->BeginDraw(handle, transform *
-                                       XMMatrixScaling(0.005f, 0.005f, 0.005f) *
+      _renderer->BeginDraw(handle, transform *  // NOTE: Remove the scaling and rotation.
+                                       XMMatrixScaling(1.f, 1.f, 1.f) *
                                        XMMatrixRotationAxis({1.f,0.f,0.f},-XM_PIDIV2));
       _renderer->DrawMesh(handle, meshComp->boneTransforms);
     }
