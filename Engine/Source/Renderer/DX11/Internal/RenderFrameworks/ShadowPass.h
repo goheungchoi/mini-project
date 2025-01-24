@@ -14,11 +14,11 @@ private:
   D3D11_VIEWPORT _shadowViewPort = {};
   Device* _device = nullptr;
   // VARIABLE
-  float _nearPlane = 7000.f;
-  float _farPlane = 20000.f;
   float _forwardDist = 0;
-  float _upLookAtDist = 9000;
+  float _upLookAtDist = 15.f;
 
+  float _nearPlane = 15.f;
+  float _farPlane = 10000.f;
 public:
   Matrix View;
   Matrix Projection;
@@ -65,10 +65,10 @@ public:
   {
     if (ImGui::Begin("Shadow"))
     {
-      ImGui::SliderFloat("forwadDist", &_forwardDist, 0.f, 5000.f);
-      ImGui::SliderFloat("UpLookAtDist", &_upLookAtDist, 1000.f, 50000.f);
-      ImGui::SliderFloat("NearPlane", &_nearPlane, 1.f, 10000.f);
-      ImGui::SliderFloat("FarPlane", &_farPlane, 10000.f, 100000.f);
+      ImGui::SliderFloat("forwadDist", &_forwardDist, 0.f, 100.f);
+      ImGui::SliderFloat("UpLookAtDist", &_upLookAtDist, 0.f, 500.f);
+      ImGui::SliderFloat("NearPlane", &_nearPlane, 1.f, 1000.f);
+      ImGui::SliderFloat("FarPlane", &_farPlane, 1000.f, 10000.f);
       ImTextureID imgID = (ImTextureID)(uintptr_t)_shadowSRV.Get();
       ImGui::Image(imgID, ImVec2(400, 400));
     }

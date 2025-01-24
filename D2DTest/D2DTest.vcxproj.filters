@@ -40,5 +40,11 @@
 		<ClInclude Include="Contents\AnimationStates\TestAnimationState.h">
 			<Filter>Contents\AnimationStates</Filter>
 		</ClInclude>
+		<ClCompile Include="Contents\GameObjects\TestGameObject.cpp">
+			<Filter>Contents\GameObjects</Filter>
+		</ClCompile>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="Contents\GameObjects\TestGameObject.cpp" />
 	</ItemGroup>
 </Project>

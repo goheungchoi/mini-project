@@ -38,7 +38,7 @@ struct PointLight
     float intensity;
 };
 
-cbuffer Frame : register(b0)
+cbuffer Frame : register(b1)
 {
     DirectionalLight mainDirectionalLight;
     float4 cameraPosition;
@@ -50,12 +50,12 @@ cbuffer Frame : register(b0)
     Matrix shadowProjection;
 };
 
-cbuffer World : register(b1)
+cbuffer World : register(b2)
 {
     Matrix world;
 };
 
-cbuffer PixelData : register(b2)
+cbuffer PixelData : register(b3)
 {
     float alphaCutoff;
     float metalicFactor;
@@ -64,9 +64,9 @@ cbuffer PixelData : register(b2)
     float4 albedoFactor;
 }
 
-cbuffer BoneMatrix : register(b3)
+cbuffer BoneMatrix : register(b4)
 {
-    Matrix boneMatrix[128];
+    Matrix boneMatrix[256];
 }
 
 struct VS_INPUT

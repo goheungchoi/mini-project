@@ -23,7 +23,7 @@ void World::Initialize(HWND hwnd, const std::wstring& title) {
       "Textures/BakerEnv.dds", "Textures/BakerSpecularBRDF_LUT.dds",
       "Textures/BakerDiffuseIrradiance.dds", "Textures/BakerSpecularIBL.dds");
 
-  _defaultCamera = new Camera(kScreenWidth, kScreenHeight,XM_PIDIV4/4*6);
+  _defaultCamera = new Camera(kScreenWidth, kScreenHeight,XM_PIDIV4);
   SetMainCamera(_defaultCamera);
 }
 
