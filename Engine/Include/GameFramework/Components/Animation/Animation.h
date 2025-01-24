@@ -279,7 +279,7 @@ public:
 
     _currentAnimTime += GetTicksPerSecond() * dt;
     _currentAnimTime = fmod(_currentAnimTime, GetDuration());
-    // _currentAnimTime = 30.f;
+    //_currentAnimTime = 0.f;
 		// Update the channels first
     for (auto& [_, channel] : boneChannels)
     {
@@ -295,7 +295,7 @@ public:
         continue;
 
 			// Check if this bone is in the current animation.
-      XMMATRIX nodeTransform{XMMatrixTranspose(node.transform)};
+      XMMATRIX nodeTransform{node.transform};
       if (auto it = boneChannels.find(node.boneId); it != boneChannels.end())
       {
         // uint32_t idx = it->second;
@@ -308,18 +308,20 @@ public:
         nodeTransform = it->second.GetLocalTransform();
       }
 
-			// Hierarchical transformation.
-			const SkeletonNode& parentNode = skeleton->nodes[node.parent];
-      XMMATRIX globalTransform = nodeTransform;
-      if (parentNode.boneId >= 0)
-        // globalTransform = nodeTransform * parentTransform
-        globalTransform *= globalMatrices[parentNode.boneId];
+      finalBoneTransforms[node.boneId] = nodeTransform;
 
-      globalMatrices[node.boneId] = globalTransform;
+			//// Hierarchical transformation.
+			//const SkeletonNode& parentNode = skeleton->nodes[node.parent];
+   //   XMMATRIX globalTransform = nodeTransform;
+   //   if (parentNode.boneId >= 0)
+   //     // globalTransform = nodeTransform * parentTransform
+   //     globalTransform *= globalMatrices[parentNode.boneId];
 
-			// Update it's final bone transformation.
-			finalBoneTransforms[node.boneId] =
-          XMMatrixTranspose(skeleton->bones[node.boneId].inverseBindMatrix) * globalTransform;
+   //   globalMatrices[node.boneId] = globalTransform;
+
+			//// Update it's final bone transformation.
+			//finalBoneTransforms[node.boneId] =
+   //      skeleton->bones[node.boneId].inverseBindMatrix * globalTransform;
 		}
   }
 

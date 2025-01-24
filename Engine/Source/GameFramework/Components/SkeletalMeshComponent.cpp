@@ -21,6 +21,8 @@ void SkeletalMeshComponent::UpdateBoneTransforms()
   TransformComponent* rootTransform = rootBone;
   transformStack.push(rootTransform);
 
+  // GetOwner()->transform->globalTransform = rootTransform->globalTransform;
+
   boneTransforms[0] = XMMatrixTranspose(rootTransform->globalTransform);
 
   uint32_t index = 0;
@@ -31,9 +33,14 @@ void SkeletalMeshComponent::UpdateBoneTransforms()
 
     for (auto* child : currTransform->children)
     {
-      if (auto it = boneNameSet.find(child->GetOwner()->name);
-          it != boneNameSet.end())
-        boneTransforms[++index] = XMMatrixTranspose(child->globalTransform);
+      if (child->GetOwner()->name == "forearm.r")
+      {
+        int a = 0;
+      }
+
+      if (auto it = boneNameMap.find(child->GetOwner()->name);
+          it != boneNameMap.end())
+        boneTransforms[++index] = XMMatrixTranspose(it->second.inverseBindMatrix * child->globalTransform);
     }
 
     for (auto rit = currTransform->children.rbegin();

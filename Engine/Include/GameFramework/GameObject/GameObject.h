@@ -137,7 +137,7 @@ public:
   void Translate(float x, float y, float z) { transform->Translate(x, y, z); }
   void Translate(XMVECTOR translation) { transform->Translate(translation); }
 
-  void SetLocalTransform(XMMATRIX transform) { SetLocalTransform(transform); }
+  void SetLocalTransform(XMMATRIX transform) { this->transform->SetLocalTransform(transform); }
 
   const XMMATRIX& GetLocalTransform() const
   {

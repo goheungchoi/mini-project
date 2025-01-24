@@ -118,7 +118,7 @@ public:
         // Create a node game object.
         GameObject* newNode = CreateGameObject<GameObject>();
         newNode->SetName(data.nodes[i].name);
-        newNode->transform->globalTransform = data.nodes[i].transform;
+        newNode->SetLocalTransform(data.nodes[i].transform);
 
         gameObjNodes[i] = newNode;
         gameObjectBoneId[skeleton.nodes[i].boneId] = newNode;
