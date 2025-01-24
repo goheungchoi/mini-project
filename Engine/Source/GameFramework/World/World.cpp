@@ -389,6 +389,7 @@ void World::RenderGameObjects() {
 
 void World::RenderUI() {
   // TODO:
+
 }
 
 void World::CleanupStage() {

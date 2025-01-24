@@ -4,6 +4,7 @@
 class Device;
 class SwapChain;
 class Font;
+class Text;
 class UIRenderer;
 class Texture;
 
@@ -49,8 +50,17 @@ public:
   void CreateSprite(LPCSTR path);
   void DrawSprites();
 
+  void AddText(const wchar_t* format, Vector4 rect,
+               const std::wstring& fontName, Color color);
+  void DeleteText();
+
+private:
+  void RenderText();
+
 public:
-  Font* _pFont = nullptr;
+  // Font
+  Font* _pFont;
+  std::vector<Text*> _TextList;
 
 private:
   Device* _pDevice = nullptr;
@@ -69,46 +79,3 @@ private:
   std::unique_ptr<DirectX::SpriteBatch> _pSpriteBatch = nullptr;
   std::vector<Sprite*> _Sprites;
 };
-
-
-class Font
-{
-public:
-  Font(ID2D1DeviceContext* pD2D1DeviceContext, ID2D1SolidColorBrush* pBrush);
-  ~Font();
-
-public:
-  void TextDraw(const wchar_t* format, Vector4 rect,
-                const std::wstring& fontName = L"Agency FB",
-                Color color = Color(1.0f, 0.0f, 1.0f, 1.0f));
-
-private:
-  void Init();
-  void UnInit();
-
-  void CreateIDWriteFactory();
-
-
-private:
-  void CreateTextFormat(
-      const std::wstring& fontName, float size,
-      UINT fontWeight = DWRITE_FONT_WEIGHT_REGULAR,
-      UINT textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER,
-      UINT paragraphAlignment = DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-
-  IDWriteTextFormat* FindFont(const std::wstring& fontName);
-
-
-public:
-  std::unordered_map<std::wstring, IDWriteTextFormat*> _TextFormats;
-
-private:
-  ID2D1DeviceContext* _pD2D1DeviceContext = nullptr;
-  ID2D1SolidColorBrush* _pBrush = nullptr;
-  IDWriteFactory* pDWriteFactory = nullptr;
-
-  // 컴퓨터에 설치되어있는 글꼴 말고 폴더에 있는 글꼴 가져다 쓰는 코드 추가 해야함
-};
-
-
-
