@@ -7,9 +7,9 @@ TestGameObject::TestGameObject(World* world)
     : GameObject(world)
 {
   world->_renderer->CreateSprite("Textures/BakerSpecularBRDF_LUT.dds");
-  world->_renderer->AddText(L"한글Test1234", {0, 0, 1920, 150}, L"궁서");
 }
-
 void TestGameObject::OnRender() 
 {
+  GetWorld()->_renderer->AddText(L"한글Test1234", {0, 0, 1920, 150}, L"궁서");
+  GetWorld()->_renderer->AddText(L"asdfqwer", {0, 0, 300, 150}, L"Agency FB");
 }
