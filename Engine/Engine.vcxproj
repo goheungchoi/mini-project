@@ -277,6 +277,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Image.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Material.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\PipeLineState.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\QuadFrame.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Sampler.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\SkyBox.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\SwapChain.h" />
