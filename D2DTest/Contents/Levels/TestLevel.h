@@ -3,7 +3,7 @@
 #include "GameFramework/World/World.h"
 #include "GameFramework/Level/Level.h"
 #include "Contents/GameObjects/TestGameObject.h"
-//#define USED2D
+#define USED2D
 
 class TestLevel : public Level
 {
@@ -18,10 +18,10 @@ public:
 	
   virtual void PrepareLevel() override
   {
-    sponzaHandle = LoadModel("Models\\GlbTest\\glbTest.glb");
+    //sponzaHandle = LoadModel("Models\\GlbTest\\glbTest.glb");
   }
   virtual void BeginLevel() override {
-    testObject = world->CreateGameObjectFromModel(sponzaHandle);
+   // testObject = world->CreateGameObjectFromModel(sponzaHandle);
 
 #ifdef USED2D
     text = world->CreateGameObject<TestGameObject>();

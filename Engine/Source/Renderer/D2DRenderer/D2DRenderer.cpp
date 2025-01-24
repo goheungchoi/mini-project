@@ -2,6 +2,7 @@
 #include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/SwapChain.h"
 #include "Renderer/DX11/Internal/Resources/Material.h"
+#include "Font/Font.h"
 
 Sprite::Sprite(LPCSTR path, Device* pDevice)
 {
@@ -106,8 +107,10 @@ bool D2DRenderer::Init(Device* device, SwapChain* swapChain,
       std::make_unique<DirectX::SpriteBatch>(_pDevice->GetImmContext());
   _pSpriteBatch->SetViewport(_viewport);
 
+
   // Font 초기화
-  _pFont = new Font(_pD2D1DeviceContext, _pBrush);
+  _pFont = new Font;
+
 
   return true;
 }
@@ -144,7 +147,7 @@ void D2DRenderer::UnInit()
 {
   // SpriteBatch의 해제
   if (_pSpriteBatch) { _pSpriteBatch.reset(); }
-
+  DeleteText();
   SAFE_RELEASE(_pFont);
   Com::SAFE_RELEASE(_pBrush);
   Com::SAFE_RELEASE(_pID2D1Bitmap);
@@ -156,11 +159,9 @@ void D2DRenderer::UnInit()
 
   _pDevice = nullptr;
   _pSwapChain = nullptr;
-
 }
 
 void D2DRenderer::Draw() {
-
 }
 
 void D2DRenderer::BeginDraw()
@@ -170,6 +171,7 @@ void D2DRenderer::BeginDraw()
 
 void D2DRenderer::EndDraw()
 {
+  RenderText();
   _pD2D1DeviceContext->EndDraw();
 }
 
@@ -208,108 +210,51 @@ void D2DRenderer::DrawSprites()
 }
 
 
-
-
-/// <summary>
-////////////////////// Font Engine //////////////////////////
-/// </summary>
-
-Font::Font(ID2D1DeviceContext* pD2D1DeviceContext, ID2D1SolidColorBrush* pBrush)
+void D2DRenderer::AddText(const wchar_t* format, Vector4 rect,
+                          const std::wstring& fontName, Color color)
 {
-  _pD2D1DeviceContext = pD2D1DeviceContext;
-  _pBrush = pBrush;
+  Text* newText = new Text(format, rect, fontName, color);
 
-  Init();
+  _TextList.push_back(newText);
 }
 
-Font::~Font()
+void D2DRenderer::DeleteText()
 {
-  UnInit();
-}
-
-void Font::Init()
-{
-  CreateIDWriteFactory();
-  CreateTextFormat(L"Agency FB", 100.0f);
-  CreateTextFormat(L"궁서", 32.0f);
-}
-
-void Font::UnInit()
-{
-  for (auto& pair : _TextFormats)
+  if (!_TextList.empty())
   {
-    if (pair.second)
+    for (auto txt : _TextList)
     {
-      Com::SAFE_RELEASE(pair.second);
+      SAFE_RELEASE(txt);
     }
   }
-
-  _TextFormats.clear();
-
-  // IDWriteFactory 파괴
-  Com::SAFE_RELEASE(pDWriteFactory);
-
-  _pD2D1DeviceContext = nullptr;
-  _pBrush = nullptr;
 }
 
-void Font::CreateIDWriteFactory()
+void D2DRenderer::RenderText()
 {
-  HR_T(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory),
-                           reinterpret_cast<IUnknown**>(&pDWriteFactory)));
-}
-
-void Font::CreateTextFormat(const std::wstring& fontName, float size, UINT fontWeight,
-                            UINT textAlignment, UINT paragraphAlignment)
-{
-  IDWriteTextFormat* pTextFormat;
-
-  //const wchar_t* formatName = L"맑은 고딕";
-
-  HR_T(pDWriteFactory->CreateTextFormat(
-      fontName.c_str(), // 글꼴 이름
-      NULL,              // 글꼴 컬렉션 (NULL은 시스템 기본 사용)
-      static_cast<DWRITE_FONT_WEIGHT>(fontWeight), DWRITE_FONT_STYLE_NORMAL,
-      DWRITE_FONT_STRETCH_NORMAL,
-      size, // 글꼴 크기
-      L"ko-KR", // 로케일
-      &pTextFormat));
-
-  // 텍스트 정렬
-  pTextFormat->SetTextAlignment(static_cast<DWRITE_TEXT_ALIGNMENT>(textAlignment));
-  pTextFormat->SetParagraphAlignment(
-      static_cast<DWRITE_PARAGRAPH_ALIGNMENT>(paragraphAlignment));
-
-  _TextFormats.insert({fontName, pTextFormat});
-}
-
-void Font::TextDraw(const wchar_t* format, Vector4 rect,
-                    const std::wstring& fontName, Color color)
-{
-  // 텍스트 그리기
-                                //  left,    top,  right, bottom
-  D2D1_RECT_F _rect = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
-
-  D2D1_COLOR_F _color = D2D1::ColorF(color.x, color.y, color.z, color.w);
-
-  _pBrush->SetColor(_color);
-
-  IDWriteTextFormat* txtformat = FindFont(fontName);
-  
-  _pD2D1DeviceContext->DrawText(format, lstrlen(format) + 1, txtformat, _rect,
-                                _pBrush);
-}
-
-
-IDWriteTextFormat* Font::FindFont(const std::wstring& fontName)
-{
-  auto iter = _TextFormats.find(fontName);
-
-  if (iter != _TextFormats.end())
+  if (_TextList.empty())
   {
-    return iter->second;
+    return;
   }
 
-  return nullptr;
-}
+  for (auto txt : _TextList)
+  {
+    // 텍스트 그리기
+    //  left,    top,  right, bottom
+    D2D1_RECT_F rect =
+        D2D1_RECT_F(txt->_rect.x, txt->_rect.y, txt->_rect.z, txt->_rect.w);
 
+    D2D1_COLOR_F color = D2D1::ColorF(txt->_color.x, txt->_color.y,
+                                      txt->_color.z, txt->_color.w);
+
+    _pBrush->SetColor(color);
+
+    IDWriteTextFormat* txtformat = _pFont->FindFont(txt->_fontName);
+
+    _pD2D1DeviceContext->DrawText(txt->_format.c_str(),
+                                  lstrlen(txt->_format.c_str()) + 1,
+                                  txtformat,
+                                  rect,
+                                  _pBrush);
+  }
+
+}
