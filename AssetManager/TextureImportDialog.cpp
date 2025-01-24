@@ -120,7 +120,8 @@ std::pair<fs::path, fs::path> TextureImportDialog::GetExportPaths(
     const QString& texturePath)
 {
   QDir assetDir(ASSET_DIR);
-  QString relativePath = assetDir.relativeFilePath(texturePath);
+  QString relativePath =
+      assetDir.relativeFilePath(texturePath).replace('/', '\\');
 
   UUID uuid = GenerateUUIDFromName(relativePath.toStdString());
 
