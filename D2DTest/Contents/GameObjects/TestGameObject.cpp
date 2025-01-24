@@ -1,7 +1,15 @@
 ﻿#include "TestGameObject.h"
 #include "GameFramework/World/World.h"
 
+#include "GameFramework/Level/Level.h"
+
+TestGameObject::TestGameObject(World* world)
+    : GameObject(world)
+{
+  world->_renderer->CreateSprite("Textures/BakerSpecularBRDF_LUT.dds");
+}
 void TestGameObject::OnRender() 
 {
-  GetWorld()->_renderer->TextDraw(L"한글Test1234", {0, 0, 1920, 150}, L"궁서");
+  GetWorld()->_renderer->AddText(L"한글Test1234", {0, 0, 1920, 150}, L"궁서");
+  GetWorld()->_renderer->AddText(L"asdfqwer", {0, 0, 300, 150}, L"Agency FB");
 }

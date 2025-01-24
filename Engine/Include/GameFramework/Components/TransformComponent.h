@@ -208,7 +208,8 @@ public:
     this->scaling = localScaling;
 
     localTransform = transform; 
-    bNeedUpdateGlobalTransform = false;
+    bNeedUpdateTransform = false;
+    bNeedUpdateGlobalTransform = true;
   }
 
 	void UpdateLocalTransform()
@@ -218,7 +219,8 @@ public:
     XMMATRIX _T = XMMatrixTranslationFromVector(translation);
 
 		localTransform = _S * _R * _T;
-    bNeedUpdateGlobalTransform = false;
+    bNeedUpdateTransform = false;
+    bNeedUpdateGlobalTransform = true;
 	}
 
   void UpdateGlobalTransform()
@@ -227,6 +229,8 @@ public:
       globalTransform = localTransform * parent->globalTransform;
     else
       globalTransform = localTransform;
+
+    bNeedUpdateGlobalTransform = false;
 	}
 
 	const XMVECTOR& GetScaling() const { return scaling; }

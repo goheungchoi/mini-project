@@ -1,0 +1,13 @@
+{
+    "import_path": "Models\\Vampire\\../../../../home/app/mixamo-mini/tmp/skins_79370133-2ef1-4bae-918b-0b7e0fab2f26.fbm/Vampire_normal.png",
+    "resource_type": "texture",
+    "details": {
+        "is_normal": true,
+        "is_cube": false,
+        "color_space": "kLinear",
+        "alpha_mode": "kOpaque",
+        "format": "DXGI_FORMAT_BC7_UNORM",
+        "mipmap": true,
+        "mipmapCount": 12
+    }
+}

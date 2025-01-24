@@ -66,7 +66,7 @@ cbuffer PixelData : register(b3)
 
 cbuffer BoneMatrix : register(b4)
 {
-    Matrix boneMatrix[128];
+    Matrix boneMatrix[256];
 }
 
 struct VS_INPUT

@@ -46,7 +46,7 @@
           }
 
           if (skeleton->nodes[++index].boneId >= 0)
-            child->globalTransform = finalBoneTransforms[boneId++];
+            child->SetLocalTransform(finalBoneTransforms[boneId++]);
         }
 
         for (auto rit = currTransform->children.rbegin();

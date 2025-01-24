@@ -380,10 +380,10 @@ void DX11Renderer::CreateSprite(LPCSTR path)
   _d2dRenderer->CreateSprite(path);
 }
 
-void DX11Renderer::TextDraw(const wchar_t* format, Vector4 rect,
+void DX11Renderer::AddText(const wchar_t* format, Vector4 rect,
                             const std::wstring& fontName, Color color)
 {
-  _d2dRenderer->_pFont->TextDraw(format, rect, fontName, color);
+  _d2dRenderer->AddText(format, rect, fontName, color);
 }
 
 void DX11Renderer::CreateEngineShader()

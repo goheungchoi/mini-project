@@ -256,6 +256,8 @@
 		<ClInclude Include="Source\Renderer\D2DRenderer\Common.h" />
 		<ClCompile Include="Source\Renderer\D2DRenderer\D2DRenderer.cpp" />
 		<ClInclude Include="Source\Renderer\D2DRenderer\D2DRenderer.h" />
+		<ClCompile Include="Source\Renderer\D2DRenderer\Font\Font.cpp" />
+		<ClInclude Include="Source\Renderer\D2DRenderer\Font\Font.h" />
 		<ClCompile Include="Source\Renderer\DX11\DX11Renderer.cpp" />
 		<ClInclude Include="Source\Renderer\DX11\DX11Renderer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Common.h" />
@@ -266,6 +268,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\Objects\Swapchain.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ComputeEffect.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\DeferredPass.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\PostProcess\PostProcess.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\RenderPass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\Shader.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShaderModule.h" />
@@ -277,6 +280,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Image.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Material.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\PipeLineState.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\QuadFrame.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Sampler.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\SkyBox.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\SwapChain.h" />

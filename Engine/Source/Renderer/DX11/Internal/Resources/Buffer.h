@@ -37,7 +37,7 @@ struct PixelData
 };
 struct BoneMatrix
 {
-  XMMATRIX matrix[128] = {};
+  XMMATRIX matrix[256] = {};
 };
 } // namespace Constant
 

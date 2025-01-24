@@ -97,9 +97,8 @@ public:
     }
 
     // TODO: Fix the logic!
-
     const ModelData& data = AccessModelData(modelHandle);
-    bool isSkeleton = !data.skeleton.IsInvalid();
+    const bool isSkeleton = !data.skeleton.IsInvalid();
 
     // Root game object
     GameObject* rootGameNode = CreateGameObject<GameObject>();
@@ -113,9 +112,12 @@ public:
 
     if (isSkeleton)
     {
+      // Fetch the skeleton data.
       const SkeletonData& skeleton = AccessSkeletonData(data.skeleton);
 
+      // Map GameObjects to boneIds.
       std::unordered_map<BoneId, GameObject*> gameObjectBoneId;
+      // Find the root bone of the skeletal mesh components.
       std::vector<std::pair<SkeletalMeshComponent*, BoneId>>
           skeletalMeshRootBonePair;
 
@@ -125,7 +127,7 @@ public:
         // Create a node game object.
         GameObject* newNode = CreateGameObject<GameObject>();
         newNode->SetName(data.nodes[i].name);
-        newNode->transform->globalTransform = data.nodes[i].transform;
+        newNode->SetLocalTransform(data.nodes[i].transform);
 
         gameObjNodes[i] = newNode;
         gameObjectBoneId[skeleton.nodes[i].boneId] = newNode;
@@ -317,4 +319,8 @@ public:
   void RenderUI();
 
   void CleanupStage();
+
+private:
+  void UpdateGameObjectHierarchy(GameObject* gameObject,
+                                 std::function<void(GameObject*)> func);
 };

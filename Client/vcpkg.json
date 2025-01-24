@@ -1,6 +1,7 @@
 {
   "dependencies": [
     "fmt",
+		"physx",
 		"directxtk",
 		"taskflow",
     {
@@ -10,5 +11,11 @@
 				"win32-binding"
 			]
 		}
-  ]
+  ],
+	"overrides": [
+        {
+            "name": "physx",
+            "version": "5.5.0"
+        }
+    ]
 }

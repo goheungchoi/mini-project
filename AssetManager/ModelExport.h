@@ -1,5 +1,8 @@
 #pragma once
 
+#include <DirectXMath.h>
+using namespace DirectX;
+
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
@@ -281,6 +284,8 @@ private:
   std::unordered_set<std::string> _materialNameRegistry;
   bool _extractBones{false};
   bool _exportAnim{false};
+
+  XMMATRIX _globalInverseTransform{};
 
   void ProcessScene(const aiScene* scene);
   void ProcessNode(GeometryModel& geoModel, GeometryNode& parentGeoNode,

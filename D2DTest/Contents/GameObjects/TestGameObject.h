@@ -4,14 +4,11 @@
 
 class TestGameObject : public GameObject
 {
+public:
+	TestGameObject(World* world);
 
 public:
-	
-	TestGameObject(World* world) : GameObject(world) {}
-
-
-	void OnRender();
-
+	void OnRender() override;
 };
 
 

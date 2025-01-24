@@ -1,0 +1,25 @@
+{
+    "uuid": "9b96fdf8f2115d039c8b3707bd00de20",
+    "import_path": "Models\\Maps\\Cube.0430.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Cube.0430",
+        "bounding_box": [
+            [
+                -0.6242894530296326,
+                5.960464477539063e-08,
+                -0.6242894530296326
+            ],
+            [
+                0.6242894530296326,
+                1.4645044803619385,
+                0.6242894530296326
+            ]
+        ],
+        "num_vertices": 73,
+        "num_indices": 270,
+        "material": "Models\\Maps\\Moum2.mat",
+        "bones": [],
+        "bone_weights": []
+    }
+}

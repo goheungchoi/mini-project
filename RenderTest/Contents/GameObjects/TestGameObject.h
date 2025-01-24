@@ -25,7 +25,7 @@ public:
 	void OnRender() override
 	{ 
 		 std::ranges::for_each(modeldata.meshes, [this](MeshHandle handle) {
-      world->_renderer->BeginDraw(handle,Matrix::Identity*Matrix::CreateScale(50.f));
+      world->_renderer->BeginDraw(handle,Matrix::Identity);
       world->_renderer->DrawMesh(handle);
     });
     

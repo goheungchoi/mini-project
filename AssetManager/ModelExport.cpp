@@ -1,5 +1,6 @@
 #include "ModelExport.h"
 
+
 #include <stb_image.h>
 
 #include <magic_enum/magic_enum.hpp>
@@ -98,6 +99,7 @@ void ModelExporter::ProcessScene(const aiScene* scene)
   GeometryNode geoNode;
   geoNode.name = scene->mRootNode->mName.C_Str();
   geoNode.transform = scene->mRootNode->mTransformation;
+  geoNode.transform.Inverse();
   geoNode.level = 0;
   geoNode.parent = -1;
   geoNode.myIndex = 0;
@@ -128,7 +130,8 @@ void ModelExporter::ProcessNode(GeometryModel& geoModel,
 
     GeometryNode geoNode;
     geoNode.name = node->mChildren[i]->mName.C_Str();
-    geoNode.transform = node->mTransformation;
+    geoNode.transform = node->mChildren[i]->mTransformation;
+    geoNode.transform = geoNode.transform.Transpose();
     geoNode.level = parentGeoNode.level + 1;
     geoNode.parent = parentGeoNode.myIndex;
     geoNode.myIndex = geoModel.nodes.size();
@@ -179,23 +182,42 @@ void ModelExporter::ProcessMesh(GeometryModel& geoModel, GeometryNode& geoNode,
   std::vector<Vertex> vertices(mesh->mNumVertices);
   std::vector<uint32_t> indices(mesh->mNumFaces * 3);
 
+  // Node transform
+  XMMATRIX localNode = XMMATRIX{&geoNode.transform.a1};
+
   // Process vertices;
   for (uint32_t i = 0; i < mesh->mNumVertices; ++i)
   {
-    Vertex v{.position = {mesh->mVertices[i].x, mesh->mVertices[i].y,
-                          mesh->mVertices[i].z, 1.0},
-             .normal = {mesh->mNormals[i].x, mesh->mNormals[i].y,
-                        mesh->mNormals[i].z}};
+    XMVECTOR position{mesh->mVertices[i].x, mesh->mVertices[i].y,
+                      mesh->mVertices[i].z, 1.f};
+    position = XMVector4Transform(position, localNode);
+    
+    XMVECTOR normal{mesh->mNormals[i].x, mesh->mNormals[i].y,
+                    mesh->mNormals[i].z, 0.f};
+    normal = XMVector4Transform(normal, localNode);
+
+    XMVECTOR tangent{mesh->mTangents[i].x, mesh->mTangents[i].y,
+                     mesh->mTangents[i].z, 0.f};
+    tangent = XMVector4Transform(tangent, localNode);
+
+    XMVECTOR bitangent{mesh->mBitangents[i].x, mesh->mBitangents[i].y,
+                       mesh->mBitangents[i].z, 0.f};
+    bitangent = XMVector4Transform(bitangent, localNode);
+
+    Vertex v{
+        .position = {position.m128_f32[0], position.m128_f32[1],
+                     position.m128_f32[2], 1.0},
+        .normal = {normal.m128_f32[0], normal.m128_f32[1], normal.m128_f32[2]}};
 
     if (mesh->HasTangentsAndBitangents())
     {
-      v.tangent[0] = mesh->mTangents[i].x;
-      v.tangent[1] = mesh->mTangents[i].y;
-      v.tangent[2] = mesh->mTangents[i].z;
+      v.tangent[0] = tangent.m128_f32[0];
+      v.tangent[1] = tangent.m128_f32[1];
+      v.tangent[2] = tangent.m128_f32[2];
 
-      v.bitangent[0] = mesh->mBitangents[i].x;
-      v.bitangent[1] = mesh->mBitangents[i].y;
-      v.bitangent[2] = mesh->mBitangents[i].z;
+      v.bitangent[0] = bitangent.m128_f32[0];
+      v.bitangent[1] = bitangent.m128_f32[1];
+      v.bitangent[2] = bitangent.m128_f32[2];
     }
 
     // Check if any texture coord set exists
@@ -1035,6 +1057,7 @@ void ModelExporter::ProcessSkeletonNode(Skeleton& skeleton,
     SkeletonNode skeletonNode;
     skeletonNode.name = node->mChildren[i]->mName.C_Str();
     skeletonNode.transform = node->mChildren[i]->mTransformation;
+    skeletonNode.transform.Transpose();
     skeletonNode.level = parentSkeletonNode.level + 1;
     skeletonNode.parent = parentSkeletonNode.myIndex;
     skeletonNode.myIndex = skeleton.nodes.size(); // Node index
@@ -1110,6 +1133,7 @@ void ModelExporter::ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
 		// Retrieve the bone info
 		Bone& bone = _skeleton.bones[boneId];
 		bone.offset = currBone->mOffsetMatrix;
+    bone.offset.Transpose();
     geoMesh.bones[boneIdx] = bone;
 
 		// Retrieve the influences of the bone to vertices
@@ -1315,6 +1339,7 @@ void ModelExporter::ProcessAnimation(Animation& geoAnim,
 
 	geoAnim.globalInverseTransform = scene->mRootNode->mTransformation;
   geoAnim.globalInverseTransform.Inverse();
+  geoAnim.globalInverseTransform.Transpose();
 
 	// Get animation channels
   geoAnim.animationChannels.reserve(anim->mNumChannels);

@@ -93,6 +93,7 @@ static void ProcessGeoNode(ModelData& model,
 {
 	// Create a node
   ModelNode node{.name = geoNode->name()->c_str(),
+                 .transform = Matrix((float*)geoNode->transform()),
                  .level = geoNode->level(),
                  .parent = geoNode->parent(),
                  .firstChild = geoNode->firstChild(),
