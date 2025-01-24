@@ -19,6 +19,8 @@ public:
 
 	bool bNeedUpdateTransform{false};
   XMMATRIX localTransform{};
+
+  bool bNeedUpdateGlobalTransform{false};
   XMMATRIX globalTransform{};
   
 	TransformComponent(class GameObject* owner) : ComponentBase(owner) {}
@@ -96,9 +98,26 @@ public:
 	}
   void SetRotation(XMVECTOR euler)
   {
-    this->quaterion = XMQuaternionRotationRollPitchYawFromVector(euler);
+    float pitch = XMConvertToRadians(euler.m128_f32[0]);
+    float yaw = XMConvertToRadians(euler.m128_f32[1]);
+    float roll = XMConvertToRadians(euler.m128_f32[2]);
+    this->quaterion = XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
     bNeedUpdateTransform = true;
 	}
+  void SetRotationAroundXAxis(float angle) {
+    this->quaterion = XMQuaternionRotationAxis(MathUtil::kRight, angle);
+    bNeedUpdateTransform = true;
+  }
+  void SetRotationAroundYAxis(float angle)
+  {
+    this->quaterion = XMQuaternionRotationAxis(MathUtil::kUp, angle);
+    bNeedUpdateTransform = true;
+  }
+  void SetRotationAroundZAxis(float angle)
+  {
+    this->quaterion = XMQuaternionRotationAxis(MathUtil::kFront, angle);
+    bNeedUpdateTransform = true;
+  }
 	void SetRotationAroundAxis(XMVECTOR axis, float angle) {
     this->quaterion = XMQuaternionRotationAxis(axis, angle);
     bNeedUpdateTransform = true;
@@ -134,15 +153,38 @@ public:
     this->quaterion *= XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
     bNeedUpdateTransform = true;
 	}
-  void Rotate(XMVECTOR rotation)
+  void Rotate(XMVECTOR euler)
   {
-    this->quaterion *= XMQuaternionRotationRollPitchYawFromVector(rotation);
+    float pitch = XMConvertToRadians(euler.m128_f32[0]);
+    float yaw = XMConvertToRadians(euler.m128_f32[1]);
+    float roll = XMConvertToRadians(euler.m128_f32[2]);
+    this->quaterion *= XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
     bNeedUpdateTransform = true;
 	}
+  void RotateAroundXAxis(float angle)
+  {
+    this->quaterion *= XMQuaternionRotationAxis(MathUtil::kRight, angle);
+    bNeedUpdateTransform = true;
+  }
+  void RotateAroundYAxis(float angle)
+  {
+    this->quaterion *= XMQuaternionRotationAxis(MathUtil::kUp, angle);
+    bNeedUpdateTransform = true;
+  }
+  void RotateAroundZAxis(float angle)
+  {
+    this->quaterion *= XMQuaternionRotationAxis(MathUtil::kFront, angle);
+    bNeedUpdateTransform = true;
+  }
 	void RotateAroundAxis(XMVECTOR axis, float angle) {
     this->quaterion *= XMQuaternionRotationAxis(axis, angle);
     bNeedUpdateTransform = true;
 	}
+  void RotateToward(XMVECTOR target, float maxAngleStep) {
+    this->quaterion = MathUtil::RotateToward(this->quaterion, target,
+                                             translation, maxAngleStep);
+    bNeedUpdateTransform = true;
+  }
 
 	void Translate(float x, float y, float z)
   {
@@ -155,6 +197,20 @@ public:
     bNeedUpdateTransform = true;
 	}
 
+  void SetLocalTransform(XMMATRIX transform) { 
+    XMVECTOR localTranslation;
+    XMVECTOR localQuatRot;
+    XMVECTOR localScaling;
+    XMMatrixDecompose(&localScaling, &localQuatRot, &localTranslation, transform);
+
+    this->translation = localTranslation;
+    this->quaterion = localQuatRot;
+    this->scaling = localScaling;
+
+    localTransform = transform; 
+    bNeedUpdateGlobalTransform = false;
+  }
+
 	void UpdateLocalTransform()
   {
     XMMATRIX _S = XMMatrixScalingFromVector(scaling);
@@ -162,11 +218,15 @@ public:
     XMMATRIX _T = XMMatrixTranslationFromVector(translation);
 
 		localTransform = _S * _R * _T;
-    bNeedUpdateTransform = false;
+    bNeedUpdateGlobalTransform = false;
 	}
-  void UpdateGlobalTransform(XMMATRIX parentTransform)
+
+  void UpdateGlobalTransform()
   {
-    globalTransform = localTransform * parentTransform;
+    if (parent)
+      globalTransform = localTransform * parent->globalTransform;
+    else
+      globalTransform = localTransform;
 	}
 
 	const XMVECTOR& GetScaling() const { return scaling; }

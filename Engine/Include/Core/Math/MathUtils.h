@@ -14,6 +14,36 @@ constexpr XMVECTOR kRight{1.f, 0.f, 0.f, 0.f};
 constexpr XMVECTOR kUp{0.f, 1.f, 0.f, 0.f};
 constexpr XMVECTOR kFront{0.f, 0.f, 1.f, 0.f};
 
+
+
+struct AABB
+{
+  XMVECTOR min;
+  XMVECTOR max;
+};
+
+constexpr float kEpsilon_f{1e-6f};
+
+constexpr float kQuaterPi_f{0.25 * std::numbers::pi};
+constexpr float kHalfPi_f{0.5 * std ::numbers::pi};
+constexpr float kPi_f{std::numbers::pi_v<float>};
+constexpr float kTwoPi_f{2.0 * std::numbers::pi};
+
+constexpr double kQuaterPi{0.25 * std::numbers::pi};
+constexpr double kHalfPi{std::numbers::pi * 0.5};
+constexpr double kPi{std::numbers::pi};
+constexpr double kTwoPi{2.0 * std::numbers::pi};
+
+constexpr float kInvPi_f{std::numbers::inv_pi_v<float>};
+constexpr double kInvPi{std::numbers::inv_pi};
+
+constexpr float kE_f{std::numbers::e_v<float>};
+constexpr double kE{std::numbers::e};
+
+constexpr float kSqrt2_f{std::numbers::sqrt2_v<float>};
+constexpr double kSqrt2{std::numbers::sqrt2};
+
+
 // Function to rotate a vector towards a target vector
 inline XMVECTOR RotateVectorToward(
     const XMVECTOR& source, // The source vector to rotate
@@ -59,31 +89,73 @@ inline XMVECTOR RotateVectorToward(
   return rotatedVector;
 }
 
-struct AABB
+inline XMVECTOR RotateToward(XMVECTOR quatRot, XMVECTOR target,
+                             XMVECTOR position, float maxAngleStep)
 {
-  XMVECTOR min;
-  XMVECTOR max;
-};
+  // Calculate the direction from the current position to the target target
+  XMVECTOR direction = XMVectorSubtract(target, position);
+  direction = XMVector3Normalize(direction);
 
-constexpr float kEpsilon_f{0.000001};
+  // Extract the current forward vector from the quaternion
+  XMVECTOR forward = XMVector3Rotate(XMVectorSet(0.f, 0.f, 1.f, 0.f), quatRot);
 
-constexpr float kQuaterPi_f{0.25 * std::numbers::pi};
-constexpr float kHalfPi_f{0.5 * std ::numbers::pi};
-constexpr float kPi_f{std::numbers::pi_v<float>};
-constexpr float kTwoPi_f{2.0 * std::numbers::pi};
+  // Compute the angle between the forward vector and the target direction
+  float dotProduct = XMVectorGetX(XMVector3Dot(forward, direction));
+  dotProduct =
+      std::clamp(dotProduct, -1.0f, 1.0f); // Clamp to avoid precision issues
+  float angleBetween = acosf(dotProduct);
 
-constexpr double kQuaterPi{0.25 * std::numbers::pi};
-constexpr double kHalfPi{std::numbers::pi * 0.5};
-constexpr double kPi{std::numbers::pi};
-constexpr double kTwoPi{2.0 * std::numbers::pi};
+  // If the angle is less than or equal to the maximum step, directly face the
+  // target
+  if (angleBetween <= maxAngleStep)
+  {
+    return XMQuaternionRotationMatrix(
+        XMMatrixLookToLH(position, direction, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+  }
 
-constexpr float kInvPi_f{std::numbers::inv_pi_v<float>};
-constexpr double kInvPi{std::numbers::inv_pi};
+  // Calculate the rotation axis (perpendicular vector)
+  XMVECTOR rotationAxis = XMVector3Cross(forward, direction);
+  if (XMVector3LengthSq(rotationAxis).m128_f32[0] < 1e-6f)
+  {
+    // If the vectors are parallel or anti-parallel, use an arbitrary
+    // perpendicular axis
+    rotationAxis = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+  }
+  rotationAxis = XMVector3Normalize(rotationAxis);
 
-constexpr float kE_f{std::numbers::e_v<float>};
-constexpr double kE{std::numbers::e};
+  // Create a quaternion representing the step rotation
+  float angleToRotate = std::min(maxAngleStep, angleBetween);
+  XMVECTOR stepRotation = XMQuaternionRotationAxis(rotationAxis, angleToRotate);
 
-constexpr float kSqrt2_f{std::numbers::sqrt2_v<float>};
-constexpr double kSqrt2{std::numbers::sqrt2};
+  // Update the current quaternion by applying the step rotation
+  XMVECTOR resQuatRot = XMQuaternionMultiply(stepRotation, quatRot);
+  return XMQuaternionNormalize(resQuatRot);
+}
+
+inline XMVECTOR GetTranslationFromMatrix(const XMMATRIX& matrix)
+{
+  // Extract the translation vector from the matrix (fourth column)
+  return XMVectorSet(
+      XMVectorGetX(matrix.r[3]), XMVectorGetY(matrix.r[3]),
+      XMVectorGetZ(matrix.r[3]),
+      0.0f // Ensure the w-component is 0 for a translation vector
+  );
+}
+
+inline XMVECTOR GetQuaternionFromMatrix(const XMMATRIX& matrix)
+{
+  // Extract the rotation quaternion from the transformation matrix
+  return XMQuaternionRotationMatrix(matrix);
+}
+
+inline XMVECTOR GetScalingFromMatrix(const XMMATRIX& matrix)
+{
+  // Extract the scaling vector from the transformation matrix
+  return XMVectorSet(XMVectorGetX(XMVector3Length(matrix.r[0])),
+                     XMVectorGetY(XMVector3Length(matrix.r[1])),
+                     XMVectorGetZ(XMVector3Length(matrix.r[2])),
+                     0.0f // Ensure the w-component is 0 for a scaling vector
+  );
+}
 
 }

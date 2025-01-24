@@ -75,6 +75,72 @@ public:
 
   /* Game Object Transform */
 
+  const XMVECTOR& GetLocalRight() const { return transform->GetLocalRight(); }
+  const XMVECTOR& GetLocalUp() const { return transform->GetLocalUp(); }
+  const XMVECTOR& GetLocalFront() const { return transform->GetLocalFront(); }
+
+  const XMVECTOR& GetGlobalRight() const { return transform->GetGlobalRight(); }
+  const XMVECTOR& GetGlobalUp() const { return transform->GetGlobalUp(); }
+  const XMVECTOR& GetGlobalFront() const { return transform->GetGlobalFront(); }
+
+  const void SetScaling(float scaling) { transform->SetScaling(scaling); }
+  const void SetScaling(float x, float y, float z)
+  {
+    transform->SetScaling(x, y, z);
+  }
+  const void SetScaling(XMVECTOR scaling) { transform->SetScaling(scaling); }
+  void SetRotation(float pitch, float yaw, float roll)
+  {
+    transform->SetRotation(pitch, yaw, roll);
+  }
+  void SetRotation(XMVECTOR euler) { transform->SetRotation(euler);
+  }
+  void SetRotationAroundAxis(XMVECTOR axis, float angle)
+  {
+    transform->SetRotationAroundAxis(axis, angle);
+  }
+  void SetTranslation(float x, float y, float z)
+  {
+    transform->SetTranslation(x, y, z);
+  }
+  void SetTranslation(XMVECTOR translation)
+  {
+    transform->SetTranslation(translation);
+  }
+
+  void Scale(float scaling)
+  { transform->Scale(scaling);
+  }
+  void Scale(float x, float y, float z)
+  {
+    transform->Scale(x, y, z);
+  }
+  void Scale(XMVECTOR scaling)
+  {
+    transform->Scale(scaling);
+  }
+
+  void Rotate(float pitch, float yaw, float roll)
+  {
+    transform->Rotate(pitch, yaw, roll);
+  }
+  void Rotate(XMVECTOR euler) { transform->Rotate(euler); }
+  void RotateAroundXAxis(float angle) { transform->RotateAroundXAxis(angle); }
+  void RotateAroundYAxis(float angle) { transform->RotateAroundYAxis(angle); }
+  void RotateAroundZAxis(float angle) { transform->RotateAroundZAxis(angle); }
+  void RotateAroundAxis(XMVECTOR axis, float angle)
+  {
+    transform->RotateAroundAxis(axis, angle);
+  }
+  void RotateToward(XMVECTOR target, float maxAngleStep) {
+    transform->RotateToward(target, maxAngleStep);
+  }
+
+  void Translate(float x, float y, float z) { transform->Translate(x, y, z); }
+  void Translate(XMVECTOR translation) { transform->Translate(translation); }
+
+  void SetLocalTransform(XMMATRIX transform) { SetLocalTransform(transform); }
+
   const XMMATRIX& GetLocalTransform() const
   {
     return transform->localTransform;
@@ -154,6 +220,7 @@ public:
   // Game loop events
   virtual void OnAwake() {}
   virtual void OnActivated() {}
+  virtual void OnRender() {}
 
   void Activate() { 
     if (status == EStatus_Active)
@@ -178,7 +245,7 @@ public:
   virtual void PreUpdate(float dt) {}
   virtual void Update(float dt) {}
   virtual void PostUpdate(float dt) {}
-
+  
 private:
   void RegisterMeshComponentToWorld(MeshComponent* meshComp);
   void RegisterMeshComponentToWorld(SkeletalMeshComponent* skeletalMeshComp);

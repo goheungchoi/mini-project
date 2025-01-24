@@ -175,7 +175,7 @@ void World::FixedUpdate(float fixedRate)
 
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (!gameObject->status == EStatus_Active)
+    if (!(gameObject->status == EStatus_Active))
       continue;
 
     gameObject->FixedUpdate(fixedRate);
@@ -267,7 +267,7 @@ void World::PreUpdate(float dt) {
 
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (!gameObject->status == EStatus_Active)
+    if (!(gameObject->status == EStatus_Active))
       continue;
 
     gameObject->PreUpdate(dt);
@@ -281,7 +281,7 @@ void World::Update(float dt)
 
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (!gameObject->status == EStatus_Active)
+    if (!(gameObject->status == EStatus_Active))
       continue;
 
     gameObject->Update(dt);
@@ -295,7 +295,7 @@ void World::AnimationUpdate(float dt)
 
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (!gameObject->status == EStatus_Active)
+    if (!(gameObject->status == EStatus_Active))
       continue;
 
     if (auto* animComp = gameObject->GetComponent<AnimatorComponent>();
@@ -313,11 +313,22 @@ void World::PostUpdate(float dt)
 
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (!gameObject->status == EStatus_Active)
+    if (!(gameObject->status == EStatus_Active))
       continue;
 
     gameObject->PostUpdate(dt);
   }
+
+
+  // Update hierarchical transforms
+  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
+  {
+    if (!(gameObject->status == EStatus_Active))
+      continue;
+
+
+  }
+
 }
 
 void World::RenderGameObjects() {
@@ -333,6 +344,8 @@ void World::RenderGameObjects() {
   {
     if (!gameObject->status == EStatus_Active)
       continue;
+
+    gameObject->OnRender();
 
     if (auto* meshComp = gameObject->GetComponent<MeshComponent>();
         meshComp)

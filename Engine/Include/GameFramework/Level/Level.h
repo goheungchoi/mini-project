@@ -18,7 +18,7 @@ public:
   GameObjectNameMap gameObjectNameMap;
   std::list<GameObject*> gameObjects;
 
-  Level(const std::string& name);
+  Level(const std::string& name) : name{name} {}
   virtual ~Level() {}
 
   class World* GetWorld() { return world; }

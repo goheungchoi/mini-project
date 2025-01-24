@@ -10,7 +10,7 @@
 
 class World
 {
-private:
+public:
 
   IRenderer* _renderer{nullptr};
 
@@ -160,6 +160,7 @@ public:
     }
     else
     {
+      // TODO: Debugging
       // Create node game objects.
       for (int i = 0; i < data.nodes.size(); ++i)
       {
@@ -292,7 +293,6 @@ public:
 
   /* Game Loop Flow */
   
-
   void InitialStage();
 
   void FixedUpdate(float fixedRate);
