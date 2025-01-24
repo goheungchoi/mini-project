@@ -71,19 +71,19 @@ public:
     _geometry = new GeometryPrimitive(_device);
     ID3D11DeviceContext* dc = _device->GetImmContext();
     dc->VSSetConstantBuffers(
-        1, 1,
+        2, 1,
         _CB->_constantBuffers[static_cast<UINT>(MeshCBType::World)]
             .GetAddressOf());
     dc->PSSetConstantBuffers(
-        2, 1,
+        3, 1,
         _CB->_constantBuffers[static_cast<UINT>(MeshCBType::PixelData)]
             .GetAddressOf());
     dc->VSSetConstantBuffers(
-        3, 1,
+        4, 1,
         _CB->_constantBuffers[static_cast<UINT>(MeshCBType::BoneMatrix)]
             .GetAddressOf());
-    dc->VSSetConstantBuffers(0, 1, _frameCB->_constantBuffer.GetAddressOf());
-    dc->PSSetConstantBuffers(0, 1, _frameCB->_constantBuffer.GetAddressOf());
+    dc->VSSetConstantBuffers(1, 1, _frameCB->_constantBuffer.GetAddressOf());
+    dc->PSSetConstantBuffers(1, 1, _frameCB->_constantBuffer.GetAddressOf());
     _transparentMeshes.resize(2);
     _opaqueMesh.resize(2);
     _shadowMesh.resize(2);
