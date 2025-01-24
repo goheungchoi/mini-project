@@ -102,6 +102,10 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _renderer->AddShadow(animSkeletal1->GetHandle());
   _renderer->CreateMesh(animSkeletal2->GetHandle());
   _renderer->AddShadow(animSkeletal2->GetHandle());
+
+#ifdef USED2D
+  _renderer->CreateSprite("Textures\Test_QuestUI_1.png");
+#endif // USED2D
 }
 
 void GameApp::Execute()

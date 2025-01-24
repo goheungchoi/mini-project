@@ -1,6 +1,74 @@
 ﻿#include "D2DRenderer.h"
 #include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/SwapChain.h"
+#include "Renderer/DX11/Internal/Resources/Material.h"
+
+Sprite::Sprite(LPCSTR path, Device* pDevice)
+{
+  _pDevice = pDevice;
+
+  Init(path);
+}
+
+Sprite::~Sprite()
+{
+  UnInit();
+}
+
+void Sprite::Init(LPCSTR path)
+{
+  // Texture 생성
+  TextureHandle handle = LoadTexture(path, TextureType::kUnknown);
+  TextureData data;
+  data = AccessTextureData(handle);
+  _pTexture = Texture::CreateSRV(_pDevice, data);
+
+  _textureSize = CalculateTextureSize();
+}
+
+void Sprite::UnInit()
+{
+  // Texture의 해제
+  if (_pTexture)
+  {
+    SAFE_RELEASE(_pTexture);
+  }
+}
+
+
+Vector2 Sprite::CalculateTextureSize()
+{
+  if (_pTexture == nullptr)
+    return Vector2(0, 0);
+
+  ID3D11Resource* resource = nullptr;
+  _pTexture->GetResource()->GetResource(&resource);
+
+  ID3D11Texture2D* tex2D = nullptr;
+  HRESULT hr = resource->QueryInterface<ID3D11Texture2D>(&tex2D);
+  if (FAILED(hr))
+  {
+    resource->Release();
+    return Vector2(0, 0);
+  }
+
+  D3D11_TEXTURE2D_DESC desc;
+  tex2D->GetDesc(&desc);
+
+  tex2D->Release();
+  resource->Release();
+
+  return Vector2(desc.Width, desc.Height);
+}
+
+void Sprite::Render(DirectX::SpriteBatch* pSpriteBatch)
+{
+  auto textureSRV = _pTexture->GetResource().Get();
+
+  pSpriteBatch->Draw(textureSRV, _pos);
+}
+
+
 D2DRenderer::~D2DRenderer()
 {
   UnInit();
@@ -33,9 +101,13 @@ bool D2DRenderer::Init(Device* device, SwapChain* swapChain,
 
   CreateD2DRenderTarget();
 
+  // SpriteBatch 생성 및 설정
+  _pSpriteBatch =
+      std::make_unique<DirectX::SpriteBatch>(_pDevice->GetImmContext());
+  _pSpriteBatch->SetViewport(_viewport);
+
   // Font 초기화
   _pFont = new Font(_pD2D1DeviceContext, _pBrush);
-  _pUIRenderer = new UIRenderer(_pDevice->GetImmContext(), _viewport);
 
   return true;
 }
@@ -70,6 +142,9 @@ void D2DRenderer::CreateD2DRenderTarget()
 
 void D2DRenderer::UnInit()
 {
+  // SpriteBatch의 해제
+  if (_pSpriteBatch) { _pSpriteBatch.reset(); }
+
   SAFE_RELEASE(_pFont);
   Com::SAFE_RELEASE(_pBrush);
   Com::SAFE_RELEASE(_pID2D1Bitmap);
@@ -96,6 +171,40 @@ void D2DRenderer::BeginDraw()
 void D2DRenderer::EndDraw()
 {
   _pD2D1DeviceContext->EndDraw();
+}
+
+void D2DRenderer::CreateSprite(LPCSTR path)
+{
+  // IMG 객체를 생성하고 반환
+  Sprite* sprite = new Sprite(path, _pDevice);
+  _Sprites.push_back(sprite);
+}
+
+void D2DRenderer::DrawSprites()
+{
+  // 현재 DepthStencilState 저장
+  ID3D11DepthStencilState* prevDepthState = nullptr;
+  UINT stencilRef;
+
+  _pDevice->GetImmContext()->OMGetDepthStencilState(&prevDepthState,
+                                                    &stencilRef);
+
+
+  _pSpriteBatch->Begin();
+
+  // 모든 Sprite Render
+  if (!_Sprites.empty())
+  {
+    for (auto sprite : _Sprites)
+    {
+      sprite->Render(_pSpriteBatch.get());
+    }
+  }
+
+  _pSpriteBatch->End();
+
+  // DepthStencilState 복원
+  _pDevice->GetImmContext()->OMSetDepthStencilState(prevDepthState, stencilRef);
 }
 
 
@@ -204,27 +313,3 @@ IDWriteTextFormat* Font::FindFont(const std::wstring& fontName)
   return nullptr;
 }
 
-UIRenderer::UIRenderer(ID3D11DeviceContext* pD3D1DeviceContext,
-                       D3D11_VIEWPORT viewport)
-{
-  _pD3D1DeviceContext = pD3D1DeviceContext;
-  _viewport = viewport;
-
-  Init();
-}
-
-UIRenderer::~UIRenderer()
-{
-
-}
-
-void UIRenderer::Init()
-{
-  spriteBatch = std::make_unique<DirectX::SpriteBatch>(_pD3D1DeviceContext);
-  spriteBatch->SetViewport(_viewport);
-}
-
-void UIRenderer::UnInit()
-{
-  spriteBatch.reset();
-}

@@ -5,8 +5,33 @@ class Device;
 class SwapChain;
 class Font;
 class UIRenderer;
+class Texture;
 
-class D2DRenderer    // D2D.ver
+class Sprite
+{
+public:
+  Sprite(LPCSTR path, Device* pDevice);
+  ~Sprite();
+
+private:
+  void Init(LPCSTR path);
+  void UnInit();
+  Vector2 CalculateTextureSize();
+
+  public:
+  void Render(DirectX::SpriteBatch* pSpriteBatch);
+  void SetPos(Vector2 pos) { _pos = pos; }
+
+private:
+  Texture* _pTexture = nullptr;
+  Vector2 _textureSize{};
+  Vector2 _pos{};
+
+  Device* _pDevice = nullptr;
+
+};
+
+class D2DRenderer // D2D.ver
 {
 public:
   D2DRenderer() = default;
@@ -21,11 +46,11 @@ public:
   void BeginDraw();
   void EndDraw();
 
-  //ID2D1Bitmap1* ConvertDDSToD2DBitmap1(TextureData data);
+  void CreateSprite(LPCSTR path);
+  void DrawSprites();
 
 public:
   Font* _pFont = nullptr;
-  UIRenderer* _pUIRenderer = nullptr;
 
 private:
   Device* _pDevice = nullptr;
@@ -41,6 +66,8 @@ private:
   ID2D1SolidColorBrush* _pBrush = nullptr;
   ID2D1Bitmap1* _pID2D1Bitmap = nullptr;
 
+  std::unique_ptr<DirectX::SpriteBatch> _pSpriteBatch = nullptr;
+  std::vector<Sprite*> _Sprites;
 };
 
 
@@ -79,23 +106,9 @@ private:
   ID2D1DeviceContext* _pD2D1DeviceContext = nullptr;
   ID2D1SolidColorBrush* _pBrush = nullptr;
   IDWriteFactory* pDWriteFactory = nullptr;
+
+  // 컴퓨터에 설치되어있는 글꼴 말고 폴더에 있는 글꼴 가져다 쓰는 코드 추가 해야함
 };
 
 
 
-class UIRenderer
-{
-public:
-  UIRenderer(ID3D11DeviceContext* pD3D1DeviceContext, D3D11_VIEWPORT viewport);
-  ~UIRenderer();
-
-private:
-  void Init();
-  void UnInit();
-
-  private:
-  ID3D11DeviceContext* _pD3D1DeviceContext = nullptr;
-  D3D11_VIEWPORT _viewport{};
-
-  std::unique_ptr<DirectX::SpriteBatch> spriteBatch = nullptr;
-};

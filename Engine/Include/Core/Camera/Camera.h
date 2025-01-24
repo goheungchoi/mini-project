@@ -2,6 +2,8 @@
 
 #include "Core/Math/MathUtils.h"
 
+#include <iostream>
+
 /**
  * @brief Camera class
  */

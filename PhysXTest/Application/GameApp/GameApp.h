@@ -3,6 +3,7 @@
 #include "GameEngine/GameEngine.h"
 #include "GameFramework/GameObject/GameObject.h"
 #include "Renderer/IRenderer.h"
+struct PhyjixRay;
 class IPhyjixEngine;
 class IPhyjixWorld;
 class RigidbodyComponent;
@@ -41,8 +42,11 @@ private:
   GameObject* testobject = nullptr;
   RigidbodyComponent* testrigidbody = nullptr;
 
-    GameObject* testobject2 = nullptr;
+  GameObject* testobject2 = nullptr;
   RigidbodyComponent* testrigidbody2 = nullptr;
+
+  PhyjixRay* ray;
+  Color debugcolor;
 
   bool _bCameraMove = false;
 };

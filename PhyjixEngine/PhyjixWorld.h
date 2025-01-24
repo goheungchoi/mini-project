@@ -5,6 +5,13 @@
 class RigidBody;
 class IRigidBody;
 class PhyjixEventHandler;
+struct PhyjixRay
+{
+  physx::PxVec3 Pos{};
+  physx::PxVec3 Direction{};
+
+};
+
 
 class PhyjixWorld : public IPhyjixWorld
 {
@@ -29,6 +36,19 @@ public:
   void Update(float deltaTime) override;
   IRigidBody* GetGroundActor() override;
 
+
+  
+  PhyjixRay* CreateRay(DirectX::SimpleMath::Vector3 pos,
+                       DirectX::SimpleMath::Vector2 mousepos,
+                               DirectX::SimpleMath::Matrix view,
+                               DirectX::SimpleMath::Matrix projection,
+                               DirectX::SimpleMath::Vector2 ScreenSize) override;
+  void CastRay(PhyjixRay* ray) override;
+
+  void LeftClick() { isLClicked = true; }
+  void RightClick() { isRClicked = true; }
+
+
 private:
   float elapsedTimer = 0.f;
   physx::PxScene* _scene = nullptr;
@@ -43,5 +63,8 @@ private:
   physx::PxRigidStatic* groundPlane = nullptr;
 
   physx::PxMaterial* mMaterial = nullptr;
+
+  BOOL isLClicked = false;
+  BOOL isRClicked = false;
 
 };

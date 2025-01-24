@@ -7,19 +7,20 @@ enum class eCollisionEventType
   eTrigger,
   eWake,
   eSleep,
+  eHover,
+  eLClick,
+  eRClick,
   eCollisionTypeEnd,
 };
 
 class IRigidBody
 {
-
 public:
   virtual ~IRigidBody() = default;
 
   virtual void SetCollisionEvent(eCollisionEventType collisiontype,
                                  IRigidBody* other,
                                  std::function<void(void)> event) = 0;
-
   virtual void SetLinVelocity(DirectX::SimpleMath::Vector3 vel) = 0;
   virtual void SetMaxLinVelocity(float vel) = 0;
   virtual void SetAngVelocity(DirectX::SimpleMath::Vector3 vel) = 0;

@@ -1,0 +1,25 @@
+{
+    "uuid": "5eb5f504a01b5e7888d35376c7db6859",
+    "import_path": "Models\\GlbTest\\Cube.0080.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Cube.0080",
+        "bounding_box": [
+            [
+                -0.7136855125427246,
+                -0.1326534003019333,
+                -0.8116669654846191
+            ],
+            [
+                9.286314010620117,
+                0.0,
+                9.188333511352539
+            ]
+        ],
+        "num_vertices": 20,
+        "num_indices": 30,
+        "material": "Models\\GlbTest\\MuseumTile.0010.mat",
+        "bones": [],
+        "bone_weights": []
+    }
+}
