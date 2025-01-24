@@ -266,6 +266,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\Objects\Swapchain.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ComputeEffect.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\DeferredPass.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\PostProcess\PostProcess.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\RenderPass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\Shader.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShaderModule.h" />
