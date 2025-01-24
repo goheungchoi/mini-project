@@ -11,6 +11,11 @@
 #include "GameFramework/Components/SkeletalMeshComponent.h"
 #include "GameFramework/Components/TransformComponent.h"
 
+#ifdef _DEBUG
+#include <imgui.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_win32.h>
+#endif
 void World::Initialize(HWND hwnd, const std::wstring& title) {
   _renderer = new DX11Renderer();
   _renderer->Init_Win32(kScreenWidth, kScreenHeight, nullptr, &hwnd);
@@ -18,7 +23,7 @@ void World::Initialize(HWND hwnd, const std::wstring& title) {
       "Textures/BakerEnv.dds", "Textures/BakerSpecularBRDF_LUT.dds",
       "Textures/BakerDiffuseIrradiance.dds", "Textures/BakerSpecularIBL.dds");
 
-  _defaultCamera = new Camera(kScreenWidth, kScreenHeight);
+  _defaultCamera = new Camera(kScreenWidth, kScreenHeight,XM_PIDIV4/4*6);
   SetMainCamera(_defaultCamera);
 }
 
@@ -128,6 +133,7 @@ void World::RegisterMeshComponent(MeshComponent* meshComp)
     return;
 
   _renderer->CreateMesh(meshComp->GetHandle());
+  _renderer->AddShadow(meshComp->GetHandle());
 }
 
 void World::RegisterMeshComponent(SkeletalMeshComponent* skeletalMeshComp) {
@@ -319,7 +325,7 @@ void World::PostUpdate(float dt)
     gameObject->PostUpdate(dt);
   }
 }
-
+static DirectionalLight _mainLight;
 void World::RenderGameObjects() {
   if (!_currentLevel || changingLevel)
     return;
@@ -327,8 +333,20 @@ void World::RenderGameObjects() {
   Matrix view = mainCamera->GetViewTransform();
   Matrix projection = mainCamera->GetProjectionMatrix();
   _renderer->BeginFrame(mainCamera->GetPosition(), view, projection,
-      DirectionalLight{{1.f, 1.f, 0.f, 0.f}, {1.f, 1.f, 1.f, 1.f}});
-
+                        _mainLight);
+  #ifdef _DEBUG
+  if (ImGui::Begin("main Light"))
+  {
+    float _mainLightDir[3] = {_mainLight.direction.x, _mainLight.direction.y,
+                              _mainLight.direction.z};
+    ImGui::SliderFloat3("direction", _mainLightDir, -1.f, 1.f);
+    _mainLight.direction.x = _mainLightDir[0];
+    _mainLight.direction.y = _mainLightDir[1];
+    _mainLight.direction.z = _mainLightDir[2];
+    _mainLight.radiance = {1.f, 1.f, 1.f, 1.f};
+  }
+  ImGui::End();
+  #endif
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
     if (!gameObject->status == EStatus_Active)
@@ -339,7 +357,7 @@ void World::RenderGameObjects() {
     {
       auto handle = meshComp->GetHandle();
       const auto& transform = gameObject->GetWorldTransform();
-      _renderer->BeginDraw(handle, transform);
+      _renderer->BeginDraw(handle, transform*XMMatrixScaling(100.f,100.f,100.f));
       _renderer->DrawMesh(handle);
     }
     else if (auto* meshComp = gameObject->GetComponent<SkeletalMeshComponent>();

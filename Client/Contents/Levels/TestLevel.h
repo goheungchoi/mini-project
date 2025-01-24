@@ -16,7 +16,7 @@ public:
 	
   virtual void PrepareLevel() override
   {
-    sponzaHandle = LoadModel("Models\\Sponza\\Sponza.gltf");
+    sponzaHandle = LoadModel("Models\\GlbTest\\glbTest.glb");
   }
   virtual void BeginLevel() override {
     testObject = world->CreateGameObjectFromModel(sponzaHandle);
