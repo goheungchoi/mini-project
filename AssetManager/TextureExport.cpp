@@ -53,9 +53,9 @@ DXGI_FORMAT todx(ImageFormat format, bool srgb)
     else
       return DXGI_FORMAT_BC1_UNORM;
   case ImageFormat::R8_UINT:
-    return DXGI_FORMAT_R8_UINT;
+    return DXGI_FORMAT_R8_UNORM;
   case ImageFormat::R8G8_UINT:
-    return DXGI_FORMAT_R8G8_UINT;
+    return DXGI_FORMAT_R8G8_UNORM;
   case ImageFormat::R8G8B8A8_UINT:
       return DXGI_FORMAT_R8G8B8A8_UNORM;
   case ImageFormat::R16_FLOAT:

@@ -26,8 +26,8 @@ public:
 	
   virtual void PrepareLevel() override
   {
-    // sponzaHandle = LoadModel("Models\\Maps\\Map002_Museum.glb");
-    sponzaHandle = LoadModel("Models\\Sponza\\Sponza.gltf");
+    sponzaHandle = LoadModel("Models\\Maps\\Map002_Museum.glb");
+    // sponzaHandle = LoadModel("Models\\Sponza\\Sponza.gltf");
     testAnimationHandle = LoadModel("Models\\SkinningTest\\SkinningTest.fbx");
   }
 

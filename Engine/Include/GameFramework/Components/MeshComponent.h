@@ -9,12 +9,14 @@ class MeshComponent : public ComponentBase
 public:
   bool isVisible{true};
   bool bCastShadow{true};
-  MeshHandle handle;
+  std::vector<MeshHandle> subMeshHandles;
 
 	MeshComponent(class GameObject* owner) : ComponentBase(owner) {}
 
-  void SetHandle(MeshHandle handle) { this->handle = handle; }
-	MeshHandle GetHandle() { return handle; }
+	void AddSubMesh(MeshHandle handle) { subMeshHandles.push_back(handle); }
+  void RemoveSubMesh(MeshHandle handle) { std::erase(subMeshHandles, handle); }
+  const auto& GetSubMeshes() { return subMeshHandles; }
+
   void RegisterMeshToWorld();
   void SetVisible(bool visible) { isVisible = visible; }
   void SetCastShadow(bool shadow) { bCastShadow = shadow; }

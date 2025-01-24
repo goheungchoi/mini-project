@@ -295,7 +295,7 @@ public:
         continue;
 
 			// Check if this bone is in the current animation.
-      XMMATRIX nodeTransform{node.transform};
+      XMMATRIX nodeTransform{XMMatrixIdentity()};
       if (auto it = boneChannels.find(node.boneId); it != boneChannels.end())
       {
         // uint32_t idx = it->second;

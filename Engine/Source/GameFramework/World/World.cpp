@@ -132,9 +132,21 @@ void World::RegisterMeshComponent(MeshComponent* meshComp)
   if (!meshComp)
     return;
 
-  _renderer->CreateMesh(meshComp->GetHandle());
-  if (meshComp->bCastShadow)
-    _renderer->AddShadow(meshComp->GetHandle());
+	if (meshComp->bCastShadow)
+  {
+    for (auto handle : meshComp->GetSubMeshes())
+    {
+      _renderer->CreateMesh(handle);
+      _renderer->AddShadow(handle);
+    }
+  }
+  else
+  {
+    for (auto handle : meshComp->GetSubMeshes())
+    {
+      _renderer->CreateMesh(handle);
+    }
+	}
 }
 
 void World::RegisterMeshComponent(SkeletalMeshComponent* skeletalMeshComp) {
@@ -405,21 +417,23 @@ void World::RenderGameObjects() {
     if (auto* meshComp = gameObject->GetComponent<MeshComponent>();
         meshComp)
     {
-      auto handle = meshComp->GetHandle();
       const auto& transform = gameObject->GetWorldTransform();
-      _renderer->BeginDraw(handle, XMMatrixIdentity()/*transform*XMMatrixScaling(100.f,100.f,100.f)*/);
-      _renderer->DrawMesh(handle);
+      for (auto handle : meshComp->GetSubMeshes())
+      {
+        _renderer->BeginDraw(handle, transform);
+        _renderer->DrawMesh(handle);
+			}
     }
     // Draw skeletal mesh
-    else if (auto* meshComp = gameObject->GetComponent<SkeletalMeshComponent>();
-             meshComp)
+    else if (auto* skeletalMeshComp = gameObject->GetComponent<SkeletalMeshComponent>();
+             skeletalMeshComp)
     {
-      auto handle = meshComp->GetHandle();
+      auto handle = skeletalMeshComp->GetHandle();
       const auto& transform = gameObject->GetWorldTransform();
       _renderer->BeginDraw(handle, transform *  // NOTE: Remove the scaling and rotation.
                                        XMMatrixScaling(1.f, 1.f, 1.f) *
                                        XMMatrixRotationAxis({1.f,0.f,0.f},-XM_PIDIV2));
-      _renderer->DrawMesh(handle, meshComp->boneTransforms);
+      _renderer->DrawMesh(handle, skeletalMeshComp->boneTransforms);
     }
   }
 

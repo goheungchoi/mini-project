@@ -98,18 +98,19 @@ public:
 
     // TODO: Fix the logic!
     const ModelData& data = AccessModelData(modelHandle);
-    const bool isSkeleton = !data.skeleton.IsInvalid();
+    if (data.nodes.empty())
+    {
+      throw std::runtime_error("The model data doesn't have any nodes to build!");
+		}
 
-    // Root game object
-    GameObject* rootGameNode = CreateGameObject<GameObject>();
-    rootGameNode->SetName(data.nodes[0].name);
-    rootGameNode->transform->globalTransform = data.nodes[0].transform;
+
+    const bool isSkeleton = !data.skeleton.IsInvalid();
 
     // Create a right-sibling tree of the game objects.
     std::vector<GameObject*> gameObjNodes;
     gameObjNodes.resize(data.nodes.size());
-    gameObjNodes[0] = rootGameNode;
 
+		// Check if it's a model with skeletal data.
     if (isSkeleton)
     {
       // Fetch the skeleton data.
@@ -120,6 +121,12 @@ public:
       // Find the root bone of the skeletal mesh components.
       std::vector<std::pair<SkeletalMeshComponent*, BoneId>>
           skeletalMeshRootBonePair;
+
+			// Root game object
+      GameObject* rootGameNode = CreateGameObject<GameObject>();
+      rootGameNode->SetName(data.nodes[0].name);
+      rootGameNode->SetLocalTransform(data.nodes[0].transform);
+      gameObjNodes[0] = rootGameNode;
 
       // Create node game objects
       for (int i = 1; i < data.nodes.size(); ++i)
@@ -132,22 +139,21 @@ public:
         gameObjNodes[i] = newNode;
         gameObjectBoneId[skeleton.nodes[i].boneId] = newNode;
 
-        // Create game objects with mesh components.
-        for (MeshHandle meshHandle : data.nodes[i].meshes)
+        // Create a skeletal game object.
+        if (!data.nodes[i].meshes.empty())
         {
-          const MeshData& meshData = AccessMeshData(meshHandle);
+          MeshHandle meshHandle = data.nodes[i].meshes[0];
+					const MeshData& meshData = AccessMeshData(meshHandle);
 
           if (meshData.bones.empty())
           {
-            // Static mesh
-            MeshComponent* meshComponent =
-                newNode->CreateComponent<MeshComponent>();
-            meshComponent->SetHandle(meshHandle);
-            meshComponent->RegisterMeshToWorld();
+            // Static mesh is not allowed.
+            throw std::runtime_error(
+                "Static mesh is not allowed for a skeletal model.");
           }
           else
           {
-            // Skeletal mesh
+            // Create a skeletal mesh.
             SkeletalMeshComponent* skeletalMeshComponent =
                 newNode->CreateComponent<SkeletalMeshComponent>();
             skeletalMeshComponent->SetHandle(meshHandle);
@@ -157,12 +163,13 @@ public:
             skeletalMeshRootBonePair.push_back(
                 {skeletalMeshComponent, rootBoneNode});
           }
-        }
+				}
 
+				// Attach it to the parent node.
         gameObjNodes[data.nodes[i].parent]->AddChild(newNode);
       }
 
-      // Bine the root bones to the skeletal mesh.
+      // Bind the root bones to the skeletal mesh.
       for (auto [skeletalMesh, boneId] : skeletalMeshRootBonePair)
       {
         auto* gameObject = gameObjectBoneId[boneId];
@@ -171,43 +178,33 @@ public:
     }
     else
     {
-      // TODO: Debugging
-      // Create node game objects.
-      for (int i = 0; i < data.nodes.size(); ++i)
+			for (int i = 0; i < data.nodes.size(); ++i)
       {
-        GameObject* newNode;
-        if (i > 0)
-        {
-          newNode = CreateGameObject<GameObject>();
-          gameObjNodes[i] = newNode;
-        }
-        else
-        {
-          newNode = rootGameNode;
-        }
+				// Create a new node game object.
+        GameObject* newNode = CreateGameObject<GameObject>();
+        newNode->SetName(data.nodes[i].name);
+        newNode->SetLocalTransform(data.nodes[i].transform);
+        gameObjNodes[i] = newNode;
 
-        for (MeshHandle meshHandle : data.nodes[i].meshes)
+				// Add a mesh component if any.
+				if (!data.nodes[i].meshes.empty())
         {
-          const MeshData& meshData = AccessMeshData(meshHandle);
-
-          GameObject* meshNode = CreateGameObject<GameObject>();
-          meshNode->SetName(meshData.name);
-          meshNode->transform->globalTransform = data.nodes[i].transform;
-
           MeshComponent* meshComponent =
-              meshNode->CreateComponent<MeshComponent>();
-          meshComponent->SetHandle(meshHandle);
+              newNode->CreateComponent<MeshComponent>();
+					for (auto handle : data.nodes[i].meshes)
+          {
+						meshComponent->AddSubMesh(handle);
+					}
           meshComponent->RegisterMeshToWorld();
+				}
 
-          newNode->AddChild(meshNode);
-        }
-
+				// Attach it to the parent node.
         if (data.nodes[i].parent >= 0)
-          gameObjNodes[i]->AddChild(newNode);
-      }
+					gameObjNodes[data.nodes[i].parent]->AddChild(newNode);
+			}
     }
 
-    return rootGameNode;
+    return gameObjNodes[0];
   }
 
   void RegisterGameObjectName(GameObject* gameObject);
