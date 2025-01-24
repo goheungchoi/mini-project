@@ -125,7 +125,7 @@ public:
 			// Root game object
       GameObject* rootGameNode = CreateGameObject<GameObject>();
       rootGameNode->SetName(data.nodes[0].name);
-      rootGameNode->SetLocalTransform(data.nodes[0].transform);
+      rootGameNode->SetLocalTransform(XMMatrixIdentity());
       gameObjNodes[0] = rootGameNode;
 
       // Create node game objects
@@ -134,7 +134,7 @@ public:
         // Create a node game object.
         GameObject* newNode = CreateGameObject<GameObject>();
         newNode->SetName(data.nodes[i].name);
-        newNode->SetLocalTransform(data.nodes[i].transform);
+        newNode->SetLocalTransform(XMMatrixIdentity());
 
         gameObjNodes[i] = newNode;
         gameObjectBoneId[skeleton.nodes[i].boneId] = newNode;
@@ -183,7 +183,7 @@ public:
 				// Create a new node game object.
         GameObject* newNode = CreateGameObject<GameObject>();
         newNode->SetName(data.nodes[i].name);
-        newNode->SetLocalTransform(data.nodes[i].transform);
+        newNode->SetLocalTransform(XMMatrixIdentity());
         gameObjNodes[i] = newNode;
 
 				// Add a mesh component if any.

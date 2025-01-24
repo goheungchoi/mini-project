@@ -29,13 +29,6 @@
         TransformComponent* currTransform = transformStack.top();
         transformStack.pop();
 
-        /*std::string nodeName = currTransform->GetOwner()->name;
-        std::string skeletalNodeName = skeleton->nodes[index].name;
-        if (nodeName != skeletalNodeName)
-        {
-          throw std::runtime_error("Node name mismatch!");
-        }*/
-
         for (auto* child : currTransform->children)
         {
           std::string nodeName = child->GetOwner()->name;
@@ -75,7 +68,7 @@
 
         const auto* channel = _currState->_animation->FindChannel(
             currTransform->GetOwner()->GetName());
-        currTransform->localTransform = channel->GetLocalTransform();
+        currTransform->SetLocalTransform(channel->GetLocalTransform());
 
         for (auto* child : currTransform->children)
         {

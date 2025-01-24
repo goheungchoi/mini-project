@@ -279,7 +279,7 @@ public:
 
     _currentAnimTime += GetTicksPerSecond() * dt;
     _currentAnimTime = fmod(_currentAnimTime, GetDuration());
-    //_currentAnimTime = 0.f;
+    _currentAnimTime = 0.f;
 		// Update the channels first
     for (auto& [_, channel] : boneChannels)
     {
@@ -295,7 +295,7 @@ public:
         continue;
 
 			// Check if this bone is in the current animation.
-      XMMATRIX nodeTransform{XMMatrixIdentity()};
+      XMMATRIX nodeTransform{node.transform};
       if (auto it = boneChannels.find(node.boneId); it != boneChannels.end())
       {
         // uint32_t idx = it->second;
