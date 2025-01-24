@@ -1122,29 +1122,57 @@ void ModelExporter::ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
     weightVector.reserve(kMaxBoneInfluences);
 	}
 
+	// Original bone index mapper
+  std::unordered_map<BoneId, uint32_t> boneIdOriginalIndexMap;
+
   // Process bone influences
-  for (uint32_t boneIdx = 0; boneIdx < mesh->mNumBones; ++boneIdx)
+  for (BoneId boneIdx = 0; boneIdx < mesh->mNumBones; ++boneIdx)
   {
     aiBone* currBone = mesh->mBones[boneIdx];
 
 		const std::string boneName{currBone->mName.C_Str()};
 		const uint32_t boneId = _skeleton.boneNameIdMap[boneName];
+    if (boneId == 59)
+    {
+      int a = 0;
+		}
+
+		// Map the original bone index to the boneId
+		boneIdOriginalIndexMap[boneId] = boneIdx;
 		
 		// Retrieve the bone info
 		Bone& bone = _skeleton.bones[boneId];
 		bone.offset = currBone->mOffsetMatrix;
     bone.offset.Transpose();
     geoMesh.bones[boneIdx] = bone;
+  }
 
-		// Retrieve the influences of the bone to vertices
+	// Sort the bone array, so that the root node comes first.
+  std::sort(geoMesh.bones.begin(), geoMesh.bones.end(),
+            [](const Bone& lhs, const Bone& rhs) { return lhs.id < rhs.id; });
+
+	int sortedIndex = 0;
+	for (Bone& bone : geoMesh.bones)
+  {
+    if (sortedIndex == 59)
+    {
+      int a = 0;
+		}
+
+    uint32_t originalIndex = boneIdOriginalIndexMap[bone.id];
+    aiBone* currBone = mesh->mBones[originalIndex];
+
+    // Retrieve the influences of the bone to vertices
     uint32_t numWeights = currBone->mNumWeights;
-		auto* vertexWeights = currBone->mWeights;
+    auto* vertexWeights = currBone->mWeights;
     for (uint32_t weightIdx = 0; weightIdx < numWeights; ++weightIdx)
     {
       uint32_t vertexId = vertexWeights[weightIdx].mVertexId;
       float weight = vertexWeights[weightIdx].mWeight;
-      geoMesh.vertexBoneWeights[vertexId].push_back({bone.id, weight});
-		}
+      geoMesh.vertexBoneWeights[vertexId].push_back({sortedIndex, weight});
+    }
+		// Next sorted index of the bone.
+    sortedIndex++;
   }
 
   // Post-process bone influence info for optimization
@@ -1164,28 +1192,24 @@ void ModelExporter::ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
     }
   }
 
-  // Sort the bone array, so that the root node comes first.
-  std::sort(geoMesh.bones.begin(), geoMesh.bones.end(), [](const Bone& lhs, const Bone& rhs) { return lhs.id < rhs.id; });
+  
+  //std::unordered_map<BoneId, uint32_t> boneIndexMap;
+  //uint32_t index = 0;
+  //for (Bone& bone : geoMesh.bones)
+  //{
+  //  boneIndexMap[bone.id] = index++;
+  //}
 
-  std::unordered_map<BoneId, uint32_t> boneIndexMap;
-  uint32_t index = 0;
-  for (Bone& bone : geoMesh.bones)
-  {
-    boneIndexMap[bone.id] = index++;
-  }
-
-  // Match the weights to the bone array.
-  size_t i = 0;
-  for (auto& vertexWeights : geoMesh.vertexBoneWeights)
-  {
-    for (VertexBoneWeight& weight : vertexWeights)
-    {
-      if (i == 10000)
-        continue;
-      weight.boneId = boneIndexMap[weight.boneId];
-      ++i;
-		}
-  }
+  //// Match the weights to the bone array.
+  //size_t i = 0;
+  //for (auto& vertexWeights : geoMesh.vertexBoneWeights)
+  //{
+  //  for (VertexBoneWeight& weight : vertexWeights)
+  //  {
+  //    weight.boneId = boneIndexMap[weight.boneId];
+  //    ++i;
+		//}
+  //}
 }
 
 void ModelExporter::ExportSkeleton(Skeleton& skeleton) {

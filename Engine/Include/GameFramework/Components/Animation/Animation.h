@@ -279,7 +279,7 @@ public:
 
     _currentAnimTime += GetTicksPerSecond() * dt;
     _currentAnimTime = fmod(_currentAnimTime, GetDuration());
-    _currentAnimTime = 0.f;
+    // _currentAnimTime = 0.f;
 		// Update the channels first
     for (auto& [_, channel] : boneChannels)
     {

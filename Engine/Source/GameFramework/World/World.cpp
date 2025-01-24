@@ -272,17 +272,17 @@ void World::ProcessInput(float dt)
   {
     // 마우스 이동량 가져오기
     Vector2 mouseDelta = Input.GetMouseDelta();
-    float x = -mouseDelta.x * mainCamera->GetRotationSpeed();
-    float y = -mouseDelta.y * mainCamera->GetRotationSpeed();
+    float x = -mouseDelta.x;
+    float y = -mouseDelta.y;
 
-    if ((Input.GetCurrMouseState().x != Input.GetPrevMouseState().x) ||
+    /*if ((Input.GetCurrMouseState().x != Input.GetPrevMouseState().x) ||
         (Input.GetCurrMouseState().y != Input.GetPrevMouseState().y))
-    {
+    {*/
       // 마우스가 Y 축으로 움직이면 X 축 회전
       mainCamera->RotateAroundXAxis(y);
       // 마우스가 X 축으로 움직이면 Y 축 회전
       mainCamera->RotateAroundYAxis(x);
-    }
+    //}
   }
 }
 

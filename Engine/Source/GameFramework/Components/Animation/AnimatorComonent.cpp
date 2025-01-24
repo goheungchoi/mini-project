@@ -23,7 +23,7 @@
       transformStack.push(rootTransform);
 
       uint32_t boneId = 0;
-      uint32_t index = 0;
+      uint32_t index = 1;
       while (!transformStack.empty())
       {
         TransformComponent* currTransform = transformStack.top();
@@ -32,13 +32,13 @@
         for (auto* child : currTransform->children)
         {
           std::string nodeName = child->GetOwner()->name;
-          std::string skeletalNodeName = skeleton->nodes[index + 1].name;
+          std::string skeletalNodeName = skeleton->nodes[index].name;
           if (nodeName != skeletalNodeName)
           {
             throw std::runtime_error("Node name mismatch!");
           }
 
-          if (skeleton->nodes[++index].boneId >= 0)
+          if (skeleton->nodes[index++].boneId >= 0)
             child->SetLocalTransform(finalBoneTransforms[boneId++]);
         }
 

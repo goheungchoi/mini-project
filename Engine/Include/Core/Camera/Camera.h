@@ -119,6 +119,11 @@ public:
   void RotateAroundYAxis(float degrees)
   {
     yaw += rotationSpeed * XMConvertToRadians(degrees);
+
+		// Normalize yaw to keep it within the range
+    yaw = fmodf(yaw, XM_2PI); // XM_2PI is a constant for pi
+    yaw += (yaw < -XM_PI) * XM_2PI;	// XM_PI is a constant for pi
+    yaw -= (yaw > XM_PI) * XM_2PI;
   }
 
   void LookAt(XMVECTOR point)
