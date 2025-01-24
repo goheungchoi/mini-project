@@ -192,30 +192,30 @@ bool TextureImportDialog::readTextureFile()
       if (channels == 1)
       {
         if (is16bits)
+          ui.formatComboBox->setCurrentIndex(13);
+        else
+          ui.formatComboBox->setCurrentIndex(16);
+      }
+      else if (channels == 2)
+      {
+        if (is16bits)
           ui.formatComboBox->setCurrentIndex(14);
+        else
+          ui.formatComboBox->setCurrentIndex(17);
+      }
+      else if (channels == 3)
+      {
+        if (is16bits)
+          ui.formatComboBox->setCurrentIndex(15);
         else
           ui.formatComboBox->setCurrentIndex(18);
       }
-      else if (channels == 2)
+      else if (channels == 4)
       {
         if (is16bits)
           ui.formatComboBox->setCurrentIndex(15);
         else
           ui.formatComboBox->setCurrentIndex(19);
-      }
-      else if (channels == 3)
-      {
-        if (is16bits)
-          ui.formatComboBox->setCurrentIndex(16);
-        else
-          ui.formatComboBox->setCurrentIndex(20);
-      }
-      else if (channels == 4)
-      {
-        if (is16bits)
-          ui.formatComboBox->setCurrentIndex(17);
-        else
-          ui.formatComboBox->setCurrentIndex(21);
       }
     }
     else
@@ -228,13 +228,9 @@ bool TextureImportDialog::readTextureFile()
       {
         ui.formatComboBox->setCurrentIndex(11);
       }
-      else if (channels == 3)
+      else if (channels == 3 || channels == 4)
       {
         ui.formatComboBox->setCurrentIndex(12);
-      }
-      else if (channels == 4)
-      {
-        ui.formatComboBox->setCurrentIndex(13);
       }
     }
 

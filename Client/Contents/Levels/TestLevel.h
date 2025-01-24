@@ -26,18 +26,20 @@ public:
 	
   virtual void PrepareLevel() override
   {
-    // sponzaHandle = LoadModel("Models\\Sponza\\Sponza.gltf");
-    testAnimationHandle = LoadModel("Models\\AnimTest\\ANI_Test.fbx");
+    // sponzaHandle = LoadModel("Models\\Maps\\Map002_Museum.glb");
+    sponzaHandle = LoadModel("Models\\Sponza\\Sponza.gltf");
+    testAnimationHandle = LoadModel("Models\\SkinningTest\\SkinningTest.fbx");
   }
+
   virtual void BeginLevel() override {
-    //testObject = world->CreateGameObjectFromModel(sponzaHandle);
+    testObject = world->CreateGameObjectFromModel(sponzaHandle);
 
     testAnim = world->CreateGameObjectFromModel(testAnimationHandle);
 
     const ModelData& testAnimModel = AccessModelData(testAnimationHandle);
 
     anim1 = new Animation(*testAnimModel.animations.begin(), true);
-    anim2 = new Animation(*std::next(testAnimModel.animations.begin()), true);
+    // anim2 = new Animation(*std::next(testAnimModel.animations.begin()), true);
 
     animState = new AnimationState(anim1);
 
