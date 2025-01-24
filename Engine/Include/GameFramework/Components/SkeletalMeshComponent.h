@@ -12,7 +12,7 @@ public:
   bool isVisible{true};
   bool bCastShadow{true};
 
-  std::unordered_set<std::string> boneNameSet;
+  std::unordered_map<std::string, Bone> boneNameMap;
   std::vector<XMMATRIX> boneTransforms;
   class TransformComponent* rootBone{nullptr};
   MeshHandle handle;
@@ -22,12 +22,11 @@ public:
   void SetHandle(MeshHandle handle) { 
     const MeshData& data = AccessMeshData(handle);
     boneTransforms.resize(data.bones.size());
-    boneNameSet.reserve(data.bones.size());
+    boneNameMap.reserve(data.bones.size());
     for (auto& bone : data.bones)
     {
-      boneNameSet.insert(bone.name);
+      boneNameMap.insert({bone.name, bone});
     }
-
 
     this->handle = handle; 
   }

@@ -133,7 +133,8 @@ void World::RegisterMeshComponent(MeshComponent* meshComp)
     return;
 
   _renderer->CreateMesh(meshComp->GetHandle());
-  _renderer->AddShadow(meshComp->GetHandle());
+  if (meshComp->bCastShadow)
+    _renderer->AddShadow(meshComp->GetHandle());
 }
 
 void World::RegisterMeshComponent(SkeletalMeshComponent* skeletalMeshComp) {
@@ -141,6 +142,8 @@ void World::RegisterMeshComponent(SkeletalMeshComponent* skeletalMeshComp) {
     return;
 
   _renderer->CreateMesh(skeletalMeshComp->GetHandle());
+  if (skeletalMeshComp->bCastShadow)
+    _renderer->AddShadow(skeletalMeshComp->GetHandle());
 }
 
 void World::InitialStage() {
@@ -155,21 +158,25 @@ void World::InitialStage() {
   {
     if (gameObject->status == EStatus_Awake && gameObject->bShouldActivate)
     {
-      // Awake the game object and activate it.
-      gameObject->OnAwake();
-      gameObject->OnActivated();
-      gameObject->isActive = true;
-      gameObject->status = EStatus_Active;
-      gameObject->bShouldActivate = false;
+      // Awake the game objects and activate it.
+      UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
+        object->OnAwake();
+        object->OnActivated();
+        object->isActive = true;
+        object->status = EStatus_Active;
+        object->bShouldActivate = false;
+      });
     } 
 
     if (gameObject->status == EStatus_Inactive && gameObject->bShouldActivate)
     {
-      // Activate the game object.
-      gameObject->OnActivated();
-      gameObject->isActive = true;
-      gameObject->status = EStatus_Active;
-      gameObject->bShouldActivate = false;
+      UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
+        // Activate the game object.
+        object->OnActivated();
+        object->isActive = true;
+        object->status = EStatus_Active;
+        object->bShouldActivate = false;
+      });
     }
   }
 }
@@ -299,6 +306,7 @@ void World::AnimationUpdate(float dt)
   if (!_currentLevel || changingLevel)
     return;
 
+  // Animation update.
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
     if (!(gameObject->status == EStatus_Active))
@@ -325,17 +333,47 @@ void World::PostUpdate(float dt)
     gameObject->PostUpdate(dt);
   }
 
+  // Update local transforms
+  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
+  {
+    auto* transform = gameObject->transform;
+    if (transform->bNeedUpdateTransform)
+    {
+      transform->UpdateLocalTransform();
+    }
+  }
 
   // Update hierarchical transforms
+  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
+  {
+    if (gameObject->name == "c_pos")
+    {
+      int a = 1;
+    }
+    auto* transform = gameObject->transform;
+    if (transform->bNeedUpdateGlobalTransform)
+    {
+      UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
+        auto* transform = object->transform;
+        transform->UpdateGlobalTransform();
+      });
+    }
+  }
+
+  // Update skeletal mesh transforms
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
     if (!(gameObject->status == EStatus_Active))
       continue;
 
-
+    if (auto* skeletalMesh = gameObject->GetComponent<SkeletalMeshComponent>();
+        skeletalMesh)
+    {
+      skeletalMesh->UpdateBoneTransforms();
+    }
   }
-
 }
+
 static DirectionalLight _mainLight;
 void World::RenderGameObjects() {
   if (!_currentLevel || changingLevel)
@@ -358,6 +396,7 @@ void World::RenderGameObjects() {
   }
   ImGui::End();
   #endif
+
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
     if (!gameObject->status == EStatus_Active)
@@ -370,17 +409,19 @@ void World::RenderGameObjects() {
     {
       auto handle = meshComp->GetHandle();
       const auto& transform = gameObject->GetWorldTransform();
-      _renderer->BeginDraw(handle, transform*XMMatrixScaling(100.f,100.f,100.f));
+      _renderer->BeginDraw(handle, XMMatrixIdentity()/*transform*XMMatrixScaling(100.f,100.f,100.f)*/);
       _renderer->DrawMesh(handle);
     }
     else if (auto* meshComp = gameObject->GetComponent<SkeletalMeshComponent>();
              meshComp)
     {
       // TODO:
-      /*auto handle = meshComp->GetHandle();
+      auto handle = meshComp->GetHandle();
       const auto& transform = gameObject->GetWorldTransform();
-      _renderer->BeginDraw(handle, transform);
-      _renderer->DrawMesh(handle);*/
+      _renderer->BeginDraw(handle, transform *
+                                       XMMatrixScaling(0.005f, 0.005f, 0.005f) *
+                                       XMMatrixRotationAxis({1.f,0.f,0.f},-XM_PIDIV2));
+      _renderer->DrawMesh(handle, meshComp->boneTransforms);
     }
   }
 
@@ -411,10 +452,12 @@ void World::CleanupStage() {
   {
     if (gameObject->status == EStatus_Active && gameObject->bShouldDeactivate)
     {
-      // Awake the game object and activate it.
-      gameObject->status = EStatus_Inactive;
-      gameObject->isActive = false;
-      gameObject->bShouldDeactivate = false;
+      // Deactivate game object hierarchy
+      UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
+        object->status = EStatus_Inactive;
+        object->isActive = false;
+        object->bShouldDeactivate = false;
+      });
     }
 
     if (gameObject->bShouldDestroy)
@@ -443,6 +486,27 @@ void World::CleanupStage() {
 
   // Mark that it's ready to change level.
   readyToChangeLevel = true;
+}
+
+void World::UpdateGameObjectHierarchy(GameObject* gameObject,
+                                      std::function<void(GameObject*)> func)
+{
+  std::stack<GameObject*> st;
+
+  st.push(gameObject);
+
+  while (!st.empty())
+  {
+    GameObject* currObject = st.top();
+    st.pop();
+
+    func(currObject);
+
+    for (auto* child : currObject->childrens)
+    {
+      st.push(child);
+    }
+  }
 }
 
 
