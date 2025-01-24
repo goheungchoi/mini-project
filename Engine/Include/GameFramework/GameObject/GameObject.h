@@ -23,7 +23,6 @@ public:
   ComponentRegistry components;
 
 	/* Properties */
-  bool bNeedTransformUpdate{false};
 	TransformComponent* transform;
 
   bool bShouldActivate;
@@ -48,7 +47,6 @@ public:
     status = EStatus_Cleanup;
 
     // Reset to initial states
-    bNeedTransformUpdate = false;
     transform = nullptr;
     bShouldActivate = false;
     bShouldDeactivate = false;
