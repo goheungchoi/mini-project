@@ -124,7 +124,7 @@ inline XMVECTOR RotateToward(XMVECTOR quatRot, XMVECTOR target,
   rotationAxis = XMVector3Normalize(rotationAxis);
 
   // Create a quaternion representing the step rotation
-  float angleToRotate = std::min(maxAngleStep, angleBetween);
+  float angleToRotate = (std::min)(maxAngleStep, angleBetween);
   XMVECTOR stepRotation = XMQuaternionRotationAxis(rotationAxis, angleToRotate);
 
   // Update the current quaternion by applying the step rotation
