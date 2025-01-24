@@ -30,8 +30,10 @@ struct World
 struct PixelData
 {
   float alphaCutoff=0.f;
-  Vector3 padding1{};
-  Color color;
+  float metalicFactor = 0.f;
+  float roughnessFactor = 0.f;
+  float padding1;
+  Color albedoFactor;
 };
 struct BoneMatrix
 {

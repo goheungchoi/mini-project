@@ -371,10 +371,10 @@ private:
     dc->IASetIndexBuffer(_geometry->box.buffer->indexBuffer.Get(),
                          DXGI_FORMAT_R32_UINT, 0);
     std::ranges::for_each(_boxes, [this, dc](const auto& pair) {
-      const auto& [first, second] = pair;
+      const auto& [first, second] = pair; 
       Constant::World world = {first.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
-      Constant::PixelData data = {.color = second};
+      Constant::PixelData data = {.albedoFactor = second};
       _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
       dc->DrawIndexed(_geometry->box.buffer->nIndices, 0, 0);
     });
@@ -389,7 +389,7 @@ private:
       const auto& [first, second] = pair;
       Constant::World world = {first.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
-      Constant::PixelData data = {.color = second};
+      Constant::PixelData data = {.albedoFactor = second};
       _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
       dc->DrawIndexed(_geometry->sphere.buffer->nIndices, 0, 0);
     });
@@ -404,7 +404,7 @@ private:
       const auto& [first, second] = pair;
       Constant::World world = {first.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
-      Constant::PixelData data = {.color = second};
+      Constant::PixelData data = {.albedoFactor = second};
       _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
       dc->DrawIndexed(_geometry->cylinder.buffer->nIndices, 0, 0);
     });
@@ -489,7 +489,12 @@ private:
       dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
       Constant::World world = {buffer->world.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
-      Constant::PixelData data = {.alphaCutoff = buffer->material->alphaCutoff};
+      Constant::PixelData data = {
+        .alphaCutoff = buffer->material->alphaCutoff,
+        .metalicFactor = buffer->material->metallicFactor,
+        .roughnessFactor = buffer->material->roughnessFactor,
+        .albedoFactor = buffer->material->albedoFactor
+      };
       _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
       buffer->material->PSSetResourceViews(_device);
       dc->DrawIndexed(buffer->nIndices, 0, 0);
@@ -501,7 +506,11 @@ private:
       dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
       Constant::World world = {buffer->world.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
-      Constant::PixelData data = {.alphaCutoff = buffer->material->alphaCutoff};
+      Constant::PixelData data = {
+          .alphaCutoff = buffer->material->alphaCutoff,
+          .metalicFactor = buffer->material->metallicFactor,
+          .roughnessFactor = buffer->material->roughnessFactor,
+          .albedoFactor = buffer->material->albedoFactor};
       _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
       buffer->material->PSSetResourceViews(_device);
       dc->DrawIndexed(buffer->nIndices, 0, 0);
@@ -548,6 +557,12 @@ private:
       dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
       Constant::World world = {buffer->world.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {
+          .alphaCutoff = buffer->material->alphaCutoff,
+          .metalicFactor = buffer->material->metallicFactor,
+          .roughnessFactor = buffer->material->roughnessFactor,
+          .albedoFactor = buffer->material->albedoFactor};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
       buffer->material->PSSetResourceViews(_device);
       dc->DrawIndexed(buffer->nIndices, 0, 0);
     });
@@ -560,6 +575,12 @@ private:
       dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
       Constant::World world = {buffer->world.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {
+          .alphaCutoff = buffer->material->alphaCutoff,
+          .metalicFactor = buffer->material->metallicFactor,
+          .roughnessFactor = buffer->material->roughnessFactor,
+          .albedoFactor = buffer->material->albedoFactor};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
       buffer->material->PSSetResourceViews(_device);
       dc->DrawIndexed(buffer->nIndices, 0, 0);
     });
