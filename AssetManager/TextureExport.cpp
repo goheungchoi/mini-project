@@ -295,6 +295,7 @@ static void GenerateTextureInfoFile(const std::string& texturePath,
   ordered_json j;
 
 	j["import_path"] = texturePath;
+  j["export_path"] = exportPath;
 	j["resource_type"] = "texture";
 
 	ordered_json details;
