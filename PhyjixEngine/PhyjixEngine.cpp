@@ -16,7 +16,7 @@ bool PhyjixEngine::Initialize()
 	_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, physx::PxTolerancesScale(),true, _pvd);
 
 #else
-	_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, PxTolerancesScale());
+	_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, physx::PxTolerancesScale());
 
 #endif
 

@@ -19,7 +19,7 @@ RigidBody::RigidBody(physx::PxPhysics* physics,
     _actor = physics->createRigidStatic(transform);
 
   shape = cShape;
-  physx::PxMaterial* material = physics->createMaterial(0.5f, 0.5f, 0.f);
+  physx::PxMaterial* material = physics->createMaterial(0.5f, 0.5f, 1.f);
   switch (cShape)
   {
   case ColliderShape::eCubeCollider:
@@ -48,8 +48,6 @@ RigidBody::RigidBody(physx::PxPhysics* physics,
     break;
   }
   _actor->attachShape(*_defaultShape);
-
-
   _actor->userData = this;
 
 }
@@ -63,11 +61,6 @@ RigidBody::~RigidBody()
   if (_actor)
     _actor->release();
 }
-
-//PxActor* RigidBody::GetActor() const
-//{
-//  return _actor;
-//}
 
 void RigidBody::OnCollisionEnter(IRigidBody* other) 
 {
@@ -99,10 +92,29 @@ void RigidBody::OnWake()
 void RigidBody::OnSleep() 
 {
   if (!SleepEventMap.empty())
-  {
     for (auto event : SleepEventMap)
       event();
-  }
+}
+
+void RigidBody::OnHover()
+{
+  if (!HoverEventMap.empty())
+    for (auto event : HoverEventMap)
+      event();
+}
+
+void RigidBody::OnLeftClick()
+{
+  if (!LClickEventMap.empty())
+    for (auto event : LClickEventMap)
+      event();
+}
+
+void RigidBody::OnRightClick()
+{
+  if (!RClickEventMap.empty())
+    for (auto event : RClickEventMap)
+      event();
 }
 
 physx::PxRigidDynamic* RigidBody::GetDynamicActor()
@@ -129,6 +141,16 @@ void RigidBody::SetCollisionEvent(eCollisionEventType collisiontype, IRigidBody*
     case eCollisionEventType::eSleep:
       SleepEventMap.push_back(event);
       break;
+    case eCollisionEventType::eHover:
+      HoverEventMap.push_back(event);
+      break;
+    case eCollisionEventType::eLClick:
+      LClickEventMap.push_back(event);
+      break;
+    case eCollisionEventType::eRClick:
+      RClickEventMap.push_back(event);
+      break;
+
   }
 }
 

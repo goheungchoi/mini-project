@@ -111,6 +111,8 @@ public:
 
   
   // D2D Renderer
+  virtual void CreateSprite(LPCSTR path) = 0;
+
   virtual void TextDraw(const wchar_t* format, Vector4 rect,
                         const std::wstring& fontName = L"Agency FB",
                         Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) = 0;

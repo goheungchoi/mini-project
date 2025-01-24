@@ -123,29 +123,34 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   animComponent1->BineSkeleton(skinningData.skeleton);
 
   animComponent1->SetState(animState1);
+
+
   testobject2 = new GameObject(myWorld);
   testobject2->CreateComponent<RigidbodyComponent>();
   testrigidbody2 = testobject2->GetComponent<RigidbodyComponent>();
-  testrigidbody2->Initialize({0,10,0}, {10,10,10},
+  testrigidbody2->Initialize({0,100,0}, {10,10,10},
                             ColliderShape::eCubeCollider, true, false,
                             static_cast<PhyjixWorld*>(_phyjixWorld));
-  testrigidbody2->EnableDebugDraw();
+  //testrigidbody2->EnableDebugDraw();
  
 
   testobject = new GameObject(myWorld);
   testobject->CreateComponent<RigidbodyComponent>();
   testrigidbody = testobject->GetComponent<RigidbodyComponent>();
-  testrigidbody->Initialize({0, 100, 0}, {10, 10, 10},
+  testrigidbody->Initialize({0, 5, 0}, {10, 10, 10},
                             ColliderShape::eCubeCollider, false, false,
                             static_cast<PhyjixWorld*>(_phyjixWorld));
-  testrigidbody->EnableDebugDraw();
-  testrigidbody->SetCollisionEvent(testrigidbody2->GetRigidBody(),
-                                   eCollisionEventType::eCollisionEnter, [&]() 
-                                   {
-                                     testrigidbody->DisableDebugDraw();
-                                     testrigidbody2->DisableDebugDraw();
-                                   });
+  //testrigidbody->EnableDebugDraw();
 
+  debugcolor = Color(1, 1, 0);
+  testrigidbody->SetCollisionEvent(testrigidbody2->GetRigidBody(),
+                                   eCollisionEventType::eCollisionEnter, []() 
+                                   {
+                                   });
+  testrigidbody->SetCollisionEvent(nullptr, eCollisionEventType::eLClick, [&]() 
+      {
+    testrigidbody->Rotate({0, 100, 0});
+  });
 
 
 
@@ -168,6 +173,8 @@ void GameApp::Shutdown()
 
 void GameApp::Update(float deltaTime)
 {
+  //debugcolor = Color(1, 1, 0);
+
   _phyjixEngine->Update(deltaTime);
   // _camera->LookAt({10, 0, 0, 1});
   // 'Q' 누르면 Down
@@ -207,9 +214,35 @@ void GameApp::Update(float deltaTime)
     else
       testrigidbody->EnableDebugDraw();*/
     testrigidbody->DisableGravity();
-  } 
+  }
 
-  if (Input.IsKeyDown(MouseState::RB))
+  if (Input.IsKeyPress(Key::Up))
+  {
+    testrigidbody->Rotate({0, 0, 10});
+  }
+
+    if (Input.IsKeyUp(Key::Up))
+  {
+    testrigidbody->ClearTorque();
+  }
+
+
+
+
+
+
+  if (Input.IsKeyPress(MouseState::LB))
+  {
+    _phyjixWorld->LeftClick();
+  Vector3 pos = Vector3(_camera->GetPosition());
+  _phyjixWorld->CastRay(_phyjixWorld->CreateRay(
+      pos, Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
+      _camera->GetViewTransform(), _camera->GetProjectionMatrix(),
+      Vector2(kScreenWidth, kScreenHeight)));
+      
+  }
+      
+      if (Input.IsKeyDown(MouseState::RB))
   {
     bCameraMove = !bCameraMove; // camera bool값이 반대로 됨.
     ShowCursor(!bCameraMove);   // 커서가 안 보임
@@ -252,6 +285,7 @@ void GameApp::Render()
   Matrix view = _camera->GetViewTransform();
   Matrix projection = _camera->GetProjectionMatrix();
   _renderer->BeginFrame(_camera->GetPosition(), view, projection, _mainLight);
+#ifdef _DEBUG
   if (ImGui::Begin("main Light"))
   {
     float _mainLightDir[3] = {_mainLight.direction.x, _mainLight.direction.y,
@@ -262,6 +296,8 @@ void GameApp::Render()
     _mainLight.direction.z = _mainLightDir[2];
   }
   ImGui::End();
+#endif
+
 #ifdef RenderTest
   Matrix world = Matrix::Identity;
   Matrix scale = Matrix::CreateScale(100.f);
@@ -313,6 +349,8 @@ void GameApp::Render()
                           _renderer->BeginDraw(meshHandle, world4);
                           _renderer->DrawMesh(meshHandle);
                         });
+
+#ifdef _DEBUG
   if (testrigidbody->GetDebugDrawFlag())
   {
     _renderer->DrawDebugBox(Matrix::CreateScale({20, 20, 20}) * 
@@ -329,8 +367,9 @@ void GameApp::Render()
                 testrigidbody2->GetRigidBody()->GetWorldRotation()) *
             Matrix::CreateTranslation(
                 testrigidbody2->GetRigidBody()->GetWorldPosition()),
-        Color(1, 0, 1));
+        debugcolor);
   }
+#endif
 
   /* animSkeletal1->boneTransforms;
    _renderer

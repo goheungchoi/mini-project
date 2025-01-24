@@ -6,16 +6,13 @@
 class PhyjixWorld;
 class RigidBody : public IRigidBody, public ICollisionEvent
 {
-
   using CollisionEvent = std::function<void(RigidBody* self, RigidBody* other)>;
 
 public:
-  RigidBody(physx::PxPhysics* physics, const DirectX::SimpleMath::Vector3& position,
+   RigidBody(physx::PxPhysics* physics, const DirectX::SimpleMath::Vector3& position,
             const DirectX::SimpleMath::Vector3& size, ColliderShape shape,
             BOOL isStatic, BOOL isKinematic, PhyjixWorld* world);
   ~RigidBody();
-  //PxActor* GetActor() const;
-
 
 // IRigidBody을(를) 통해 상속됨
   void SetCollisionEvent(eCollisionEventType collisiontype, IRigidBody* other, std::function<void(void)> event) override;
@@ -44,6 +41,9 @@ public:
   void OnTrigger(IRigidBody* other) override;
   void OnWake() override;
   void OnSleep() override;
+  void OnHover() override;
+  void OnLeftClick() override;
+  void OnRightClick() override;
 
   physx::PxRigidActor* _actor = nullptr;
 
@@ -61,9 +61,9 @@ private:
   std::unordered_map<IRigidBody*, std::function<void(void)>> TriggerEventMap;
   std::vector<std::function<void(void)>> WakeEventMap;
   std::vector<std::function<void(void)>> SleepEventMap;
+  std::vector<std::function<void(void)>> HoverEventMap;
+  std::vector<std::function<void(void)>> LClickEventMap;
+  std::vector<std::function<void(void)>> RClickEventMap;
 
   physx::PxRigidDynamic* GetDynamicActor();
-
-public:
-
 };
