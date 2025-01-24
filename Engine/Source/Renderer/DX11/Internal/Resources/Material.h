@@ -128,6 +128,7 @@ private:
 public:
   float alphaCutoff = 0.f;
   AlphaMode alphaMode;
+  Color albedoFactor{};
   float metallicFactor = 0.f;
   float roughnessFactor = 0.f;
   bool doubleSided = false;
@@ -145,6 +146,9 @@ public:
   void CreateMaterial(Device* device, MaterialData data)
   {
     alphaMode = data.alphaMode;
+    albedoFactor = data.albedoFactor;
+    metallicFactor = data.metallicFactor;
+    roughnessFactor = data.roughnessFactor;
     if (alphaMode == AlphaMode::kBlend || alphaMode == AlphaMode::kMask)
     {
       alphaCutoff = data.alphaCutoff;

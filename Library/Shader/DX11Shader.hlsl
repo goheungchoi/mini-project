@@ -58,8 +58,10 @@ cbuffer World : register(b1)
 cbuffer PixelData : register(b2)
 {
     float alphaCutoff;
-    float3 padding1;
-    float4 color;
+    float metalicFactor;
+    float roughnessFactor;
+    float padding1;
+    float4 albedoFactor;
 }
 
 cbuffer BoneMatrix : register(b3)
@@ -188,10 +190,16 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     float3 specularIBL = (F0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
         //´õÇÏ±â
     
-    ambientLighting += (IBLdiffuse + specularIBL)*0.1;
+    float4 ambientFactor = texOcclusion.Sample(samLinear, input.uv);
+    
+    if (length(ambientFactor) == 0.f)
+    {
+        ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
+    }
+    
+    
+    ambientLighting += (IBLdiffuse + specularIBL)*0.1*ambientFactor;
     //ambientLighting += 0;
-    
-    
     float4 positionShadow = deferredShadowPosition.Sample(samLinear, input.uv);
     float currShadowDepth = positionShadow.z; // / positionShadow.w;
     float2 uv = positionShadow.xy; // / positionShadow.w;
@@ -249,12 +257,21 @@ DEFFERED_PS_OUT ps_main(PS_INPUT input)
     float depth = input.position.z;
     float4 albedo = texAlbedo.Sample(samLinear, input.uv);
     clip(albedo.a - alphaCutoff);
+    if (albedo.x == 0)
+    {
+        albedo = albedoFactor;
+    }
     output.AlbedoDepth.xyz = albedo;
     output.AlbedoDepth.a = depth;
     output.ShadowPosition = input.positionShadow / input.positionShadow.w;
-    float metalic = texMetallicRoughness.Sample(samAnisotropy, input.uv).r;
-    float roughness = texMetallicRoughness.Sample(samAnisotropy, input.uv).g;
- 
+    float4 metallRoughColor = texMetallicRoughness.Sample(samAnisotropy, input.uv);
+    float metalic = metallRoughColor.r;
+    float roughness = metallRoughColor.g;
+    if (length(metallRoughColor) == 0)
+    {
+        metalic = metalicFactor;
+        roughness = roughnessFactor;
+    }
     float3 N = normalize(input.worldNormal);
     float4 normalTexture = texNormal.Sample(samAnisotropy, input.uv);
     if (length(normalTexture) > 0.f)
@@ -349,11 +366,17 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     albedo = pow(albedo, 2.2);
     if (length(albedo) == 0.f)
     {
-        albedo = input.color.rgb;
+        albedo = albedoFactor.rgb;
     }
     //gamma correction
-    float metallic = texMetallicRoughness.Sample(samLinear, input.uv).x;
-    float roughness = texMetallicRoughness.Sample(samLinear, input.uv).y;
+    float4 metallRoughColor = texMetallicRoughness.Sample(samAnisotropy, input.uv);
+    float metallic = metallRoughColor.r;
+    float roughness = metallRoughColor.g;
+    if (length(metallRoughColor) == 0)
+    {
+        metallic = metalicFactor;
+        roughness = roughnessFactor;
+    }
     float3 normal = normalize(input.worldNormal);
     float4 normalTexture = texNormal.Sample(samLinear, input.uv);
     if (length(normalTexture) > 0.f)
@@ -409,7 +432,7 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
         ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
     }
     
-    ambientLighting += (IBLdiffuse + specularIBL)*0.1;
+    ambientLighting += (IBLdiffuse + specularIBL)*0.1*ambientFactor;
 
     float currShadowDepth = input.positionShadow.z / input.positionShadow.w;
     float2 uv = input.positionShadow.xy / input.positionShadow.w;
@@ -542,6 +565,6 @@ PS_INPUT shadow_vs_main(VS_INPUT input)
 #ifdef WireFrame
 float4 wire_frame_ps_main(PS_INPUT input) : SV_Target0
 {
-    return color;
+    return albedoFactor;
 }
 #endif
