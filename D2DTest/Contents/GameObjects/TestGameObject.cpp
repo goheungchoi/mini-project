@@ -6,7 +6,10 @@
 TestGameObject::TestGameObject(World* world)
     : GameObject(world)
 {
-  world->_renderer->CreateSprite("Textures/BakerSpecularBRDF_LUT.dds");
+  //world->_renderer->CreateSprite("Models\\Sponza\\2775690330959970771.jpg");
+  //world->_renderer->CreateSprite("Textures/BakerSpecularBRDF_LUT.dds");
+  world->_renderer->CreateSprite("Textures\\Test_CombatUI_1.png");
+
 }
 void TestGameObject::OnRender() 
 {
