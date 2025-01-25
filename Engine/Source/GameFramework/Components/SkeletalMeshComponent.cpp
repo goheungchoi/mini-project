@@ -35,11 +35,10 @@ void SkeletalMeshComponent::UpdateBoneTransforms()
 
     for (auto* child : currTransform->children)
     {
+#ifndef NDEBUG
       std::string n = child->GetOwner()->name;
-      if (index == 59)
-      {
-				int n = 0;
-			}
+#endif // !NDEBUG
+
       if (auto it = boneNameMap.find(child->GetOwner()->name);
           it != boneNameMap.end())
         boneTransforms[index++] = XMMatrixTranspose(it->second.inverseBindMatrix * child->globalTransform);

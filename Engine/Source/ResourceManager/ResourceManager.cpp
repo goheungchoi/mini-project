@@ -120,6 +120,12 @@ static ModelHandle __CloneModel__(ModelHandle handle) {
     ModelData& clonedModel =
         _m().modelPool.AccessResourceData(clonedModelHandle);
 
+		//// Duplicate the handles
+		//for (auto material : clonedModel.materials)
+  //  {
+  //    _m().materialPool.du
+		//}
+
 		std::unordered_set<MeshHandle> originalMeshes = clonedModel.meshes;
     clonedModel.meshes.clear();
 		

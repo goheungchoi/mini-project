@@ -65,6 +65,8 @@ public:
     transform->RemoveChild(gameObject->transform);
   }
 
+	void DetachFromParentTransform() { transform->DetachFromParent(); }
+
 	// State change
 	
   void Activate()

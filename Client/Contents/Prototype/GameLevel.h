@@ -15,13 +15,18 @@ class GameLevel : public Level
 	// Resource handles
   ModelHandle redCellModelHandle;
   ModelHandle greenCellModelHandle;
-  ModelHandle animTestHandle;
+	
+	ModelHandle mapMeshHandle;
+  
+	ModelHandle animTestHandle;
+
 
 	// GameObjects
 
 
   GridObject* grid{nullptr};
 
+	GameObject* map{nullptr};
 
 	Character* character{nullptr};
 
@@ -34,14 +39,18 @@ public:
     greenCellModelHandle = LoadModel("Models\\GreenCell\\GreenCell.glb");
 
     animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
+
+		mapMeshHandle = LoadModel("Models\\Maps\\Map002_Museum.glb");
 	}
 
   virtual void BeginLevel() override {
-    // grid = world->CreateGameObject<GridObject>();
-    // grid->CreateGrid(5, 5, 5.f);
+    grid = world->CreateGameObject<GridObject>();
+    grid->CreateGrid(5, 5, 2.f);
+
+		map = world->CreateGameObjectFromModel(mapMeshHandle);
 
 		character = world->CreateGameObjectFromModel<Character>(animTestHandle);
-    // character->SetRotationAroundXAxis(MathUtil::kQuaterPi_f);
+    character->SetRotationAroundXAxis(MathUtil::kQuaterPi_f);
 	}
 
   virtual void DestroyLevel() override { Level::DestroyLevel(); }
@@ -49,6 +58,8 @@ public:
   {
     UnloadModel(redCellModelHandle);
     UnloadModel(greenCellModelHandle);
+
+		UnloadModel(mapMeshHandle);
 	
 		UnloadModel(animTestHandle);
 	}

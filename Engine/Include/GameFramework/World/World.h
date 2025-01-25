@@ -135,6 +135,7 @@ public:
       rootGameNode->SetName(data.nodes[0].name);
       gameObjNodes[0] = rootGameNode;
 
+			bool bRootBoneFound{false};
       // Create node game objects
       for (int i = 1; i < data.nodes.size(); ++i)
       {
@@ -169,10 +170,16 @@ public:
             skeletalMeshRootBonePair.push_back(
                 {skeletalMeshComponent, rootBoneNode});
           }
-				}
+        }
 
 				// Attach it to the parent node.
         gameObjNodes[data.nodes[i].parent]->AddChild(newNode);
+        // Detach the parent transform from the root bone
+        if (!bRootBoneFound && data.nodes[i].meshes.empty())
+        {
+          bRootBoneFound = true;
+					newNode->DetachFromParentTransform();
+        }
       }
 
       // Bind the root bones to the skeletal mesh.

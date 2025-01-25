@@ -422,7 +422,7 @@ void World::PostUpdate(float dt)
     }
   }
 
-  // Update skeletal mesh vertex transforms
+	// Update skeletal mesh vertex transforms
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
     if (!(gameObject->status == EStatus_Active))

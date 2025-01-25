@@ -9,7 +9,7 @@
 class TransformComponent : public ComponentBase
 {
 public:
-  // TODO: Transform hierarchy
+  // Transform hierarchy
   TransformComponent* parent{nullptr};
   std::list<TransformComponent*> children;
 
@@ -36,6 +36,8 @@ public:
     component->parent = nullptr;
     children.remove(component);
   }
+
+	void DetachFromParent() { parent = nullptr; }
 
 	XMVECTOR GetLocalRight() { 
 		return XMVector3Rotate(MathUtil::kRight, quaterion);
