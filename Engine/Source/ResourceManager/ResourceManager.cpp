@@ -41,8 +41,9 @@ static ::Pools& _pools() {
 static ShaderHandle __LoadShader__(const std::string& path, ShaderType type) {
   return ShaderHandle();
 }
-static const ShaderData& __AccessShaderData__(ShaderHandle handle) {
-  return ShaderData();
+static ShaderData& __AccessShaderData__(ShaderHandle handle) {
+  static ShaderData data;
+  return data;
 }
 static void __UnloadShader__(ShaderHandle handle) {
 }
@@ -56,7 +57,7 @@ static TextureHandle __LoadTexture__(const std::string& path, TextureType type)
   }
   return TextureHandle();
 }
-static const TextureData& __AccessTextureData__(TextureHandle handle)
+static TextureData& __AccessTextureData__(TextureHandle handle)
 {
   return _m().texturePool.AccessResourceData(handle);
 }
@@ -72,7 +73,7 @@ static MaterialHandle __LoadMaterial__(const std::string& path) {
   }
   return MaterialHandle();
 }
-static const MaterialData& __AccessMaterialData__(MaterialHandle handle) {
+static MaterialData& __AccessMaterialData__(MaterialHandle handle) {
   return _m().materialPool.AccessResourceData(handle);
 }
 static void __UnloadMaterial__(MaterialHandle handle) {
@@ -88,9 +89,13 @@ static MeshHandle __LoadMesh__(const std::string& path)
 	}
   return MeshHandle();
 }
-static const MeshData& __AccessMeshData__(MeshHandle handle)
+static MeshData& __AccessMeshData__(MeshHandle handle)
 {
   return _m().meshPool.AccessResourceData(handle);
+}
+static MeshHandle __CloneMesh__(MeshHandle handle)
+{
+  return _m().meshPool.Clone(handle);
 }
 static void __UnloadMesh__(MeshHandle handle) {
 	// TODO:
@@ -105,10 +110,30 @@ static ModelHandle __LoadModel__(const std::string& path)
 	}
   return ModelHandle();
 }
-static const ModelData& __AccessModelData__(ModelHandle handle)
+static ModelData& __AccessModelData__(ModelHandle handle)
 {
   return _m().modelPool.AccessResourceData(handle);
 }
+static ModelHandle __CloneModel__(ModelHandle handle) {
+  Handle clonedModelHandle = _m().modelPool.Clone(handle);
+	if (_m().modelPool.IsValidHandle(clonedModelHandle)) {
+    ModelData& clonedModel =
+        _m().modelPool.AccessResourceData(clonedModelHandle);
+
+		std::unordered_set<MeshHandle> originalMeshes = clonedModel.meshes;
+    clonedModel.meshes.clear();
+		
+		std::unordered_set<MeshHandle> clonedMeshes;
+    for (auto originalMesh : originalMeshes)
+    {
+      clonedMeshes.insert(_m().meshPool.Clone(originalMesh));
+		}
+
+		clonedModel.meshes = std::move(clonedMeshes);
+    return clonedModelHandle;
+	}
+	return ModelHandle();
+}	
 static void __UnloadModel__(ModelHandle handle) {}
 
 // Skeleton
@@ -121,7 +146,7 @@ static SkeletonHandle __LoadSkeleton__(const std::string& path)
   }
   return SkeletonHandle();
 }
-static const SkeletonData& __AccessSkeletonData__(SkeletonHandle handle)
+static SkeletonData& __AccessSkeletonData__(SkeletonHandle handle)
 {
   return _m().skeletonPool.AccessResourceData(handle);
 }
@@ -137,7 +162,7 @@ static AnimationHandle __LoadAnimation__(const std::string& path)
   }
   return AnimationHandle();
 }
-static const AnimationData& __AccessAnimationData__(AnimationHandle handle)
+static AnimationData& __AccessAnimationData__(AnimationHandle handle)
 {
   return _m().animationPool.AccessResourceData(handle);
 }
@@ -174,10 +199,12 @@ const ResourceManager* GetResourceManager() {
 
       .LoadMesh = __LoadMesh__,
       .AccessMeshData = __AccessMeshData__,
+			.CloneMesh = __CloneMesh__,
       .UnloadMesh = __UnloadMesh__,
 
 			.LoadModel = __LoadModel__,
 			.AccessModelData = __AccessModelData__,
+			.CloneModel = __CloneModel__,
 			.UnloadModel = __UnloadModel__,
 
 			.LoadSkeleton = __LoadSkeleton__,

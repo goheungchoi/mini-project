@@ -46,7 +46,7 @@ public:
 
     auto* animator = testAnim->CreateComponent<AnimatorComponent>();
     animator->SetState(animState);
-    animator->BineSkeleton(testAnimModel.skeleton);
+    animator->BindSkeleton(testAnimModel.skeleton);
 
   }
 

@@ -177,6 +177,20 @@ public:
     return _refCounts[handle.index];
 	}
 
+  /**
+   * @brief Clone a new object and handle.
+   * @param handle The handle of the object to be cloned.
+   * @return If invalid handle is passed, return an invalid handle. Otherwise,
+   * returns the new handle of the cloned object.
+   */
+	Handle Clone(Handle handle) {
+    if (!IsValidHandle(handle))
+      return Handle::kInvalidHandle;
+
+		T clone = _table[handle.index].second.value();
+    return ClaimHandle(std::move(clone), handle.desc);
+	}
+
 	/**
 	 * @brief Check if the handle is a valid 
 	 * @param handle 

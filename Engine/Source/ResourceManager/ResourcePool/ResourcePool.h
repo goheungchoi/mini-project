@@ -66,12 +66,14 @@ public:
     _handleTable.ReleaseHandle(handle);
   }
 
+	Handle Clone(const Handle& handle) { return Handle::kInvalidHandle; }
+
   bool IsValidHandle(const Handle& handle) const
   {
     return _handleTable.IsValidHandle(handle);
   }
 
-  const T& AccessResourceData(const Handle& handle) const
+  T& AccessResourceData(const Handle& handle)
   {
     if (!IsValidHandle(handle))
       // TODO: Error message

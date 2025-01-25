@@ -75,7 +75,14 @@ public:
   virtual void PrepareLevel() {}
   virtual void BeginLevel() {}
 
-  virtual void DestroyLevel() {}
+  virtual void DestroyLevel()
+  {
+    for (auto* gameObject : gameObjects)
+    {
+      delete gameObject;
+		}
+    gameObjects.clear();
+	}
   virtual void CleanupLevel() {}
 };
 

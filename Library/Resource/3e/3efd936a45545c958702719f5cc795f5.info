@@ -1,0 +1,24 @@
+{
+    "uuid": "3efd936a45545c958702719f5cc795f5",
+    "import_path": "Models\\RedCell\\Plane0.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Plane0",
+        "bounding_box": [
+            [
+                -0.5,
+                0.0,
+                -0.5
+            ],
+            [
+                0.5,
+                0.0,
+                0.5
+            ]
+        ],
+        "num_vertices": 4,
+        "num_indices": 6,
+        "material": "Models\\RedCell\\Material.0010.mat",
+        "num_bones": 0
+    }
+}

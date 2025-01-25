@@ -76,33 +76,41 @@ public:
    */
   void StopCameraMovement(bool fixed);
 
+	// TODO:
   XMVECTOR ScreenToWorldPosition(XMVECTOR position);
 
   /* Game Object Management Functions */
 
-  template <GameObjectType T>
+  template <GameObjectType T = GameObject>
   T* CreateGameObject()
   {
     T* newGameObject = new T(this);
+    newGameObject->typeIndex = std::type_index(typeid(T));
     _currentLevel->AddGameObject<T>(newGameObject);
     return newGameObject;
   }
 
-  // template <GameObjectType T>
-  GameObject* CreateGameObjectFromModel(ModelHandle modelHandle)
+  /**
+   * @brief Create a game object from a model data. Only the root game object will be created as the type T.
+	 * The other child game objects will be the plain GameObject type.
+   * @tparam T The type of the root game object.
+   * @param modelHandle 
+   * @return The root game object if successful, otherwise nullptr.
+   */
+  template <GameObjectType T = GameObject>
+  T* CreateGameObjectFromModel(ModelHandle modelHandle)
   {
     if (modelHandle.IsInvalid())
     {
       throw std::runtime_error("Invalid model handle!");
     }
 
-    // TODO: Fix the logic!
+		// Fetch the model data
     const ModelData& data = AccessModelData(modelHandle);
     if (data.nodes.empty())
     {
       throw std::runtime_error("The model data doesn't have any nodes to build!");
 		}
-
 
     const bool isSkeleton = !data.skeleton.IsInvalid();
 
@@ -123,9 +131,8 @@ public:
           skeletalMeshRootBonePair;
 
 			// Root game object
-      GameObject* rootGameNode = CreateGameObject<GameObject>();
+      GameObject* rootGameNode = CreateGameObject<T>();
       rootGameNode->SetName(data.nodes[0].name);
-      rootGameNode->SetLocalTransform(XMMatrixIdentity());
       gameObjNodes[0] = rootGameNode;
 
       // Create node game objects
@@ -134,7 +141,6 @@ public:
         // Create a node game object.
         GameObject* newNode = CreateGameObject<GameObject>();
         newNode->SetName(data.nodes[i].name);
-        newNode->SetLocalTransform(XMMatrixIdentity());
 
         gameObjNodes[i] = newNode;
         gameObjectBoneId[skeleton.nodes[i].boneId] = newNode;
@@ -181,9 +187,13 @@ public:
 			for (int i = 0; i < data.nodes.size(); ++i)
       {
 				// Create a new node game object.
-        GameObject* newNode = CreateGameObject<GameObject>();
+        GameObject* newNode;
+        if (i == 0)
+          newNode = CreateGameObject<T>();
+        else
+          newNode = CreateGameObject<GameObject>();
+
         newNode->SetName(data.nodes[i].name);
-        newNode->SetLocalTransform(XMMatrixIdentity());
         gameObjNodes[i] = newNode;
 
 				// Add a mesh component if any.
@@ -204,13 +214,15 @@ public:
 			}
     }
 
-    return gameObjNodes[0];
+    return (T*) gameObjNodes[0];
   }
+
 
   void RegisterGameObjectName(GameObject* gameObject);
   void UnregisterGameObjectName(GameObject* gameObject);
   void RegisterGameObjectTag(GameObject* gameObject);
   void UnregisterGameObjectTag(GameObject* gameObject);
+  void UnregisterGameObjectType(GameObject* gameObject);
 
   void RegisterMeshComponent(class MeshComponent* meshComp);
   void RegisterMeshComponent(class SkeletalMeshComponent* skeletalMeshComp);
@@ -318,6 +330,7 @@ public:
   void CleanupStage();
 
 private:
+	// Utility function to hierarchically update game objects.
   void UpdateGameObjectHierarchy(GameObject* gameObject,
                                  std::function<void(GameObject*)> func);
 };

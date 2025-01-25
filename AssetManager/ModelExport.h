@@ -331,7 +331,7 @@ private:
   void ProcessAnimation(Animation& geoAnim, const aiAnimation* anim,
                         const aiScene* scene);
   void ProcessAnimationChannel(AnimationChannel& animChannel,
-                               const aiNodeAnim* channel);
+                               const aiNodeAnim* channel, const aiScene* scene);
 
 
   void ExportAnimation(Animation& geoAnim);

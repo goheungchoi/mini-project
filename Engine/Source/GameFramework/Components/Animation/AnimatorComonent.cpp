@@ -9,74 +9,76 @@
 
  void AnimatorComponent::UpdateAnimation(float dt)
 {
-  if (_currState)
-  {
-    if (skeleton)
-    {
-      _currState->_animation->UpdateBoneTransforms(dt, skeleton,
-                                                   finalBoneTransforms);
+   if (!_currState)
+     return;
 
-      // Update the transform information of the child game objects;
-      std::stack<TransformComponent*> transformStack;
+   if (skeleton)
+   {
+     _currState->_animation->UpdateBoneTransforms(dt * playSpeed, skeleton,
+                                                  finalBoneTransforms);
 
-      TransformComponent* rootTransform = GetOwner()->transform;
-      transformStack.push(rootTransform);
+     // Update the transform information of the child game objects;
+     std::stack<TransformComponent*> transformStack;
 
-      uint32_t boneId = 0;
-      uint32_t index = 1;
-      while (!transformStack.empty())
-      {
-        TransformComponent* currTransform = transformStack.top();
-        transformStack.pop();
+     TransformComponent* rootTransform = GetOwner()->transform;
+     transformStack.push(rootTransform);
 
-        for (auto* child : currTransform->children)
-        {
-          std::string nodeName = child->GetOwner()->name;
-          std::string skeletalNodeName = skeleton->nodes[index].name;
-          if (nodeName != skeletalNodeName)
-          {
-            throw std::runtime_error("Node name mismatch!");
-          }
+     uint32_t boneId = 0;
+     uint32_t index = 1;
+     while (!transformStack.empty())
+     {
+       TransformComponent* currTransform = transformStack.top();
+       transformStack.pop();
 
-          if (skeleton->nodes[index++].boneId >= 0)
-            child->SetLocalTransform(finalBoneTransforms[boneId++]);
-        }
+       for (auto* child : currTransform->children)
+       {
+#ifndef NDEBUG
+         std::string nodeName = child->GetOwner()->name;
+         std::string skeletalNodeName = skeleton->nodes[index].name;
+         if (nodeName != skeletalNodeName)
+         {
+           throw std::runtime_error("Node name mismatch!");
+         }
+#endif // !NDEBUG
 
-        for (auto rit = currTransform->children.rbegin();
-             rit != currTransform->children.rend(); ++rit)
-        {
-          std::string nodeName = (*rit)->GetOwner()->name;
-          transformStack.push(*rit);
-        }
-      }
-    }
-    else
-    {
-      // Update the current animation.
-      _currState->_animation->Update(dt);
+         if (skeleton->nodes[index++].boneId >= 0)
+           child->SetLocalTransform(finalBoneTransforms[boneId++]);
+       }
 
-      // Update the transform information of the child game objects;
-      std::stack<TransformComponent*> transformStack;
+       for (auto rit = currTransform->children.rbegin();
+            rit != currTransform->children.rend(); ++rit)
+       {
+         std::string nodeName = (*rit)->GetOwner()->name;
+         transformStack.push(*rit);
+       }
+     }
+   }
+   else
+   {
+     // Update the current animation.
+     _currState->_animation->Update(dt * playSpeed);
 
-      TransformComponent* rootTransform = GetOwner()->transform;
-      transformStack.push(rootTransform);
+     // Update the transform information of the child game objects;
+     std::stack<TransformComponent*> transformStack;
 
-      while (!transformStack.empty())
-      {
-        TransformComponent* currTransform = transformStack.top();
-        transformStack.pop();
+     TransformComponent* rootTransform = GetOwner()->transform;
+     transformStack.push(rootTransform);
 
-        const auto* channel = _currState->_animation->FindChannel(
-            currTransform->GetOwner()->GetName());
-        currTransform->SetLocalTransform(channel->GetLocalTransform());
+     while (!transformStack.empty())
+     {
+       TransformComponent* currTransform = transformStack.top();
+       transformStack.pop();
 
-        for (auto* child : currTransform->children)
-        {
-          transformStack.push(child);
-        }
-      }
-    }
-  }
+       const auto* channel = _currState->_animation->FindChannel(
+           currTransform->GetOwner()->GetName());
+       currTransform->SetLocalTransform(channel->GetLocalTransform());
+
+       for (auto* child : currTransform->children)
+       {
+         transformStack.push(child);
+       }
+     }
+   }
 }
 
 void AnimatorComponent::Toggle()

@@ -298,12 +298,14 @@ public:
       XMMATRIX nodeTransform{node.transform};
       if (auto it = boneChannels.find(node.boneId); it != boneChannels.end())
       {
+#ifndef NDEBUG
         // uint32_t idx = it->second;
-				// Get the bone's local transformation.
+        // Get the bone's local transformation.
         if (it->second.GetBoneID() != node.boneId)
         {
           throw std::exception("");
         }
+#endif // !NDEBUG
 
         nodeTransform = it->second.GetLocalTransform();
       }

@@ -17,13 +17,15 @@ class AnimatorComponent : public ComponentBase
   AnimationState* _currState{nullptr};
 
 public:
+  float playSpeed{1.f};
+
   // Skeletal animation
   const SkeletonData* skeleton{nullptr};
   std::vector<XMMATRIX> finalBoneTransforms;
 
   AnimatorComponent(class GameObject* owner) : ComponentBase{owner} {}
 
-	void BineSkeleton(SkeletonHandle skeletonHandle) {
+	void BindSkeleton(SkeletonHandle skeletonHandle) {
     skeleton = &AccessSkeletonData(skeletonHandle);
 
 		finalBoneTransforms.resize(skeleton->bones.size());
@@ -31,7 +33,9 @@ public:
 
 	void UnbindSkeleton() { skeleton = nullptr; }
 
-	
+	void AdjustAnimationPlaySpeed(float playSpeed = 1.f) {
+    this->playSpeed = playSpeed;
+	}
 	void UpdateAnimation(float dt);
 
   /*void PlayAnimation(Animation* animation)

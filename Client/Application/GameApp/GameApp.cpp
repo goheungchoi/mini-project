@@ -5,11 +5,18 @@
 #include "ResourceManager/ResourceManager.h"
 #include "WindowManager/WindowManager.h"
 
-#include "Contents/Levels/TestLevel.h"
 #include "GameFramework/Level/Level.h"
 #include "GameFramework/World/World.h"
 
+
+#include "Contents/Prototype/GridLevel.h"
+#include "Contents/Prototype/GameLevel.h"
+#include "Contents/Levels/TestLevel.h"
+
+static GridLevel* gridLevel;
 static TestLevel* testLevel;
+
+static GameLevel* gameLevel;
 
 void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
                          const std::wstring& title)
@@ -27,10 +34,15 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
 
   _world = World::CreateWorld(_hwnd, title);
 
+	gridLevel = new GridLevel("Test Grid Level", 5, 5);
   testLevel = new TestLevel();
 
+	gameLevel = new GameLevel("Test Game Level");
+
+	_world->AddLevel(gridLevel);
   _world->AddLevel(testLevel);
-  _world->PrepareChangeLevel("Test Level");
+  _world->AddLevel(gameLevel);
+  _world->PrepareChangeLevel(gameLevel->name);
   _world->CommitLevelChange();
 }
 
@@ -147,8 +159,6 @@ void GameApp::Run()
       TimeSystem::Update();
 
       dt = TimeSystem::GetDeltaTime();
-
-      InputSystem::GetInstance()->Update(dt);
 
       if (_world->changingLevel)
         continue;

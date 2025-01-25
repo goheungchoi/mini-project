@@ -929,43 +929,7 @@ void ModelExporter::GenerateModelMeshInfoFile(Mesh& geoMesh)
 
   details["material"] = geoMesh.materialPath;
 
-	std::vector<ordered_json> bones;
-  bones.reserve(geoMesh.bones.size());
-  for (const auto& bone : geoMesh.bones)
-  {
-    ordered_json b;
-
-    b["id"] = bone.id;
-    b["name"] = bone.name;
-    b["inverse_bind_mat"] = {
-        bone.offset[0][0], bone.offset[0][1], bone.offset[0][2],
-        bone.offset[0][3], bone.offset[1][0], bone.offset[1][1],
-        bone.offset[1][2], bone.offset[1][3], bone.offset[2][0],
-        bone.offset[2][1], bone.offset[2][2], bone.offset[2][3],
-        bone.offset[3][0], bone.offset[3][1], bone.offset[3][2],
-        bone.offset[3][3]};
-
-    bones.push_back(b);
-  }
-  details["bones"] = bones;
-
-	std::vector<ordered_json> boneWeightsPerVertex;
-  boneWeightsPerVertex.resize(geoMesh.vertexBoneWeights.size(),
-                              ordered_json::array());
-  size_t index{0};
-  for (const auto& vertexBoneWeight : geoMesh.vertexBoneWeights)
-  {
-    for (size_t i = 0; i < vertexBoneWeight.size(); ++i)
-    {
-      const auto& boneWeight = vertexBoneWeight[i];
-      ordered_json pair;
-      pair["id"] = boneWeight.boneId;
-      pair["weight"] = boneWeight.weight;
-      boneWeightsPerVertex[index].push_back(pair);
-    }
-    index++;
-  }
-  details["bone_weights"] = boneWeightsPerVertex;
+  details["num_bones"] = geoMesh.bones.size();
 
   j["details"] = details;
 
@@ -1280,23 +1244,7 @@ void ModelExporter::GenerateSkeletonInfoFile(Skeleton& skeleton) {
   ordered_json details;
   details["name"] = skeleton.name;
 
-  std::vector<ordered_json> bones;
-  bones.reserve(skeleton.bones.size());
-  for (const auto& bone : skeleton.bones)
-  {
-    ordered_json b;
-
-    b["id"] = bone.id;
-    b["name"] = bone.name;
-    b["inverse_bind_mat"] = {
-        bone.offset[0][0], bone.offset[0][1], bone.offset[0][2], bone.offset[0][3], 
-				bone.offset[1][0], bone.offset[1][1], bone.offset[1][2], bone.offset[1][3], 
-				bone.offset[2][0], bone.offset[2][1], bone.offset[2][2], bone.offset[2][3],
-        bone.offset[3][0], bone.offset[3][1], bone.offset[3][2], bone.offset[3][3]};
-
-    bones.push_back(b);
-  }
-  details["bones"] = bones;
+  details["num_bones"] = skeleton.bones.size();
 
 	std::vector<ordered_json> nodes;
   nodes.reserve(skeleton.nodes.size());
@@ -1370,13 +1318,14 @@ void ModelExporter::ProcessAnimation(Animation& geoAnim,
   for (int i = 0; i < anim->mNumChannels; ++i)
   {
     AnimationChannel channel;
-    ProcessAnimationChannel(channel, anim->mChannels[i]);
+    ProcessAnimationChannel(channel, anim->mChannels[i], scene);
     geoAnim.animationChannels.push_back(std::move(channel));
 	}
 }
 
 void ModelExporter::ProcessAnimationChannel(AnimationChannel& animChannel,
-                                            const aiNodeAnim* channel)
+                                            const aiNodeAnim* channel,
+                                            const aiScene* scene)
 {
 	// Get bone id if exists
   animChannel.boneId = -1;
@@ -1387,6 +1336,10 @@ void ModelExporter::ProcessAnimationChannel(AnimationChannel& animChannel,
 	}
 	// Get the name of the node of this channel
 	animChannel.nodeName = channel->mNodeName.C_Str();
+
+	// Node transform
+  aiNode* animNode = scene->mRootNode->FindNode(channel->mNodeName.C_Str());
+  XMMATRIX localNode = XMMATRIX{&animNode->mTransformation.a1};
 
 	// Read positions
   animChannel.numKeyPositions = channel->mNumPositionKeys;

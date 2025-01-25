@@ -16,6 +16,7 @@
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 #endif
+
 void World::Initialize(HWND hwnd, const std::wstring& title) {
   _renderer = new DX11Renderer();
   _renderer->Init_Win32(kScreenWidth, kScreenHeight, nullptr, &hwnd);
@@ -105,26 +106,71 @@ XMVECTOR World::ScreenToWorldPosition(XMVECTOR screenPos)
 }
 
 void World::RegisterGameObjectName(GameObject* gameObject) {
-  if (!_currentLevel)
+  if (!_currentLevel || !gameObject)
     return;
+
+	_currentLevel->gameObjectNameMap.insert({gameObject->name, gameObject});
 }
 
 void World::UnregisterGameObjectName(GameObject* gameObject)
 {
-  if (!_currentLevel)
+  if (!_currentLevel || !gameObject)
     return;
+
+	auto it = _currentLevel->gameObjectNameMap.find(gameObject->name);
+  while (it != _currentLevel->gameObjectNameMap.end() &&
+         it->first == gameObject->name)
+  {
+    if (it->second == gameObject)
+    {
+      _currentLevel->gameObjectNameMap.erase(it);
+      break;
+    }
+    ++it;
+  }
 }
 
 void World::RegisterGameObjectTag(GameObject* gameObject)
 {
-  if (!_currentLevel)
+  if (!_currentLevel || !gameObject)
     return;
+
+	_currentLevel->gameObjectTagMap.insert({gameObject->tag, gameObject});
 }
 
 void World::UnregisterGameObjectTag(GameObject* gameObject)
 {
-  if (!_currentLevel)
+  if (!_currentLevel || !gameObject)
     return;
+
+	auto it = _currentLevel->gameObjectTagMap.find(gameObject->tag);
+  while (it != _currentLevel->gameObjectTagMap.end() &&
+         it->first == gameObject->tag)
+  {
+    if (it->second == gameObject)
+    {
+      _currentLevel->gameObjectTagMap.erase(it);
+      break;
+    }
+    ++it;
+  }
+}
+
+void World::UnregisterGameObjectType(GameObject* gameObject) {
+  if (!_currentLevel || !gameObject)
+    return;
+
+	auto it = _currentLevel->gameObjectTypeMap.find(gameObject->typeIndex);
+  while (it != _currentLevel->gameObjectTypeMap.end() &&
+         it->first == gameObject->typeIndex)
+  {
+    if (it->second == gameObject)
+    {
+      _currentLevel->gameObjectTypeMap.erase(it);
+      break;
+    }
+    ++it;
+  }
 }
 
 void World::RegisterMeshComponent(MeshComponent* meshComp)
@@ -216,6 +262,8 @@ void World::PhysicsUpdate(float fixedRate) {
 
 void World::ProcessInput(float dt)
 {
+  InputSystem::GetInstance()->Update(dt);
+
   // _camera->LookAt({10, 0, 0, 1});
   // 'Q' ´©¸£¸é Down
   if (Input.IsKeyPress(Key::Q))
@@ -348,6 +396,9 @@ void World::PostUpdate(float dt)
   // Update local transforms
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
+    if (!(gameObject->status == EStatus_Active))
+      continue;
+
     auto* transform = gameObject->transform;
     if (transform->bNeedUpdateTransform)
     {
@@ -358,6 +409,9 @@ void World::PostUpdate(float dt)
   // Update hierarchical transforms
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
+    if (!(gameObject->status == EStatus_Active))
+      continue;
+
     auto* transform = gameObject->transform;
     if (transform->bNeedUpdateGlobalTransform)
     {
@@ -420,8 +474,8 @@ void World::RenderGameObjects() {
       const auto& transform = gameObject->GetWorldTransform();
       for (auto handle : meshComp->GetSubMeshes())
       {
-        _renderer->BeginDraw(handle, transform);
-        _renderer->DrawMesh(handle);
+        // _renderer->BeginDraw(handle, transform);
+        _renderer->DrawMesh(handle, transform);
 			}
     }
     // Draw skeletal mesh
@@ -430,10 +484,8 @@ void World::RenderGameObjects() {
     {
       auto handle = skeletalMeshComp->GetHandle();
       const auto& transform = gameObject->GetWorldTransform();
-      _renderer->BeginDraw(handle, transform *  // NOTE: Remove the scaling and rotation.
-                                       XMMatrixScaling(1.f, 1.f, 1.f) *
-                                       XMMatrixRotationAxis({1.f,0.f,0.f},-XM_PIDIV2));
-      _renderer->DrawMesh(handle, skeletalMeshComp->boneTransforms);
+      // _renderer->BeginDraw(handle, transform);
+      _renderer->DrawMesh(handle, transform, skeletalMeshComp->boneTransforms);
     }
   }
 
@@ -454,7 +506,7 @@ void World::CleanupStage() {
   {
     if (gameObject->status == EStatus_Cleanup)
     {
-      // Mark as destroyed.
+      // Destroy itself.
       gameObject->FinishDestroy();
     }
   }
@@ -472,16 +524,25 @@ void World::CleanupStage() {
       });
     }
 
+		// Begin destroy
     if (gameObject->bShouldDestroy)
     {
-      // Activate the game object.
-      gameObject->BeginDestroy();
-      gameObject->isActive = false;
-      gameObject->bShouldDestroy = false;
+      UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
+        object->BeginDestroy();
+        object->isActive = false;
+        object->bShouldDestroy = false;
+
+				// Remove hierarchical relationships
+        object->parent->RemoveChild(object);
+				// Remove it from the search registrations
+        object->SetName("");
+        object->SetGameObjectTag("");
+        object->RemoveFromTypeRegistration();
+      });
     }
   }
 
-  // Destroy game objects
+  // Remove destroyed game objects
   for (auto it = _currentLevel->GetGameObjectList().begin();
        it != _currentLevel->GetGameObjectList().end();)
   {

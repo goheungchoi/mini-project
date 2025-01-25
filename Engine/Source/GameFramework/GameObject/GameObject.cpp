@@ -2,23 +2,54 @@
 
 #include "GameFramework/World/World.h"
 
-void GameObject::SetGameObjectTag(const std::string& tag)
-{
-  this->tag = tag;
-  world->RegisterGameObjectTag(this);
-}
 
 void GameObject::SetName(const std::string& name)
 {
+  if (name.empty())
+  {
+    world->UnregisterGameObjectName(this);
+    return;
+  }
+
+  if (!this->tag.empty())
+  {
+    world->UnregisterGameObjectName(this);
+  }
   this->name = name;
   world->RegisterGameObjectName(this);
 }
 
-GameObject* GameObject::Clone()
+void GameObject::SetGameObjectTag(const std::string& tag)
 {
-  /* TODO: */
-  return nullptr;
+	// If empty tag is inputted
+  if (tag.empty())
+  {
+		// Reset the game object tag
+    world->UnregisterGameObjectTag(this);
+    return;
+	}
+
+	// If the current tag is not empty.
+  if (!this->tag.empty())
+  {
+		// Unregister the original game object tag first.
+    world->UnregisterGameObjectTag(this);
+	}
+	// Change tag first
+  this->tag = tag;
+	// Register it to the world.
+  world->RegisterGameObjectTag(this);
 }
+
+void GameObject::RemoveFromTypeRegistration() {
+  world->UnregisterGameObjectType(this);
+}
+
+//GameObject* GameObject::Clone()
+//{
+//  /* TODO: */
+//  return nullptr;
+//}
 
 void GameObject::RegisterMeshComponentToWorld(MeshComponent* meshComp) {
   world->RegisterMeshComponent(meshComp);

@@ -37,7 +37,7 @@ inline ResourceType GetHandleResourceType(const Handle* handle)
 struct ShaderHandle : public Handle
 {
   ShaderHandle() : Handle{} {}
-  ShaderHandle(Handle& handle) : Handle(handle)
+  ShaderHandle(const Handle& handle) : Handle(handle)
   {
     ResourceType type = GetHandleResourceType(this);
     if (ResourceType::kShader != type && ResourceType::kInvalid != type)
@@ -58,7 +58,7 @@ struct ShaderHandle : public Handle
 struct MeshHandle : public Handle
 {
   MeshHandle() : Handle{} {}
-  MeshHandle(Handle& handle) : Handle(handle)
+  MeshHandle(const Handle& handle) : Handle(handle)
   {
     ResourceType type = GetHandleResourceType(this);
     if (ResourceType::kMesh != type && ResourceType::kInvalid != type)
@@ -79,7 +79,7 @@ struct MeshHandle : public Handle
 struct MaterialHandle : public Handle
 {
   MaterialHandle() : Handle{} {}
-  MaterialHandle(Handle& handle) : Handle(handle)
+  MaterialHandle(const Handle& handle) : Handle(handle)
   {
     ResourceType type = GetHandleResourceType(this);
     if (ResourceType::kMaterial != type && ResourceType::kInvalid != type)
@@ -100,7 +100,7 @@ struct MaterialHandle : public Handle
 struct TextureHandle : public Handle
 {
   TextureHandle() : Handle{} {}
-  TextureHandle(Handle& handle) : Handle(handle)
+  TextureHandle(const Handle& handle) : Handle(handle)
   {
     ResourceType type = GetHandleResourceType(this);
     if (ResourceType::kTexture != type && ResourceType::kInvalid != type)
@@ -121,7 +121,7 @@ struct TextureHandle : public Handle
 struct ModelHandle : public Handle
 {
   ModelHandle() : Handle{} {}
-  ModelHandle(Handle& handle) : Handle(handle)
+  ModelHandle(const Handle& handle) : Handle(handle)
   {
     ResourceType type = GetHandleResourceType(this);
     if (ResourceType::kModel != type && ResourceType::kInvalid != type)
@@ -142,7 +142,7 @@ struct ModelHandle : public Handle
 struct SkeletonHandle : public Handle
 {
   SkeletonHandle() : Handle{} {}
-  SkeletonHandle(Handle& handle) : Handle(handle)
+  SkeletonHandle(const Handle& handle) : Handle(handle)
   {
     ResourceType type = GetHandleResourceType(this);
     if (ResourceType::kSkeleton != type && ResourceType::kInvalid != type)
@@ -155,7 +155,7 @@ struct SkeletonHandle : public Handle
 struct AnimationHandle : public Handle
 {
   AnimationHandle() : Handle{} {}
-  AnimationHandle(Handle& handle) : Handle(handle)
+  AnimationHandle(const Handle& handle) : Handle(handle)
   {
     ResourceType type = GetHandleResourceType(this);
     if (ResourceType::kAnimation != type && ResourceType::kInvalid != type)
@@ -176,7 +176,7 @@ struct AnimationHandle : public Handle
 struct AnimatorHandle : public Handle
 {
   AnimatorHandle() : Handle{} {}
-  AnimatorHandle(Handle& handle) : Handle(handle)
+  AnimatorHandle(const Handle& handle) : Handle(handle)
   {
     ResourceType type = GetHandleResourceType(this);
     if (ResourceType::kAnimator != type && ResourceType::kInvalid != type)
@@ -197,7 +197,7 @@ struct AnimatorHandle : public Handle
 struct AudioHandle : public Handle
 {
   AudioHandle() : Handle{} {}
-  AudioHandle(Handle& handle) : Handle(handle)
+  AudioHandle(const Handle& handle) : Handle(handle)
   {
     ResourceType type = GetHandleResourceType(this);
     if (ResourceType::kAudio != type && ResourceType::kInvalid != type)
