@@ -39,7 +39,7 @@ public:
    * @brief call per mesh
    * @param handle : mesh handle owned by mesh
    */
-  virtual void DrawMesh(MeshHandle handle,
+  virtual void DrawMesh(MeshHandle handle, Matrix world,
                         vector<DirectX::XMMATRIX> boneTransforms =
                                                vector<DirectX::XMMATRIX>()) = 0;
   /**

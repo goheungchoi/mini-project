@@ -312,7 +312,8 @@ PS_INPUT vs_main(VS_INPUT input)
                                boneIDBuffer[input.vertexID * 8 + 5],
                                boneIDBuffer[input.vertexID * 8 + 6],
                                boneIDBuffer[input.vertexID * 8 + 7]);
-
+    boneIndices0 -= uint4(1.f, 1.f, 1.f, 1.f);
+    boneIndices1 -= uint4(1.f, 1.f, 1.f, 1.f);
     float4 boneWeights0 = float4(boneWeightBuffer[input.vertexID * 8 + 0],
                                  boneWeightBuffer[input.vertexID * 8 + 1],
                                  boneWeightBuffer[input.vertexID * 8 + 2],

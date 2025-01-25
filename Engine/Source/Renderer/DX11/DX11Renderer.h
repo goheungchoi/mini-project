@@ -24,7 +24,8 @@ public:
   void BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
                   DirectionalLight mainLight) override;
   void BeginDraw(MeshHandle handle, Matrix world) override;
-  void DrawMesh(MeshHandle handle, vector<DirectX::XMMATRIX> boneTransforms =
+  void DrawMesh(MeshHandle handle, Matrix world,
+                vector<DirectX::XMMATRIX> boneTransforms =
                                        vector<DirectX::XMMATRIX>()) override;
   void EndDraw() override;
   void EndFrame() override;
