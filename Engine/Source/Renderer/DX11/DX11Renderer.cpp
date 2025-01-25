@@ -7,7 +7,7 @@
 #include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
 #include "Renderer/D2DRenderer/D2DRenderer.h"
-//#define USED2D
+// #define USED2D
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
@@ -42,7 +42,6 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   _d2dRenderer->Init(_device, _swapChain, _passMgr->GetMainViewport());
 
 #endif //  USED2D
-
 
   return true;
 }
@@ -95,12 +94,11 @@ void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
   {
     throw std::exception("buffer not registered");
   }
-  
-  buffer->second->world = world;
 }
 
-void DX11Renderer::DrawMesh(MeshHandle handle,
-                          vector<DirectX::XMMATRIX> boneTransforms)
+void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world,
+
+                            vector<DirectX::XMMATRIX> boneTransforms)
 {
   auto buffer = _storage->meshMap.find(handle);
   if (buffer == _storage->meshMap.end())
@@ -111,7 +109,8 @@ void DX11Renderer::DrawMesh(MeshHandle handle,
   {
     buffer->second->boneMatirx = boneTransforms;
   }
-  _passMgr->ClassifyPass(buffer->second);
+  //buffer->second->world = world;
+  _passMgr->ClassifyPass(buffer->second,world);
 }
 
 void DX11Renderer::EndDraw() {}
@@ -169,7 +168,7 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
     MeshBuffer* meshBuffer = new MeshBuffer;
 
     MeshData meshData = AccessMeshData(handle);
-    
+
     // material
     {
       meshBuffer->material = new Material;
@@ -193,8 +192,8 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
     }
     if (!meshData.bones.empty())
     {
-      std::vector<uint32_t> boneIndicesBuffer; 
-      std::vector<float> boneWeightsBuffer; 
+      std::vector<uint32_t> boneIndicesBuffer;
+      std::vector<float> boneWeightsBuffer;
       meshBuffer->flags |= RenderPassType::kSkinning;
       size_t index = 0;
       for (const auto& vertexBoneData : meshData.vertices)
@@ -204,20 +203,21 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
           boneIndicesBuffer.push_back(meshData.boneIds[index]);
           boneWeightsBuffer.push_back(meshData.boneWeights[index]);
           ++index;
-				}
+        }
       }
       UINT size = sizeof(uint32_t) * boneIndicesBuffer.size();
       meshBuffer->boneIDBuffer = _device->CreateDataBuffer(
-          boneIndicesBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE,sizeof(uint32_t));
+          boneIndicesBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE,
+          sizeof(uint32_t));
       meshBuffer->boneIDSrv = _device->CreateStructuredSRV(
           meshBuffer->boneIDBuffer.Get(), boneIndicesBuffer.size());
-      
+
       size = sizeof(float) * boneWeightsBuffer.size();
-      meshBuffer->boneWeightsBuffer = _device->CreateDataBuffer(
-          boneWeightsBuffer.data(), size, D3D11_BIND_SHADER_RESOURCE,
-          sizeof(float));
-      meshBuffer->boneWeightsSrv =
-          _device->CreateStructuredSRV(meshBuffer->boneWeightsBuffer.Get(), boneWeightsBuffer.size());
+      meshBuffer->boneWeightsBuffer =
+          _device->CreateDataBuffer(boneWeightsBuffer.data(), size,
+                                    D3D11_BIND_SHADER_RESOURCE, sizeof(float));
+      meshBuffer->boneWeightsSrv = _device->CreateStructuredSRV(
+          meshBuffer->boneWeightsBuffer.Get(), boneWeightsBuffer.size());
     }
     // SWTODO : 나중에 skeletal이냐 static이냐 구분해야함.??
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
@@ -242,7 +242,7 @@ bool DX11Renderer::DestroyMesh()
   // delete mesh
   for (auto& mesh : _storage->meshMap)
   {
-    SAFE_RELEASE( mesh.second);
+    SAFE_RELEASE(mesh.second);
   }
   _storage->meshMap.clear();
   return false;
@@ -337,7 +337,7 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                       specularIBLPath);
 }
 #ifdef _DEBUG
-void DX11Renderer::DrawDebugSphere(Matrix world, Color color) 
+void DX11Renderer::DrawDebugSphere(Matrix world, Color color)
 {
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Sphere, world, color);
 }
@@ -381,7 +381,7 @@ void DX11Renderer::CreateSprite(LPCSTR path)
 }
 
 void DX11Renderer::AddText(const wchar_t* format, Vector4 rect,
-                            const std::wstring& fontName, Color color)
+                           const std::wstring& fontName, Color color)
 {
   _d2dRenderer->AddText(format, rect, fontName, color);
 }

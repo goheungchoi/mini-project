@@ -27,11 +27,11 @@ class RenderPassManager
 private:
   // mesh
   // 0 : single sided 1 : double sided
-  vector<map<pair<float, int>, MeshBuffer*, greater<std::pair<float, int>>>>
+  vector<map<pair<float, int>, std::pair<MeshBuffer*,Matrix>, greater<std::pair<float, int>>>>
       _transparentMeshes;
   // 0 : single sided 1 : double sided
-  vector<vector<MeshBuffer*>> _opaqueMesh;
-  vector<vector<MeshBuffer*>> _shadowMesh;
+  vector<vector<std::pair<MeshBuffer*,Matrix>>> _opaqueMesh;
+  vector<vector<std::pair<MeshBuffer*,Matrix>>> _shadowMesh;
   SkyBox* _skyBox = nullptr;
   GeometryPrimitive* _geometry = nullptr;
   // Constant Buffer
@@ -120,14 +120,14 @@ public:
   {
     _mainLight = mainLight;
   }
-  void ClassifyPass(MeshBuffer* buff)
+  void ClassifyPass(MeshBuffer* buff,Matrix world)
   {
     if (buff->flags & RenderPassType::kOpaquePass)
     {
       if (!buff->material->doubleSided)
-        _opaqueMesh[0].push_back(buff);
+        _opaqueMesh[0].push_back({buff,world});
       else
-        _opaqueMesh[1].push_back(buff);
+        _opaqueMesh[1].push_back({buff, world});
     }
     if (buff->flags & RenderPassType::kTransparentPass)
     {
@@ -139,9 +139,9 @@ public:
           Vector4::Transform(worldPos, _camera.view); // 뷰 공간으로 변환
       float viewZ = viewPos.z;                        // 뷰 공간 Z값 추출
       if (!buff->material->doubleSided)
-        _transparentMeshes[0].insert({{viewZ, max}, buff});
+        _transparentMeshes[0].insert({{viewZ, max}, {buff, world}});
       else
-        _transparentMeshes[1].insert({{viewZ, max}, buff});
+        _transparentMeshes[1].insert({{viewZ, max}, {buff, world}});
 
       max--;
     }
@@ -149,9 +149,9 @@ public:
     if (buff->flags & RenderPassType::kShadowPass)
     {
       if (!buff->material->doubleSided)
-        _shadowMesh[0].push_back(buff);
+        _shadowMesh[0].push_back({buff, world});
       else
-        _shadowMesh[1].push_back(buff);
+        _shadowMesh[1].push_back({buff, world});
     }
   }
   void ProcessPass()
@@ -416,39 +416,39 @@ private:
     _shadow->Prepare();
     dc->PSSetShader(nullptr, nullptr, 0);
 
-    std::ranges::for_each(_shadowMesh[0], [this, dc](MeshBuffer* buffer) {
-      if (buffer->flags & RenderPassType::kSkinning)
+    std::ranges::for_each(_shadowMesh[0], [this, dc](const auto& pair) {
+      if (pair.first->flags & RenderPassType::kSkinning)
       {
         Constant::BoneMatrix boneMat = {};
-        std::copy(buffer->boneMatirx.begin(), buffer->boneMatirx.end(),
+        std::copy(pair.first->boneMatirx.begin(), pair.first->boneMatirx.end(),
                   boneMat.matrix);
 
         _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
         dc->IASetInputLayout(_vShaders["SkinningShadow"]->layout.Get());
         dc->VSSetShader(_vShaders["SkinningShadow"]->shader.Get(), nullptr, 0);
-        dc->VSSetShaderResources(15, 1, buffer->boneIDSrv.GetAddressOf());
-        dc->VSSetShaderResources(16, 1, buffer->boneWeightsSrv.GetAddressOf());
+        dc->VSSetShaderResources(15, 1, pair.first->boneIDSrv.GetAddressOf());
+        dc->VSSetShaderResources(16, 1, pair.first->boneWeightsSrv.GetAddressOf());
       }
       else
       {
         dc->IASetInputLayout(_vShaders["Shadow"]->layout.Get());
         dc->VSSetShader(_vShaders["Shadow"]->shader.Get(), nullptr, 0);
       }
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
+      dc->IASetVertexBuffers(0, 1, pair.first->vertexBuffer.GetAddressOf(),
+                             &(pair.first->stride), &(pair.first->offset));
+      dc->IASetIndexBuffer(pair.first->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {pair.second.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
+      dc->DrawIndexed(pair.first->nIndices, 0, 0);
     });
     _pso->SetCullNone();
-    std::ranges::for_each(_shadowMesh[1], [this, dc](MeshBuffer* buffer) {
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
+    std::ranges::for_each(_shadowMesh[1], [this, dc](const auto& pair) {
+      dc->IASetVertexBuffers(0, 1, pair.first->vertexBuffer.GetAddressOf(),
+                             &(pair.first->stride), &(pair.first->offset));
+      dc->IASetIndexBuffer(pair.first->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {pair.second.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
+      dc->DrawIndexed(pair.first->nIndices, 0, 0);
     });
   }
 
@@ -467,53 +467,53 @@ private:
     _skyBox->Render();
     // Deferred meshes
     dc->PSSetShader(_pShaders["Deffered"]->shader.Get(), nullptr, 0);
-    std::ranges::for_each(_opaqueMesh[0], [this, dc](MeshBuffer* buffer) {
-      if (buffer->flags & RenderPassType::kSkinning)
+    std::ranges::for_each(_opaqueMesh[0], [this, dc](const auto& pair) {
+      if (pair.first->flags & RenderPassType::kSkinning)
       {
         Constant::BoneMatrix boneMat = {};
-        std::copy(buffer->boneMatirx.begin(),buffer->boneMatirx.end(),boneMat.matrix);
+        std::copy(pair.first->boneMatirx.begin(),pair.first->boneMatirx.end(),boneMat.matrix);
         
         _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
         dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
         dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
-        dc->VSSetShaderResources(15, 1, buffer->boneIDSrv.GetAddressOf());
-        dc->VSSetShaderResources(16, 1, buffer->boneWeightsSrv.GetAddressOf());
+        dc->VSSetShaderResources(15, 1, pair.first->boneIDSrv.GetAddressOf());
+        dc->VSSetShaderResources(16, 1, pair.first->boneWeightsSrv.GetAddressOf());
       } 
       else
       {
         dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
         dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
       }
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
+      dc->IASetVertexBuffers(0, 1, pair.first->vertexBuffer.GetAddressOf(),
+                             &(pair.first->stride), &(pair.first->offset));
+      dc->IASetIndexBuffer(pair.first->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {pair.second.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
       Constant::PixelData data = {
-        .alphaCutoff = buffer->material->alphaCutoff,
-        .metalicFactor = buffer->material->metallicFactor,
-        .roughnessFactor = buffer->material->roughnessFactor,
-        .albedoFactor = buffer->material->albedoFactor
+        .alphaCutoff = pair.first->material->alphaCutoff,
+        .metalicFactor = pair.first->material->metallicFactor,
+        .roughnessFactor = pair.first->material->roughnessFactor,
+        .albedoFactor = pair.first->material->albedoFactor
       };
       _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
-      buffer->material->PSSetResourceViews(_device);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
+      pair.first->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(pair.first->nIndices, 0, 0);
     });
     _pso->SetCullNone();
-    std::ranges::for_each(_opaqueMesh[1], [this, dc](MeshBuffer* buffer) {
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
+    std::ranges::for_each(_opaqueMesh[1], [this, dc](const auto& pair) {
+      dc->IASetVertexBuffers(0, 1, pair.first->vertexBuffer.GetAddressOf(),
+                             &(pair.first->stride), &(pair.first->offset));
+      dc->IASetIndexBuffer(pair.first->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {pair.second.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
       Constant::PixelData data = {
-          .alphaCutoff = buffer->material->alphaCutoff,
-          .metalicFactor = buffer->material->metallicFactor,
-          .roughnessFactor = buffer->material->roughnessFactor,
-          .albedoFactor = buffer->material->albedoFactor};
+          .alphaCutoff = pair.first->material->alphaCutoff,
+          .metalicFactor = pair.first->material->metallicFactor,
+          .roughnessFactor = pair.first->material->roughnessFactor,
+          .albedoFactor = pair.first->material->albedoFactor};
       _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
-      buffer->material->PSSetResourceViews(_device);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
+      pair.first->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(pair.first->nIndices, 0, 0);
     });
     _pso->ClearBackBufferRTV();
     _pso->TurnZBufferOff();
@@ -533,69 +533,77 @@ private:
     
     dc->PSSetShader(_pShaders["Transparency"]->shader.Get(), nullptr, 0);
     _pso->TurnZBufferOn();
-    std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& pair) {
-      const auto& [z, buffer] = pair;
-      if (buffer->flags & RenderPassType::kSkinning)
+    std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& iter) {
+      const auto& [z, pair] = iter;
+      if (pair.first->flags & RenderPassType::kSkinning)
       {
         Constant::BoneMatrix boneMat = {};
-        std::copy(buffer->boneMatirx.begin(), buffer->boneMatirx.end(),
+        std::copy(pair.first->boneMatirx.begin(), pair.first->boneMatirx.end(),
                   boneMat.matrix);
 
         _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
         dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
         dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
-        dc->VSSetShaderResources(15, 1, buffer->boneIDSrv.GetAddressOf());
-        dc->VSSetShaderResources(16, 1, buffer->boneWeightsSrv.GetAddressOf());
+        dc->VSSetShaderResources(15, 1, pair.first->boneIDSrv.GetAddressOf());
+        dc->VSSetShaderResources(16, 1, pair.first->boneWeightsSrv.GetAddressOf());
       }
       else
       {
         dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
         dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
       }
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
+      dc->IASetVertexBuffers(0, 1, pair.first->vertexBuffer.GetAddressOf(),
+                             &(pair.first->stride), &(pair.first->offset));
+      dc->IASetIndexBuffer(pair.first->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {pair.second.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
       Constant::PixelData data = {
-          .alphaCutoff = buffer->material->alphaCutoff,
-          .metalicFactor = buffer->material->metallicFactor,
-          .roughnessFactor = buffer->material->roughnessFactor,
-          .albedoFactor = buffer->material->albedoFactor};
+          .alphaCutoff = pair.first->material->alphaCutoff,
+          .metalicFactor = pair.first->material->metallicFactor,
+          .roughnessFactor = pair.first->material->roughnessFactor,
+          .albedoFactor = pair.first->material->albedoFactor};
       _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
-      buffer->material->PSSetResourceViews(_device);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
+      pair.first->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(pair.first->nIndices, 0, 0);
     });
     _pso->SetCullNone();
-    std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& pair) {
-      const auto& [z, buffer] = pair;
+    std::ranges::for_each(_transparentMeshes[0], [this, dc](const auto& iter) {
+      const auto& [z, pair] = iter;
 
-      dc->IASetVertexBuffers(0, 1, buffer->vertexBuffer.GetAddressOf(),
-                             &(buffer->stride), &(buffer->offset));
-      dc->IASetIndexBuffer(buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-      Constant::World world = {buffer->world.Transpose()};
+      dc->IASetVertexBuffers(0, 1, pair.first->vertexBuffer.GetAddressOf(),
+                             &(pair.first->stride), &(pair.first->offset));
+      dc->IASetIndexBuffer(pair.first->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+      Constant::World world = {pair.second.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
       Constant::PixelData data = {
-          .alphaCutoff = buffer->material->alphaCutoff,
-          .metalicFactor = buffer->material->metallicFactor,
-          .roughnessFactor = buffer->material->roughnessFactor,
-          .albedoFactor = buffer->material->albedoFactor};
+          .alphaCutoff = pair.first->material->alphaCutoff,
+          .metalicFactor = pair.first->material->metallicFactor,
+          .roughnessFactor = pair.first->material->roughnessFactor,
+          .albedoFactor = pair.first->material->albedoFactor};
       _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
-      buffer->material->PSSetResourceViews(_device);
-      dc->DrawIndexed(buffer->nIndices, 0, 0);
+      pair.first->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(pair.first->nIndices, 0, 0);
     });
   }
 
   void Clear()
   {
-    std::ranges::for_each(_opaqueMesh,
-                          [](std::vector<MeshBuffer*>& vec) { vec.clear(); });
+    std::ranges::for_each(
+        _opaqueMesh,
+        [](std::vector<std::pair<MeshBuffer*, Matrix>>& vec) { vec.clear(); });
+
+    // _transparentMeshes clear
     std::ranges::for_each(
         _transparentMeshes,
-        [](map<pair<float, int>, MeshBuffer*, greater<std::pair<float, int>>>&
-               map) { map.clear(); });
-    std::ranges::for_each(_shadowMesh,
-                          [](std::vector<MeshBuffer*>& vec) { vec.clear(); });
+        [](std::map<std::pair<float, int>, std::pair<MeshBuffer*, Matrix>,
+                    std::greater<std::pair<float, int>>>& map) {
+          map.clear();
+        });
+
+    // _shadowMesh clear
+    std::ranges::for_each(
+        _shadowMesh,
+        [](std::vector<std::pair<MeshBuffer*, Matrix>>& vec) { vec.clear(); });
 #ifdef _DEBUG
     _spheres.clear();
     _boxes.clear();
