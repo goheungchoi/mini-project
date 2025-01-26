@@ -11,6 +11,8 @@
 #include "GameFramework/Components/SkeletalMeshComponent.h"
 #include "GameFramework/Components/TransformComponent.h"
 
+#include "PhyjixWorld.h"
+
 #ifdef _DEBUG
 #include <imgui.h>
 #include <imgui_impl_dx11.h>
@@ -25,6 +27,9 @@ void World::Initialize(HWND hwnd, const std::wstring& title) {
       "Textures/BakerDiffuseIrradiance.dds", "Textures/BakerSpecularIBL.dds");
 
   _defaultCamera = new Camera(kScreenWidth, kScreenHeight,XM_PIDIV4);
+
+	_phyjixEngine = new PhyjixEngine();
+
   SetMainCamera(_defaultCamera);
 }
 
@@ -483,9 +488,10 @@ void World::RenderGameObjects() {
              skeletalMeshComp)
     {
       auto handle = skeletalMeshComp->GetHandle();
-      const auto& transform = gameObject->GetWorldTransform();
+      // const auto& transform = skeletalMeshComp->rootBone->GetGlobalTransform();
       // _renderer->BeginDraw(handle, transform);
-      _renderer->DrawMesh(handle, transform, skeletalMeshComp->boneTransforms);
+      _renderer->DrawMesh(handle, XMMatrixIdentity(),
+                          skeletalMeshComp->boneTransforms);
     }
   }
 
