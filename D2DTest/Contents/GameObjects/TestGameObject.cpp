@@ -10,9 +10,9 @@ TestGameObject::TestGameObject(World* world)
   //world->_renderer->CreateSprite("Textures/BakerSpecularBRDF_LUT.dds");
   world->_renderer->CreateSprite("Textures\\Test_CombatUI_1.png");
 
+  GetWorld()->_renderer->AddText(L"한글Test1234", {0, 0, 1920, 150}, L"궁서");
+  GetWorld()->_renderer->AddText(L"asdfqwer", {0, 0, 300, 150}, L"Agency FB");
 }
 void TestGameObject::OnRender() 
 {
-  GetWorld()->_renderer->AddText(L"한글Test1234", {0, 0, 1920, 150}, L"궁서");
-  GetWorld()->_renderer->AddText(L"asdfqwer", {0, 0, 300, 150}, L"Agency FB");
 }

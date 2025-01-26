@@ -171,6 +171,18 @@
 		<ClCompile Include="Contents\GameObjects\TestGameObject.cpp" />
 		<ClInclude Include="Contents\GameObjects\TestGameObject.h" />
 		<ClInclude Include="Contents\Levels\TestLevel.h" />
+		<ClCompile Include="Contents\Prototype\CameraObject.cpp" />
+		<ClInclude Include="Contents\Prototype\CameraObject.h" />
+		<ClCompile Include="Contents\Prototype\CellObject.cpp" />
+		<ClInclude Include="Contents\Prototype\CellObject.h" />
+		<ClCompile Include="Contents\Prototype\Character.cpp" />
+		<ClInclude Include="Contents\Prototype\Character.h" />
+		<ClCompile Include="Contents\Prototype\GameLevel.cpp" />
+		<ClInclude Include="Contents\Prototype\GameLevel.h" />
+		<ClCompile Include="Contents\Prototype\GridLevel.cpp" />
+		<ClInclude Include="Contents\Prototype\GridLevel.h" />
+		<ClCompile Include="Contents\Prototype\GridObject.cpp" />
+		<ClInclude Include="Contents\Prototype\GridObject.h" />
 		<None Include="imgui.ini" />
 	</ItemGroup>
 </Project>
