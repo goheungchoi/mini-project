@@ -7,7 +7,7 @@
 #include "Core/Async/Async.h"
 
 #include "GameFramework/Level/Level.h"
-#include "../../PhyjixEngine/pch.h"
+#include "../../PhyjixEngine/Interface.h"
 
 class World
 {
@@ -174,12 +174,6 @@ public:
 
 				// Attach it to the parent node.
         gameObjNodes[data.nodes[i].parent]->AddChild(newNode);
-        // Detach the parent transform from the root bone
-        if (!bRootBoneFound && data.nodes[i].meshes.empty())
-        {
-          bRootBoneFound = true;
-					newNode->DetachFromParentTransform();
-        }
       }
 
       // Bind the root bones to the skeletal mesh.
@@ -223,8 +217,6 @@ public:
 
     return (T*) gameObjNodes[0];
   }
-
-
   void RegisterGameObjectName(GameObject* gameObject);
   void UnregisterGameObjectName(GameObject* gameObject);
   void RegisterGameObjectTag(GameObject* gameObject);

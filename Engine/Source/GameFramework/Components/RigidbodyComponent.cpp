@@ -6,7 +6,7 @@
 void RigidbodyComponent::Initialize(
     const DirectX::SimpleMath::Vector3& position,
     const DirectX::SimpleMath::Vector3& size, ColliderShape cShape,
-    BOOL isStatic, BOOL isKinematic, PhyjixWorld* world)
+    BOOL isStatic, BOOL isKinematic, IPhyjixWorld* world)
 {
   _world = world;
   _rigidbody = _world->AddRigidBody(position, size, cShape, isStatic, isKinematic);
