@@ -45,12 +45,13 @@ public:
 
   virtual void BeginLevel() override {
     grid = world->CreateGameObject<GridObject>();
-    grid->CreateGrid(5, 5, 2.f);
+    grid->CreateGrid(6, 6, 1.4f);
 
 		map = world->CreateGameObjectFromModel(mapMeshHandle);
+    map->Translate(0.6f, -0.1f, 0.8f);
 
 		character = world->CreateGameObjectFromModel<Character>(animTestHandle);
-    character->SetRotationAroundXAxis(MathUtil::kQuaterPi_f);
+    // character->SetRotationAroundXAxis(MathUtil::kQuaterPi_f);
 	}
 
   virtual void DestroyLevel() override { Level::DestroyLevel(); }

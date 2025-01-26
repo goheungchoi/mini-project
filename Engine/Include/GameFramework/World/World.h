@@ -174,12 +174,6 @@ public:
 
 				// Attach it to the parent node.
         gameObjNodes[data.nodes[i].parent]->AddChild(newNode);
-        // Detach the parent transform from the root bone
-        if (!bRootBoneFound && data.nodes[i].meshes.empty())
-        {
-          bRootBoneFound = true;
-					newNode->DetachFromParentTransform();
-        }
       }
 
       // Bind the root bones to the skeletal mesh.

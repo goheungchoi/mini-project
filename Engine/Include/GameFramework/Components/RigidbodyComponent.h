@@ -16,7 +16,7 @@ public:
   void Initialize(const DirectX::SimpleMath::Vector3& position,
                   const DirectX::SimpleMath::Vector3& size,
                   ColliderShape cShape, BOOL isStatic, BOOL isKinematic,
-                  PhyjixWorld* world);
+                  IPhyjixWorld* world);
 
   //wrapper of the iRigidbody collision setting
   void SetCollisionEvent(IRigidBody* other, eCollisionEventType eventType, Event event);
@@ -42,7 +42,7 @@ public:
 private:
   TransformComponent* GetTransformComponent();
   IRigidBody* _rigidbody = nullptr;
-  PhyjixWorld* _world = nullptr;
+  IPhyjixWorld* _world = nullptr;
 
 #ifdef _DEBUG
   BOOL _bDebugDrawFlag = false;
