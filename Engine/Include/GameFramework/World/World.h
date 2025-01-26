@@ -7,7 +7,7 @@
 #include "Core/Async/Async.h"
 
 #include "GameFramework/Level/Level.h"
-#include "../../PhyjixEngine/pch.h"
+#include "../../PhyjixEngine/Interface.h"
 
 class World
 {
@@ -223,8 +223,6 @@ public:
 
     return (T*) gameObjNodes[0];
   }
-
-
   void RegisterGameObjectName(GameObject* gameObject);
   void UnregisterGameObjectName(GameObject* gameObject);
   void RegisterGameObjectTag(GameObject* gameObject);
