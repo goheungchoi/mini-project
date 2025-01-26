@@ -64,6 +64,22 @@ public:
     return grid[w + h * width];
 	}
 
+	GameObject* GetGameObjectAt(uint32_t w, uint32_t h) {
+    if (w >= width || h >= height)
+      return nullptr;
+
+
+	}
+
+	std::pair<float, float> GetActualPositionAt(uint32_t w, uint32_t h) {
+    if (w >= width || h >= height)
+      throw std::runtime_error("grid cell out of bounds!");
+
+    float pos_x = actualCellSize * (w % width) + actualCellSize / 2;
+    float pos_z = actualCellSize * (h / height) + actualCellSize / 2;
+    return {pos_x, pos_z};
+	}
+
 	// Interaction
   virtual void OnBeginCursorOver() {};
   virtual void OnEndCursorOver() {};

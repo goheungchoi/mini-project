@@ -102,13 +102,13 @@ uint querySpecularTextureLevels()
 #ifdef Quad
 float3 GetWorldPosition(float2 screenUV, float depth)
 {
-    // 1. NDC ÁÂÇ¥ º¹¿ø
+    // 1. NDC ÃÃ‚Ã‡Â¥ ÂºÂ¹Â¿Ã¸
     float3 ndcPosition = float3(screenUV * 2.0f - 1.0f, depth);
     ndcPosition.y = -ndcPosition.y;
-    // 2. Homogeneous Clip Space º¹¿ø
+    // 2. Homogeneous Clip Space ÂºÂ¹Â¿Ã¸
     float4 clipPosition = float4(ndcPosition, 1.0f);
 
-    // 3. ¿ùµå ÁÂÇ¥ º¹¿ø (View-ProjectionÀÇ ¿ªÇà·Ä »ç¿ë)
+    // 3. Â¿Ã¹ÂµÃ¥ ÃÃ‚Ã‡Â¥ ÂºÂ¹Â¿Ã¸ (View-ProjectionÃ€Ã‡ Â¿ÂªÃ‡Ã Â·Ã„ Â»Ã§Â¿Ã«)
     float4 worldPosition = mul(clipPosition, InverseProjectionMatrix);
     worldPosition = mul(worldPosition, InverseViewMatrix);
     worldPosition /= worldPosition.w; // Homogeneous divide
@@ -178,17 +178,17 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     //ibl
     float3 irradiance = evnIrradianceTexture.Sample(samAnisotropy, normal).rgb;
     F = FresnelFactor(NdotV, F0);
-        //±Ý¼ÓÀÏ¼ö·Ï specularÇ×À» ±×´ë·Î, Ç¥¸é »ê¶õÀ» ÁÙÀÎ´Ù.
+        //Â±ÃÂ¼Ã“Ã€ÃÂ¼Ã¶Â·Ã specularÃ‡Ã—Ã€Â» Â±Ã—Â´Ã«Â·ÃŽ, Ã‡Â¥Â¸Ã© Â»ÃªÂ¶ÃµÃ€Â» ÃÃ™Ã€ÃŽÂ´Ã™.
     kd = lerp(float3(1.f, 1.f, 1.f) - F, float3(0.f, 0.f, 0.f), metallic);
     float3 IBLdiffuse = kd * albedo * irradiance;
-        //mip map ·¹º§ ±¸ÇÏ±â
+        //mip map Â·Â¹ÂºÂ§ Â±Â¸Ã‡ÃÂ±Ã¢
     uint specularTextureLevels = querySpecularTextureLevels();
-        //·¹º§¿¡ µû¶ó roughness¸¦ °öÇØ¼­ ¹Ý»çÀÇ ¼±¸íÇÔ Á¤µµ ±¸ÇÏ±â -> roughness°¡0ÀÌ¸é Á¦ÀÏ Å« ÇØ»óµµÀÇ Å¥ºê¸Ê ¹Ý»ç
+        //Â·Â¹ÂºÂ§Â¿Â¡ ÂµÃ»Â¶Ã³ roughnessÂ¸Â¦ Â°Ã¶Ã‡Ã˜Â¼Â­ Â¹ÃÂ»Ã§Ã€Ã‡ Â¼Â±Â¸Ã­Ã‡Ã” ÃÂ¤ÂµÂµ Â±Â¸Ã‡ÃÂ±Ã¢ -> roughnessÂ°Â¡0Ã€ÃŒÂ¸Ã© ÃÂ¦Ã€Ã Ã…Â« Ã‡Ã˜Â»Ã³ÂµÂµÃ€Ã‡ Ã…Â¥ÂºÃªÂ¸ÃŠ Â¹ÃÂ»Ã§
     float3 specularIrradiance = evnSpecularIBLTexture.SampleLevel(samAnisotropy, lightReflection, roughness * specularTextureLevels).rgb;
-        //look up table pbrÀºÁ¤ÀûÀÌ¹Ç·Î ¹Ì¸® °è»êµÈ ÅØ½ºÃÄ·Î uvÁÂÇ¥ÀÇ ±Ù»ç°ªÀ» »ç¿ë
+        //look up table pbrÃ€ÂºÃÂ¤Ã€Ã»Ã€ÃŒÂ¹Ã‡Â·ÃŽ Â¹ÃŒÂ¸Â® Â°Ã¨Â»ÃªÂµÃˆ Ã…Ã˜Â½ÂºÃƒÃ„Â·ÃŽ uvÃÃ‚Ã‡Â¥Ã€Ã‡ Â±Ã™Â»Ã§Â°ÂªÃ€Â» Â»Ã§Â¿Ã«
     float2 IBLSpecularBRDF = evnSpecularBRDF.Sample(samClamp, float2(NdotV, roughness)).rg;
     float3 specularIBL = (F0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
-        //´õÇÏ±â
+        //Â´ÃµÃ‡ÃÂ±Ã¢
     
     float4 ambientFactor = texOcclusion.Sample(samLinear, input.uv);
     
@@ -203,13 +203,13 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     float4 positionShadow = deferredShadowPosition.Sample(samLinear, input.uv);
     float currShadowDepth = positionShadow.z; // / positionShadow.w;
     float2 uv = positionShadow.xy; // / positionShadow.w;
-    //yµÚÁý±â
+    //yÂµÃšÃÃ½Â±Ã¢
     uv.y = -uv.y;
     //-1~1 ->0~1
     uv = uv * 0.5f + 0.5f;
-    //±×¸²ÀÚ factor
+    //Â±Ã—Â¸Â²Ã€Ãš factor
     float shadowFactor = 1.f;
-    //Ä¿¹öÇÒ¼ö ÀÖ´Â ¿µ¿ªÀÌ ¾Æ´Ï¸é Ã³¸® x
+    //Ã„Â¿Â¹Ã¶Ã‡Ã’Â¼Ã¶ Ã€Ã–Â´Ã‚ Â¿ÂµÂ¿ÂªÃ€ÃŒ Â¾Ã†Â´ÃÂ¸Ã© ÃƒÂ³Â¸Â® x
     if (uv.x >= 0.f && uv.x <= 1.f && uv.y >= 0.f && uv.y <= 1.f)
     {
         float2 offset[9] =
@@ -220,13 +220,13 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
         };
         uint width, height, levels;
         texShadow.GetDimensions(width, height);
-        float texelSize = 1.0 / width; //ÅØ¼¿ Å©±â
+        float texelSize = 1.0 / width; //Ã…Ã˜Â¼Â¿ Ã…Â©Â±Ã¢
         shadowFactor = 0.f;
             [unroll]
         for (int i = 0; i < 9; i++)
         {
-            float2 sampleUV = uv + offset[i] * texelSize; //¿ÀÇÁ¼Â °è»ê
-                //sampleCmpLevelZero·Î pcf»ùÇÃ¸µ
+            float2 sampleUV = uv + offset[i] * texelSize; //Â¿Ã€Ã‡ÃÂ¼Ã‚ Â°Ã¨Â»Ãª
+                //sampleCmpLevelZeroÂ·ÃŽ pcfÂ»Ã¹Ã‡ÃƒÂ¸Âµ
             shadowFactor += texShadow.SampleCmpLevelZero(samComparison, sampleUV, currShadowDepth - 0.001);
 
         }
@@ -414,17 +414,17 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     //ibl
     float3 irradiance = evnIrradianceTexture.Sample(samAnisotropy, normal).rgb;
     F = FresnelFactor(NdotV, f0);
-        //±Ý¼ÓÀÏ¼ö·Ï specularÇ×À» ±×´ë·Î, Ç¥¸é »ê¶õÀ» ÁÙÀÎ´Ù.
+        //Â±ÃÂ¼Ã“Ã€ÃÂ¼Ã¶Â·Ã specularÃ‡Ã—Ã€Â» Â±Ã—Â´Ã«Â·ÃŽ, Ã‡Â¥Â¸Ã© Â»ÃªÂ¶ÃµÃ€Â» ÃÃ™Ã€ÃŽÂ´Ã™.
     kd = lerp(float3(1.f, 1.f, 1.f) - F, float3(0.f, 0.f, 0.f), metallic);
     float3 IBLdiffuse = kd * albedo * irradiance;
-        //mip map ·¹º§ ±¸ÇÏ±â
+        //mip map Â·Â¹ÂºÂ§ Â±Â¸Ã‡ÃÂ±Ã¢
     uint specularTextureLevels = querySpecularTextureLevels();
-        //·¹º§¿¡ µû¶ó roughness¸¦ °öÇØ¼­ ¹Ý»çÀÇ ¼±¸íÇÔ Á¤µµ ±¸ÇÏ±â -> roughness°¡0ÀÌ¸é Á¦ÀÏ Å« ÇØ»óµµÀÇ Å¥ºê¸Ê ¹Ý»ç
+        //Â·Â¹ÂºÂ§Â¿Â¡ ÂµÃ»Â¶Ã³ roughnessÂ¸Â¦ Â°Ã¶Ã‡Ã˜Â¼Â­ Â¹ÃÂ»Ã§Ã€Ã‡ Â¼Â±Â¸Ã­Ã‡Ã” ÃÂ¤ÂµÂµ Â±Â¸Ã‡ÃÂ±Ã¢ -> roughnessÂ°Â¡0Ã€ÃŒÂ¸Ã© ÃÂ¦Ã€Ã Ã…Â« Ã‡Ã˜Â»Ã³ÂµÂµÃ€Ã‡ Ã…Â¥ÂºÃªÂ¸ÃŠ Â¹ÃÂ»Ã§
     float3 specularIrradiance = evnSpecularIBLTexture.SampleLevel(samAnisotropy, lightReflection, roughness * specularTextureLevels).rgb;
-        //look up table pbrÀºÁ¤ÀûÀÌ¹Ç·Î ¹Ì¸® °è»êµÈ ÅØ½ºÃÄ·Î uvÁÂÇ¥ÀÇ ±Ù»ç°ªÀ» »ç¿ë
+        //look up table pbrÃ€ÂºÃÂ¤Ã€Ã»Ã€ÃŒÂ¹Ã‡Â·ÃŽ Â¹ÃŒÂ¸Â® Â°Ã¨Â»ÃªÂµÃˆ Ã…Ã˜Â½ÂºÃƒÃ„Â·ÃŽ uvÃÃ‚Ã‡Â¥Ã€Ã‡ Â±Ã™Â»Ã§Â°ÂªÃ€Â» Â»Ã§Â¿Ã«
     float2 IBLSpecularBRDF = evnSpecularBRDF.Sample(samClamp, float2(NdotV, roughness)).rg;
     float3 specularIBL = (f0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
-        //´õÇÏ±â
+        //Â´ÃµÃ‡ÃÂ±Ã¢
     float4 ambientFactor = texOcclusion.Sample(samLinear, input.uv);
     
     if (length(ambientFactor) == 0.f)
@@ -436,11 +436,11 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
 
     float currShadowDepth = input.positionShadow.z / input.positionShadow.w;
     float2 uv = input.positionShadow.xy / input.positionShadow.w;
-    //yµÚÁý±â
+    //yÂµÃšÃÃ½Â±Ã¢
     uv.y = -uv.y;
     //-1~1 ->0~1
     uv = uv * 0.5f + 0.5f;
-    //±×¸²ÀÚ factor
+    //Â±Ã—Â¸Â²Ã€Ãš factor
     float shadowFactor = 1.f;
     if (uv.x >= 0.f && uv.x <= 1.f && uv.y >= 0.f && uv.y <= 1.f)
     {
@@ -452,13 +452,13 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
         };
         uint width, height, levels;
         texShadow.GetDimensions(width, height);
-        float texelSize = 1.0 / width; //ÅØ¼¿ Å©±â
+        float texelSize = 1.0 / width; //Ã…Ã˜Â¼Â¿ Ã…Â©Â±Ã¢
         shadowFactor = 0.f;
             [unroll]
         for (int i = 0; i < 9; i++)
         {
-            float2 sampleUV = uv + offset[i] * texelSize; //¿ÀÇÁ¼Â °è»ê
-                //sampleCmpLevelZero·Î pcf»ùÇÃ¸µ
+            float2 sampleUV = uv + offset[i] * texelSize; //Â¿Ã€Ã‡ÃÂ¼Ã‚ Â°Ã¨Â»Ãª
+                //sampleCmpLevelZeroÂ·ÃŽ pcfÂ»Ã¹Ã‡ÃƒÂ¸Âµ
             shadowFactor += texShadow.SampleCmpLevelZero(samComparison, sampleUV, currShadowDepth - 0.001);
 
         }
