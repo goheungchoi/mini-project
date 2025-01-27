@@ -40,8 +40,13 @@ public:
   virtual void WakeUp() = 0;
   virtual void Sleep() = 0;
 
+
+  virtual physx::PxTransform GetWorldTransform() = 0;
   virtual DirectX::SimpleMath::Vector3 GetWorldPosition() = 0;
   virtual DirectX::SimpleMath::Vector4 GetWorldRotation() = 0;
+  virtual void SetWorldTransform(
+      DirectX::SimpleMath::Vector3 pos,DirectX::SimpleMath::Vector4 rot) = 0;
+
 
   virtual ColliderShape GetColliderShapeType() = 0;
 

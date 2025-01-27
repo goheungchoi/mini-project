@@ -243,17 +243,36 @@ void RigidBody::Sleep()
 DirectX::SimpleMath::Vector3 RigidBody::GetWorldPosition()
 {
   if (isStatic)
-      return PhyjixUtil::PxVecToVec(static_cast<physx::PxRigidStatic*>(_actor)->getGlobalPose().p);
+    return PhyjixUtil::PxVecToVec(
+        static_cast<physx::PxRigidStatic*>(_actor)->getGlobalPose().p);
   else
-  return PhyjixUtil::PxVecToVec(GetDynamicActor()->getGlobalPose().p);
+    return PhyjixUtil::PxVecToVec(GetDynamicActor()->getGlobalPose().p);
+
 }
 
 DirectX::SimpleMath::Vector4 RigidBody::GetWorldRotation()
 {
   if (isStatic)
-    return PhyjixUtil::PxQuatToVec(
-        static_cast<physx::PxRigidStatic*>(_actor)->getGlobalPose().q);
-  return PhyjixUtil::PxQuatToVec(GetDynamicActor()->getGlobalPose().q);
+      return PhyjixUtil::PxQuatToVec(static_cast<physx::PxRigidStatic*>(_actor)->getGlobalPose().q);
+  else 
+      return PhyjixUtil::PxQuatToVec(GetDynamicActor()->getGlobalPose().q);
+}
+
+physx::PxTransform RigidBody::GetWorldTransform()
+{
+  if (isStatic)
+    return static_cast<physx::PxRigidStatic*>(_actor)->getGlobalPose();
+  else
+    return GetDynamicActor()->getGlobalPose();
+}
+  void RigidBody::SetWorldTransform(DirectX::SimpleMath::Vector3 pos,
+                                  DirectX::SimpleMath::Vector4 rot)
+{
+  if (isStatic)
+    static_cast<physx::PxRigidStatic*>(_actor)->setGlobalPose(physx::PxTransform(pos.x,pos.y,pos.z, physx::PxQuat(rot.x,rot.y,rot.z,rot.w)) );
+  else
+    GetDynamicActor()->setGlobalPose(physx::PxTransform(
+        pos.x, pos.y, pos.z, physx::PxQuat(rot.x, rot.y, rot.z, rot.w)));
 }
 
 
