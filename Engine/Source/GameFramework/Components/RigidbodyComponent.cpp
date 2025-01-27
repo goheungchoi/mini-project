@@ -59,6 +59,28 @@ void RigidbodyComponent::DisableGravity()
   _rigidbody->DisableGravity();
 }
 #ifdef _DEBUG
+
+void RigidbodyComponent::UpdateFromTransform()
+{
+  _rigidbody->SetWorldTransform(GetTransformComponent()->GetTranslation(),
+                                GetTransformComponent()->GetQuaternion());
+  _prevTransform = _rigidbody->GetWorldTransform();
+
+
+}
+
+void RigidbodyComponent::UpdateToTransform()
+{
+  XMVECTOR _S = GetTransformComponent()->GetScaling();
+  XMVECTOR _R = _rigidbody->GetWorldRotation();
+  XMVECTOR _T = _rigidbody->GetWorldPosition();
+
+  XMMATRIX transform = XMMatrixScalingFromVector(_S) *
+                       XMMatrixRotationQuaternion(_R) *
+                       XMMatrixTranslationFromVector(_T);
+  GetTransformComponent()->SetLocalTransform(transform);
+}
+
 void RigidbodyComponent::EnableDebugDraw()
 {
   _bDebugDrawFlag = true;

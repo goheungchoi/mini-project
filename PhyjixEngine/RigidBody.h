@@ -30,8 +30,15 @@ public:
   void DisableGravity() override;
   void WakeUp() override;
   void Sleep() override;
+
+
   DirectX::SimpleMath::Vector3 GetWorldPosition() override;
   DirectX::SimpleMath::Vector4 GetWorldRotation() override;
+  physx::PxTransform GetWorldTransform() override;
+
+  void SetWorldTransform(DirectX::SimpleMath::Vector3 pos,
+                         DirectX::SimpleMath::Vector4 rot) override;
+
 
   ColliderShape GetColliderShapeType() override;
 
@@ -66,4 +73,6 @@ private:
   std::vector<std::function<void(void)>> RClickEventMap;
 
   physx::PxRigidDynamic* GetDynamicActor();
+
+public:
 };

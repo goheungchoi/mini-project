@@ -11,7 +11,8 @@
 #include "GameFramework/Components/SkeletalMeshComponent.h"
 #include "GameFramework/Components/TransformComponent.h"
 
-#include "PhyjixWorld.h"
+#include "../../PhyjixEngine/Interface.h"
+#include "../../PhyjixEngine/PhyjixEngine.h"
 
 #ifdef _DEBUG
 #include <imgui.h>
@@ -28,7 +29,9 @@ void World::Initialize(HWND hwnd, const std::wstring& title) {
 
   _defaultCamera = new Camera(kScreenWidth, kScreenHeight,XM_PIDIV4);
 
-  _phyjixEngine = new PhyjixEngine();
+	_phyjixEngine = new PhyjixEngine();
+  _phyjixEngine->Initialize();
+  _phyjixWorld = _phyjixEngine->CreateWorld();
 
   SetMainCamera(_defaultCamera);
 }
@@ -364,6 +367,14 @@ void World::Update(float dt)
 
     gameObject->Update(dt);
   }
+
+  for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
+  {
+    component->UpdateFromTransform();
+  }
+  _phyjixEngine->Update(dt);
+
+  //phjix simulate
 }
 
 void World::AnimationUpdate(float dt)
