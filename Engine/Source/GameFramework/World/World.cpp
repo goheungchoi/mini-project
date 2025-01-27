@@ -11,8 +11,8 @@
 #include "GameFramework/Components/SkeletalMeshComponent.h"
 #include "GameFramework/Components/TransformComponent.h"
 
-#include "../../PhyjixEngine/Interface.h"
-#include "../../PhyjixEngine/PhyjixEngine.h"
+#include "Interface.h"
+#include "PhyjixEngine.h"
 
 #ifdef _DEBUG
 #include <imgui.h>
