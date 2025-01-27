@@ -33,6 +33,8 @@ void World::Initialize(HWND hwnd, const std::wstring& title)
   _phyjixEngine = new PhyjixEngine();
   _phyjixEngine->Initialize();
   _phyjixWorld = _phyjixEngine->CreateWorld();
+  //_phyjixWorld->CreateDefaultGround();
+  //_phyjixWorld->GetGroundActor()->SetWorldTransform({0, 200, 0}, {0, 0, 0, 0});
   _phyjixWorld->CreateRay(
       _defaultCamera->GetPosition(),
       Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
@@ -375,21 +377,21 @@ void World::Update(float dt)
     gameObject->Update(dt);
   }
 
-  //Rigidbody updatefromtransform
-  for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
-  {
-    component->UpdateFromTransform();
-  }
+  ////Rigidbody updatefromtransform
+  //for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
+  //{
+  //  component->UpdateFromTransform();
+  //}
 
 
   //phjix simulate
-  _phyjixEngine->Update(dt);
   _phyjixWorld->UpdateRay(
       _defaultCamera->GetPosition(),
       Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
       _defaultCamera->GetViewTransform(), _defaultCamera->GetProjectionMatrix(),
       Vector2(kScreenWidth, kScreenHeight));
   _phyjixWorld->CastRay();
+  _phyjixEngine->Update(dt);
 
     // Rigidbody updateTotransform
   for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
@@ -528,6 +530,34 @@ void World::RenderGameObjects() {
                           skeletalMeshComp->boneTransforms);
     }
   }
+#ifdef _DEBUG
+  for (auto object : _currentLevel->GetGameObjectList())
+  {
+    if (auto rigidbody = object->GetComponent<RigidbodyComponent>())
+    {
+      auto transform = object->GetComponent<TransformComponent>();
+      if (rigidbody->GetDebugDrawFlag())
+      {
+        switch (rigidbody->GetRigidBody()->GetColliderShapeType())
+        {
+        case ColliderShape::eCubeCollider:
+          _renderer->DrawDebugBox(transform->GetGlobalTransform(),
+                                  Color(1, 0, 1));
+          break;
+        case ColliderShape::eSphereCollider:
+          _renderer->DrawDebugSphere(transform->GetGlobalTransform(),
+                                     Color(1, 0, 1));
+          break;
+        default:
+          break;
+
+        }
+      }
+    }
+  }
+#endif
+
+
 
   _renderer->EndFrame();
 }

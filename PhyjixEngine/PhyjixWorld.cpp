@@ -187,11 +187,12 @@ void PhyjixWorld::UpdateRay(DirectX::SimpleMath::Vector3 camerapos,
 
 void PhyjixWorld::CreateDefaultGround()
 {
-  mMaterial = _physics->createMaterial(0.5f, 0.5f, 1.f);
+  mMaterial = _physics->createMaterial(0.5f, 0.5f, 0.f);
   groundPlane =
       PxCreatePlane(*_physics, physx::PxPlane(0, 1, 0, 50), *mMaterial);
   groundrigidbody = new RigidBody(_physics,{0, 0, 0}, {1, 1, 1}, ColliderShape::eCubeCollider, true, false,this);
   groundPlane->userData = groundrigidbody;
   groundrigidbody->_actor = groundPlane;
   _scene->addActor(*groundrigidbody->_actor);
+
 }

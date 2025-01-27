@@ -52,6 +52,22 @@ public:
 
 		character = world->CreateGameObjectFromModel<Character>(animTestHandle);
     // character->SetRotationAroundXAxis(MathUtil::kQuaterPi_f);
+
+		    auto* testrigidbody = character->CreateComponent<RigidbodyComponent>();
+    testrigidbody->Initialize(character->transform->GetTranslation(),
+                                  character->transform->GetScaling(),
+                              ColliderShape::eCubeCollider, false, false,
+                              GetWorld()->_phyjixWorld);
+    AddRigidbody(testrigidbody);
+    //testrigidbody->EnableDebugDraw();
+    testrigidbody->SetCollisionEvent(
+        nullptr, eCollisionEventType::eLClick,
+        [&]() { testrigidbody->Translate({0, 100, 0}); });
+
+
+
+
+
 	}
 
   virtual void DestroyLevel() override { Level::DestroyLevel(); }
