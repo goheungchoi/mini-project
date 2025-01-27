@@ -5,11 +5,17 @@
 #include "ResourceManager/ResourceManager.h"
 #include "WindowManager/WindowManager.h"
 
-#include "Contents/Levels/TestLevel.h"
 #include "GameFramework/Level/Level.h"
 #include "GameFramework/World/World.h"
 
+#include "Contents/Levels/TestLevel.h"
+#include "Contents/Prototype/GameLevel.h"
+#include "Contents/Prototype/GridLevel.h"
+
+static GridLevel* gridLevel;
 static TestLevel* testLevel;
+
+static GameLevel* gameLevel;
 
 void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
                          const std::wstring& title)
@@ -27,10 +33,15 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
 
   _world = World::CreateWorld(_hwnd, title);
 
+  gridLevel = new GridLevel("Test Grid Level", 5, 5);
   testLevel = new TestLevel();
 
+  gameLevel = new GameLevel("Test Game Level");
+
+  _world->AddLevel(gridLevel);
   _world->AddLevel(testLevel);
-  _world->PrepareChangeLevel("Test Level");
+  _world->AddLevel(gameLevel);
+  _world->PrepareChangeLevel(gameLevel->name);
   _world->CommitLevelChange();
 }
 
@@ -148,8 +159,6 @@ void GameApp::Run()
 
       dt = TimeSystem::GetDeltaTime();
 
-      InputSystem::GetInstance()->Update(dt);
-
       if (_world->changingLevel)
         continue;
 
@@ -157,7 +166,7 @@ void GameApp::Run()
 
       // 게임 루프 소용돌이를 방어하기 위해 델타타임이 일정시간 이상 넘어가면
       // 픽스 합니다.
-      dtThreshole = 0.25 * dt;
+      dtThreshole = 0.25;
       if (dt > dtThreshole)
         dt = dtThreshole; // Clamp the frame time
 
