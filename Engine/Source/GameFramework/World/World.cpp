@@ -20,18 +20,25 @@
 #include <imgui_impl_win32.h>
 #endif
 
-void World::Initialize(HWND hwnd, const std::wstring& title) {
+void World::Initialize(HWND hwnd, const std::wstring& title)
+{
   _renderer = new DX11Renderer();
   _renderer->Init_Win32(kScreenWidth, kScreenHeight, nullptr, &hwnd);
   _renderer->CreateSkyBox(
       "Textures/BakerEnv.dds", "Textures/BakerSpecularBRDF_LUT.dds",
       "Textures/BakerDiffuseIrradiance.dds", "Textures/BakerSpecularIBL.dds");
 
-  _defaultCamera = new Camera(kScreenWidth, kScreenHeight,XM_PIDIV4);
+  _defaultCamera = new Camera(kScreenWidth, kScreenHeight, XM_PIDIV4);
 
-	_phyjixEngine = new PhyjixEngine();
+  _phyjixEngine = new PhyjixEngine();
   _phyjixEngine->Initialize();
   _phyjixWorld = _phyjixEngine->CreateWorld();
+  _phyjixWorld->CreateRay(
+      _defaultCamera->GetPosition(),
+      Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
+      _defaultCamera->GetViewTransform(), 
+      _defaultCamera->GetProjectionMatrix(),
+      Vector2(kScreenWidth, kScreenHeight));
 
   SetMainCamera(_defaultCamera);
 }
@@ -368,13 +375,29 @@ void World::Update(float dt)
     gameObject->Update(dt);
   }
 
+  //Rigidbody updatefromtransform
   for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
   {
     component->UpdateFromTransform();
   }
-  _phyjixEngine->Update(dt);
+
 
   //phjix simulate
+  _phyjixEngine->Update(dt);
+  _phyjixWorld->UpdateRay(
+      _defaultCamera->GetPosition(),
+      Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
+      _defaultCamera->GetViewTransform(), _defaultCamera->GetProjectionMatrix(),
+      Vector2(kScreenWidth, kScreenHeight));
+  _phyjixWorld->CastRay();
+
+    // Rigidbody updateTotransform
+  for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
+  {
+    component->UpdateToTransform();
+  }
+
+
 }
 
 void World::AnimationUpdate(float dt)

@@ -6,12 +6,5 @@ class TestGameObject : public GameObject
 {
 
 public:
-	
-	TestGameObject(World* world) : GameObject(world) {}
-
-
-
-
+  TestGameObject(World* world) : GameObject(world) {}
 };
-
-
