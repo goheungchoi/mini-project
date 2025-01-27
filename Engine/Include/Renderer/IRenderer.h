@@ -111,7 +111,7 @@ public:
 
   
   // D2D Renderer
-  virtual void CreateSprite(LPCSTR path) = 0;
+  virtual void CreateSprite(LPCSTR path, Vector2 pos) = 0;
 
   virtual void AddText(const wchar_t* format, Vector4 rect,
                         const std::wstring& fontName = L"Agency FB",
