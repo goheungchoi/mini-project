@@ -175,10 +175,11 @@ void D2DRenderer::EndDraw()
   _pD2D1DeviceContext->EndDraw();
 }
 
-void D2DRenderer::CreateSprite(LPCSTR path)
+void D2DRenderer::CreateSprite(LPCSTR path, Vector2 pos)
 {
   // IMG 객체를 생성하고 반환
   Sprite* sprite = new Sprite(path, _pDevice);
+  sprite->SetPos(pos);
   _Sprites.push_back(sprite);
 }
 

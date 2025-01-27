@@ -51,6 +51,8 @@ public:
 
 	character = world->CreateGameObjectFromModel<Character>(animTestHandle);
     character->SetRotationAroundXAxis(MathUtil::kQuaterPi_f);
+    character->SetTranslation(100, 100, 0);
+
 
 
 	#ifdef USED2D

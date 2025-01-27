@@ -47,7 +47,7 @@ public:
   void BeginDraw();
   void EndDraw();
 
-  void CreateSprite(LPCSTR path);
+  void CreateSprite(LPCSTR path, Vector2 pos);
   void DrawSprites();
 
   void AddText(const wchar_t* format, Vector4 rect,
