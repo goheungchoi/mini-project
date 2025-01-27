@@ -223,6 +223,8 @@
 		<ClInclude Include="Include\GameFramework\GameObject\GameObject.h" />
 		<ClInclude Include="Include\GameFramework\Level\Level.h" />
 		<ClInclude Include="Include\GameFramework\Systems\RenderSystem.h" />
+		<ClInclude Include="Include\GameFramework\UI\UIButton\UIButton.h" />
+		<ClInclude Include="Include\GameFramework\UI\UIElement\UIElement.h" />
 		<ClInclude Include="Include\GameFramework\UI\UIPanel\UIPanel.h" />
 		<ClInclude Include="Include\GameFramework\World\World.h" />
 		<ClInclude Include="Include\Renderer\IRenderer.h" />
@@ -251,6 +253,8 @@
 		<ClCompile Include="Source\GameFramework\GameObject\GameObject.cpp" />
 		<ClCompile Include="Source\GameFramework\Level\Level.cpp" />
 		<ClCompile Include="Source\GameFramework\Systems\RenderSystem.cpp" />
+		<ClCompile Include="Source\GameFramework\UI\UIButton\UIButton.cpp" />
+		<ClCompile Include="Source\GameFramework\UI\UIElement\UIElement.cpp" />
 		<ClCompile Include="Source\GameFramework\UI\UIPanel\UIPanel.cpp" />
 		<ClCompile Include="Source\GameFramework\World\World.cpp" />
 		<ClInclude Include="Source\Renderer\D2DRenderer\Common.h" />
