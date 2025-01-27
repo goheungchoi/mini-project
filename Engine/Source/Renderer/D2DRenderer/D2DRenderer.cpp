@@ -147,7 +147,7 @@ void D2DRenderer::UnInit()
 {
   // SpriteBatch의 해제
   if (_pSpriteBatch) { _pSpriteBatch.reset(); }
-  DeleteText();
+  DeleteTextAll();
   SAFE_RELEASE(_pFont);
   Com::SAFE_RELEASE(_pBrush);
   Com::SAFE_RELEASE(_pID2D1Bitmap);
@@ -219,7 +219,22 @@ void D2DRenderer::AddText(const wchar_t* format, Vector4 rect,
   _TextList.push_back(newText);
 }
 
-void D2DRenderer::DeleteText()
+void D2DRenderer::DeleteText(const wchar_t* format)
+{
+  //auto it = std::remove_if(_TextList.begin(), _TextList.end(),
+  //                         [format](const Text* text) {
+  //                           return wcscmp(text->_format.c_str(), format) == 0;
+  //                         });
+
+  //for (auto i = it; i != _TextList.end(); ++i)
+  //{
+  //  delete *i;
+  //}
+
+  //_TextList.erase(it, _TextList.end());
+}
+
+void D2DRenderer::DeleteTextAll()
 {
   if (!_TextList.empty())
   {

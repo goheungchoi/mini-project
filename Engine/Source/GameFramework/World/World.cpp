@@ -28,7 +28,7 @@ void World::Initialize(HWND hwnd, const std::wstring& title) {
 
   _defaultCamera = new Camera(kScreenWidth, kScreenHeight,XM_PIDIV4);
 
-	//_phyjixEngine = new PhyjixEngine();
+  _phyjixEngine = new PhyjixEngine();
 
   SetMainCamera(_defaultCamera);
 }
