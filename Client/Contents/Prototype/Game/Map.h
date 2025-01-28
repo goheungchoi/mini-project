@@ -24,9 +24,9 @@ public:
 	bool isActionTriggered{false};
 
 
-	// 
+	// Placement
 	bool isPlacementModeOn{false};
-  Character* placeholder;
+  Character* placeholder{nullptr};
 
 public:
 
