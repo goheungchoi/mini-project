@@ -28,6 +28,9 @@ void Map::TurnOnPlacementMode(CharactorType type) {
     return;
 	}
 
+	// Turn on the placement mode on grid.
+  grid->TurnOnSelectionMode();
+
 	// TODO: Placeholder's model should be transparent.
 	switch (type)
   {
@@ -56,7 +59,7 @@ void Map::TurnOnPlacementMode(CharactorType type) {
   break;
   }
 
-	placeholder->animator->PauseAnimation();
+	TranslatePlaceholder();
 
   isPlacementModeOn = true;
 }
@@ -66,6 +69,9 @@ void Map::TurnOffPlacementMode() {
   {
     return;
 	}
+
+	// Turn of the selection mode on grid
+  grid->TurnOffSelectionMode();
 
   // Remove the placeholder.
   placeholder->Destroy();
@@ -193,35 +199,7 @@ void Map::Update(float dt) {
       isPlacementModeOn = false;
 		}
 
-		// Detect if grid cell is pointed.
-		if (grid->selectedCell)
-    {
-      auto [w, h] = grid->selectedCell->GetCellPosition();
-			auto [x, z] = grid->GetActualPositionAt(w, h);
-
-			XMVECTOR translate =
-          XMVector3Transform({x, 0, z}, grid->GetWorldTransform());
-
-			placeholder->SetTranslation(translate);
-		}
-    else
-    {
-      // Follow the mouse pointer position.
-      // y = 0, intersection between mouse pointer ray and p = (x, 0, z), n =
-      // (0, 1, 0) plane. The placeholder character is translated to the
-      // intersection point.
-      Vector2 mousePos{(float)Input.GetCurrMouseState().x,
-                       (float)Input.GetCurrMouseState().y};
-      Ray cursorRay = world->GetScreenCursorRay(mousePos);
-      Plane xzPlane{{0, 0, 0}, {0, 1, 0}};
-
-      float t;
-      cursorRay.Intersects(xzPlane, t);
-
-      XMVECTOR intersection = cursorRay.position + cursorRay.direction * t;
-
-      placeholder->SetTranslation(intersection);
-		}
+		TranslatePlaceholder();
     
 		// Cancel placement mode.
 		if (Input.IsKeyDown(Key::Escape))
@@ -279,5 +257,47 @@ void Map::Update(float dt) {
       return;
     }
 	}
+}
+
+XMVECTOR Map::GetCursorPosition() const
+{
+  // Follow the mouse pointer position.
+  // y = 0, intersection between mouse pointer ray and p = (x, 0, z), n =
+  // (0, 1, 0) plane. The placeholder character is translated to the
+  // intersection point.
+  Vector2 mousePos{(float)Input.GetCurrMouseState().x,
+                   (float)Input.GetCurrMouseState().y};
+  Ray cursorRay = world->GetScreenCursorRay(mousePos);
+  Plane xzPlane{{0, 0, 0}, {0, 1, 0}};
+
+  float t;
+  cursorRay.Intersects(xzPlane, t);
+
+  XMVECTOR intersection = cursorRay.position + cursorRay.direction * t;
+  return intersection;
+}
+
+void Map::TranslatePlaceholder() {
+  if (!placeholder)
+    return;
+
+  // Detect if grid cell is pointed.
+  if (grid->selectedCell)
+  {
+    auto [w, h] = grid->selectedCell->GetCellPosition();
+    auto [x, z] = grid->GetActualPositionAt(w, h);
+
+    XMVECTOR translate =
+        XMVector3Transform({x, 0, z}, grid->GetWorldTransform());
+
+    placeholder->SetTranslation(translate);
+  }
+  else
+  {
+    // If the cursor is not on the grid,
+    // follow the cursor pos.
+    XMVECTOR cursorPos = GetCursorPosition();
+    placeholder->SetTranslation(cursorPos);
+  }
 }
 

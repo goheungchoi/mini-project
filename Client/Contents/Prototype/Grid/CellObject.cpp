@@ -32,6 +32,32 @@ CellObject::~CellObject() {
   UnloadModel(greenCellModelHandle);
 }
 
+void CellObject::SetInvisible() {
+  auto* redMeshComp = redCell->GetComponent<MeshComponent>();
+  auto* greenMeshComp = greenCell->GetComponent<MeshComponent>();
+  if (redMeshComp)
+  {
+    redMeshComp->SetVisible(false);
+	}
+  if (greenMeshComp)
+  {
+    greenMeshComp->SetVisible(false);
+	}
+}
+
+void CellObject::SetVisible() {
+  auto* redMeshComp = redCell->GetComponent<MeshComponent>();
+  auto* greenMeshComp = greenCell->GetComponent<MeshComponent>();
+  if (redMeshComp)
+  {
+    redMeshComp->SetVisible(true);
+  }
+  if (greenMeshComp)
+  {
+    greenMeshComp->SetVisible(true);
+  }
+}
+
 void CellObject::SetCellType(CellType type) {
   this->type = type;
 }

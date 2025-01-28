@@ -91,6 +91,14 @@ std::pair<uint32_t, uint32_t> Character::GetGridLocation()
 
 void Character::OnAwake() {
   grid = world->FindGameObjectByType<GridObject>();
+  if (bGridLocationChanged)
+  {
+    ApplyChangedGridLocation();
+  }
+  if (bDirectionChanged)
+  {
+    ApplyChangedDirection();
+  }
 }
 
 // TODO:

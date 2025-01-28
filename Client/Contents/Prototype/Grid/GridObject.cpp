@@ -125,7 +125,29 @@ std::pair<float, float> GridObject::GetActualPositionAt(uint32_t w, uint32_t h)
   return {pos_x, pos_z};
 }
 
-void GridObject::FindHoveredCell() {
+void GridObject::TurnOnSelectionMode() {
+  isSelectionMode = true;
+
+	for (auto* cell : grid)
+  {
+    cell->SetVisible();
+	}
+}
+
+void GridObject::TurnOffSelectionMode() {
+  isSelectionMode = false;
+
+	selectedCell = nullptr;
+
+	for (auto* cell : grid)
+  {
+    cell->SetCellType(CellType_Green);
+    cell->SetInvisible();
+  }
+}
+
+void GridObject::FindHoveredCell()
+{
   bool anyHover{false};
 
   Vector2 mousePos{(float)Input.GetCurrMouseState().x,
@@ -152,6 +174,24 @@ void GridObject::FindHoveredCell() {
 		selectedCell = nullptr;
 }
 
+void GridObject::OnAwake() {
+  if (isSelectionMode)
+  {
+    TurnOnSelectionMode();
+	}
+	else
+	{
+    TurnOffSelectionMode();
+	}
+}
+
 void GridObject::Update(float dt) {
-  FindHoveredCell();
+  if (isSelectionMode)
+  {
+		FindHoveredCell();
+  }
+  else
+  {
+		
+	}
 }

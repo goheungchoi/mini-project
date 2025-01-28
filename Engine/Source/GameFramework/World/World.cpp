@@ -520,7 +520,7 @@ void World::RenderGameObjects() {
 
     // Draw static mesh
     if (auto* meshComp = gameObject->GetComponent<MeshComponent>();
-        meshComp)
+        meshComp && meshComp->isVisible)
     {
       const auto& transform = gameObject->GetWorldTransform();
       for (auto handle : meshComp->GetSubMeshes())
@@ -531,7 +531,7 @@ void World::RenderGameObjects() {
     }
     // Draw skeletal mesh
     else if (auto* skeletalMeshComp = gameObject->GetComponent<SkeletalMeshComponent>();
-             skeletalMeshComp)
+             skeletalMeshComp && skeletalMeshComp->isVisible)
     {
       auto handle = skeletalMeshComp->GetHandle();
       // const auto& transform = skeletalMeshComp->rootBone->GetGlobalTransform();

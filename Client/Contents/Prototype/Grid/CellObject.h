@@ -32,6 +32,9 @@ public:
   CellObject(World* world);
   ~CellObject();
 
+	void SetInvisible();
+  void SetVisible();
+
 	void SetCellType(CellType type);
   CellType GetCellType();
   void SetCellPosition(int w, int h);

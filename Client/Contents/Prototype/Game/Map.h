@@ -54,5 +54,9 @@ public:
 	void OnAwake() override;
 
 	void Update(float dt) override;
+
+private:
+  XMVECTOR GetCursorPosition() const;
+  void TranslatePlaceholder();
 };
 

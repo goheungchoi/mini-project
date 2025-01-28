@@ -85,14 +85,14 @@ public:
   virtual void OnPressed() {};
 
   // Game loop events
-  virtual void OnAwake() {}
-  virtual void OnActivated() {}
+  void OnAwake() override;
 
-  virtual void FixedUpdate(float fixedRate) {}
-  virtual void PreUpdate(float dt) {}
   void Update(float dt) override;
-  virtual void PostUpdate(float dt) {}
-  virtual void OnRender() {}
+
+	bool isSelectionMode{false};
+
+  void TurnOnSelectionMode();
+  void TurnOffSelectionMode();
 
 private:
 

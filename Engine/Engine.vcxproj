@@ -213,6 +213,7 @@
 		<ClInclude Include="Include\GameFramework\Components\Animation\Animation.h" />
 		<ClInclude Include="Include\GameFramework\Components\Animation\AnimationState.h" />
 		<ClInclude Include="Include\GameFramework\Components\Animation\AnimatorComponent.h" />
+		<ClInclude Include="Include\GameFramework\Components\BillboardComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\ComponentBase.h" />
 		<ClInclude Include="Include\GameFramework\Components\LightComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\MeshComponent.h" />
