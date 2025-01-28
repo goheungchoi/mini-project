@@ -25,13 +25,34 @@ using namespace std;
 class RenderPassManager
 {
 private:
+  struct StaticMesh
+  {
+    MeshBuffer* buffer;
+    Matrix world;
+  };
+  struct SkelMesh
+  {
+    MeshBuffer* buffer;
+    Matrix world;
+    std::vector<XMMATRIX> boneMatrix;
+  };
+private:
   // mesh
   // 0 : single sided 1 : double sided
   vector<map<pair<float, int>, std::pair<MeshBuffer*,Matrix>, greater<std::pair<float, int>>>>
       _transparentMeshes;
+  /*vector<map<pair<float, int>, StaticMesh>, greater<std::pair<float, int>>>
+      _staticTransMeshes;
+  vector<map<pair<float, int>, SkelMesh>, greater<std::pair<float, int>>>
+      _skelTransMeshes;*/
   // 0 : single sided 1 : double sided
   vector<vector<std::pair<MeshBuffer*,Matrix>>> _opaqueMesh;
+  vector<vector<std::pair<StaticMesh, Matrix>>> _staticOpaqueMesh;
+  vector<vector<std::pair<SkelMesh, Matrix>>> _skelOpaqueMesh;
+
   vector<vector<std::pair<MeshBuffer*,Matrix>>> _shadowMesh;
+  vector<vector<std::pair<StaticMesh, Matrix>>> _staticShadowMesh;
+  vector<vector<std::pair<SkelMesh, Matrix>>> _skelShadowMesh;
   SkyBox* _skyBox = nullptr;
   GeometryPrimitive* _geometry = nullptr;
   // Constant Buffer
