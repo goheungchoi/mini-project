@@ -1,6 +1,12 @@
 {
   "dependencies": [
-    "physx",
-    "directxtk"
+      "directxtk",
+      "physx"
+  ],
+  "overrides": [
+      {
+          "name": "physx",
+          "version": "5.5.0"
+      }
   ]
 }

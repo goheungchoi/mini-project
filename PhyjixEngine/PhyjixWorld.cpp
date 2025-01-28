@@ -21,7 +21,7 @@ PhyjixWorld::PhyjixWorld(physx::PxPhysics* physics, physx::PxDefaultCpuDispatche
   _eventhandler = new PhyjixEventHandler();
   sceneDesc.simulationEventCallback = _eventhandler;
 
-
+  
 
   _scene = physics->createScene(sceneDesc);
   _physics = physics;

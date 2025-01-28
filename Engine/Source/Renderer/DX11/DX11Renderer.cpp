@@ -104,12 +104,8 @@ void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world,
   {
     throw std::exception("buffer not registered");
   }
-  if (!boneTransforms.empty())
-  {
-    buffer->second->boneMatirx = boneTransforms;
-  }
-  //buffer->second->world = world;
-  _passMgr->ClassifyPass(buffer->second,world);
+
+  _passMgr->ClassifyPass(buffer->second, world, boneTransforms);
 }
 
 void DX11Renderer::EndDraw() {}
