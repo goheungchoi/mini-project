@@ -52,17 +52,16 @@ public:
 
 		character = world->CreateGameObjectFromModel<Character>(animTestHandle);
     // character->SetRotationAroundXAxis(MathUtil::kQuaterPi_f);
-
-		    auto* testrigidbody = character->CreateComponent<RigidbodyComponent>();
-    testrigidbody->Initialize(character->transform->GetTranslation(),
-                                  character->transform->GetScaling(),
-                              ColliderShape::eCubeCollider, false, false,
-                              GetWorld()->_phyjixWorld);
+    RigidbodyComponent* testrigidbody = character->GetComponent<RigidbodyComponent>();
     AddRigidbody(testrigidbody);
-    //testrigidbody->EnableDebugDraw();
+    testrigidbody->EnableDebugDraw();
     testrigidbody->SetCollisionEvent(
         nullptr, eCollisionEventType::eLClick,
-        [&]() { testrigidbody->Translate({0, 100, 0}); });
+        [=]() {
+                                       cout << "testrigidbody detected \m";
+                                       testrigidbody->Rotate({0,10, 0});
+                                       //testrigidbody->DisableCollision();
+        });
 
 
 

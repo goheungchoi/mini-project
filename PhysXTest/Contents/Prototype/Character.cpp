@@ -19,6 +19,12 @@ Character::Character(World* world) : GameObject(world)
 
   UnloadModel(characterModelHandle);
 
+  rigidbody = CreateComponent<RigidbodyComponent>();
+  rigidbody->Initialize(transform->GetTranslation(),
+                            transform->GetScaling(),
+                            ColliderShape::eCubeCollider, false, false,
+                            GetWorld()->_phyjixWorld);
+
   /*auto* rigidBody = CreateComponent<RigidbodyComponent>();
   rigidBody->Initialize({0, 0, 0}, {3, 5, 3}, ColliderShape::eCubeCollider,
                         false, true, world->_phyjixWorld);*/

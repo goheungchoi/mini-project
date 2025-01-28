@@ -210,6 +210,7 @@ void RigidBody::EnableCollision()
 
 void RigidBody::DisableCollision()
 {
+  _actor->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
   physx::PxShape* shape = nullptr;
   physx::PxU32 shapeCount = GetDynamicActor()->getNbShapes();
   if (shapeCount > 0)
@@ -217,6 +218,7 @@ void RigidBody::DisableCollision()
     GetDynamicActor()->getShapes(&shape, 1, 0);
     if (shape)
       shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
+
   }
 }
 
