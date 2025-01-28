@@ -213,7 +213,6 @@
 		<ClInclude Include="Include\GameFramework\Components\Animation\Animation.h" />
 		<ClInclude Include="Include\GameFramework\Components\Animation\AnimationState.h" />
 		<ClInclude Include="Include\GameFramework\Components\Animation\AnimatorComponent.h" />
-		<ClInclude Include="Include\GameFramework\Components\BillboardComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\ComponentBase.h" />
 		<ClInclude Include="Include\GameFramework\Components\LightComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\MeshComponent.h" />
@@ -224,6 +223,10 @@
 		<ClInclude Include="Include\GameFramework\GameObject\GameObject.h" />
 		<ClInclude Include="Include\GameFramework\Level\Level.h" />
 		<ClInclude Include="Include\GameFramework\Systems\RenderSystem.h" />
+		<ClInclude Include="Include\GameFramework\UI\Canvas\Canvas.h" />
+		<ClInclude Include="Include\GameFramework\UI\UIButton\UIButton.h" />
+		<ClInclude Include="Include\GameFramework\UI\UIElement\UIElement.h" />
+		<ClInclude Include="Include\GameFramework\UI\UIPanel\UIPanel.h" />
 		<ClInclude Include="Include\GameFramework\World\World.h" />
 		<ClInclude Include="Include\Renderer\IRenderer.h" />
 		<ClInclude Include="Include\ResourceManager\ResourceManager.h" />
@@ -251,6 +254,10 @@
 		<ClCompile Include="Source\GameFramework\GameObject\GameObject.cpp" />
 		<ClCompile Include="Source\GameFramework\Level\Level.cpp" />
 		<ClCompile Include="Source\GameFramework\Systems\RenderSystem.cpp" />
+		<ClCompile Include="Source\GameFramework\UI\Canvas\Canvas.cpp" />
+		<ClCompile Include="Source\GameFramework\UI\UIButton\UIButton.cpp" />
+		<ClCompile Include="Source\GameFramework\UI\UIElement\UIElement.cpp" />
+		<ClCompile Include="Source\GameFramework\UI\UIPanel\UIPanel.cpp" />
 		<ClCompile Include="Source\GameFramework\World\World.cpp" />
 		<ClInclude Include="Source\Renderer\D2DRenderer\Common.h" />
 		<ClCompile Include="Source\Renderer\D2DRenderer\D2DRenderer.cpp" />
@@ -267,6 +274,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\Objects\Swapchain.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ComputeEffect.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\DeferredPass.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\PostProcess\OutLine.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\PostProcess\PostProcess.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\RenderPass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\Shader.h" />

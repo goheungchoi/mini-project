@@ -47,12 +47,14 @@ public:
   void BeginDraw();
   void EndDraw();
 
-  void CreateSprite(LPCSTR path);
+  void CreateSprite(LPCSTR path, Vector2 pos);
   void DrawSprites();
 
   void AddText(const wchar_t* format, Vector4 rect,
                const std::wstring& fontName, Color color);
-  void DeleteText();
+  
+  void DeleteText(const wchar_t* format);
+  void DeleteTextAll();
 
 private:
   void RenderText();

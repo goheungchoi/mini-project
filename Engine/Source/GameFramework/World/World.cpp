@@ -11,7 +11,8 @@
 #include "GameFramework/Components/SkeletalMeshComponent.h"
 #include "GameFramework/Components/TransformComponent.h"
 
-#include "PhyjixWorld.h"
+#include "Interface.h"
+#include "PhyjixEngine.h"
 
 #ifdef _DEBUG
 #include <imgui.h>
@@ -19,16 +20,26 @@
 #include <imgui_impl_win32.h>
 #endif
 
-void World::Initialize(HWND hwnd, const std::wstring& title) {
+void World::Initialize(HWND hwnd, const std::wstring& title)
+{
   _renderer = new DX11Renderer();
   _renderer->Init_Win32(kScreenWidth, kScreenHeight, nullptr, &hwnd);
   _renderer->CreateSkyBox(
       "Textures/BakerEnv.dds", "Textures/BakerSpecularBRDF_LUT.dds",
       "Textures/BakerDiffuseIrradiance.dds", "Textures/BakerSpecularIBL.dds");
 
-  _defaultCamera = new Camera(kScreenWidth, kScreenHeight,XM_PIDIV4);
+  _defaultCamera = new Camera(kScreenWidth, kScreenHeight, XM_PIDIV4);
 
-	_phyjixEngine = new PhyjixEngine();
+  _phyjixEngine = new PhyjixEngine();
+  _phyjixEngine->Initialize();
+  _phyjixWorld = _phyjixEngine->CreateWorld();
+  _phyjixWorld->CreateDefaultGround();
+  _phyjixWorld->CreateRay(
+      _defaultCamera->GetPosition(),
+      Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
+      _defaultCamera->GetViewTransform(), 
+      _defaultCamera->GetProjectionMatrix(),
+      Vector2(kScreenWidth, kScreenHeight));
 
   SetMainCamera(_defaultCamera);
 }
@@ -79,6 +90,7 @@ void World::CommitLevelChange() {
       _currentLevel->CleanupLevel();
     }
     
+
     _currentLevel = _preparingLevel;
     _currentLevel->BeginLevel();
 
@@ -361,6 +373,44 @@ void World::PreUpdate(float dt) {
   }
 }
 
+void World::Update(float dt)
+{
+  if (!_currentLevel || changingLevel)
+    return;
+
+  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
+  {
+    if (!(gameObject->status == EStatus_Active))
+      continue;
+
+    gameObject->Update(dt);
+  }
+
+  ////Rigidbody updatefromtransform
+  //for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
+  //{
+  //  component->UpdateFromTransform();
+  //}
+
+
+  //phjix simulate
+  _phyjixWorld->UpdateRay(
+      _defaultCamera->GetPosition(),
+      Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
+      _defaultCamera->GetViewTransform(), _defaultCamera->GetProjectionMatrix(),
+      Vector2(kScreenWidth, kScreenHeight));
+  _phyjixWorld->CastRay();
+  _phyjixEngine->Update(dt);
+
+    // Rigidbody updateTotransform
+  for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
+  {
+    component->UpdateToTransform();
+  }
+
+
+}
+
 void World::AnimationUpdate(float dt)
 {
   if (!_currentLevel || changingLevel)
@@ -422,19 +472,6 @@ void World::AnimationUpdate(float dt)
   }
 }
 
-void World::Update(float dt)
-{
-  if (!_currentLevel || changingLevel)
-    return;
-
-  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
-  {
-    if (!(gameObject->status == EStatus_Active))
-      continue;
-
-    gameObject->Update(dt);
-  }
-}
 
 void World::PostUpdate(float dt)
 {
@@ -503,6 +540,34 @@ void World::RenderGameObjects() {
                           skeletalMeshComp->boneTransforms);
     }
   }
+#ifdef _DEBUG
+  for (auto object : _currentLevel->GetGameObjectList())
+  {
+    if (auto rigidbody = object->GetComponent<RigidbodyComponent>())
+    {
+      auto transform = object->GetComponent<TransformComponent>();
+      if (rigidbody->GetDebugDrawFlag())
+      {
+        switch (rigidbody->GetRigidBody()->GetColliderShapeType())
+        {
+        case ColliderShape::eCubeCollider:
+          _renderer->DrawDebugBox(transform->GetGlobalTransform(),
+                                  Color(1, 0, 1));
+          break;
+        case ColliderShape::eSphereCollider:
+          _renderer->DrawDebugSphere(transform->GetGlobalTransform(),
+                                     Color(1, 0, 1));
+          break;
+        default:
+          break;
+
+        }
+      }
+    }
+  }
+#endif
+
+
 
   _renderer->EndFrame();
 }

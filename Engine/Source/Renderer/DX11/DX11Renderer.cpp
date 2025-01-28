@@ -7,7 +7,7 @@
 #include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
 #include "Renderer/D2DRenderer/D2DRenderer.h"
-// #define USED2D
+//#define USED2D
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
@@ -50,7 +50,6 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
 bool DX11Renderer::Cleanup()
 {
   DestroyMesh();
-  DestroyPipeline();
   DestroyTexture();
   DestroyShaderModule();
   SAFE_RELEASE(_passMgr);
@@ -105,12 +104,8 @@ void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world,
   {
     throw std::exception("buffer not registered");
   }
-  if (!boneTransforms.empty())
-  {
-    buffer->second->boneMatirx = boneTransforms;
-  }
-  //buffer->second->world = world;
-  _passMgr->ClassifyPass(buffer->second,world);
+
+  _passMgr->ClassifyPass(buffer->second, world, boneTransforms);
 }
 
 void DX11Renderer::EndDraw() {}
@@ -310,15 +305,6 @@ bool DX11Renderer::DestroyShaderModule()
   _storage->pixelShaderMap.clear();
   return false;
 }
-bool DX11Renderer::CreatePipeline()
-{
-  return true;
-}
-
-bool DX11Renderer::DestroyPipeline()
-{
-  return false;
-}
 
 bool DX11Renderer::CreateComputeEffect()
 {
@@ -352,6 +338,16 @@ void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
 }
 
+void DX11Renderer::AddOutLine(MeshHandle handle)
+{
+
+}
+
+void DX11Renderer::DeleteOutLine(MeshHandle handle) 
+{
+
+}
+
 #endif
 void DX11Renderer::BeginImGuiDraw()
 {
@@ -375,9 +371,9 @@ void DX11Renderer::DrawImGui()
   ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void DX11Renderer::CreateSprite(LPCSTR path)
+void DX11Renderer::CreateSprite(LPCSTR path, Vector2 pos)
 {
-  _d2dRenderer->CreateSprite(path);
+  _d2dRenderer->CreateSprite(path, pos);
 }
 
 void DX11Renderer::AddText(const wchar_t* format, Vector4 rect,

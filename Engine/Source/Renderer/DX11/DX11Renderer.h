@@ -39,8 +39,6 @@ public:
   bool DestroyTexture() override;
   bool CreateShaderModule(ShaderHandle shaderHandle) override;
   bool DestroyShaderModule() override;
-  bool CreatePipeline() override;
-  bool DestroyPipeline() override;
   bool CreateComputeEffect() override;
   bool DestoryComputeEffect() override;
   void CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
@@ -49,6 +47,8 @@ public:
   void DrawDebugSphere(Matrix world, Color color) override;
   void DrawDebugBox(Matrix world, Color color) override;
   void DrawDebugCylinder(Matrix world, Color color) override;
+  void AddOutLine(MeshHandle handle) override;
+  void DeleteOutLine(MeshHandle handle) override;
   #endif
 public:
 	// Render ImGui graphical interface.
@@ -56,7 +56,7 @@ public:
   void DrawImGui();
 
 // D2D Renderer
-  void CreateSprite(LPCSTR path) override;
+  void CreateSprite(LPCSTR path, Vector2 pos) override;
   void AddText(const wchar_t* format, Vector4 rect,
                 const std::wstring& fontName = L"Agency FB",
                 Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) override;

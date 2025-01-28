@@ -21,7 +21,7 @@ PhyjixWorld::PhyjixWorld(physx::PxPhysics* physics, physx::PxDefaultCpuDispatche
   _eventhandler = new PhyjixEventHandler();
   sceneDesc.simulationEventCallback = _eventhandler;
 
-
+  
 
   _scene = physics->createScene(sceneDesc);
   _physics = physics;
@@ -36,12 +36,6 @@ PhyjixWorld::PhyjixWorld(physx::PxPhysics* physics, physx::PxDefaultCpuDispatche
     pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES,
                                true);
   }
-
-
-
-
-
-
 
 }
 
@@ -115,7 +109,6 @@ void PhyjixWorld::Update(float deltaTime)
 {
   isLClicked = false;
   isRClicked = false;
-
   UpdateCharacterControllers(deltaTime);
   _scene->simulate(deltaTime);
   _scene->fetchResults(true);
@@ -132,7 +125,9 @@ IRigidBody* PhyjixWorld::GetGroundActor()
   return static_cast<IRigidBody*>(groundrigidbody);
 }
 
-PhyjixRay* PhyjixWorld::CreateRay(DirectX::SimpleMath::Vector3 pos,
+
+// mousepos = 마우스 좌표 / view, projection = camera view, projection 매트릭스 /  pos =  camera position
+void PhyjixWorld::CreateRay(DirectX::SimpleMath::Vector3 camerapos,
     DirectX::SimpleMath::Vector2 mousepos, DirectX::SimpleMath::Matrix view,
     DirectX::SimpleMath::Matrix projection,
     DirectX::SimpleMath::Vector2 ScreenSize)
@@ -141,24 +136,21 @@ PhyjixRay* PhyjixWorld::CreateRay(DirectX::SimpleMath::Vector3 pos,
 
   DirectX::SimpleMath::Vector4 world = PhyjixUtil::NDCToWorld(
       PhyjixUtil::ScreenToNDC(mousepos.x, mousepos.y, ScreenSize.x,
-                              ScreenSize.y),
-      view, projection);
+                              ScreenSize.y),view, projection);
 
 
-  PhyjixRay* newRay = new PhyjixRay();
-  newRay->Pos = physx::PxVec3(pos.x, pos.y, pos.z);
+  _ray = new PhyjixRay;
+  _ray->Pos = physx::PxVec3(camerapos.x, camerapos.y, camerapos.z);
   DirectX::SimpleMath::Vector3 rayVec = DirectX::XMVector3Normalize(DirectX::SimpleMath::Vector3(world.x, world.y, world.z));
-  newRay->Direction = physx::PxVec3(rayVec.x, rayVec.y, rayVec.z);
-  return newRay;
-
+  _ray->Direction = physx::PxVec3(rayVec.x, rayVec.y, rayVec.z);
 }
 
-void PhyjixWorld::CastRay(PhyjixRay* ray)
+void PhyjixWorld::CastRay()
 {
   physx::PxRaycastBuffer hitBuffer;
   float maxDistance = 1000.f;
 
-  if (_scene->raycast(ray->Pos, ray->Direction, maxDistance, hitBuffer))
+  if (_scene->raycast(_ray->Pos, _ray->Direction, maxDistance, hitBuffer))
   {
     if (hitBuffer.hasBlock)
     {
@@ -181,17 +173,26 @@ void PhyjixWorld::CastRay(PhyjixRay* ray)
       }
     }
   }
-
   
+}
+
+void PhyjixWorld::UpdateRay(DirectX::SimpleMath::Vector3 camerapos,
+    DirectX::SimpleMath::Vector2 mousepos, DirectX::SimpleMath::Matrix view,
+    DirectX::SimpleMath::Matrix projection,
+    DirectX::SimpleMath::Vector2 ScreenSize)
+{
+  _ray->ScreenSize = ScreenSize;
+  _ray->UpdateRay(camerapos, mousepos, view, projection);
 }
 
 void PhyjixWorld::CreateDefaultGround()
 {
-  mMaterial = _physics->createMaterial(0.5f, 0.5f, 1.f);
+  mMaterial = _physics->createMaterial(0.5f, 0.5f, 0.f);
   groundPlane =
-      PxCreatePlane(*_physics, physx::PxPlane(0, 1, 0, 50), *mMaterial);
+      PxCreatePlane(*_physics, physx::PxPlane(0, 1, 0, 1), *mMaterial);
   groundrigidbody = new RigidBody(_physics,{0, 0, 0}, {1, 1, 1}, ColliderShape::eCubeCollider, true, false,this);
   groundPlane->userData = groundrigidbody;
   groundrigidbody->_actor = groundPlane;
   _scene->addActor(*groundrigidbody->_actor);
+
 }

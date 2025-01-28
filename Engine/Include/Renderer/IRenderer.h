@@ -59,6 +59,7 @@ public:
    * Param1 : own meshHandle
    */
   virtual void AddShadow(MeshHandle handle) = 0;
+  virtual void DeleteShadow(MeshHandle handle) = 0;
   ///*
   // * @brief
   //   1. you can delete meshes render pass type.
@@ -84,7 +85,10 @@ public:
    */
   virtual void DrawDebugCylinder(Matrix world, Color color) = 0;
   #endif
-  virtual void DeleteShadow(MeshHandle handle) = 0;
+
+  virtual void AddOutLine(MeshHandle handle) = 0;
+  virtual void DeleteOutLine(MeshHandle handle) = 0;
+  
 
   virtual void BindPipeline() = 0;
 
@@ -100,9 +104,6 @@ public:
   virtual bool CreateShaderModule(ShaderHandle shaderHandle) = 0;
   virtual bool DestroyShaderModule() = 0;
 
-  virtual bool CreatePipeline() = 0;
-  virtual bool DestroyPipeline() = 0;
-
   virtual bool CreateComputeEffect() = 0;
   virtual bool DestoryComputeEffect() = 0;
 
@@ -111,7 +112,7 @@ public:
 
   
   // D2D Renderer
-  virtual void CreateSprite(LPCSTR path) = 0;
+  virtual void CreateSprite(LPCSTR path, Vector2 pos) = 0;
 
   virtual void AddText(const wchar_t* format, Vector4 rect,
                         const std::wstring& fontName = L"Agency FB",

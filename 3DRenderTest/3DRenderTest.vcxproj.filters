@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<ItemGroup>
+		<Filter Include="Contents">
+			<UniqueIdentifier>{71839052-CA31-43CB-B35A-1A25AF946B32}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Contents\AnimationStates">
+			<UniqueIdentifier>{6BEFF31A-778D-4336-8EC8-DFB6524FA76C}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Application\GameApp">
+			<UniqueIdentifier>{6E2387DB-9461-40A3-9BE7-FC370A145466}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Application">
+			<UniqueIdentifier>{8E8EF174-549E-4D15-9AAA-88A89C8C9CD3}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Contents\GameObjects">
+			<UniqueIdentifier>{DFCEA2D8-15C2-4273-9801-6EA219B78D11}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Contents\Levels">
+			<UniqueIdentifier>{3CA1BE79-9D2C-4221-ADDD-2E1654F978B1}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Contents\Prototype">
+			<UniqueIdentifier>{A32D3104-1B77-40A1-9C38-6F842CDB69DE}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="Application\WinMain.cpp">
+			<Filter>Application</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\GameObjects\TestGameObject.h">
+			<Filter>Contents\GameObjects</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\AnimationStates\TestAnimationState.h">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClInclude>
+		<ClInclude Include="Application\GameApp\GameApp.h">
+			<Filter>Application\GameApp</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Levels\TestLevel.h">
+			<Filter>Contents\Levels</Filter>
+		</ClInclude>
+		<None Include="imgui.ini" />
+		<ClCompile Include="Application\GameApp\GameApp.cpp">
+			<Filter>Application\GameApp</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\Prototype\GridLevel.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\CellObject.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\GridObject.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\Prototype\CellObject.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\Prototype\GameLevel.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\Character.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\CameraObject.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\Prototype\Character.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\GridLevel.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\CameraObject.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\GridObject.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\GameLevel.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>
