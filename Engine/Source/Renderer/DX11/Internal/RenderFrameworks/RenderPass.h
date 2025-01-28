@@ -384,6 +384,8 @@ private:
   void DrawGeometryPrimitveWireFrame(ID3D11DeviceContext* dc)
   {
     _pso->SetWireFrame();
+    dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
+    dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
     dc->PSSetShader(_pShaders["WireFrame"]->shader.Get(), nullptr, 0);
     // box
     dc->IASetVertexBuffers(
