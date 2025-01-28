@@ -12,6 +12,7 @@ public:
 	Animation* idleAnimation;
   AnimationState* idleAnimationState;
   AnimatorComponent* animator;
+  RigidbodyComponent* rigidbody;
 
 	SkeletonHandle skeletonHandle;
 

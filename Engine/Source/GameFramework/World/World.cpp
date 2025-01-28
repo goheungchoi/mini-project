@@ -33,8 +33,7 @@ void World::Initialize(HWND hwnd, const std::wstring& title)
   _phyjixEngine = new PhyjixEngine();
   _phyjixEngine->Initialize();
   _phyjixWorld = _phyjixEngine->CreateWorld();
-  //_phyjixWorld->CreateDefaultGround();
-  //_phyjixWorld->GetGroundActor()->SetWorldTransform({0, 200, 0}, {0, 0, 0, 0});
+  _phyjixWorld->CreateDefaultGround();
   _phyjixWorld->CreateRay(
       _defaultCamera->GetPosition(),
       Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
@@ -91,6 +90,7 @@ void World::CommitLevelChange() {
       _currentLevel->CleanupLevel();
     }
     
+
     _currentLevel = _preparingLevel;
     _currentLevel->BeginLevel();
 
@@ -321,6 +321,11 @@ void World::ProcessInput(float dt)
     mainCamera->AddMoveSpeed(+10);
   }
 
+  if (Input.IsKeyDown(MouseState::LB))
+  {
+    _phyjixWorld->LeftClick();
+
+  }
   if (Input.IsKeyDown(MouseState::RB))
   {
     bCameraMove = !bCameraMove; // camera bool값이 반대로 됨.
