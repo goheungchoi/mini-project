@@ -5,13 +5,14 @@
 #include "../RenderFrameworks/DeferredPass.h"
 #include "../RenderFrameworks/Shader.h"
 #include "../RenderFrameworks/ShadowPass.h"
+#include "../RenderFrameworks/PostProcess/PostProcessManager.h"
 #include "../Resources/ConstantBuffer.h"
 #include "../Resources/GeometryPrimitive.h"
 #include "../Resources/PipeLineState.h"
 #include "../Resources/Sampler.h"
 #include "../Resources/SkyBox.h"
 #include "Core/Common.h"
-
+using namespace RenderMesh;
 namespace Renderer
 {
 struct Camera
@@ -24,18 +25,6 @@ struct Camera
 using namespace std;
 class RenderPassManager
 {
-private:
-  struct StaticMesh
-  {
-    MeshBuffer* buffer;
-    Matrix world;
-  };
-  struct SkelMesh
-  {
-    MeshBuffer* buffer;
-    Matrix world;
-    std::vector<XMMATRIX> boneMatrix;
-  };
 private:
   // mesh
   // 0 : single sided 1 : double sided

@@ -16,7 +16,8 @@ protected:
   ComPtr<ID3D11ShaderResourceView> _srv;
 
   Quad::QuadFrame* _frame;
-  std::vector<std::pair<MeshBuffer*, Matrix>> _meshes;
+  std::vector<RenderMesh::StaticMesh> _staticMeshes;
+  std::vector<RenderMesh::SkelMesh> _skelMeshes;
 
 public:
   PostProcess(Device* device) : _device{device}
@@ -49,6 +50,7 @@ public:
   virtual ~PostProcess()
   {
     SAFE_RELEASE(_frame);
-    _meshes.clear();
+    _staticMeshes.clear();
+    _skelMeshes.clear();
   }
 };

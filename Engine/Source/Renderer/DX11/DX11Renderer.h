@@ -43,6 +43,9 @@ public:
   bool DestoryComputeEffect() override;
   void CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                     LPCSTR diffuseIrrPath, LPCSTR specularIBLPath) override;
+  void CreateParticle() override;
+  void DeleteParticle() override;
+
   #ifdef _DEBUG
   void DrawDebugSphere(Matrix world, Color color) override;
   void DrawDebugBox(Matrix world, Color color) override;

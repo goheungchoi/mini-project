@@ -62,3 +62,18 @@ struct MeshBuffer
   Material* material=nullptr;
   RenderPassFlags flags = 0;
 };
+
+namespace RenderMesh
+{
+struct StaticMesh
+{
+  MeshBuffer* buffer = nullptr;
+  Matrix world;
+};
+struct SkelMesh
+{
+  MeshBuffer* buffer = nullptr;
+  Matrix world;
+  std::vector<XMMATRIX> boneMatrix;
+};
+}
