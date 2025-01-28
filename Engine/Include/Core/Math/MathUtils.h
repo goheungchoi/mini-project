@@ -14,8 +14,6 @@ constexpr XMVECTOR kRight{1.f, 0.f, 0.f, 0.f};
 constexpr XMVECTOR kUp{0.f, 1.f, 0.f, 0.f};
 constexpr XMVECTOR kFront{0.f, 0.f, 1.f, 0.f};
 
-
-
 struct AABB
 {
   XMVECTOR min;

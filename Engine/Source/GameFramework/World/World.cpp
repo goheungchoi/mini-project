@@ -103,14 +103,90 @@ void World::StopCameraMovement(bool fixed)
   bCameraMove = !fixed;
 }
 
-XMVECTOR World::ScreenToWorldPosition(XMVECTOR screenPos)
+Ray World::GetScreenCursorRay(XMVECTOR screenPos)
 {
+  // Convert screen coordinates to normalized device coordinates (NDC)
+  float x = (2.0f * XMVectorGetX(screenPos)) / kScreenWidth - 1.0f;
+  float y = 1.0f - (2.0f * XMVectorGetY(screenPos)) / kScreenHeight;
 
+  // Near plane (z = 0) and far plane (z = 1) in NDC
+  XMVECTOR ndcNear = XMVectorSet(x, y, 0.0f, 1.0f);
+  XMVECTOR ndcFar = XMVectorSet(x, y, 1.0f, 1.0f);
 
-  return XMVECTOR();
+  // Get the inverse of the combined view-projection matrix
+  XMMATRIX projectionMatrix = mainCamera->GetProjectionMatrix();
+  XMMATRIX viewMatrix = mainCamera->GetViewTransform();
+  XMMATRIX invViewProjMatrix =
+      XMMatrixInverse(nullptr, XMMatrixMultiply(viewMatrix, projectionMatrix));
+
+  // Unproject the NDC coordinates to world space
+  XMVECTOR worldNear = XMVector3TransformCoord(ndcNear, invViewProjMatrix);
+  XMVECTOR worldFar = XMVector3TransformCoord(ndcFar, invViewProjMatrix);
+
+  // Calculate the ray direction
+  XMVECTOR rayDirection = XMVector3Normalize(worldFar - worldNear);
+
+  // Create and return the ray
+  Ray ray;
+  ray.position = worldNear;
+  ray.direction = rayDirection;
+
+  return ray;
 }
 
-void World::RegisterGameObjectName(GameObject* gameObject) {
+GameObject* World::FindGameObjectByTag(const std::string& tag)
+{
+  if (!_currentLevel)
+    return nullptr;
+
+  auto it = _currentLevel->gameObjectTagMap.find(tag);
+  if (it == _currentLevel->gameObjectTagMap.end())
+    return nullptr;
+  return it->second;
+}
+
+std::vector<GameObject*> World::FindAllGameObjectsByTag(const std::string& tag)
+{
+  if (!_currentLevel)
+    return {};
+
+  std::vector<GameObject*> res;
+  auto range = _currentLevel->gameObjectTagMap.equal_range(tag);
+  for (auto it = range.first; it != range.second; ++it)
+  {
+    res.push_back(it->second);
+  }
+  return res;
+}
+
+GameObject* World::FindGameObjectByName(const std::string& name)
+{
+  if (!_currentLevel)
+    return nullptr;
+
+  auto it = _currentLevel->gameObjectNameMap.find(name);
+  if (it == _currentLevel->gameObjectNameMap.end())
+    return nullptr;
+  return it->second;
+}
+
+std::vector<GameObject*> World::FindAllGameObjectsByName(
+    const std::string& name)
+{
+  if (!_currentLevel)
+    return {};
+
+  std::vector<GameObject*> res;
+  auto range = _currentLevel->gameObjectNameMap.equal_range(name);
+  for (auto it = range.first; it != range.second; ++it)
+  {
+    res.push_back(it->second);
+  }
+  return res;
+}
+
+void World::RegisterGameObjectName(GameObject* gameObject)
+{
   if (!_currentLevel || !gameObject)
     return;
 
@@ -244,99 +320,32 @@ void World::InitialStage() {
   }
 }
 
-void World::FixedUpdate(float fixedRate)
-{
-  if (!_currentLevel || changingLevel)
-    return;
+//void World::FixedUpdate(float fixedRate)
+//{
+//  if (!_currentLevel || changingLevel)
+//    return;
+//
+//  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
+//  {
+//    if (!(gameObject->status == EStatus_Active))
+//      continue;
+//
+//    gameObject->FixedUpdate(fixedRate);
+//  }
+//}
+//
+//void World::PhysicsUpdate(float fixedRate) {
+//  if (!_currentLevel || changingLevel)
+//    return;
+//
+//  // TODO:
+//}
 
-  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
-  {
-    if (!(gameObject->status == EStatus_Active))
-      continue;
 
-    gameObject->FixedUpdate(fixedRate);
-  }
-}
-
-void World::PhysicsUpdate(float fixedRate) {
-  if (!_currentLevel || changingLevel)
-    return;
-
-  // TODO:
-}
 
 void World::ProcessInput(float dt)
 {
   InputSystem::GetInstance()->Update(dt);
-
-  // _camera->LookAt({10, 0, 0, 1});
-  // 'Q' 누르면 Down
-  if (Input.IsKeyPress(Key::Q))
-  {
-    mainCamera->MoveDownUp(-dt);
-  }
-  // 'E' 누르면 Up
-  if (Input.IsKeyPress(Key::E))
-  {
-    mainCamera->MoveDownUp(dt);
-  }
-  // 'A' 누르면 Left
-  if (Input.IsKeyPress(Key::A))
-  {
-    mainCamera->MoveLeftRight(-dt);
-  }
-  // 'D' 누르면 Right
-  if (Input.IsKeyPress(Key::D))
-  {
-    mainCamera->MoveLeftRight(dt);
-  }
-  // 'W' 누르면 Forward
-  if (Input.IsKeyPress(Key::W))
-  {
-    mainCamera->MoveBackForward(dt);
-  }
-  // 'S' 누르면 Backward
-  if (Input.IsKeyPress(Key::S))
-  {
-    mainCamera->MoveBackForward(-dt);
-  }
-  if (Input.IsKeyPress(Key::OemMinus))
-  {
-    mainCamera->AddMoveSpeed(-10);
-  }
-  if (Input.IsKeyPress(Key::OemPlus))
-  {
-    mainCamera->AddMoveSpeed(+10);
-  }
-
-  if (Input.IsKeyDown(MouseState::RB))
-  {
-    bCameraMove = !bCameraMove; // camera bool값이 반대로 됨.
-    ShowCursor(!bCameraMove);   // 커서가 안 보임
-  }
-  if (Input.IsKeyUp(MouseState::RB))
-  {
-    bCameraMove = !bCameraMove; // camera bool값이 반대로 됨.
-    ShowCursor(!bCameraMove);   // 커서가 보임
-  }
-
-  // 마우스 회전
-  if (bCameraMove)
-  {
-    // 마우스 이동량 가져오기
-    Vector2 mouseDelta = Input.GetMouseDelta();
-    float x = -mouseDelta.x;
-    float y = -mouseDelta.y;
-
-    /*if ((Input.GetCurrMouseState().x != Input.GetPrevMouseState().x) ||
-        (Input.GetCurrMouseState().y != Input.GetPrevMouseState().y))
-    {*/
-      // 마우스가 Y 축으로 움직이면 X 축 회전
-      mainCamera->RotateAroundXAxis(y);
-      // 마우스가 X 축으로 움직이면 Y 축 회전
-      mainCamera->RotateAroundYAxis(x);
-    //}
-  }
 }
 
 void World::PreUpdate(float dt) {
@@ -349,20 +358,6 @@ void World::PreUpdate(float dt) {
       continue;
 
     gameObject->PreUpdate(dt);
-  }
-}
-
-void World::Update(float dt)
-{
-  if (!_currentLevel || changingLevel)
-    return;
-
-  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
-  {
-    if (!(gameObject->status == EStatus_Active))
-      continue;
-
-    gameObject->Update(dt);
   }
 }
 
@@ -382,20 +377,6 @@ void World::AnimationUpdate(float dt)
     {
       animComp->UpdateAnimation(dt);
     }
-  }
-}
-
-void World::PostUpdate(float dt)
-{
-  if (!_currentLevel || changingLevel)
-    return;
-
-  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
-  {
-    if (!(gameObject->status == EStatus_Active))
-      continue;
-
-    gameObject->PostUpdate(dt);
   }
 
   // Update local transforms
@@ -427,7 +408,7 @@ void World::PostUpdate(float dt)
     }
   }
 
-	// Update skeletal mesh vertex transforms
+  // Update skeletal mesh vertex transforms
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
     if (!(gameObject->status == EStatus_Active))
@@ -438,6 +419,34 @@ void World::PostUpdate(float dt)
     {
       skeletalMesh->UpdateBoneTransforms();
     }
+  }
+}
+
+void World::Update(float dt)
+{
+  if (!_currentLevel || changingLevel)
+    return;
+
+  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
+  {
+    if (!(gameObject->status == EStatus_Active))
+      continue;
+
+    gameObject->Update(dt);
+  }
+}
+
+void World::PostUpdate(float dt)
+{
+  if (!_currentLevel || changingLevel)
+    return;
+
+  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
+  {
+    if (!(gameObject->status == EStatus_Active))
+      continue;
+
+    gameObject->PostUpdate(dt);
   }
 }
 
@@ -467,7 +476,7 @@ void World::RenderGameObjects() {
   // Rendering stage
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (!gameObject->status == EStatus_Active)
+    if (!(gameObject->status == EStatus_Active))
       continue;
 
     gameObject->OnRender();
@@ -539,7 +548,8 @@ void World::CleanupStage() {
         object->bShouldDestroy = false;
 
 				// Remove hierarchical relationships
-        object->parent->RemoveChild(object);
+        if (object->parent)
+					object->parent->RemoveChildGameObject(object);
 				// Remove it from the search registrations
         object->SetName("");
         object->SetGameObjectTag("");

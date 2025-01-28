@@ -188,11 +188,12 @@ public:
         this->quaterion, XMQuaternionRotationAxis(axis, angle));
     bNeedUpdateTransform = true;
 	}
-  void RotateToward(XMVECTOR target, float maxAngleStep) {
-    this->quaterion = MathUtil::RotateToward(this->quaterion, target,
-                                             translation, maxAngleStep);
+
+  /*void RotateToward(XMVECTOR target, float maxAngleStep) {
+    this->quaterion = MathUtil::RotateToward(
+        this->quaterion, target, GetGlobalTranslation(), maxAngleStep);
     bNeedUpdateTransform = true;
-  }
+  }*/
 
 	void Translate(float x, float y, float z)
   {
@@ -245,5 +246,14 @@ public:
   const XMVECTOR& GetQuaternion() const { return quaterion; }
   const XMVECTOR& GetTranslation() const { return translation; }
   const XMMATRIX& GetLocalTransform() const { return localTransform; }
+  const XMVECTOR& GetGlobalScaling() const {
+    return MathUtil::GetScalingFromMatrix(globalTransform);
+  }
+  const XMVECTOR& GetGlobalQuaternion() const {
+    return MathUtil::GetQuaternionFromMatrix(globalTransform);
+  }
+	const XMVECTOR& GetGlobalTranslation() const {
+    return MathUtil::GetTranslationFromMatrix(globalTransform);
+	}
   const XMMATRIX& GetGlobalTransform() const { return globalTransform; }
 };

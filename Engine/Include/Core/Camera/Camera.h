@@ -9,11 +9,12 @@
  */
 class Camera
 {
-
+public:
   static constexpr XMVECTOR UP{0.f, 1.f, 0.f, 0.f};
   static constexpr XMVECTOR RIGHT{1.f, 0.f, 0.f, 0.f};
   static constexpr XMVECTOR FORWARD{0.f, 0.f, 1.f, 0.f};
 
+private:
   float vfov;
   UINT width, height;
   float aspectRatio;

@@ -32,12 +32,20 @@ protected:
   float actualCellSize{0.f};
   uint32_t width{0}, height{0};
 
+	std::vector<GameObject*> placements;
+
   std::vector<CellObject*> grid;
 
 public:
+
+	CellObject* selectedCell{nullptr};
+
   GridObject(World* world) : GameObject(world) {}
 
 	void CreateGrid(uint32_t width, uint32_t height, float actualCellSize);
+
+	uint32_t GetWidth() const { return width; }
+  uint32_t GetHeight() const { return height; }
 
 	//////////////////////////////////////////////////////////////
 	//
@@ -56,29 +64,19 @@ public:
   //		 	+--------------------------------------------+
   //	[0, 0]																					+x
   //
-  CellObject* GetCellObjectAt(uint32_t w, uint32_t h)
-  {
-    if (w >= width || h >= height)
-      return nullptr;
+  CellObject* GetCellObjectAt(uint32_t w, uint32_t h);
 
-    return grid[w + h * width];
-	}
+	bool PlaceGameObjectAt(GameObject* object, uint32_t w, uint32_t h);
 
-	GameObject* GetGameObjectAt(uint32_t w, uint32_t h) {
-    if (w >= width || h >= height)
-      return nullptr;
+	void ReplaceGameObjectAt(GameObject* object, uint32_t w, uint32_t h);
 
+	void RemoveGameObject(GameObject* object);
 
-	}
+	bool MoveGameObjectTo(GameObject* object, uint32_t w, uint32_t h);
 
-	std::pair<float, float> GetActualPositionAt(uint32_t w, uint32_t h) {
-    if (w >= width || h >= height)
-      throw std::runtime_error("grid cell out of bounds!");
+	GameObject* GetGameObjectAt(uint32_t w, uint32_t h);
 
-    float pos_x = actualCellSize * (w % width) + actualCellSize / 2;
-    float pos_z = actualCellSize * (h / height) + actualCellSize / 2;
-    return {pos_x, pos_z};
-	}
+	std::pair<float, float> GetActualPositionAt(uint32_t w, uint32_t h);
 
 	// Interaction
   virtual void OnBeginCursorOver() {};
@@ -92,8 +90,13 @@ public:
 
   virtual void FixedUpdate(float fixedRate) {}
   virtual void PreUpdate(float dt) {}
-  virtual void Update(float dt) {}
+  void Update(float dt) override;
   virtual void PostUpdate(float dt) {}
   virtual void OnRender() {}
 
+private:
+
+	void FindHoveredCell();
+
+	uint32_t idx(uint32_t w, uint32_t h) { return w + h * width; }
 };
