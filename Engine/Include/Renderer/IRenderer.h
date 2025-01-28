@@ -85,6 +85,14 @@ public:
    */
   virtual void DrawDebugCylinder(Matrix world, Color color) = 0;
   #endif
+  /**
+   * @brief About Particle
+   */
+  virtual void CreateParticle() = 0;
+  /**
+   * @brief About Particle
+   */
+  virtual void DeleteParticle() = 0;
 
   virtual void AddOutLine(MeshHandle handle) = 0;
   virtual void DeleteOutLine(MeshHandle handle) = 0;

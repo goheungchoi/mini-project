@@ -322,6 +322,8 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
   _passMgr->SetSkyBox(envPath, specularBRDFPath, diffuseIrrPath,
                       specularIBLPath);
 }
+void DX11Renderer::CreateParticle() {}
+void DX11Renderer::DeleteParticle() {}
 #ifdef _DEBUG
 void DX11Renderer::DrawDebugSphere(Matrix world, Color color)
 {
