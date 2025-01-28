@@ -17,6 +17,8 @@ public:
   GameObjectTypeMap gameObjectTypeMap;
   GameObjectNameMap gameObjectNameMap;
   std::list<GameObject*> gameObjects;
+  std::vector<RigidbodyComponent*> rigidbodyComponents;
+
 
   Level(const std::string& name) : name{name} {}
   virtual ~Level() {}
@@ -25,8 +27,13 @@ public:
 
   template <GameObjectType T>
   void AddGameObject(GameObject* object) { 
-    gameObjects.push_back(object); 
+    gameObjects.push_back(object);
     gameObjectTypeMap.insert({std::type_index(typeid(T)), object});
+  }
+
+  void AddRigidbody(RigidbodyComponent* rigidbody)
+  {
+    rigidbodyComponents.push_back(rigidbody);
   }
 
   template<GameObjectType T>
@@ -69,6 +76,7 @@ public:
   }
 
   const std::list<GameObject*>& GetGameObjectList() { return gameObjects; }
+  const std::vector<RigidbodyComponent*>& GetRigidbodyList() { return rigidbodyComponents; }
 
 public:
 

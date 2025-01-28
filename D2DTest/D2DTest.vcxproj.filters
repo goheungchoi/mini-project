@@ -19,6 +19,9 @@
 		<Filter Include="Contents\Levels">
 			<UniqueIdentifier>{6C443D0D-F9E9-4F05-94D6-36AB63D503B9}</UniqueIdentifier>
 		</Filter>
+		<Filter Include="Contents\Prototype">
+			<UniqueIdentifier>{75C9F310-284E-4E09-B8C4-06A04D0157F7}</UniqueIdentifier>
+		</Filter>
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="Application\GameApp\GameApp.h">
@@ -43,8 +46,50 @@
 		<ClCompile Include="Contents\GameObjects\TestGameObject.cpp">
 			<Filter>Contents\GameObjects</Filter>
 		</ClCompile>
+		<ClInclude Include="Contents\Prototype\CameraObject.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\CellObject.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\Character.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\GameLevel.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\GridLevel.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\GridObject.h">
+			<Filter>Contents\Prototype</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\Prototype\CameraObject.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\Character.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\GridLevel.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\GameLevel.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\CellObject.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\GridObject.cpp">
+			<Filter>Contents\Prototype</Filter>
+		</ClCompile>
 	</ItemGroup>
 	<ItemGroup>
 		<ClCompile Include="Contents\GameObjects\TestGameObject.cpp" />
+		<ClCompile Include="Contents\Prototype\CameraObject.cpp" />
+		<ClCompile Include="Contents\Prototype\CellObject.cpp" />
+		<ClCompile Include="Contents\Prototype\Character.cpp" />
+		<ClCompile Include="Contents\Prototype\GameLevel.cpp" />
+		<ClCompile Include="Contents\Prototype\GridLevel.cpp" />
+		<ClCompile Include="Contents\Prototype\GridObject.cpp" />
 	</ItemGroup>
 </Project>

@@ -32,13 +32,17 @@ public:
   // physics update
   virtual void Update(float deltaTime) = 0;
 
-  virtual void CastRay(PhyjixRay* ray) = 0;
-  virtual PhyjixRay* CreateRay(DirectX::SimpleMath::Vector3 pos,
+  virtual void CastRay() = 0;
+  virtual void CreateRay(DirectX::SimpleMath::Vector3 camerapos,
                                DirectX::SimpleMath::Vector2 mousepos,
                               DirectX::SimpleMath::Matrix view,
                               DirectX::SimpleMath::Matrix projection,
                               DirectX::SimpleMath::Vector2 ScreenSize) = 0;
-
+  virtual void UpdateRay(DirectX::SimpleMath::Vector3 camerapos,
+                         DirectX::SimpleMath::Vector2 mousepos,
+                         DirectX::SimpleMath::Matrix view,
+                         DirectX::SimpleMath::Matrix projection,
+                         DirectX::SimpleMath::Vector2 ScreenSize) = 0;
   virtual void LeftClick() = 0;
   virtual void RightClick() = 0;
 };

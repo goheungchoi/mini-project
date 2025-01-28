@@ -32,6 +32,9 @@ public:
   void EnableGravity();
   void DisableGravity();
   IRigidBody* GetRigidBody() { return _rigidbody; };
+
+  void UpdateFromTransform();
+  void UpdateToTransform();
 #ifdef _DEBUG
   void EnableDebugDraw();
   void DisableDebugDraw();
@@ -40,9 +43,13 @@ public:
 
 
 private:
+
+
   TransformComponent* GetTransformComponent();
   IRigidBody* _rigidbody = nullptr;
   IPhyjixWorld* _world = nullptr;
+  physx::PxTransform _prevTransform;
+
 
 #ifdef _DEBUG
   BOOL _bDebugDrawFlag = false;
