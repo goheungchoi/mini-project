@@ -50,7 +50,6 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
 bool DX11Renderer::Cleanup()
 {
   DestroyMesh();
-  DestroyPipeline();
   DestroyTexture();
   DestroyShaderModule();
   SAFE_RELEASE(_passMgr);
@@ -310,15 +309,6 @@ bool DX11Renderer::DestroyShaderModule()
   _storage->pixelShaderMap.clear();
   return false;
 }
-bool DX11Renderer::CreatePipeline()
-{
-  return true;
-}
-
-bool DX11Renderer::DestroyPipeline()
-{
-  return false;
-}
 
 bool DX11Renderer::CreateComputeEffect()
 {
@@ -350,6 +340,16 @@ void DX11Renderer::DrawDebugBox(Matrix world, Color color)
 void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
 {
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
+}
+
+void DX11Renderer::AddOutLine(MeshHandle handle)
+{
+
+}
+
+void DX11Renderer::DeleteOutLine(MeshHandle handle) 
+{
+
 }
 
 #endif
