@@ -16,7 +16,7 @@ public:
   IRenderer* _renderer{nullptr};
 
   // UI System
-  // class Canvas* _canvas = nullptr;
+  class Canvas* _canvas = nullptr;
 
   // EffectSystem
   // EffectSystem _effectSystem;

@@ -20,6 +20,9 @@
 #include <imgui_impl_win32.h>
 #endif
 
+#include "GameFramework/UI/Canvas/Canvas.h"
+#define USED2D
+
 void World::Initialize(HWND hwnd, const std::wstring& title)
 {
   _renderer = new DX11Renderer();
@@ -42,6 +45,10 @@ void World::Initialize(HWND hwnd, const std::wstring& title)
       Vector2(kScreenWidth, kScreenHeight));
 
   SetMainCamera(_defaultCamera);
+
+#ifdef USED2D
+  _canvas = new Canvas(this);
+#endif // USED2D
 }
 
 World* World::CreateWorld(HWND hwnd, const std::wstring& title)
@@ -59,6 +66,11 @@ void World::PrepareChangeLevel(const std::string& levelName) {
     _preparingLevel = it->second;
     
     _preparingLevel->PrepareLevel();
+
+    // 여기에 Level에 맞는 canvas를 준비해야 하나??
+  #ifdef USED2D
+    _canvas->BeginLevel();
+  #endif // USED2D
   }
   else
   {
@@ -88,6 +100,11 @@ void World::CommitLevelChange() {
     {
       _currentLevel->DestroyLevel();
       _currentLevel->CleanupLevel();
+
+#ifdef USED2D
+      delete _canvas;
+      _canvas = new Canvas(this);
+#endif // USED2D
     }
     
 
@@ -413,6 +430,10 @@ void World::Update(float dt)
     component->UpdateToTransform();
   }
 
+// UI Update
+#ifdef USED2D
+  _canvas->Update(dt);
+#endif // USED2D
 
 }
 
@@ -579,7 +600,9 @@ void World::RenderGameObjects() {
 
 void World::RenderUI() {
   // TODO:
-
+#ifdef USED2D
+  _canvas->Render();
+#endif // USED2D
 }
 
 void World::CleanupStage() {
