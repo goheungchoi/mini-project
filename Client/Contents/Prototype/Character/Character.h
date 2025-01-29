@@ -39,9 +39,9 @@ public:
 
   ModelHandle characterModelHandle;
   ModelData* characterModelData;
-  GameObject* model;
 	SkeletonHandle skeletonHandle;
   AnimatorComponent* animator;
+  RigidbodyComponent* rigidBody;
 
 	// Properties
   bool bGridLocationChanged{false};

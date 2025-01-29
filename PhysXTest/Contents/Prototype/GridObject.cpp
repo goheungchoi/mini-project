@@ -14,7 +14,7 @@ void GridObject::CreateGrid(uint32_t width, uint32_t height, float actualCellSiz
 	for (int i = 0; i < len; ++i)
   {
     CellObject* cell = world->CreateGameObject<CellObject>();
-		AddChild(cell);
+		AddChildGameObject(cell);
 
 		float pos_x = actualCellSize * (i % width) + actualCellSize / 2;
     float pos_z = actualCellSize * (i / height) + actualCellSize / 2;

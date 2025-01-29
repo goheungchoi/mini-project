@@ -358,6 +358,11 @@ void World::InitialStage() {
 void World::ProcessInput(float dt)
 {
   InputSystem::GetInstance()->Update(dt);
+
+	if (Input.IsKeyDown(MouseState::LB))
+  {
+    _phyjixWorld->LeftClick();
+  }
 }
 
 void World::PreUpdate(float dt) {
