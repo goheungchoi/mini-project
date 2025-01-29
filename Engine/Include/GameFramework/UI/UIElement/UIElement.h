@@ -16,23 +16,12 @@ public:
   virtual ~UIElement() = default;
 
 public:
-  // Interaction
-  virtual void OnBeginCursorOver() {};
-  virtual void OnEndCursorOver() {};
-  virtual void OnClicked() {};
-  virtual void OnPressed() {};
-
-  // Game loop events
-  virtual void OnAwake() {}
-  virtual void OnActivated() {}
-
-  virtual void FixedUpdate(float fixedRate) {}
-  virtual void PreUpdate(float dt) {}
-  virtual void Update(float dt) {}
-  virtual void PostUpdate(float dt) {}
-  virtual void OnRender() {}
+  virtual void BeginLevel();
+  virtual void Update(float dt);
+  virtual void Render();
 
 
+  EStatus GetStatus() { return status; }
 
   // State change
   void Activate()

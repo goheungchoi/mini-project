@@ -9,7 +9,7 @@ concept Derived = std::is_base_of<UIPanel, T>::value;
 class Canvas
 {
 public:
-  Canvas(class World* _world);
+  Canvas(class World* world);
   ~Canvas();
 
 private:
@@ -19,7 +19,7 @@ private:
 
 public:
   void BeginLevel();
-  void Update();
+  void Update(float dt);
   void Render();
 
   template <typename T>
@@ -58,3 +58,8 @@ public:
     panel = nullptr;
   }
 };
+
+/*
+- 장면이 전환될 때 마다, Canvas가 삭제되고 다시 생성되면서
+- 그 장면에 맞는 Panel들이 생성된다.
+*/
