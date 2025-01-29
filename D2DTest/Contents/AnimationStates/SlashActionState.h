@@ -2,11 +2,11 @@
 
 #include "GameFramework/Components/Animation/AnimationState.h"
 
-class IdleState : public AnimationState
+class SlashActionState : public AnimationState
 {
 
 public:
-  IdleState(Animation* animation) : AnimationState(animation) {}
+  SlashActionState(Animation* animation) : AnimationState(animation) {}
 
   void Toggle(AnimatorComponent*) override;
 };
