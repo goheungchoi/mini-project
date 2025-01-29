@@ -44,6 +44,11 @@ Character::Character(World* world) : GameObject(world)
   state = new AnimationState(anim);*/
   // animator->SetState(state);
   // animator->AdjustAnimationPlaySpeed(0.1f);
+
+	rigidBody = CreateComponent<RigidbodyComponent>();
+  rigidBody->Initialize({0, 1.25, 0}, {1.f, 1.5f, 1.f},
+                        ColliderShape::eCubeCollider, true, false,
+                        world->_phyjixWorld);
 }
 
 Character::~Character() {
