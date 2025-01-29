@@ -8,7 +8,7 @@ public:
   UIPanel(class World* world);
   virtual ~UIPanel();
 
-  virtual void BeginLevel() override;
-  virtual void Update(float dt) override;
-  virtual void Render() override;
+  void BeginLevel() override;
+  void Update(float dt) override;
+  void Render() override;
 };

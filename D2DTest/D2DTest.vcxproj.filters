@@ -34,6 +34,9 @@
 		<Filter Include="Contents\Prototype\Bullet">
 			<UniqueIdentifier>{F22C8123-6345-44DF-AE57-5BB3B323E9E4}</UniqueIdentifier>
 		</Filter>
+		<Filter Include="Contents\Prototype\UI">
+			<UniqueIdentifier>{41154C0D-C562-4CC1-B1DE-BB37F9FB0558}</UniqueIdentifier>
+		</Filter>
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="Application\GameApp\GameApp.h">
@@ -187,15 +190,15 @@
 		<ClCompile Include="Contents\Prototype\Character\Brawler.cpp">
 			<Filter>Contents\Prototype\Character</Filter>
 		</ClCompile>
+		<ClInclude Include="Contents\Prototype\UI\TestUI.h">
+			<Filter>Contents\Prototype\UI</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\Prototype\UI\TestUI.cpp">
+			<Filter>Contents\Prototype\UI</Filter>
+		</ClCompile>
 	</ItemGroup>
 	<ItemGroup>
 		<ClCompile Include="Contents\GameObjects\TestGameObject.cpp" />
-		<ClCompile Include="Contents\Prototype\CameraObject.cpp" />
-		<ClCompile Include="Contents\Prototype\CellObject.cpp" />
-		<ClCompile Include="Contents\Prototype\Character.cpp" />
-		<ClCompile Include="Contents\Prototype\GameLevel.cpp" />
-		<ClCompile Include="Contents\Prototype\GridLevel.cpp" />
-		<ClCompile Include="Contents\Prototype\GridObject.cpp" />
 		<ClCompile Include="Contents\GameObjects\CameraObject.cpp" />
 		<ClCompile Include="Contents\Prototype\Game\FixedCameraObject.cpp" />
 		<ClCompile Include="Contents\Prototype\Game\GameLevel.cpp" />
@@ -209,5 +212,6 @@
 		<ClCompile Include="Contents\Prototype\Grid\CellObject.cpp" />
 		<ClCompile Include="Contents\Prototype\Grid\GridLevel.cpp" />
 		<ClCompile Include="Contents\Prototype\Grid\GridObject.cpp" />
+		<ClCompile Include="Contents\Prototype\UI\TestUI.cpp" />
 	</ItemGroup>
 </Project>

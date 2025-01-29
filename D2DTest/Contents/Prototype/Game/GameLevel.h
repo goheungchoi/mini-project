@@ -26,7 +26,7 @@ protected:
   GameObject* pivot{nullptr};
   class Map* map{nullptr};
 
-  class TestGameObject* text;
+  class TestGameObject* text{nullptr};
 
 public:
   GameLevel(const std::string& name) : Level(name) {}

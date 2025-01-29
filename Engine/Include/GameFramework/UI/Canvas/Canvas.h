@@ -27,7 +27,7 @@ public:
   T* CreatePanel(std::wstring name)
   {
     T* t = new T(_world);
-    UIPanel* panel = dynamic_cast<UIPanel*>(t);
+    UIPanel* panel = static_cast<UIPanel*>(t);
 
     if (panel == nullptr)
     {
