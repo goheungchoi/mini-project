@@ -1,7 +1,7 @@
 #include "GameLevel.h"
 #include "Map.h"
 
-#define USED2D
+//#define USED2D
 
 void GameLevel::PrepareLevel()
 {
