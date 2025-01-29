@@ -1,7 +1,10 @@
 ﻿#include "GameFramework/UI/UIElement/UIElement.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 
-void UIElement::BeginLevel() {}
+void UIElement::BeginLevel()
+{
+  _status = EStatus_Active;
+}
 
 void UIElement::Update(float dt) {}
 

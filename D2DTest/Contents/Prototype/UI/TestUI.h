@@ -4,10 +4,9 @@
 class TestUI : public UIPanel
 {
 public:
-  TestUI(class World* world) : UIPanel(world) {}
-  virtual ~TestUI() = default;
+  TestUI(class World* world);
+  virtual ~TestUI();
 
-  virtual void BeginLevel() override {}
-  virtual void Update(float dt) override {}
-  virtual void Render() override {}
+private:
+  class UIButton* testBtn{nullptr};
 };

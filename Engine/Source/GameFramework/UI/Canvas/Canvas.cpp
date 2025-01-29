@@ -22,7 +22,9 @@ void Canvas::Update(float dt)
   for (auto panel : panelList)
   {
     if (panel->GetStatus() == EStatus_Active)
+    {
       panel->Update(dt);
+    }
   }
 }
 
@@ -31,6 +33,8 @@ void Canvas::Render()
   for (auto panel : panelList)
   {
     if (panel->GetStatus() == EStatus_Active)
+    {
       panel->Render();
+    }
   }
 }

@@ -175,3 +175,13 @@ Vector2 InputSystem::GetMouseDelta() const
 
   return delta;
 }
+
+Vector2 InputSystem::GetCurrMouseStateVec()
+{
+  POINT cursorPos;
+  GetCursorPos(&cursorPos);
+  ScreenToClient(_hWnd, &cursorPos);
+
+  return Vector2(static_cast<float>(cursorPos.x),
+                 static_cast<float>(cursorPos.y));
+}

@@ -13,6 +13,8 @@ UIPanel::~UIPanel()
 
 void UIPanel::BeginLevel()
 {
+  __super::BeginLevel();
+
   for (auto ui : uiList)
   {
     if (ui->GetStatus() == EStatus_Awake)

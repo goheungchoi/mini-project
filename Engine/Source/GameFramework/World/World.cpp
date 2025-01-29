@@ -66,11 +66,6 @@ void World::PrepareChangeLevel(const std::string& levelName) {
     _preparingLevel = it->second;
     
     _preparingLevel->PrepareLevel();
-
-    // 여기에 Level에 맞는 canvas를 준비해야 하나??
-  #ifdef USED2D
-    _canvas->BeginLevel();
-  #endif // USED2D
   }
   else
   {
@@ -347,6 +342,11 @@ void World::InitialStage() {
       });
     }
   }
+
+// 여기에 Level에 맞는 canvas를 준비해야 하나??
+#ifdef USED2D
+  _canvas->BeginLevel();
+#endif // USED2D
 }
 
 //void World::FixedUpdate(float fixedRate)

@@ -19,7 +19,7 @@ private:
   void UnInit();
   Vector2 CalculateTextureSize();
 
-  public:
+public:
   void Render(DirectX::SpriteBatch* pSpriteBatch);
   void SetPos(Vector2 pos) { _pos = pos; }
 
