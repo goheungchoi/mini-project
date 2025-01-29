@@ -42,7 +42,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
 	_world->AddLevel(gridLevel);
   _world->AddLevel(testLevel);
   _world->AddLevel(gameLevel);
-  _world->PrepareChangeLevel(gameLevel->name);
+  _world->PrepareChangeLevel(testLevel->name);
   _world->CommitLevelChange();
 }
 

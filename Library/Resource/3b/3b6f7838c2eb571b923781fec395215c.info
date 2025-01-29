@@ -1,0 +1,24 @@
+{
+    "uuid": "3b6f7838c2eb571b923781fec395215c",
+    "import_path": "Models\\HandGun\\Cube.0010.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Cube.0010",
+        "bounding_box": [
+            [
+                -0.08372294902801514,
+                1.8732056617736816,
+                -0.16412468254566193
+            ],
+            [
+                0.08372294902801514,
+                1.8932709693908691,
+                -0.1251767873764038
+            ]
+        ],
+        "num_vertices": 104,
+        "num_indices": 156,
+        "material": "Models\\HandGun\\1.mat",
+        "num_bones": 0
+    }
+}

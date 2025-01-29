@@ -13,11 +13,13 @@ class TestLevel : public Level
   ModelHandle testAnimationHandle;
   GameObject* testObject{nullptr};
   GameObject* testAnim{nullptr};
+  GameObject* testAnim2{nullptr};
 
   Animation* anim1{};
   Animation* anim2{};
 
   AnimationState* animState{};
+  AnimationState* animState2{};
 
 public:
 
@@ -28,8 +30,8 @@ public:
   {
     sponzaHandle = LoadModel("Models\\Maps\\Map002_Museum.glb");
     // sponzaHandle = LoadModel("Models\\Sponza\\Sponza.gltf");
-    testAnimationHandle = LoadModel("Models\\SkinningTest\\SkinningTest.gltf");
-    //testAnimationHandle = LoadModel("AnimTest\\ANI_Test.fbx");
+    //testAnimationHandle = LoadModel("Models\\SkinningTest\\SkinningTest.gltf");
+    testAnimationHandle = LoadModel("AnimTest\\ANI_Test.fbx");
   }
 
   virtual void BeginLevel() override {
@@ -40,14 +42,11 @@ public:
     const ModelData& testAnimModel = AccessModelData(testAnimationHandle);
 
     anim1 = new Animation(*testAnimModel.animations.begin(), true);
-    // anim2 = new Animation(*std::next(testAnimModel.animations.begin()), true);
 
     animState = new AnimationState(anim1);
-
     auto* animator = testAnim->CreateComponent<AnimatorComponent>();
     animator->SetState(animState);
     animator->BindSkeleton(testAnimModel.skeleton);
-
   }
 
   virtual void DestroyLevel() override {}

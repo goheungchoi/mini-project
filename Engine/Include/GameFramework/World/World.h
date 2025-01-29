@@ -77,7 +77,7 @@ public:
   void StopCameraMovement(bool fixed);
 
 	// TODO:
-  XMVECTOR ScreenToWorldPosition(XMVECTOR position);
+  Ray GetScreenCursorRay(XMVECTOR screenPos);
 
   /* Game Object Management Functions */
 
@@ -173,7 +173,7 @@ public:
         }
 
 				// Attach it to the parent node.
-        gameObjNodes[data.nodes[i].parent]->AddChild(newNode);
+        gameObjNodes[data.nodes[i].parent]->AddChildGameObject(newNode);
       }
 
       // Bind the root bones to the skeletal mesh.
@@ -211,12 +211,48 @@ public:
 
 				// Attach it to the parent node.
         if (data.nodes[i].parent >= 0)
-					gameObjNodes[data.nodes[i].parent]->AddChild(newNode);
+					gameObjNodes[data.nodes[i].parent]->AddChildGameObject(newNode);
 			}
     }
 
     return (T*) gameObjNodes[0];
   }
+
+	template <GameObjectType T>
+  T* FindGameObjectByType()
+  {
+    if (!_currentLevel)
+      return nullptr;
+
+		auto it = _currentLevel->gameObjectTypeMap.find(std::type_index(typeid(T)));
+    if (it == _currentLevel->gameObjectTypeMap.end())
+      return nullptr;
+    return static_cast<T*>(it->second);
+	}
+
+	template <GameObjectType T>
+  std::vector<T*> FindAllGameObjectByType()
+  {
+    if (!_currentLevel)
+      return nullptr;
+
+    std::vector<T*> res;
+    auto range = _currentLevel->gameObjectTypeMap.equal_range(
+        std::type_index(typeid(T)));
+    for (auto it = range.first; it != range.second; ++it)
+    {
+      res.push_back(static_cast<T*>(it->second));
+    }
+    return res;
+  }
+
+	GameObject* FindGameObjectByTag(const std::string& tag);
+	std::vector<GameObject*> FindAllGameObjectsByTag(const std::string& tag);
+
+	GameObject* FindGameObjectByName(const std::string& name);
+	std::vector<GameObject*> FindAllGameObjectsByName(const std::string& name);
+
+
   void RegisterGameObjectName(GameObject* gameObject);
   void UnregisterGameObjectName(GameObject* gameObject);
   void RegisterGameObjectTag(GameObject* gameObject);
@@ -226,101 +262,14 @@ public:
   void RegisterMeshComponent(class MeshComponent* meshComp);
   void RegisterMeshComponent(class SkeletalMeshComponent* skeletalMeshComp);
 
-  // bool CheckComponentOverlapMulti(
-  //	std::vector<OverlapResult>& outOverlapResults,
-  //	class PrimitiveComponent* primComp,
-  //	const Math::Vector2& pos,
-  //	const Math::Matrix& rotation);
-
-  // bool CheckComponentOverlapMultiByChannel(
-  //	std::vector<OverlapResult>& outOverlapResults,
-  //	class PrimitiveComponent* primComp,
-  //	const Math::Vector2& pos,
-  //	const Math::Matrix& rotation,
-  //	ECollisionChannel channel);
-
-  // bool CheckComponentSweepMulti(
-  //	std::vector<HitResult>& outHitResults,
-  //	class PrimitiveComponent* primComp,
-  //	const Math::Vector2& start,
-  //	const Math::Vector2& end,
-  //	const Math::Matrix& rotation);
-
-  // bool CheckComponentSweepMultiByChannel(
-  //	std::vector<HitResult>& outHitResults,
-  //	class PrimitiveComponent* primComp,
-  //	const Math::Vector2& start,
-  //	const Math::Vector2& end,
-  //	const Math::Matrix& rotation,
-  //	ECollisionChannel channel);
-
-  // bool LineTraceMultiByChannel(
-  //	std::vector<HitResult>& outHitResults,
-  //	const Math::Vector2& start,
-  //	const Math::Vector2& end,
-  //	ECollisionChannel channel,
-  //	const CollisionProperty& collisionProperty) const {
-  //	// TODO
-  //	return false;
-  // }
-
-  // bool LineTraceSingleByChannel(
-  //	HitResult& outHitResults,
-  //	const Math::Vector2& start,
-  //	const Math::Vector2& end,
-  //	ECollisionChannel channel,
-  //	const CollisionProperty& collisionProperty) const {
-  //	// TODO
-  //	return false;
-  // }
-
-  // bool OverlapMultiByChannel(
-  //	std::vector<OverlapResult>& outOverlapResults,
-  //	const Math::Vector2& pos,
-  //	ECollisionChannel channel,
-  //	const CollisionShape& collisionShape,
-  //	const CollisionProperty& collisionProperty) const {
-  //	// TODO
-  //	return false;
-  // }
-
-  // bool SweepMultiByChannel(
-  //	std::vector<HitResult>& outHitResults,
-  //	const Math::Vector2& start,
-  //	const Math::Vector2& end,
-  //	ECollisionChannel channel,
-  //	const CollisionShape& collisionShape,
-  //	const CollisionProperty& collisionProperty) const {
-  //	// TODO
-  //	return false;
-  // }
-
-  // bool SweepSingleByChannel(
-  //	HitResult& outHitResults,
-  //	const Math::Vector2& start,
-  //	const Math::Vector2& end,
-  //	ECollisionChannel channel,
-  //	const CollisionShape& collisionShape,
-  //	const CollisionProperty& collisionProperty) const {
-  //	// TODO
-  //	return false;
-  // }
-
-
-
-
-
   /* Game Loop Flow */
   
   void InitialStage();
 
-  void FixedUpdate(float fixedRate);
-  void PhysicsUpdate(float fixedRate);
-
+  void AnimationUpdate(float dt);
   void ProcessInput(float dt);
   void PreUpdate(float dt);
   void Update(float dt);
-  void AnimationUpdate(float dt);
   void PostUpdate(float dt);
 
   void RenderGameObjects();

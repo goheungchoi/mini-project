@@ -55,7 +55,7 @@ public:
   {
     for (int index = 0; index < GetNumKeyPositions() - 1; ++index)
     {
-      if (animationTime < GetKeyPositions()[index + 1].timeStamp)
+      if (animationTime <= GetKeyPositions()[index + 1].timeStamp)
         return index;
     }
     return -1;
@@ -70,7 +70,7 @@ public:
   {
     for (int index = 0; index < GetNumKeyRotations() - 1; ++index)
     {
-      if (animationTime < GetKeyRotations()[index + 1].timeStamp)
+      if (animationTime <= GetKeyRotations()[index + 1].timeStamp)
         return index;
     }
     return -1;
@@ -85,7 +85,7 @@ public:
   {
     for (int index = 0; index < GetNumKeyScalings() - 1; ++index)
     {
-      if (animationTime < GetKeyScalings()[index + 1].timeStamp)
+      if (animationTime <= GetKeyScalings()[index + 1].timeStamp)
         return index;
     }
     return -1;
@@ -184,19 +184,20 @@ class Animation
 {
   const AnimationData* data{nullptr};
 
-  
   std::unordered_map<BoneId, AnimationChannel> boneChannels;
   std::unordered_map<std::string, AnimationChannel> nodeChannels;
   std::unordered_map<BoneId, uint32_t> boneIndexMap;
   std::unordered_map<std::string, uint32_t> nodeIndexMap;
 
-  float _currentAnimTime{0.f}; // Current animation time
+	float _currentAnimTime{0.f}; // Current animation time
 
   bool isTriggered{false};
   bool isPlaying{false};
 
-public:
   bool isLoop;
+
+public:
+  
 
   Animation(AnimationHandle handle, bool isLoop = false) : isLoop{isLoop}
   {
@@ -246,13 +247,16 @@ public:
   {
     isTriggered = true;
     isPlaying = true;
-
     _currentAnimTime = 0.f;
   }
 
   void Pause() { isPlaying = false; }
+  void Resume() { isPlaying = true; }
 
+	bool IsStarted() const { return isTriggered; }
+  bool IsDone() const { return !isTriggered; }
   bool IsPlaying() const { return isPlaying; }
+  bool IsPaused() const { return !isPlaying; }
 
   void Quit()
   {
@@ -277,8 +281,21 @@ public:
   {
     std::vector<XMMATRIX> globalMatrices(finalBoneTransforms.size());
 
-    _currentAnimTime += GetTicksPerSecond() * dt;
-    _currentAnimTime = fmod(_currentAnimTime, GetDuration());
+		_currentAnimTime += GetTicksPerSecond() * dt;
+
+		if (_currentAnimTime > GetDuration())
+    {
+      if (isLoop)
+      {
+        _currentAnimTime = fmod(_currentAnimTime, GetDuration());
+      }
+      else
+      {
+        Quit();
+				_currentAnimTime = GetDuration();
+			}
+    }
+
     // _currentAnimTime = 0.f;
 		// Update the channels first
     for (auto& [_, channel] : boneChannels)

@@ -213,6 +213,7 @@
 		<ClInclude Include="Include\GameFramework\Components\Animation\Animation.h" />
 		<ClInclude Include="Include\GameFramework\Components\Animation\AnimationState.h" />
 		<ClInclude Include="Include\GameFramework\Components\Animation\AnimatorComponent.h" />
+		<ClInclude Include="Include\GameFramework\Components\BillboardComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\ComponentBase.h" />
 		<ClInclude Include="Include\GameFramework\Components\LightComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\MeshComponent.h" />
@@ -276,6 +277,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\DeferredPass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\PostProcess\OutLine.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\PostProcess\PostProcess.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\PostProcess\PostProcessManager.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\RenderPass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\Shader.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShaderModule.h" />

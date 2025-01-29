@@ -31,50 +31,6 @@ public:
     gameObjectTypeMap.insert({std::type_index(typeid(T)), object});
   }
 
-  void AddRigidbody(RigidbodyComponent* rigidbody)
-  {
-    rigidbodyComponents.push_back(rigidbody);
-  }
-
-  template<GameObjectType T>
-  T* FindGameObjectByType()
-  {
-    auto it = gameObjectTypeMap.find(std::type_index(typeid(T)));
-    if (it == gameObjectTypeMap.end())
-      return nullptr;
-    return static_cast<T*>(it->second);
-  }
-
-  template<GameObjectType T>
-  std::vector<T*> FindAllGameObjectByType()
-  {
-    std::vector<T*> res;
-    auto range = gameObjectTypeMap.equal_range(std::type_index(typeid(T)));
-    for (auto it = range.first; it != range.second; ++it)
-    {
-      res.push_back(static_cast<T*>(it->second));
-    }
-    return res;
-  }
-  
-  GameObject* GetGameObjectByTag(const std::string& tag) {
-    auto it = gameObjectTagMap.find(tag);
-    if (it == gameObjectTagMap.end())
-      return nullptr;
-    return it->second;
-  }
-
-  std::vector<GameObject*> FindAllGameObjectsByTag(const std::string& tag)
-  {
-    std::vector<GameObject*> res;
-    auto range = gameObjectTagMap.equal_range(tag);
-    for (auto it = range.first; it != range.second; ++it)
-    {
-      res.push_back(it->second);
-    }
-    return res;
-  }
-
   const std::list<GameObject*>& GetGameObjectList() { return gameObjects; }
   const std::vector<RigidbodyComponent*>& GetRigidbodyList() { return rigidbodyComponents; }
 

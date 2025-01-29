@@ -1,0 +1,24 @@
+{
+    "uuid": "124d52da2e665805ae19553834e9a713",
+    "import_path": "Models\\HandGun\\Sphere0.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Sphere0",
+        "bounding_box": [
+            [
+                0.027503062039613724,
+                1.8482472896575928,
+                -0.14887550473213196
+            ],
+            [
+                0.06440812349319458,
+                1.9009929895401,
+                -0.10522086173295975
+            ]
+        ],
+        "num_vertices": 1984,
+        "num_indices": 2880,
+        "material": "Models\\HandGun\\2.mat",
+        "num_bones": 0
+    }
+}
