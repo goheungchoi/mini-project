@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Renderer/IRenderer.h"
 struct ResourceStorage;
 #ifdef _DEBUG
@@ -17,7 +17,7 @@ public:
   virtual ~DX11Renderer();
 
 public:
-  // IRendererÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+  // IRendererì„(ë¥¼) í†µí•´ ìƒì†ë¨
   bool Init_Win32(int width, int height, void* hInstance, void* hwnd) override;
   bool Cleanup() override;
   void ResizeScreen(unsigned int width, unsigned int height) override;

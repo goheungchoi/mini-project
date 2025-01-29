@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "GameFramework/Common.h"
 #include "Core/Math/MathUtils.h"
 #include  "GameFramework/World/World.h"
@@ -21,6 +21,7 @@ public:
   virtual void Update(float dt);
   virtual void Render();
 
+  void SetownerPanel(class UIPanel* _ownerPanel) { ownerPanel = _ownerPanel; }
 
   EStatus GetStatus() { return status; }
 
@@ -57,10 +58,7 @@ public:
     bShouldDestroy = false;
   }
 
-  void FinishDestroy()
-  {
-    status = EStatus_Destroyed;
-  }
+  void FinishDestroy() { status = EStatus_Destroyed; }
 
 protected:
   class World* _world = nullptr;
@@ -73,4 +71,6 @@ protected:
 
   EStatus status{EStatus_Awake};
   bool isActive{false};
+
+  class UIPanel* ownerPanel = nullptr;
 };

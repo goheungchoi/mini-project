@@ -1,4 +1,4 @@
-#include "GameFramework/World/World.h"
+ï»¿#include "GameFramework/World/World.h"
 
 #include "Renderer/DX11/DX11Renderer.h"
 
@@ -67,7 +67,7 @@ void World::PrepareChangeLevel(const std::string& levelName) {
     
     _preparingLevel->PrepareLevel();
 
-    // ¿©±â¿¡ Level¿¡ ¸Â´Â canvas¸¦ ÁØºñÇØ¾ß ÇÏ³ª??
+    // ì—¬ê¸°ì— Levelì— ë§žëŠ” canvasë¥¼ ì¤€ë¹„í•´ì•¼ í•˜ë‚˜??
   #ifdef USED2D
     _canvas->BeginLevel();
   #endif // USED2D
