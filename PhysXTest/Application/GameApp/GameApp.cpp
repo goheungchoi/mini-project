@@ -63,8 +63,8 @@ void GameApp::ProcessInput(float dt)
 
 void GameApp::FixedUpdate(float fixedRate)
 {
-  _world->FixedUpdate(fixedRate);
-  _world->PhysicsUpdate(fixedRate);
+  //_world->FixedUpdate(fixedRate);
+  //_world->PhysicsUpdate(fixedRate);
 }
 
 void GameApp::Update(float dt)
