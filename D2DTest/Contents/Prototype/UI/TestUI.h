@@ -7,6 +7,8 @@ public:
   TestUI(class World* world);
   virtual ~TestUI();
 
+  virtual void Render() override;
+
 private:
   class UIButton* testBtn{nullptr};
 };

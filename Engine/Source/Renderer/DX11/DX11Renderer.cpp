@@ -118,7 +118,6 @@ void DX11Renderer::EndFrame()
   DrawImGui();
 #endif
 #ifdef USED2D
-  _d2dRenderer->DrawSprites();
   _d2dRenderer->EndDraw();
 #endif
   _swapChain->GetSwapChain()->Present(0, 0);
@@ -368,10 +367,16 @@ void DX11Renderer::CreateSprite(LPCSTR path, Vector2 pos)
   _d2dRenderer->CreateSprite(path, pos);
 }
 
-void DX11Renderer::AddText(const wchar_t* format, Vector4 rect,
+void DX11Renderer::CreateText(const wchar_t* format, Vector4 rect,
                            const std::wstring& fontName, Color color)
 {
-  _d2dRenderer->AddText(format, rect, fontName, color);
+  _d2dRenderer->CreateText(format, rect, fontName, color);
+}
+
+void DX11Renderer::DrawRectangle(Color color, Vector4 rect, float stroke,
+                                 float opacity)
+{
+  _d2dRenderer->DrawRectangle(color, rect, stroke, opacity);
 }
 
 void DX11Renderer::CreateEngineShader()

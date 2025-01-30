@@ -58,9 +58,11 @@ public:
 
   // D2D Renderer
   void CreateSprite(LPCSTR path, Vector2 pos) override;
-  void AddText(const wchar_t* format, Vector4 rect,
-               const std::wstring& fontName = L"Agency FB",
-               Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) override;
+  void CreateText(const wchar_t* format, Vector4 rect,
+                  const std::wstring& fontName = L"Agency FB",
+                  Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) override;
+  void DrawRectangle(Color color, Vector4 rect, float stroke = 1.0f,
+                     float opacity = 1.0f) override;
 
 private:
   void CreateEngineShader();

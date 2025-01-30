@@ -26,6 +26,7 @@ void GameLevel::BeginLevel()
   CreateMap();
 
 #ifdef USED2D 
+  testObj = world->CreateGameObject<TestGameObject>();
   world->_canvas->CreatePanel<TestUI>(L"TestUI");
 #endif // USED2D
 }

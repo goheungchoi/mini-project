@@ -24,6 +24,7 @@ protected:
   FixedCameraObject* gameCamera;
 
   GameObject* pivot{nullptr};
+  TestGameObject* testObj{nullptr};
   class Map* map{nullptr};
 
 public:

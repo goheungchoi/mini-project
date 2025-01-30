@@ -1,7 +1,7 @@
 ﻿#include "D2DRenderer.h"
+#include "Font/Font.h"
 #include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/SwapChain.h"
-#include "Font/Font.h"
 #include "Sprite/Sprite.h"
 
 D2DRenderer::~D2DRenderer()
@@ -28,11 +28,11 @@ bool D2DRenderer::Init(Device* device, SwapChain* swapChain,
 
   // ID2D1DeviceContext 생성
   HR_T(_pD2D1Device->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
-                                          &_pD2D1DeviceContext));
+                                         &_pD2D1DeviceContext));
 
   // brush 생성
-  HR_T(_pD2D1DeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black),
-                                              &_pBrush));
+  HR_T(_pD2D1DeviceContext->CreateSolidColorBrush(
+      D2D1::ColorF(D2D1::ColorF::Black), &_pBrush));
 
   CreateD2DRenderTarget();
 
@@ -41,10 +41,8 @@ bool D2DRenderer::Init(Device* device, SwapChain* swapChain,
       std::make_unique<DirectX::SpriteBatch>(_pDevice->GetImmContext());
   _pSpriteBatch->SetViewport(_viewport);
 
-
   // Font 초기화
   _pFont = new Font;
-
 
   return true;
 }
@@ -59,7 +57,8 @@ void D2DRenderer::CreateD2DRenderTarget()
 
   // DXGI 표면 가져오기
   // Microsoft::WRL::ComPtr<IDXGISurface> dxgiSurface;
-  HR_T(_pSwapChain->GetSwapChain()->GetBuffer(0, IID_PPV_ARGS(&_pIDXGISurface)));
+  HR_T(
+      _pSwapChain->GetSwapChain()->GetBuffer(0, IID_PPV_ARGS(&_pIDXGISurface)));
 
   // Direct2D 비트맵 속성 정의
   D2D1_BITMAP_PROPERTIES1 bitmapProperties = D2D1::BitmapProperties1(
@@ -81,7 +80,10 @@ void D2DRenderer::UnInit()
 {
   _SpriteManager.Destory();
   // SpriteBatch의 해제
-  if (_pSpriteBatch) { _pSpriteBatch.reset(); }
+  if (_pSpriteBatch)
+  {
+    _pSpriteBatch.reset();
+  }
   _TextManager.Destory();
   SAFE_RELEASE(_pFont);
   Com::SAFE_RELEASE(_pBrush);
@@ -96,8 +98,7 @@ void D2DRenderer::UnInit()
   _pSwapChain = nullptr;
 }
 
-void D2DRenderer::Draw() {
-}
+void D2DRenderer::Draw() {}
 
 void D2DRenderer::BeginDraw()
 {
@@ -106,8 +107,65 @@ void D2DRenderer::BeginDraw()
 
 void D2DRenderer::EndDraw()
 {
-  RenderText();
+  RenderSprites();
+  RenderTexts();
   _pD2D1DeviceContext->EndDraw();
+}
+
+void D2DRenderer::DrawRectangle(Color color, Vector4 rect, float stroke,
+                                float opacity)
+{
+  D2D1_COLOR_F clr = D2D1::ColorF(color.x, color.y, color.z, color.w);
+  D2D1_RECT_F rt = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
+                             //  left,    top,  right, bottom
+
+  _pBrush->SetColor(clr);
+  _pBrush->SetOpacity(opacity);
+  _pD2D1DeviceContext->DrawRectangle(rt, _pBrush, stroke);
+}
+
+void D2DRenderer::DrawEllipse(Color color, Vector2 ellipsePT, Vector2 radius,
+                              float stroke, float opacity)
+{
+  D2D1_COLOR_F clr = D2D1::ColorF(color.x, color.y, color.z, color.w);
+  D2D1_ELLIPSE ellipse = {{ellipsePT.x, ellipsePT.y}, radius.x, radius.y};
+
+  _pBrush->SetColor(clr);
+  _pBrush->SetOpacity(opacity);
+  _pD2D1DeviceContext->DrawEllipse(ellipse, _pBrush, stroke);
+}
+
+void D2DRenderer::FillRectangle(Color color, Vector4 rect, float opacity)
+{
+  D2D1_COLOR_F clr = D2D1::ColorF(color.x, color.y, color.z, color.w);
+  D2D1_RECT_F rt = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
+
+  _pBrush->SetColor(clr);
+  _pBrush->SetOpacity(opacity);
+  _pD2D1DeviceContext->FillRectangle(rt, _pBrush);
+}
+
+void D2DRenderer::FillEllipse(Color color, Vector2 ellipsePT, Vector2 radius,
+                              float opacity)
+{
+  D2D1_COLOR_F clr = D2D1::ColorF(color.x, color.y, color.z, color.w);
+  D2D1_ELLIPSE ellipse = {{ellipsePT.x, ellipsePT.y}, radius.x, radius.y};
+
+  _pBrush->SetColor(clr);
+  _pBrush->SetOpacity(opacity);
+  _pD2D1DeviceContext->FillEllipse(ellipse, _pBrush);
+}
+
+void D2DRenderer::DrawLine(Color color, Vector2 startPt, Vector2 endPt,
+                           float stroke, float opacity)
+{
+  D2D1_COLOR_F clr = D2D1::ColorF(color.x, color.y, color.z, color.w);
+  D2D1_POINT_2F _startPt = {startPt.x, startPt.y};
+  D2D1_POINT_2F _endPt = {endPt.x, endPt.y};
+
+  _pBrush->SetColor(clr);
+  _pBrush->SetOpacity(opacity);
+  _pD2D1DeviceContext->DrawLine(_startPt, _endPt, _pBrush, stroke);
 }
 
 void D2DRenderer::CreateSprite(LPCSTR path, Vector2 pos)
@@ -117,7 +175,16 @@ void D2DRenderer::CreateSprite(LPCSTR path, Vector2 pos)
   newSprite->SetPos(pos);
 }
 
-void D2DRenderer::DrawSprites()
+void D2DRenderer::CreateText(const wchar_t* format, Vector4 rect,
+                             const std::wstring& fontName, Color color)
+{
+  Text* newText = _TextManager.GetText(format);
+  newText->_rect = rect;
+  newText->_fontName = fontName;
+  newText->_color = color;
+}
+
+void D2DRenderer::RenderSprites()
 {
   // 현재 DepthStencilState 저장
   ID3D11DepthStencilState* prevDepthState = nullptr;
@@ -143,18 +210,7 @@ void D2DRenderer::DrawSprites()
   _pDevice->GetImmContext()->OMSetDepthStencilState(prevDepthState, stencilRef);
 }
 
-
-void D2DRenderer::AddText(const wchar_t* format, Vector4 rect,
-                          const std::wstring& fontName, Color color)
-{
-  Text* newText = _TextManager.GetText(format);
-  newText->_rect = rect;
-  newText->_fontName = fontName;
-  newText->_color = color;
-}
-
-
-void D2DRenderer::RenderText()
+void D2DRenderer::RenderTexts()
 {
   if (_TextManager._textList.empty())
   {
@@ -164,22 +220,19 @@ void D2DRenderer::RenderText()
   for (auto txt : _TextManager._textList)
   {
     // 텍스트 그리기
-    //  left,    top,  right, bottom
     D2D1_RECT_F rect =
         D2D1_RECT_F(txt->_rect.x, txt->_rect.y, txt->_rect.z, txt->_rect.w);
 
-    D2D1_COLOR_F color = D2D1::ColorF(txt->_color.x, txt->_color.y,
-                                      txt->_color.z, txt->_color.w);
+    D2D1_COLOR_F clr = D2D1::ColorF(txt->_color.x, txt->_color.y, txt->_color.z,
+                                    txt->_color.w);
 
-    _pBrush->SetColor(color);
+    _pBrush->SetColor(clr);
+    _pBrush->SetOpacity(1.0f);
 
     IDWriteTextFormat* txtformat = _pFont->FindFont(txt->_fontName);
 
     _pD2D1DeviceContext->DrawText(txt->_format.c_str(),
-                                  lstrlen(txt->_format.c_str()) + 1,
-                                  txtformat,
-                                  rect,
-                                  _pBrush);
+                                  lstrlen(txt->_format.c_str()) + 1, txtformat,
+                                  rect, _pBrush);
   }
-
 }

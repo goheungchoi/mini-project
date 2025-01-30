@@ -24,20 +24,28 @@ public:
   void BeginDraw();
   void EndDraw();
 
-  void CreateSprite(LPCSTR path, Vector2 pos);
-  void DrawSprites();
+  void DrawRectangle(Color color, Vector4 rect, float stroke = 1.0f,
+                     float opacity = 1.0f);
+  void DrawEllipse(Color color, Vector2 ellipsePT, Vector2 radius,
+                   float stroke = 1.0f, float opacity = 1.0f);
 
-  void AddText(const wchar_t* format, Vector4 rect,
-               const std::wstring& fontName, Color color);
-  
+  void FillRectangle(Color color, Vector4 rect, float opacity = 1.0f);
+  void FillEllipse(Color color, Vector2 ellipsePT, Vector2 radius,
+                   float opacity = 1.0f);
+  void DrawLine(Color color, Vector2 startPt, Vector2 endPt,
+                float stroke = 1.0f, float opacity = 1.0f);
+
+  void CreateSprite(LPCSTR path, Vector2 pos);
+  void CreateText(const wchar_t* format, Vector4 rect,
+                  const std::wstring& fontName, Color color);
 
 private:
-  void RenderText();
+  void RenderSprites();
+  void RenderTexts();
 
 public:
   // Font
   Font* _pFont;
-  //std::vector<Text*> _TextList;
 
 private:
   Device* _pDevice = nullptr;

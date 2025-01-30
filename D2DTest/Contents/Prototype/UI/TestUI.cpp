@@ -6,8 +6,9 @@ TestUI::TestUI(World* world) : UIPanel(world)
   testBtn = CreateUI<UIButton>(L"TestButton");
   testBtn->SetPosition({200, 200});
 
+  
   testBtn->AddOnClickHandler([this]() {
-    _world->_renderer->AddText(L"클릭", {0, 0, 200, 200}, L"궁서");
+    _world->_renderer->CreateText(L"클릭", {0, 0, 200, 200}, L"궁서");
   });
 
   testBtn->AddOnHoveredHandler([this]() {
@@ -16,7 +17,7 @@ TestUI::TestUI(World* world) : UIPanel(world)
   });
 
   testBtn->AddOnPressedHandler([this]() {
-    _world->_renderer->AddText(L"Pressed", {0, 0, 300, 100}, L"Agency FB");
+    _world->_renderer->CreateText(L"Pressed", {0, 0, 300, 100}, L"Agency FB");
   });
 
   testBtn->AddOnUnHoveredHandler(
@@ -24,3 +25,9 @@ TestUI::TestUI(World* world) : UIPanel(world)
 }
 
 TestUI::~TestUI() {}
+
+void TestUI::Render() 
+{
+    // 작동안됨... 렌더 구조 잘못짜서 그런듯... TestGameObject와 비교 해볼 것
+  //_world->_renderer->DrawRectangle({0, 1, 1, 1}, {50, 50, 100, 100}, 2.0f);
+}
