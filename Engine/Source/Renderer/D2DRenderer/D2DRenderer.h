@@ -30,8 +30,6 @@ public:
   void AddText(const wchar_t* format, Vector4 rect,
                const std::wstring& fontName, Color color);
   
-  void DeleteText(const wchar_t* format);
-  void DeleteTextAll();
 
 private:
   void RenderText();
@@ -39,7 +37,7 @@ private:
 public:
   // Font
   Font* _pFont;
-  std::vector<Text*> _TextList;
+  //std::vector<Text*> _TextList;
 
 private:
   Device* _pDevice = nullptr;

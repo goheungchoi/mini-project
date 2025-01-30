@@ -41,7 +41,7 @@ private:
 
 public:
   static SpriteManager* GetInstance();
-  std::shared_ptr<Sprite> GetSprite(LPCSTR path, class Device* pDevice);
+  std::shared_ptr<Sprite> GetSprite(LPCSTR path, Device* pDevice);
   void Destory();
 
 public:

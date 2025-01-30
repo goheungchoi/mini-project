@@ -82,7 +82,7 @@ void D2DRenderer::UnInit()
   _SpriteManager.Destory();
   // SpriteBatch의 해제
   if (_pSpriteBatch) { _pSpriteBatch.reset(); }
-  DeleteTextAll();
+  _TextManager.Destory();
   SAFE_RELEASE(_pFont);
   Com::SAFE_RELEASE(_pBrush);
   Com::SAFE_RELEASE(_pID2D1Bitmap);
@@ -147,45 +147,21 @@ void D2DRenderer::DrawSprites()
 void D2DRenderer::AddText(const wchar_t* format, Vector4 rect,
                           const std::wstring& fontName, Color color)
 {
-  Text* newText = new Text(format, rect, fontName, color);
-
-  _TextList.push_back(newText);
+  Text* newText = _TextManager.GetText(format);
+  newText->_rect = rect;
+  newText->_fontName = fontName;
+  newText->_color = color;
 }
 
-void D2DRenderer::DeleteText(const wchar_t* format)
-{
-  //auto it = std::remove_if(_TextList.begin(), _TextList.end(),
-  //                         [format](const Text* text) {
-  //                           return wcscmp(text->_format.c_str(), format) == 0;
-  //                         });
-
-  //for (auto i = it; i != _TextList.end(); ++i)
-  //{
-  //  delete *i;
-  //}
-
-  //_TextList.erase(it, _TextList.end());
-}
-
-void D2DRenderer::DeleteTextAll()
-{
-  if (!_TextList.empty())
-  {
-    for (auto txt : _TextList)
-    {
-      SAFE_RELEASE(txt);
-    }
-  }
-}
 
 void D2DRenderer::RenderText()
 {
-  if (_TextList.empty())
+  if (_TextManager._textList.empty())
   {
     return;
   }
 
-  for (auto txt : _TextList)
+  for (auto txt : _TextManager._textList)
   {
     // 텍스트 그리기
     //  left,    top,  right, bottom
