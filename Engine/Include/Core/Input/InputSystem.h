@@ -58,6 +58,7 @@ public:
 
   // 마우스 이동 값 가져오기
   Vector2 GetMouseDelta() const;
+  Vector2 GetCurrMouseStateVec();
 
   DirectX::Mouse::State GetCurrMouseState() { return _mouseState; }
   DirectX::Mouse::State GetPrevMouseState() { return _prevMouseState; }

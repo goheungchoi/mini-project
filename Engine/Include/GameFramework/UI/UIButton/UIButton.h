@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "GameFramework/Common.h"
 #include "GameFramework/UI/UIElement/UIElement.h"
 
@@ -13,16 +13,28 @@ enum ButtonState
 class UIButton : public UIElement
 {
 public:
-  UIButton();
+  UIButton(class World* world);
   virtual ~UIButton();
 
+public:
+  void Update(float dt) override;
 
-  private:
+  void AddOnClickHandler(std::function<void()> handler);
+  void AddOnHoveredHandler(std::function<void()> handler);
+  void AddOnUnHoveredHandler(std::function<void()> handler);
+  void AddOnPressedHandler(std::function<void()> handler);
+
+private:
+  void OnClicked();
+  void OnHovered();
+  void OnUnHovered();
+  void OnPressed();
+
+private:
   ButtonState _state = BS_None;
 
   std::vector<std::function<void()>> onClickHandlers;
   std::vector<std::function<void()>> onHoveredHandlers;
   std::vector<std::function<void()>> onUnHoveredHandlers;
   std::vector<std::function<void()>> onPressedHandlers;
-
 };

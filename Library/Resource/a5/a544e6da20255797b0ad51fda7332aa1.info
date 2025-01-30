@@ -1,0 +1,24 @@
+{
+    "uuid": "a544e6da20255797b0ad51fda7332aa1",
+    "import_path": "Models\\Indicator\\Plane0.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Plane0",
+        "bounding_box": [
+            [
+                -1.0,
+                0.0,
+                -1.0
+            ],
+            [
+                1.0,
+                0.0,
+                1.0
+            ]
+        ],
+        "num_vertices": 4,
+        "num_indices": 6,
+        "material": "Models\\Indicator\\Material.0010.mat",
+        "num_bones": 0
+    }
+}

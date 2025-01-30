@@ -1,33 +1,33 @@
-#pragma once
+﻿#pragma once
 #include "GameFramework/Common.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 
-// ���� ����
+// 컨셉 정의
 template <typename T>
-concept Derived = std::is_base_of<UIPanel, T>::value;
+concept UIPanelType = std::is_base_of<UIPanel, T>::value;
 
 class Canvas
 {
-public:
-  Canvas(class World* _world);
-  ~Canvas();
-
 private:
   std::map<std::wstring, UIPanel*> panelMap;
   std::vector<class UIPanel*> panelList;
   class World* _world = nullptr;
 
 public:
+  Canvas(class World* world);
+  ~Canvas();
+
+public:
   void BeginLevel();
-  void Update();
+  void Update(float dt);
   void Render();
 
   template <typename T>
-    requires Derived<T>
+    requires UIPanelType<T>
   T* CreatePanel(std::wstring name)
   {
     T* t = new T(_world);
-    UIPanel* panel = dynamic_cast<UIPanel*>(t);
+    UIPanel* panel = static_cast<UIPanel*>(t);
 
     if (panel == nullptr)
     {
@@ -58,3 +58,8 @@ public:
     panel = nullptr;
   }
 };
+
+/*
+- 장면이 전환될 때 마다, Canvas가 삭제되고 다시 생성되면서
+- 그 장면에 맞는 Panel들이 생성된다.
+*/

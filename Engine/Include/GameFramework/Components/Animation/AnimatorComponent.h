@@ -37,12 +37,9 @@ public:
     this->playSpeed = playSpeed;
 	}
 	void UpdateAnimation(float dt);
-
-  /*void PlayAnimation(Animation* animation)
-  {
-    _currentAnimation = animation;
-    _currentTime = 0.f;
-  }*/
+  void PauseAnimation();
+  void ResumeAnimation();
+  AnimationState* GetCurrentAnimationState() { return _currState; }
 
 	//
   void Toggle();

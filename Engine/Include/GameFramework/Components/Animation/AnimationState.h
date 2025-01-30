@@ -2,7 +2,8 @@
 
 #include "Core/Common.h"
 
-class Animation;
+#include "Animation.h"
+
 class AnimatorComponent;
 class AnimationState
 {

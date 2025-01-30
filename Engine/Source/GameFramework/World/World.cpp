@@ -1,4 +1,4 @@
-#include "GameFramework/World/World.h"
+ï»¿#include "GameFramework/World/World.h"
 
 #include "Renderer/DX11/DX11Renderer.h"
 
@@ -19,6 +19,9 @@
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 #endif
+
+#include "GameFramework/UI/Canvas/Canvas.h"
+//#define USED2D
 
 void World::Initialize(HWND hwnd, const std::wstring& title)
 {
@@ -42,6 +45,10 @@ void World::Initialize(HWND hwnd, const std::wstring& title)
       Vector2(kScreenWidth, kScreenHeight));
 
   SetMainCamera(_defaultCamera);
+
+#ifdef USED2D
+  _canvas = new Canvas(this);
+#endif // USED2D
 }
 
 World* World::CreateWorld(HWND hwnd, const std::wstring& title)
@@ -88,6 +95,11 @@ void World::CommitLevelChange() {
     {
       _currentLevel->DestroyLevel();
       _currentLevel->CleanupLevel();
+
+#ifdef USED2D
+      delete _canvas;
+      _canvas = new Canvas(this);
+#endif // USED2D
     }
     
 
@@ -115,14 +127,90 @@ void World::StopCameraMovement(bool fixed)
   bCameraMove = !fixed;
 }
 
-XMVECTOR World::ScreenToWorldPosition(XMVECTOR screenPos)
+Ray World::GetScreenCursorRay(XMVECTOR screenPos)
 {
+  // Convert screen coordinates to normalized device coordinates (NDC)
+  float x = (2.0f * XMVectorGetX(screenPos)) / kScreenWidth - 1.0f;
+  float y = 1.0f - (2.0f * XMVectorGetY(screenPos)) / kScreenHeight;
 
+  // Near plane (z = 0) and far plane (z = 1) in NDC
+  XMVECTOR ndcNear = XMVectorSet(x, y, 0.0f, 1.0f);
+  XMVECTOR ndcFar = XMVectorSet(x, y, 1.0f, 1.0f);
 
-  return XMVECTOR();
+  // Get the inverse of the combined view-projection matrix
+  XMMATRIX projectionMatrix = mainCamera->GetProjectionMatrix();
+  XMMATRIX viewMatrix = mainCamera->GetViewTransform();
+  XMMATRIX invViewProjMatrix =
+      XMMatrixInverse(nullptr, XMMatrixMultiply(viewMatrix, projectionMatrix));
+
+  // Unproject the NDC coordinates to world space
+  XMVECTOR worldNear = XMVector3TransformCoord(ndcNear, invViewProjMatrix);
+  XMVECTOR worldFar = XMVector3TransformCoord(ndcFar, invViewProjMatrix);
+
+  // Calculate the ray direction
+  XMVECTOR rayDirection = XMVector3Normalize(worldFar - worldNear);
+
+  // Create and return the ray
+  Ray ray;
+  ray.position = worldNear;
+  ray.direction = rayDirection;
+
+  return ray;
 }
 
-void World::RegisterGameObjectName(GameObject* gameObject) {
+GameObject* World::FindGameObjectByTag(const std::string& tag)
+{
+  if (!_currentLevel)
+    return nullptr;
+
+  auto it = _currentLevel->gameObjectTagMap.find(tag);
+  if (it == _currentLevel->gameObjectTagMap.end())
+    return nullptr;
+  return it->second;
+}
+
+std::vector<GameObject*> World::FindAllGameObjectsByTag(const std::string& tag)
+{
+  if (!_currentLevel)
+    return {};
+
+  std::vector<GameObject*> res;
+  auto range = _currentLevel->gameObjectTagMap.equal_range(tag);
+  for (auto it = range.first; it != range.second; ++it)
+  {
+    res.push_back(it->second);
+  }
+  return res;
+}
+
+GameObject* World::FindGameObjectByName(const std::string& name)
+{
+  if (!_currentLevel)
+    return nullptr;
+
+  auto it = _currentLevel->gameObjectNameMap.find(name);
+  if (it == _currentLevel->gameObjectNameMap.end())
+    return nullptr;
+  return it->second;
+}
+
+std::vector<GameObject*> World::FindAllGameObjectsByName(
+    const std::string& name)
+{
+  if (!_currentLevel)
+    return {};
+
+  std::vector<GameObject*> res;
+  auto range = _currentLevel->gameObjectNameMap.equal_range(name);
+  for (auto it = range.first; it != range.second; ++it)
+  {
+    res.push_back(it->second);
+  }
+  return res;
+}
+
+void World::RegisterGameObjectName(GameObject* gameObject)
+{
   if (!_currentLevel || !gameObject)
     return;
 
@@ -254,105 +342,43 @@ void World::InitialStage() {
       });
     }
   }
+
+// ì—¬ê¸°ì— Levelì— ë§žëŠ” canvasë¥¼ ì¤€ë¹„í•´ì•¼ í•˜ë‚˜??
+#ifdef USED2D
+  _canvas->BeginLevel();
+#endif // USED2D
 }
 
-void World::FixedUpdate(float fixedRate)
-{
-  if (!_currentLevel || changingLevel)
-    return;
+//void World::FixedUpdate(float fixedRate)
+//{
+//  if (!_currentLevel || changingLevel)
+//    return;
+//
+//  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
+//  {
+//    if (!(gameObject->status == EStatus_Active))
+//      continue;
+//
+//    gameObject->FixedUpdate(fixedRate);
+//  }
+//}
+//
+//void World::PhysicsUpdate(float fixedRate) {
+//  if (!_currentLevel || changingLevel)
+//    return;
+//
+//  // TODO:
+//}
 
-  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
-  {
-    if (!(gameObject->status == EStatus_Active))
-      continue;
 
-    gameObject->FixedUpdate(fixedRate);
-  }
-}
-
-void World::PhysicsUpdate(float fixedRate) {
-  if (!_currentLevel || changingLevel)
-    return;
-
-  // TODO:
-}
 
 void World::ProcessInput(float dt)
 {
   InputSystem::GetInstance()->Update(dt);
 
-  // _camera->LookAt({10, 0, 0, 1});
-  // 'Q' ´©¸£¸é Down
-  if (Input.IsKeyPress(Key::Q))
-  {
-    mainCamera->MoveDownUp(-dt);
-  }
-  // 'E' ´©¸£¸é Up
-  if (Input.IsKeyPress(Key::E))
-  {
-    mainCamera->MoveDownUp(dt);
-  }
-  // 'A' ´©¸£¸é Left
-  if (Input.IsKeyPress(Key::A))
-  {
-    mainCamera->MoveLeftRight(-dt);
-  }
-  // 'D' ´©¸£¸é Right
-  if (Input.IsKeyPress(Key::D))
-  {
-    mainCamera->MoveLeftRight(dt);
-  }
-  // 'W' ´©¸£¸é Forward
-  if (Input.IsKeyPress(Key::W))
-  {
-    mainCamera->MoveBackForward(dt);
-  }
-  // 'S' ´©¸£¸é Backward
-  if (Input.IsKeyPress(Key::S))
-  {
-    mainCamera->MoveBackForward(-dt);
-  }
-  if (Input.IsKeyPress(Key::OemMinus))
-  {
-    mainCamera->AddMoveSpeed(-10);
-  }
-  if (Input.IsKeyPress(Key::OemPlus))
-  {
-    mainCamera->AddMoveSpeed(+10);
-  }
-
-  if (Input.IsKeyDown(MouseState::LB))
+	if (Input.IsKeyDown(MouseState::LB))
   {
     _phyjixWorld->LeftClick();
-
-  }
-  if (Input.IsKeyDown(MouseState::RB))
-  {
-    bCameraMove = !bCameraMove; // camera bool°ªÀÌ ¹Ý´ë·Î µÊ.
-    ShowCursor(!bCameraMove);   // Ä¿¼­°¡ ¾È º¸ÀÓ
-  }
-  if (Input.IsKeyUp(MouseState::RB))
-  {
-    bCameraMove = !bCameraMove; // camera bool°ªÀÌ ¹Ý´ë·Î µÊ.
-    ShowCursor(!bCameraMove);   // Ä¿¼­°¡ º¸ÀÓ
-  }
-
-  // ¸¶¿ì½º È¸Àü
-  if (bCameraMove)
-  {
-    // ¸¶¿ì½º ÀÌµ¿·® °¡Á®¿À±â
-    Vector2 mouseDelta = Input.GetMouseDelta();
-    float x = -mouseDelta.x;
-    float y = -mouseDelta.y;
-
-    /*if ((Input.GetCurrMouseState().x != Input.GetPrevMouseState().x) ||
-        (Input.GetCurrMouseState().y != Input.GetPrevMouseState().y))
-    {*/
-      // ¸¶¿ì½º°¡ Y ÃàÀ¸·Î ¿òÁ÷ÀÌ¸é X Ãà È¸Àü
-      mainCamera->RotateAroundXAxis(y);
-      // ¸¶¿ì½º°¡ X ÃàÀ¸·Î ¿òÁ÷ÀÌ¸é Y Ãà È¸Àü
-      mainCamera->RotateAroundYAxis(x);
-    //}
   }
 }
 
@@ -404,6 +430,10 @@ void World::Update(float dt)
     component->UpdateToTransform();
   }
 
+// UI Update
+#ifdef USED2D
+  _canvas->Update(dt);
+#endif // USED2D
 
 }
 
@@ -423,20 +453,6 @@ void World::AnimationUpdate(float dt)
     {
       animComp->UpdateAnimation(dt);
     }
-  }
-}
-
-void World::PostUpdate(float dt)
-{
-  if (!_currentLevel || changingLevel)
-    return;
-
-  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
-  {
-    if (!(gameObject->status == EStatus_Active))
-      continue;
-
-    gameObject->PostUpdate(dt);
   }
 
   // Update local transforms
@@ -468,7 +484,7 @@ void World::PostUpdate(float dt)
     }
   }
 
-	// Update skeletal mesh vertex transforms
+  // Update skeletal mesh vertex transforms
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
     if (!(gameObject->status == EStatus_Active))
@@ -479,6 +495,21 @@ void World::PostUpdate(float dt)
     {
       skeletalMesh->UpdateBoneTransforms();
     }
+  }
+}
+
+
+void World::PostUpdate(float dt)
+{
+  if (!_currentLevel || changingLevel)
+    return;
+
+  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
+  {
+    if (!(gameObject->status == EStatus_Active))
+      continue;
+
+    gameObject->PostUpdate(dt);
   }
 }
 
@@ -508,14 +539,14 @@ void World::RenderGameObjects() {
   // Rendering stage
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (!gameObject->status == EStatus_Active)
+    if (!(gameObject->status == EStatus_Active))
       continue;
 
     gameObject->OnRender();
 
     // Draw static mesh
     if (auto* meshComp = gameObject->GetComponent<MeshComponent>();
-        meshComp)
+        meshComp && meshComp->isVisible)
     {
       const auto& transform = gameObject->GetWorldTransform();
       for (auto handle : meshComp->GetSubMeshes())
@@ -528,7 +559,7 @@ void World::RenderGameObjects() {
     }
     // Draw skeletal mesh
     else if (auto* skeletalMeshComp = gameObject->GetComponent<SkeletalMeshComponent>();
-             skeletalMeshComp)
+             skeletalMeshComp && skeletalMeshComp->isVisible)
     {
       auto handle = skeletalMeshComp->GetHandle();
       // const auto& transform = skeletalMeshComp->rootBone->GetGlobalTransform();
@@ -575,7 +606,9 @@ void World::RenderGameObjects() {
 
 void World::RenderUI() {
   // TODO:
-
+#ifdef USED2D
+  _canvas->Render();
+#endif // USED2D
 }
 
 void World::CleanupStage() {
@@ -614,7 +647,8 @@ void World::CleanupStage() {
         object->bShouldDestroy = false;
 
 				// Remove hierarchical relationships
-        object->parent->RemoveChild(object);
+        if (object->parent)
+					object->parent->RemoveChildGameObject(object);
 				// Remove it from the search registrations
         object->SetName("");
         object->SetGameObjectTag("");

@@ -1,4 +1,4 @@
-#include "DX11Renderer.h"
+ï»¿#include "DX11Renderer.h"
 #include "Internal/DebugLayer.h"
 #include "Internal/Device.h"
 #include "Internal/RenderFrameworks/RenderPass.h"
@@ -46,7 +46,7 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   return true;
 }
 
-// Á¾·á Á÷Àü¿¡ ÄİÇØÁÖ±â
+// ì¢…ë£Œ ì§ì „ì— ì½œí•´ì£¼ê¸°
 bool DX11Renderer::Cleanup()
 {
   DestroyMesh();
@@ -213,7 +213,7 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
       meshBuffer->boneWeightsSrv = _device->CreateStructuredSRV(
           meshBuffer->boneWeightsBuffer.Get(), boneWeightsBuffer.size());
     }
-    // SWTODO : ³ªÁß¿¡ skeletalÀÌ³Ä staticÀÌ³Ä ±¸ºĞÇØ¾ßÇÔ.??
+    // SWTODO : ë‚˜ì¤‘ì— skeletalì´ëƒ staticì´ëƒ êµ¬ë¶„í•´ì•¼í•¨.??
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
     meshBuffer->vertexBuffer = _device->CreateDataBuffer(
         meshData.vertices.data(), size, D3D11_BIND_VERTEX_BUFFER);
@@ -258,7 +258,7 @@ bool DX11Renderer::CreateShaderModule(ShaderHandle shaderHandle)
   ShaderData data = AccessShaderData(shaderHandle);
   if (data.data.empty())
   {
-    // SWTODO : ¿¡·¯Ã³¸®.
+    // SWTODO : ì—ëŸ¬ì²˜ë¦¬.
     return false;
   }
 

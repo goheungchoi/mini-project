@@ -1,0 +1,24 @@
+{
+    "uuid": "f2e83f03737950c3b8b6fed803a6773e",
+    "import_path": "Models\\HandGun\\Cylinder.0050.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Cylinder.0050",
+        "bounding_box": [
+            [
+                -0.02632918208837509,
+                -0.10778247565031052,
+                -0.17900854349136353
+            ],
+            [
+                0.026329180225729942,
+                0.045066237449645996,
+                0.11085085570812225
+            ]
+        ],
+        "num_vertices": 1120,
+        "num_indices": 2892,
+        "material": "Models\\HandGun\\Material.0020.mat",
+        "num_bones": 0
+    }
+}

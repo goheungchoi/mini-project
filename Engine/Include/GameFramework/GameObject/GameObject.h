@@ -52,13 +52,13 @@ public:
 
 	/* Game Object Hierarchy */
 
-  void AddChild(GameObject* gameObject)
+  void AddChildGameObject(GameObject* gameObject)
   {
     gameObject->parent = this;
     childrens.push_back(gameObject);
     transform->AddChild(gameObject->transform);
   }
-  void RemoveChild(GameObject* gameObject)
+  void RemoveChildGameObject(GameObject* gameObject)
   {
     gameObject->parent = nullptr;
     childrens.remove(gameObject);
@@ -121,7 +121,7 @@ public:
   const std::string& GetName() const { return name; }
 
   void SetGameObjectTag(const std::string& tag);
-  const std::string& GetTag() const { return tag; }
+  const std::string& GetGameObjectTag() const { return tag; }
 
 
 	void RemoveFromTypeRegistration();
@@ -198,9 +198,9 @@ public:
   {
     transform->RotateAroundAxis(axis, angle);
   }
-  void RotateToward(XMVECTOR target, float maxAngleStep) {
+  /*void RotateToward(XMVECTOR target, float maxAngleStep) {
     transform->RotateToward(target, maxAngleStep);
-  }
+  }*/
 
   void Translate(float x, float y, float z) { transform->Translate(x, y, z); }
   void Translate(XMVECTOR translation) { transform->Translate(translation); }
@@ -248,6 +248,28 @@ public:
       components.erase(it);
     }
   }
+
+	GameObject* FindChildGameObject(const std::string& name) {
+    std::stack<GameObject*> st;
+    st.push(this);
+
+		while (!st.empty())
+    {
+      GameObject* object = st.top();
+      st.pop();
+
+			if (object->name == name)
+      {
+        return object;
+			}
+
+			for (auto* child : object->childrens)
+      {
+        st.push(child);
+			}
+		}
+    return nullptr;
+	}
 
 	// TODO:
   // GameObject* Clone();
