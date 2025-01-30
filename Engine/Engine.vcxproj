@@ -202,6 +202,7 @@
 		<ClInclude Include="Include\Core\Types\MaterialData.h" />
 		<ClInclude Include="Include\Core\Types\MeshData.h" />
 		<ClInclude Include="Include\Core\Types\ModelData.h" />
+		<ClInclude Include="Include\Core\Types\RenderType.h" />
 		<ClInclude Include="Include\Core\Types\ShaderData.h" />
 		<ClInclude Include="Include\Core\Types\SkeletonData.h" />
 		<ClInclude Include="Include\Core\Types\TextureData.h" />
@@ -265,6 +266,8 @@
 		<ClInclude Include="Source\Renderer\D2DRenderer\D2DRenderer.h" />
 		<ClCompile Include="Source\Renderer\D2DRenderer\Font\Font.cpp" />
 		<ClInclude Include="Source\Renderer\D2DRenderer\Font\Font.h" />
+		<ClCompile Include="Source\Renderer\D2DRenderer\Sprite\Sprite.cpp" />
+		<ClInclude Include="Source\Renderer\D2DRenderer\Sprite\Sprite.h" />
 		<ClCompile Include="Source\Renderer\DX11\DX11Renderer.cpp" />
 		<ClInclude Include="Source\Renderer\DX11\DX11Renderer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Common.h" />
@@ -275,7 +278,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\Objects\Swapchain.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ComputeEffect.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\DeferredPass.h" />
-		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\PostProcess\OutLine.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\PostProcess\OutLinePass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\PostProcess\PostProcess.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\PostProcess\PostProcessManager.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\RenderPass.h" />

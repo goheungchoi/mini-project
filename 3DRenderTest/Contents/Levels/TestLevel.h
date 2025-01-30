@@ -31,7 +31,7 @@ public:
     sponzaHandle = LoadModel("Models\\Maps\\Map002_Museum.glb");
     // sponzaHandle = LoadModel("Models\\Sponza\\Sponza.gltf");
     //testAnimationHandle = LoadModel("Models\\SkinningTest\\SkinningTest.gltf");
-    testAnimationHandle = LoadModel("AnimTest\\ANI_Test.fbx");
+    testAnimationHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
   }
 
   virtual void BeginLevel() override {

@@ -5,12 +5,13 @@
 #include "../RenderFrameworks/DeferredPass.h"
 #include "../RenderFrameworks/Shader.h"
 #include "../RenderFrameworks/ShadowPass.h"
-#include "../RenderFrameworks/PostProcess/PostProcessManager.h"
+#include "../RenderFrameworks/PostProcess/OutLinePass.h"
 #include "../Resources/ConstantBuffer.h"
 #include "../Resources/GeometryPrimitive.h"
 #include "../Resources/PipeLineState.h"
 #include "../Resources/Sampler.h"
 #include "../Resources/SkyBox.h"
+#include "Core/Types/RenderType.h"
 #include "Core/Common.h"
 using namespace RenderMesh;
 namespace Renderer
@@ -35,9 +36,11 @@ private:
   // 0 : single sided 1 : double sided
   vector<vector<StaticMesh>> _staticOpaqueMesh;
   vector<vector<SkelMesh>> _skelOpaqueMesh;
-
+  // 0 : single sided 1 : double sided
   vector<vector<StaticMesh>> _staticShadowMesh;
   vector<vector<SkelMesh>> _skelShadowMesh;
+  // outline
+  OutLinePass* _outLine = nullptr;
   SkyBox* _skyBox = nullptr;
   GeometryPrimitive* _geometry = nullptr;
   // Constant Buffer
@@ -75,6 +78,7 @@ public:
     _deffered = new DefferedPass(width, height, _device);
     _skyBox = new SkyBox(_device);
     _geometry = new GeometryPrimitive(_device);
+    _outLine = new OutLinePass(_CB);
     ID3D11DeviceContext* dc = _device->GetImmContext();
     dc->VSSetConstantBuffers(
         2, 1,
@@ -132,42 +136,10 @@ public:
   {
     _mainLight = mainLight;
   }
-  //void ClassifyPass(MeshBuffer* buff, Matrix world)
-  //{
-  //  if (buff->flags & RenderPassType::kOpaquePass)
-  //  {
-  //    if (!buff->material->doubleSided)
-  //      _opaqueMesh[0].push_back({buff,world});
-  //    else
-  //      _opaqueMesh[1].push_back({buff, world});
-  //  }
-  //  if (buff->flags & RenderPassType::kTransparentPass)
-  //  {
-  //    // 뷰 공간의 Z값 계산
-  //    Vector3 worldPos3 = buff->world.Translation(); // 월드 공간에서의 위치
-  //    Vector4 worldPos = {worldPos3.x, worldPos3.y, worldPos3.z,
-  //                        1.f}; // 월드 공간에서의 위치
-  //    Vector4 viewPos =
-  //        Vector4::Transform(worldPos, _camera.view); // 뷰 공간으로 변환
-  //    float viewZ = viewPos.z;                        // 뷰 공간 Z값 추출
-  //    if (!buff->material->doubleSided)
-  //      _transparentMeshes[0].insert({{viewZ, max}, {buff, world}});
-  //    else
-  //      _transparentMeshes[1].insert({{viewZ, max}, {buff, world}});
-
-  //    max--;
-  //  }
-
-  //  if (buff->flags & RenderPassType::kShadowPass)
-  //  {
-  //    if (!buff->material->doubleSided)
-  //      _shadowMesh[0].push_back({buff, world});
-  //    else
-  //      _shadowMesh[1].push_back({buff, world});
-  //  }
-  //}
+ 
   void ClassifyPass(MeshBuffer* buff, Matrix world,
-                    vector<XMMATRIX> boneMatrix = std::vector<XMMATRIX>())
+                    vector<XMMATRIX> boneMatrix,
+                    RenderTypeFlags flags)
   {
     if (boneMatrix.empty())
     {
@@ -246,13 +218,32 @@ public:
       }
     }
 
-    
+    //NOTE : renderflags 확인해서 outline 처리해주기.
+    if (flags & RenderType::kOutline)
+    {
+      if (boneMatrix.empty())
+      {
+        StaticMesh mesh;
+        mesh.buffer = buff;
+        mesh.world = world;
+        _outLine->_staticMesh.push_back(mesh);
+      }
+      else
+      {
+        SkelMesh mesh;
+        mesh.buffer = buff;
+        mesh.world = world;
+        mesh.boneMatrix = boneMatrix;
+        _outLine->_skelMesh.push_back(mesh);
+      }
+    }
   }
   void ProcessPass()
   {
     ID3D11DeviceContext* dc = _device->GetImmContext();
     _pso->ClearBackBufferDSV();
     _pso->SetMainRS();
+    _pso->TurnZBufferOn();
     // Shadow pass
     this->DrawShadow(dc);
     //--------------------------------------------------------------------------------------//
@@ -260,10 +251,12 @@ public:
     this->DrawDeffered(dc);
 
     //--------------------------------------------------------------------------------------//
-    // Transparent pass -> Forward renderin
+    // Transparent pass -> Forward rendering
     this->DrawTransparency(dc);
 
-//--------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------//
+    // OutLine
+    this->DrawOutline(dc);
 // wireFrame pass -> Forward rendering
 #ifdef _DEBUG
     this->DrawGeometryPrimitveWireFrame(dc);
@@ -335,6 +328,14 @@ public:
     macros = {{"Shadow", "1"}, {"Skinning", "1"} ,{nullptr, nullptr}};
     _vShaders.insert(
         {"SkinningShadow", _compiler->CompileVertexShader(macros, "shadow_vs_main")});
+    macros.clear();
+    macros = {{"OutLine", "1"}, {nullptr, nullptr}};
+    _vShaders.insert({"StaticOutLine", _compiler->CompileVertexShader(
+                                            macros, "outline_vs_main")});
+    macros.clear();
+    macros = {{"OutLine", "1"}, {"Skinning", "1"}, {nullptr, nullptr}};
+    _vShaders.insert({"SkinningOutLine", _compiler->CompileVertexShader(
+                                            macros, "outline_vs_main")});
     // ps
     macros = {{"Deffered", "1"}, {nullptr, nullptr}};
     _pShaders.insert(
@@ -357,6 +358,10 @@ public:
     _pShaders.insert({"WireFrame", _compiler->CompilePixelShader(
                                        macros, "wire_frame_ps_main")});
 #endif
+    macros.clear();
+    macros = {{"OutLine", "1"}, {nullptr, nullptr}};
+    _pShaders.insert({"OutLine", _compiler->CompilePixelShader(
+                                       macros, "outline_ps_main")});
   }
   void CreateSamplers()
   {
@@ -824,6 +829,28 @@ private:
       dc->DrawIndexed(mesh.buffer->nIndices, 0, 0);
     });
   }
+  
+  void DrawOutline(ID3D11DeviceContext* dc)
+  {
+    // write stencil only nead vertex shader
+    _pso->ClearBackBufferDSV();
+    _pso->SetStencilWrite();
+    dc->PSSetShader(nullptr, nullptr, 0);
+    dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
+    dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
+    _outLine->WriteStaticStencil(dc);
+    dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
+    dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
+    _outLine->WriteSkelStencil(dc);
+    _pso->SetStencilRead();
+    dc->PSSetShader(_pShaders["OutLine"]->shader.Get(), nullptr, 0);
+    dc->IASetInputLayout(_vShaders["StaticOutLine"]->layout.Get());
+    dc->VSSetShader(_vShaders["StaticOutLine"]->shader.Get(), nullptr, 0);
+    _outLine->DrawStaticOutline(dc);
+    dc->IASetInputLayout(_vShaders["SkinningOutLine"]->layout.Get());
+    dc->VSSetShader(_vShaders["SkinningOutLine"]->shader.Get(), nullptr, 0);
+    _outLine->DrawSkelOutline(dc);
+  }
   void Clear()
   {
     // Opaque meshes
@@ -848,6 +875,7 @@ private:
     {
       meshes.clear();
     }
+    _outLine->ClearMeshes();
 #ifdef _DEBUG
     _spheres.clear();
     _boxes.clear();

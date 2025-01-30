@@ -1,4 +1,4 @@
-#include "DX11Renderer.h"
+ï»¿#include "DX11Renderer.h"
 #include "Internal/DebugLayer.h"
 #include "Internal/Device.h"
 #include "Internal/RenderFrameworks/RenderPass.h"
@@ -46,7 +46,7 @@ bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
   return true;
 }
 
-// Á¾·á Á÷Àü¿¡ ÄİÇØÁÖ±â
+// ì¢…ë£Œ ì§ì „ì— ì½œí•´ì£¼ê¸°
 bool DX11Renderer::Cleanup()
 {
   DestroyMesh();
@@ -95,7 +95,7 @@ void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
   }
 }
 
-void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world,
+void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world, RenderTypeFlags type,
 
                             vector<DirectX::XMMATRIX> boneTransforms)
 {
@@ -105,7 +105,7 @@ void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world,
     throw std::exception("buffer not registered");
   }
 
-  _passMgr->ClassifyPass(buffer->second, world, boneTransforms);
+  _passMgr->ClassifyPass(buffer->second, world, boneTransforms,type);
 }
 
 void DX11Renderer::EndDraw() {}
@@ -189,7 +189,6 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
     {
       std::vector<uint32_t> boneIndicesBuffer;
       std::vector<float> boneWeightsBuffer;
-      meshBuffer->flags |= RenderPassType::kSkinning;
       size_t index = 0;
       for (const auto& vertexBoneData : meshData.vertices)
       {
@@ -214,7 +213,7 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
       meshBuffer->boneWeightsSrv = _device->CreateStructuredSRV(
           meshBuffer->boneWeightsBuffer.Get(), boneWeightsBuffer.size());
     }
-    // SWTODO : ³ªÁß¿¡ skeletalÀÌ³Ä staticÀÌ³Ä ±¸ºĞÇØ¾ßÇÔ.??
+    // SWTODO : ë‚˜ì¤‘ì— skeletalì´ëƒ staticì´ëƒ êµ¬ë¶„í•´ì•¼í•¨.??
     uint32_t size = sizeof(Vertex) * meshData.vertices.size();
     meshBuffer->vertexBuffer = _device->CreateDataBuffer(
         meshData.vertices.data(), size, D3D11_BIND_VERTEX_BUFFER);
@@ -259,7 +258,7 @@ bool DX11Renderer::CreateShaderModule(ShaderHandle shaderHandle)
   ShaderData data = AccessShaderData(shaderHandle);
   if (data.data.empty())
   {
-    // SWTODO : ¿¡·¯Ã³¸®.
+    // SWTODO : ì—ëŸ¬ì²˜ë¦¬.
     return false;
   }
 
@@ -340,15 +339,6 @@ void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
 }
 
-void DX11Renderer::AddOutLine(MeshHandle handle)
-{
-
-}
-
-void DX11Renderer::DeleteOutLine(MeshHandle handle) 
-{
-
-}
 
 #endif
 void DX11Renderer::BeginImGuiDraw()

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "GameFramework/Level/Level.h"
 #include "GameFramework/World/World.h"
@@ -25,8 +25,6 @@ protected:
 
   GameObject* pivot{nullptr};
   class Map* map{nullptr};
-
-  class TestGameObject* text;
 
 public:
   GameLevel(const std::string& name) : Level(name) {}

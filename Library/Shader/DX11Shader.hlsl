@@ -568,3 +568,80 @@ float4 wire_frame_ps_main(PS_INPUT input) : SV_Target0
     return albedoFactor;
 }
 #endif
+//---------------------------define OutLine--------------------------------------------
+#ifdef OutLine
+PS_INPUT outline_vs_main(VS_INPUT input)
+{
+    PS_INPUT output = (PS_INPUT) 0;
+    float4x4 matWolrd;
+    float scaleFactor = 0.03;
+    float3 normalOffset = normalize(mul(input.normal, (float3x3) world)) * scaleFactor;
+    input.position.xyz += normalOffset;
+    
+#ifdef Skinning
+   matrix boneTransform =  matrix(
+     0.f, 0.f, 0.f, 0.f,
+     0.f, 0.f, 0.f, 0.f,
+     0.f, 0.f, 0.f, 0.f,
+     0.f, 0.f, 0.f, 0.f
+    );
+    
+    uint4 boneIndices0 = uint4(boneIDBuffer[input.vertexID * 8 + 0],
+                               boneIDBuffer[input.vertexID * 8 + 1],
+                               boneIDBuffer[input.vertexID * 8 + 2],
+                               boneIDBuffer[input.vertexID * 8 + 3]);
+    uint4 boneIndices1 = uint4(boneIDBuffer[input.vertexID * 8 + 4],
+                               boneIDBuffer[input.vertexID * 8 + 5],
+                               boneIDBuffer[input.vertexID * 8 + 6],
+                               boneIDBuffer[input.vertexID * 8 + 7]);
+
+    float4 boneWeights0 = float4(boneWeightBuffer[input.vertexID * 8 + 0],
+                                 boneWeightBuffer[input.vertexID * 8 + 1],
+                                 boneWeightBuffer[input.vertexID * 8 + 2],
+                                 boneWeightBuffer[input.vertexID * 8 + 3]);
+    float4 boneWeights1 = float4(boneWeightBuffer[input.vertexID * 8 + 4],
+                                 boneWeightBuffer[input.vertexID * 8 + 5],
+                                 boneWeightBuffer[input.vertexID * 8 + 6],
+                                 boneWeightBuffer[input.vertexID * 8 + 7]);
+  
+    boneTransform += mul(boneWeights0.x, boneMatrix[boneIndices0.x]);
+    boneTransform += mul(boneWeights0.y, boneMatrix[boneIndices0.y]);
+    boneTransform += mul(boneWeights0.z, boneMatrix[boneIndices0.z]);
+    boneTransform += mul(boneWeights0.w, boneMatrix[boneIndices0.w]);
+  
+
+    boneTransform += mul(boneWeights1.x, boneMatrix[boneIndices1.x]);
+    boneTransform += mul(boneWeights1.y, boneMatrix[boneIndices1.y]);
+    boneTransform += mul(boneWeights1.z, boneMatrix[boneIndices1.z]);
+    boneTransform += mul(boneWeights1.w, boneMatrix[boneIndices1.w]);
+  
+    
+    matWolrd =  boneTransform;
+    float4 totalPos = mul(input.position, boneTransform);
+    matrix wvp = mul(world, view);
+    wvp = mul(wvp, projection);
+    output.position = mul(totalPos, wvp);
+    output.worldPosition = mul(totalPos, world);
+#else
+    matWolrd = world;
+    output.position = mul(input.position, matWolrd);
+    output.worldPosition = output.position;
+    output.position = mul(output.position, view);
+    output.position = mul(output.position, projection);
+#endif
+    output.worldNormal = normalize(mul(normalize(input.normal), (float3x3) matWolrd));
+    output.worldTangent = normalize(mul(normalize(input.tangent), (float3x3) matWolrd));
+    output.worldBitangent = normalize(mul(normalize(input.biTangent), (float3x3) matWolrd));
+    output.color = input.color;
+    output.uv = input.uv;
+    output.positionShadow = mul(output.worldPosition,
+    shadowView);
+    output.positionShadow = mul(output.positionShadow, shadowProjection);
+    return output;
+}
+
+float4 outline_ps_main(PS_INPUT input) :SV_Target0
+{
+    return float4(1.f, 1.f, 0.f, 1.f);
+}
+#endif 

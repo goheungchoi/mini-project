@@ -1,6 +1,8 @@
-#include "GameLevel.h"
+﻿#include "GameLevel.h"
 #include "Map.h"
-
+#include "GameFramework/UI/Canvas/Canvas.h"
+#include "GameFramework/UI/UIPanel/UIPanel.h"
+#include "Contents/Prototype/UI/TestUI.h"
 //#define USED2D
 
 void GameLevel::PrepareLevel()
@@ -23,8 +25,8 @@ void GameLevel::BeginLevel()
 
   CreateMap();
 
-#ifdef USED2D
-  text = world->CreateGameObject<TestGameObject>();
+#ifdef USED2D 
+  world->_canvas->CreatePanel<TestUI>(L"TestUI");
 #endif // USED2D
 }
 

@@ -1,13 +1,14 @@
-#pragma once
+﻿#pragma once
 #include "GameFramework/Common.h"
 #include "Core/Math/MathUtils.h"
+#include  "GameFramework/World/World.h"
 
 class UIElement
 {
 public:
   UIElement(class World* world) : _world(world)
   {
-    status = EStatus_Awake;
+    _status = EStatus_Awake;
     bShouldActivate = true;
     bShouldDeactivate = false;
     bShouldDestroy = false;
@@ -20,27 +21,34 @@ public:
   virtual void Update(float dt);
   virtual void Render();
 
+  void SetownerPanel(class UIPanel* ownerPanel) { _ownerPanel = ownerPanel; }
+  
+  void SetPosition(Vector2 pos) { _position = pos; }
+  Vector2 GetPosition() { return _position; }
 
-  EStatus GetStatus() { return status; }
+  void SetSize(Vector2 size) { _size = size; }
+  Vector2 GetSize() { return _size; }
+
+  EStatus GetStatus() { return _status; }
 
   // State change
   void Activate()
   {
-    if (status == EStatus_Active)
+    if (_status == EStatus_Active)
       return;
 
     bShouldActivate = true;
   }
   void Deactivate()
   {
-    if (status == EStatus_Inactive)
+    if (_status == EStatus_Inactive)
       return;
 
     bShouldDeactivate = true;
   }
   void Destroy()
   {
-    if (status == EStatus_Cleanup || status == EStatus_Destroyed)
+    if (_status == EStatus_Cleanup || _status == EStatus_Destroyed)
       return;
 
     bShouldDestroy = true;
@@ -48,7 +56,7 @@ public:
 
   void BeginDestroy()
   {
-    status = EStatus_Cleanup;
+    _status = EStatus_Cleanup;
 
     // Reset to initial states
     bShouldActivate = false;
@@ -56,20 +64,19 @@ public:
     bShouldDestroy = false;
   }
 
-  void FinishDestroy()
-  {
-    status = EStatus_Destroyed;
-  }
+  void FinishDestroy() { _status = EStatus_Destroyed; }
 
 protected:
   class World* _world = nullptr;
   Vector2 _position{};
-  Vector2 _size{};
+  Vector2 _size{100, 100};  // width, height
 
   bool bShouldActivate;
   bool bShouldDeactivate;
   bool bShouldDestroy;
 
-  EStatus status{EStatus_Awake};
+  EStatus _status{EStatus_Awake};
   bool isActive{false};
+
+  class UIPanel* _ownerPanel = nullptr;
 };

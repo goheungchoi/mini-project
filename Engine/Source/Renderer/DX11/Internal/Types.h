@@ -36,6 +36,5 @@ enum RenderPassType : uint8_t
   kShadowPass = 1 << 2,       // 0000 0100
   kLightPass = 1 << 3,       // 0000 0100
   kWireFrame = 1 << 4,         // 0000 1000
-  kSkinning = 1<<5,           //0001 0000
 };
 using RenderPassFlags = uint8_t;
