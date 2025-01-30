@@ -3,34 +3,11 @@
 
 class Device;
 class SwapChain;
+class Sprite;
 class Font;
 class Text;
 class UIRenderer;
 class Texture;
-
-class Sprite
-{
-public:
-  Sprite(LPCSTR path, Device* pDevice);
-  ~Sprite();
-
-private:
-  void Init(LPCSTR path);
-  void UnInit();
-  Vector2 CalculateTextureSize();
-
-public:
-  void Render(DirectX::SpriteBatch* pSpriteBatch);
-  void SetPos(Vector2 pos) { _pos = pos; }
-
-private:
-  Texture* _pTexture = nullptr;
-  Vector2 _textureSize{};
-  Vector2 _pos{};
-
-  Device* _pDevice = nullptr;
-
-};
 
 class D2DRenderer // D2D.ver
 {
@@ -79,5 +56,4 @@ private:
   ID2D1Bitmap1* _pID2D1Bitmap = nullptr;
 
   std::unique_ptr<DirectX::SpriteBatch> _pSpriteBatch = nullptr;
-  std::vector<Sprite*> _Sprites;
 };

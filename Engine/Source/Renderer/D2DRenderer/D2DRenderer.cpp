@@ -1,74 +1,8 @@
 ﻿#include "D2DRenderer.h"
 #include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/SwapChain.h"
-#include "Renderer/DX11/Internal/Resources/Material.h"
 #include "Font/Font.h"
-
-Sprite::Sprite(LPCSTR path, Device* pDevice)
-{
-  _pDevice = pDevice;
-
-  Init(path);
-}
-
-Sprite::~Sprite()
-{
-  UnInit();
-}
-
-void Sprite::Init(LPCSTR path)
-{
-  // Texture 생성
-  TextureHandle handle = LoadTexture(path, TextureType::kUnknown);
-  TextureData data;
-  data = AccessTextureData(handle);
-  _pTexture = Texture::CreateSRV(_pDevice, data);
-
-  _textureSize = CalculateTextureSize();
-}
-
-void Sprite::UnInit()
-{
-  // Texture의 해제
-  if (_pTexture)
-  {
-    SAFE_RELEASE(_pTexture);
-  }
-}
-
-
-Vector2 Sprite::CalculateTextureSize()
-{
-  if (_pTexture == nullptr)
-    return Vector2(0, 0);
-
-  ID3D11Resource* resource = nullptr;
-  _pTexture->GetResource()->GetResource(&resource);
-
-  ID3D11Texture2D* tex2D = nullptr;
-  HRESULT hr = resource->QueryInterface<ID3D11Texture2D>(&tex2D);
-  if (FAILED(hr))
-  {
-    resource->Release();
-    return Vector2(0, 0);
-  }
-
-  D3D11_TEXTURE2D_DESC desc;
-  tex2D->GetDesc(&desc);
-
-  tex2D->Release();
-  resource->Release();
-
-  return Vector2(desc.Width, desc.Height);
-}
-
-void Sprite::Render(DirectX::SpriteBatch* pSpriteBatch)
-{
-  auto textureSRV = _pTexture->GetResource().Get();
-
-  pSpriteBatch->Draw(textureSRV, _pos);
-}
-
+#include "Sprite/Sprite.h"
 
 D2DRenderer::~D2DRenderer()
 {
@@ -145,6 +79,7 @@ void D2DRenderer::CreateD2DRenderTarget()
 
 void D2DRenderer::UnInit()
 {
+  _SpriteManager.Destory();
   // SpriteBatch의 해제
   if (_pSpriteBatch) { _pSpriteBatch.reset(); }
   DeleteTextAll();
@@ -178,9 +113,8 @@ void D2DRenderer::EndDraw()
 void D2DRenderer::CreateSprite(LPCSTR path, Vector2 pos)
 {
   // IMG 객체를 생성하고 반환
-  Sprite* sprite = new Sprite(path, _pDevice);
-  sprite->SetPos(pos);
-  _Sprites.push_back(sprite);
+  auto newSprite = _SpriteManager.GetSprite(path, _pDevice);
+  newSprite->SetPos(pos);
 }
 
 void D2DRenderer::DrawSprites()
@@ -192,15 +126,14 @@ void D2DRenderer::DrawSprites()
   _pDevice->GetImmContext()->OMGetDepthStencilState(&prevDepthState,
                                                     &stencilRef);
 
-
   _pSpriteBatch->Begin();
 
   // 모든 Sprite Render
-  if (!_Sprites.empty())
+  if (!_SpriteManager._spritePool.empty())
   {
-    for (auto sprite : _Sprites)
+    for (auto sprite : _SpriteManager._spritePool)
     {
-      sprite->Render(_pSpriteBatch.get());
+      sprite.second->Render(_pSpriteBatch.get());
     }
   }
 
