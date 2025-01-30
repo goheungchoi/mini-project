@@ -25,11 +25,7 @@ public:
   IPhyjixEngine* _phyjixEngine;
   IPhyjixWorld* _phyjixWorld;
 
-
-
-
-
-
+	std::vector<class RigidbodyComponent*> rigidBodyComponents;
 
 
   class Camera* _defaultCamera{nullptr};
@@ -261,6 +257,9 @@ public:
 
   void RegisterMeshComponent(class MeshComponent* meshComp);
   void RegisterMeshComponent(class SkeletalMeshComponent* skeletalMeshComp);
+
+	void RegisterRigidBodyComponent(class RigidbodyComponent* rigidBody);
+  void UnregisterRigidBodyComponent(class RigidbodyComponent* rigidBody);
 
   /* Game Loop Flow */
   

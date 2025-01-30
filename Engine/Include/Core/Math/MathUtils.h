@@ -42,6 +42,48 @@ constexpr float kSqrt2_f{std::numbers::sqrt2_v<float>};
 constexpr double kSqrt2{std::numbers::sqrt2};
 
 
+class CubicBezier
+{
+  double _x1, _y1;
+  double _x2, _y2;
+
+public:
+  CubicBezier(double x1, double y1, double x2, double y2)
+      : _x1{x1}, _y1{y1}, _x2{x2}, _y2{y2}
+  {
+    if (!((0 <= x1 && x1 <= 1) && (0 <= x2 && x2 <= 1)))
+      assert(-1);
+  }
+
+  /**
+   * @brief
+   * @param t Interpolated time t from 0 to 1
+   * @return
+   */
+  double operator()(double t) const
+  {
+    double s = 1.0 - t;
+    double s_squared = s * s;
+
+    double t_squared = t * t;
+    double t_cubed = t_squared * t;
+
+    double res1 = 3.0 * s_squared * t * _y1;
+    double res2 = 3.0 * s * t_squared * _y2;
+
+    return res1 + res2 + t_cubed;
+  }
+};
+
+namespace bezier
+{
+static const CubicBezier linear{0.0, 0.0, 1.0, 1.0};
+static const CubicBezier ease{0.25, 0.1, 0.25, 1.0};
+static const CubicBezier ease_in{0.42, 0, 1.0, 1.0};
+static const CubicBezier ease_out{0, 0, 0.58, 1.0};
+static const CubicBezier ease_in_out{0.42, 0, 0.58, 1.0};
+}; // namespace bezier
+
 // Function to rotate a vector towards a target vector
 inline XMVECTOR RotateVectorToward(
     const XMVECTOR& source, // The source vector to rotate

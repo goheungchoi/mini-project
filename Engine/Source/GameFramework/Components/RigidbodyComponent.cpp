@@ -1,7 +1,9 @@
 #include "GameFramework/GameObject/GameObject.h"
 #include "GameFramework/Components/RigidbodyComponent.h"
 
-#include "../../../../PhyjixEngine/PhyjixWorld.h"
+#include "GameFramework/World/World.h"
+
+#include "PhyjixWorld.h"
 
 void RigidbodyComponent::Initialize(
     const DirectX::SimpleMath::Vector3& position,
@@ -10,13 +12,18 @@ void RigidbodyComponent::Initialize(
 {
   _world = world;
   _rigidbody = _world->AddRigidBody(position, size, cShape, isStatic, isKinematic);
-
+  RegisterRigidBodyToWorld();
 }
 
 void RigidbodyComponent::SetCollisionEvent(IRigidBody* other,
                                            eCollisionEventType eventType, Event event)
 {
   _rigidbody->SetCollisionEvent(eventType, other, event);
+}
+
+RigidbodyComponent::~RigidbodyComponent() {
+  _world->RemoveRigidBody(_rigidbody);
+  UnregisterRigidBodyFromWorld();
 }
 
 void RigidbodyComponent::Translate(Vector3 Force)
@@ -90,6 +97,25 @@ void RigidbodyComponent::DisableDebugDraw()
 {
   _bDebugDrawFlag = false;
 }
+
+void RigidbodyComponent::RegisterRigidBodyToWorld() {
+  GetWorld()->RegisterRigidBodyComponent(this);
+}
+
+void RigidbodyComponent::UnregisterRigidBodyFromWorld() {
+  GetWorld()->UnregisterRigidBodyComponent(this);
+}
+
+void RigidbodyComponent::BeginOverlap(RigidbodyComponent* other)
+{
+  GetOwner()->OnBeginOverlap(other->GetOwner());
+}
+
+void RigidbodyComponent::EndOverlap(RigidbodyComponent* other)
+{
+  GetOwner()->OnEndOverlap(other->GetOwner());
+}
+
 #endif
 TransformComponent* RigidbodyComponent::GetTransformComponent()
 {

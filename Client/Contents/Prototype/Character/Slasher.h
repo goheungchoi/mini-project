@@ -23,6 +23,16 @@ protected:
   Animation* action;
   AnimationState* actionState;
 
+
+	float slashSpeedPerSec{1.f};
+  float slashElapsedTime{0.f};
+  float slashNormalizedTime{0.f};
+
+	bool temp{false};
+
+	XMVECTOR currPos;
+  XMVECTOR targetPos;
+
 public:
   Slasher(World* world);
   ~Slasher() {}

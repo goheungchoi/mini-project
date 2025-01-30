@@ -7,6 +7,7 @@ class Gunman : public Character
 	using Super = Character;
 protected:
   ModelHandle handgunModelHandle;
+  ModelHandle muzzleModelHandle;
 
 	GameObject* handgun;
 

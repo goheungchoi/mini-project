@@ -41,7 +41,9 @@ public:
   ModelData* characterModelData;
 	SkeletonHandle skeletonHandle;
   AnimatorComponent* animator;
-  RigidbodyComponent* rigidBody;
+	
+	GameObject* body;
+  GameObject* head;
 
 	// Properties
   bool bGridLocationChanged{false};
@@ -55,12 +57,18 @@ public:
 
 	bool bDirectionChanged{false};
   Direction dir{kEast};
+
+	// TODO: Action only when a target is in range...
   bool isTargetInRange{false};
+  int distanceToTarget{-1};
 
 	class GridObject* grid{nullptr};
 
 	//
 	bool isDead{false};
+
+	//
+  bool isSimulationMode{false};
 
 public:
 
@@ -83,15 +91,12 @@ public:
   virtual void OnClicked() {};
   virtual void OnPressed() {};
 
+	void OnBeginOverlap(GameObject* other);
+
   // Game loop events
   void OnAwake();
-  virtual void OnActivated() {}
 
-  virtual void FixedUpdate(float fixedRate) {}
-  virtual void PreUpdate(float dt) {}
   void Update(float dt) override;
-  virtual void PostUpdate(float dt) {}
-  virtual void OnRender() {}
 
 protected:
 	// Update logic

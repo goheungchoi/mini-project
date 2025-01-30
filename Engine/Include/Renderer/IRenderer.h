@@ -1,12 +1,13 @@
 ﻿#pragma once
-#include "Core/Handle/ResourceHandle.h"
 #include "Core/Common.h"
+#include "Core/Handle/ResourceHandle.h"
 #include "Core/Types/LightTypes.h"
+#include "Core/Types/RenderType.h"
 using namespace std;
 /**
- * @brief 
+ * @brief
  * 1. call AddRenderPass() per mesh at initialize
- * 2. call BeginFrame() per frame 
+ * 2. call BeginFrame() per frame
  * 3. call BeinDraw() per mesh every frame
  * 4. call DrawMesh() per mesh every frame
  * 5. call EndFrame() per frame
@@ -39,9 +40,9 @@ public:
    * @brief call per mesh
    * @param handle : mesh handle owned by mesh
    */
-  virtual void DrawMesh(MeshHandle handle, Matrix world,
+  virtual void DrawMesh(MeshHandle handle, Matrix world, RenderTypeFlags type,
                         vector<DirectX::XMMATRIX> boneTransforms =
-                                               vector<DirectX::XMMATRIX>()) = 0;
+                            vector<DirectX::XMMATRIX>()) = 0;
   /**
    * @brief still working on it....
    */
@@ -52,7 +53,7 @@ public:
   virtual void EndFrame() = 0;
 
   /*
-   * @brief 
+   * @brief
      1. you can add more than one call before begin draw
      2. Runs only the type of render path you added, for this mesh
      3. don't call every loop
@@ -60,12 +61,12 @@ public:
    */
   virtual void AddShadow(MeshHandle handle) = 0;
   virtual void DeleteShadow(MeshHandle handle) = 0;
-  ///*
-  // * @brief
-  //   1. you can delete meshes render pass type.
-  // * Param1 : own meshHandle
-  // */
-  #ifdef _DEBUG
+///*
+// * @brief
+//   1. you can delete meshes render pass type.
+// * Param1 : own meshHandle
+// */
+#ifdef _DEBUG
   /**
    * @brief draw Sphere wireFrame, it's only work on debug
    * @param world world Matirx
@@ -84,7 +85,7 @@ public:
    * @param color color
    */
   virtual void DrawDebugCylinder(Matrix world, Color color) = 0;
-  #endif
+#endif
   /**
    * @brief About Particle
    */
@@ -93,10 +94,6 @@ public:
    * @brief About Particle
    */
   virtual void DeleteParticle() = 0;
-
-  virtual void AddOutLine(MeshHandle handle) = 0;
-  virtual void DeleteOutLine(MeshHandle handle) = 0;
-  
 
   virtual void BindPipeline() = 0;
 
@@ -118,12 +115,10 @@ public:
   virtual void CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                             LPCSTR diffuseIrrPath, LPCSTR specularIBLPath) = 0;
 
-  
   // D2D Renderer
   virtual void CreateSprite(LPCSTR path, Vector2 pos) = 0;
 
   virtual void AddText(const wchar_t* format, Vector4 rect,
-                        const std::wstring& fontName = L"Agency FB",
-                        Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) = 0;
-
+                       const std::wstring& fontName = L"Agency FB",
+                       Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) = 0;
 };

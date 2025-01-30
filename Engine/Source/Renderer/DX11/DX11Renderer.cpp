@@ -95,7 +95,7 @@ void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
   }
 }
 
-void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world,
+void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world, RenderTypeFlags type,
 
                             vector<DirectX::XMMATRIX> boneTransforms)
 {
@@ -105,7 +105,7 @@ void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world,
     throw std::exception("buffer not registered");
   }
 
-  _passMgr->ClassifyPass(buffer->second, world, boneTransforms);
+  _passMgr->ClassifyPass(buffer->second, world, boneTransforms,type);
 }
 
 void DX11Renderer::EndDraw() {}
@@ -189,7 +189,6 @@ bool DX11Renderer::CreateMesh(MeshHandle handle)
     {
       std::vector<uint32_t> boneIndicesBuffer;
       std::vector<float> boneWeightsBuffer;
-      meshBuffer->flags |= RenderPassType::kSkinning;
       size_t index = 0;
       for (const auto& vertexBoneData : meshData.vertices)
       {
@@ -340,15 +339,6 @@ void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
 }
 
-void DX11Renderer::AddOutLine(MeshHandle handle)
-{
-
-}
-
-void DX11Renderer::DeleteOutLine(MeshHandle handle) 
-{
-
-}
 
 #endif
 void DX11Renderer::BeginImGuiDraw()

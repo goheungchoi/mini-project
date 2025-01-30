@@ -42,15 +42,15 @@ void GameLevel::CreateMap() {
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
 
-	/*map->CreateEnemyAt(4, 4, kEast);
+	map->CreateEnemyAt(4, 4, kEast);
   map->CreateEnemyAt(3, 3, kEast);
   map->CreateEnemyAt(2, 1, kEast);
 
-  map->CreateAllyAt(kBrawler, 4, 5, kWest);
-  map->CreateAllyAt(kSlasher, 3, 5, kWest);
-  map->CreateAllyAt(kGunman, 2, 5, kWest);
+  // map->CreateAllyAt(kBrawler, 4, 5, kWest);
+  // map->CreateAllyAt(kSlasher, 3, 5, kWest);
+  // map->CreateAllyAt(kGunman, 2, 5, kWest);
 	
-	map->CreateCivillianAt(4, 4);*/
+	// map->CreateCivillianAt(4, 4);
 
 	map->CreateAllyAt(kGunman, 2, 5, kWest);
 }

@@ -125,6 +125,7 @@ std::pair<float, float> GridObject::GetActualPositionAt(uint32_t w, uint32_t h)
   return {pos_x, pos_z};
 }
 
+// TODO: Don't light up on tiles where objects already exist
 void GridObject::TurnOnSelectionMode() {
   isSelectionMode = true;
 

@@ -24,9 +24,9 @@ public:
   void BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
                   DirectionalLight mainLight) override;
   void BeginDraw(MeshHandle handle, Matrix world) override;
-  void DrawMesh(MeshHandle handle, Matrix world,
+  void DrawMesh(MeshHandle handle, Matrix world, RenderTypeFlags type,
                 vector<DirectX::XMMATRIX> boneTransforms =
-                                       vector<DirectX::XMMATRIX>()) override;
+                    vector<DirectX::XMMATRIX>()) override;
   void EndDraw() override;
   void EndFrame() override;
   void AddShadow(MeshHandle handle) override;
@@ -46,28 +46,26 @@ public:
   void CreateParticle() override;
   void DeleteParticle() override;
 
-  #ifdef _DEBUG
+#ifdef _DEBUG
   void DrawDebugSphere(Matrix world, Color color) override;
   void DrawDebugBox(Matrix world, Color color) override;
   void DrawDebugCylinder(Matrix world, Color color) override;
-  void AddOutLine(MeshHandle handle) override;
-  void DeleteOutLine(MeshHandle handle) override;
-  #endif
+#endif
 public:
-	// Render ImGui graphical interface.
+  // Render ImGui graphical interface.
   void BeginImGuiDraw();
   void DrawImGui();
 
-// D2D Renderer
+  // D2D Renderer
   void CreateSprite(LPCSTR path, Vector2 pos) override;
   void AddText(const wchar_t* format, Vector4 rect,
-                const std::wstring& fontName = L"Agency FB",
-                Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) override;
+               const std::wstring& fontName = L"Agency FB",
+               Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) override;
 
 private:
   void CreateEngineShader();
 
-	// Initialize ImGui
+  // Initialize ImGui
   void InitImGui();
 
 private:

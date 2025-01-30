@@ -8,6 +8,8 @@
 #include "Contents/AnimationStates/GunFireActionState.h"
 #include "Contents/AnimationStates/DeadState.h"
 
+#include "Contents/Prototype/Bullet/Bullet.h"
+
 Gunman::Gunman(World* world) : Character(world) {
   type = kGunman;
   range = 5;
@@ -15,25 +17,32 @@ Gunman::Gunman(World* world) : Character(world) {
 	// Create a hand gun game object.
   handgunModelHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 	handgun = world->CreateGameObjectFromModel(handgunModelHandle);
+
+	muzzleModelHandle = LoadModel("Models\\Bullet\\Bullet.glb");
+	muzzle = world->CreateGameObjectFromModel<GameObject>(muzzleModelHandle);
+
+	handgun->AddChildGameObject(muzzle);
   
 	// Create a muzzle game object.
 
 
 	// Create animation states
   dead = new Animation(*characterModelData->animations.begin(), false);
-  deadState = new AnimationState(dead);
+  deadState = new DeadState(dead);
 
   idle = new Animation(*characterModelData->animations.begin(), true);
-  idleState = new AnimationState(idle);
+  idleState = new IdleState(idle);
 
   ready1 = new Animation(*characterModelData->animations.begin(), false);
-  ready1State = new AnimationState(ready1);
+  ready1State = new GunFireReady1State(ready1);
 
   ready2 = new Animation(*characterModelData->animations.begin(), false);
-  ready2State = new AnimationState(ready2);
+  ready2State = new GunFireReady2State(ready2);
 
   fire = new Animation(*characterModelData->animations.begin(), false);
-  fireState = new AnimationState(fire);
+  fireState = new GunFireActionState(fire);
+
+	animator->DeclareVariable<bool>("fire", false);
 
 	// Set state dependencies
   idleState->AddAnimationStateDependency("next", ready1State);
@@ -67,4 +76,14 @@ void Gunman::OnAwake() {
 void Gunman::Update(float dt) {
   Super::Update(dt);
 
+	if (animator->GetVariable<bool>("fire"))
+  {
+    Bullet* bullet =
+        world->CreateGameObjectFromModel<Bullet>(muzzleModelHandle);
+    bullet->SetTranslation(muzzle->transform->GetGlobalTranslation());
+    bullet->SetDirection(-this->GetGlobalFront());
+    bullet->SetScaling(10.f, 10.f, 10.f);
+
+		animator->SetVariable<bool>("fire", false);
+	}
 }
