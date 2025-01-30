@@ -275,6 +275,9 @@ public:
   // GameObject* Clone();
 
 	// Interaction 
+	virtual void OnBeginOverlap(GameObject* other) {}
+  virtual void OnEndOverlap(GameObject* other) {}
+
   virtual void OnBeginCursorOver() {};
   virtual void OnEndCursorOver() {};
   virtual void OnClicked() {};

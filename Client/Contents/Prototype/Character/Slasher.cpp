@@ -22,16 +22,18 @@ Slasher::Slasher(World* world) : Character(world) {
 
 	// Create animation states
   dead = new Animation(*characterModelData->animations.begin(), false);
-  deadState = new AnimationState(dead);
+  deadState = new DeadState(dead);
 
   idle = new Animation(*characterModelData->animations.begin(), true);
-  idleState = new AnimationState(idle);
+  idleState = new IdleState(idle);
 
   ready = new Animation(*characterModelData->animations.begin(), false);
-  readyState = new AnimationState(ready);
+  readyState = new SlashReadyState(ready);
 
   action = new Animation(*characterModelData->animations.begin(), false);
-  actionState = new AnimationState(action);
+  actionState = new SlashActionState(action);
+
+	animator->DeclareVariable<bool>("fire", false);
 
 	// Set state dependencies
   idleState->AddAnimationStateDependency("next", readyState);
@@ -55,4 +57,26 @@ void Slasher::OnAwake() {
 void Slasher::Update(float dt) {
   Super::Update(dt);
 
+	if (animator->GetVariable<bool>("fire"))
+  {
+    // TODO: slash!
+    if (!temp)
+    {
+      currPos = transform->GetTranslation();
+      targetPos =
+          1.4f * distanceToTarget * -transform->GetLocalFront() + currPos;
+			temp = true;
+    }
+    else
+    {
+      slashElapsedTime += dt;
+      float normalizedTime = slashElapsedTime / (float)distanceToTarget;
+      float t = MathUtil::bezier::ease_in(normalizedTime);
+
+      SetTranslation(t * targetPos + (1 - t) * currPos);
+
+      if (normalizedTime >= 1.f)
+        animator->SetVariable<bool>("fire", false);
+		}
+  }
 }

@@ -45,10 +45,26 @@ Character::Character(World* world) : GameObject(world)
   // animator->SetState(state);
   // animator->AdjustAnimationPlaySpeed(0.1f);
 
-	rigidBody = CreateComponent<RigidbodyComponent>();
-  rigidBody->Initialize({0, 1.25, 0}, {1.f, 1.5f, 1.f},
-                        ColliderShape::eCubeCollider, true, false,
-                        world->_phyjixWorld);
+	body = world->CreateGameObject();
+  head = world->CreateGameObject();
+  AddChildGameObject(body);
+  AddChildGameObject(head);
+
+	auto* bodyRigidBody = body->CreateComponent<RigidbodyComponent>();
+  bodyRigidBody->Initialize({0, 0, 0}, {1.f, 1.f, 1.f},
+                            ColliderShape::eCubeCollider, true, true,
+                            world->_phyjixWorld);
+  bodyRigidBody->EnableDebugDraw();
+  body->SetTranslation(0, 1.f, 0);
+  body->SetScaling(0.4f, 1.2f, 0.2f);
+
+	auto* headRigidBody = head->CreateComponent<RigidbodyComponent>();
+  headRigidBody->Initialize({0, 5.f, 0}, {1.f, 1.f, 1.f},
+                            ColliderShape::eSphereCollider, true, true,
+                            world->_phyjixWorld);
+  headRigidBody->EnableDebugDraw();
+  head->SetTranslation(0, 1.8f, 0);
+  head->SetScaling(0.2f, 0.2f, 0.2f);
 }
 
 Character::~Character() {
@@ -59,7 +75,8 @@ Character::~Character() {
 
 void Character::TriggerAction()
 {
-  animator->SetVariable<bool>("triggered", true, true);
+  if (isTargetInRange)
+		animator->SetVariable<bool>("triggered", true, true);
 }
 
 void Character::SetFaction(Faction faction) {
@@ -94,8 +111,26 @@ std::pair<uint32_t, uint32_t> Character::GetGridLocation()
   return {grid_w, grid_h};
 }
 
-void Character::OnAwake() {
+void Character::OnBeginOverlap(GameObject* other) {
+  if (other->GetGameObjectTag() == "bullet")
+  {
+    health -= 1;
+	}
+
+	if (health <= 0)
+  {
+    animator->SetVariable<bool>("dead", true, true);
+    isDead = true;
+	}
+}
+
+void Character::OnAwake()
+{
   grid = world->FindGameObjectByType<GridObject>();
+  if (!grid)
+  {
+    throw std::runtime_error("Can'f find grid!");
+  }
   if (bGridLocationChanged)
   {
     ApplyChangedGridLocation();
@@ -202,27 +237,35 @@ void Character::FindTargetInRange() {
 
 	int next_search_spot_w = grid_w;
   int next_search_spot_h = grid_h;
-	for (int i = 1; i < range; ++i)
+	for (int i = 1; i <= range; ++i)
   {
     next_search_spot_w += search_dir_w;
     next_search_spot_h += search_dir_h;
 
-		if (grid->GetWidth() <= next_search_spot_w && next_search_spot_w < grid->GetWidth() &&
-        grid->GetHeight() <= next_search_spot_h &&
-        next_search_spot_h < grid->GetHeight())
+		if (0 <= next_search_spot_w && next_search_spot_w < grid->GetWidth() &&
+        0 <= next_search_spot_h && next_search_spot_h < grid->GetHeight())
     {
       GameObject* searchTarget =
           grid->GetGameObjectAt(next_search_spot_w, next_search_spot_h);
 
+			// No target found at the location.
+			if (!searchTarget)
+        continue;
+
+			// Don't attack civilians.
+			if (searchTarget->GetGameObjectTag() == kFactionTags[kNeutral])
+        continue;
+
 			// If this is an opponent.
-			if (kFactionTags[!this->faction] ==
-          searchTarget->GetGameObjectTag())
+			if (kFactionTags[!this->faction] == searchTarget->GetGameObjectTag())
       {
+        distanceToTarget = i;
         isTargetInRange = true;
         return;
 			}
 		}
 	}
 
+	distanceToTarget = -1;
 	isTargetInRange = false;
 }

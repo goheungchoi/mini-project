@@ -13,13 +13,13 @@ Brawler::Brawler(World* world) : Character(world)
 
 	// NOTE: Test animation and state.
   dead = new Animation(*characterModelData->animations.begin(), false);
-  deadState = new AnimationState(dead);
+  deadState = new DeadState(dead);
 
 	idle = new Animation(*characterModelData->animations.begin(), true);
-  idleState = new AnimationState(idle);
+  idleState = new IdleState(idle);
 
   action = new Animation(*characterModelData->animations.begin(), false);
-  actionState = new AnimationState(action);
+  actionState = new BrawlerActionState(action);
 
 	idleState->AddAnimationStateDependency("next", actionState);
 	idleState->AddAnimationStateDependency("dead", deadState);

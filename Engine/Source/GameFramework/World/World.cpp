@@ -10,6 +10,7 @@
 #include "GameFramework/Components/MeshComponent.h"
 #include "GameFramework/Components/SkeletalMeshComponent.h"
 #include "GameFramework/Components/TransformComponent.h"
+#include "GameFramework/Components/RigidbodyComponent.h"
 
 #include "Interface.h"
 #include "PhyjixEngine.h"
@@ -100,6 +101,8 @@ void World::CommitLevelChange() {
     {
       _currentLevel->DestroyLevel();
       _currentLevel->CleanupLevel();
+
+			rigidBodyComponents.clear();
 
 #ifdef USED2D
       delete _canvas;
@@ -314,6 +317,32 @@ void World::RegisterMeshComponent(SkeletalMeshComponent* skeletalMeshComp) {
     _renderer->AddShadow(skeletalMeshComp->GetHandle());
 }
 
+void World::RegisterRigidBodyComponent(RigidbodyComponent* rigidBody) {
+  for (auto* other : rigidBodyComponents)
+  {
+    other->SetCollisionEvent(
+        rigidBody->GetRigidBody(), eCollisionEventType::eCollisionEnter,
+        [&]() { other->BeginOverlap(rigidBody); });
+    other->SetCollisionEvent(rigidBody->GetRigidBody(),
+                             eCollisionEventType::eCollisionExit,
+                             [&]() { other->EndOverlap(rigidBody); });
+
+		rigidBody->SetCollisionEvent(other->GetRigidBody(),
+                             eCollisionEventType::eCollisionEnter,
+                                 [&]() { rigidBody->BeginOverlap(other); });
+    rigidBody->SetCollisionEvent(other->GetRigidBody(),
+                             eCollisionEventType::eCollisionExit,
+                                 [&]() { rigidBody->EndOverlap(other); });
+	}
+
+	rigidBodyComponents.push_back(rigidBody);
+}
+
+void World::UnregisterRigidBodyComponent(RigidbodyComponent* rigidBody) {
+  auto it = std::remove(rigidBodyComponents.begin(), rigidBodyComponents.end(), rigidBody);
+  rigidBodyComponents.erase(it, rigidBodyComponents.end());
+}
+
 void World::InitialStage() {
   if (!_currentLevel || changingLevel)
     return;
@@ -424,9 +453,12 @@ void World::Update(float dt)
   _phyjixWorld->CastRay();
   _phyjixEngine->Update(dt);
 
-    // Rigidbody updateTotransform
-  for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
+  // Rigidbody updateTotransform
+  for (RigidbodyComponent* component : rigidBodyComponents)
   {
+    if (!(component->GetOwner()->status == EStatus_Active))
+      continue;
+
     component->UpdateToTransform();
   }
 

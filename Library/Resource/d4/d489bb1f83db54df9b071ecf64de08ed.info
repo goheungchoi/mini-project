@@ -1,0 +1,27 @@
+{
+    "uuid": "d489bb1f83db54df9b071ecf64de08ed",
+    "import_path": "Models\\Bullet\\Material.0060.mat",
+    "resource_type": "model",
+    "details": {
+        "name": "Material.0060",
+        "albedo_factor": [
+            [
+                0.0,
+                0.08763013780117035,
+                1.0,
+                1.0
+            ]
+        ],
+        "albedo_texture": "",
+        "metallic_factor": 0.0,
+        "roughness_factor": 0.5,
+        "metallic_roughness_texture": "",
+        "normal_texture": "",
+        "occlusion_texture": "",
+        "emissive_factor": 0.0,
+        "emissive_texture": "",
+        "alpha_mode": "AlphaMode_kOpaque",
+        "alpha_cutoff": 0.5,
+        "double_sided": true
+    }
+}

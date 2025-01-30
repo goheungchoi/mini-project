@@ -4,8 +4,12 @@
 
 class Bullet : public GameObject
 {
+  float lifetime{5.f};
+
   float speed{1.4f};
-  XMVECTOR direction;
+
+	XMVECTOR direction{};
+
 public:
 
 	Bullet(World* world);

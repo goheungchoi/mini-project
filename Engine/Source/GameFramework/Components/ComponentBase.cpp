@@ -1,6 +1,8 @@
 #include "GameFrameWork/Components/ComponentBase.h"
 
+#include "GameFramework/GameObject/GameObject.h"
+
 World* ComponentBase::GetWorld() const
 {
-  return nullptr;
+  return _owner->GetWorld();
 }

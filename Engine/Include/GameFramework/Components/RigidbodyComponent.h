@@ -21,7 +21,8 @@ public:
   //wrapper of the iRigidbody collision setting
   void SetCollisionEvent(IRigidBody* other, eCollisionEventType eventType, Event event);
 
-  RigidbodyComponent(class GameObject* owner) : ComponentBase(owner){}
+  RigidbodyComponent(class GameObject* owner) : ComponentBase(owner) {}
+  ~RigidbodyComponent();
 
   void Translate(Vector3 force);
   void Rotate(Vector3 Torque);
@@ -41,6 +42,11 @@ public:
   BOOL GetDebugDrawFlag() { return _bDebugDrawFlag; };
 #endif
 
+	void RegisterRigidBodyToWorld();
+  void UnregisterRigidBodyFromWorld();
+
+	void BeginOverlap(RigidbodyComponent* other);
+  void EndOverlap(RigidbodyComponent* other);
 
 private:
 

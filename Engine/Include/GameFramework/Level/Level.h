@@ -17,7 +17,7 @@ public:
   GameObjectTypeMap gameObjectTypeMap;
   GameObjectNameMap gameObjectNameMap;
   std::list<GameObject*> gameObjects;
-  std::vector<RigidbodyComponent*> rigidbodyComponents;
+  
 
 
   Level(const std::string& name) : name{name} {}
@@ -31,13 +31,7 @@ public:
     gameObjectTypeMap.insert({std::type_index(typeid(T)), object});
   }
 
-	void AddRigidbody(RigidbodyComponent* rigidbody)
-  {
-    rigidbodyComponents.push_back(rigidbody);
-  }
-
   const std::list<GameObject*>& GetGameObjectList() { return gameObjects; }
-  const std::vector<RigidbodyComponent*>& GetRigidbodyList() { return rigidbodyComponents; }
 
 public:
 
