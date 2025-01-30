@@ -520,8 +520,10 @@ void World::RenderGameObjects() {
       const auto& transform = gameObject->GetWorldTransform();
       for (auto handle : meshComp->GetSubMeshes())
       {
+        // NOTE : ADD draw mesh -> flag
+        RenderTypeFlags flag = 0;
         // _renderer->BeginDraw(handle, transform);
-        _renderer->DrawMesh(handle, transform);
+        _renderer->DrawMesh(handle, transform,flag);
 			}
     }
     // Draw skeletal mesh
@@ -531,7 +533,11 @@ void World::RenderGameObjects() {
       auto handle = skeletalMeshComp->GetHandle();
       // const auto& transform = skeletalMeshComp->rootBone->GetGlobalTransform();
       // _renderer->BeginDraw(handle, transform);
-      _renderer->DrawMesh(handle, XMMatrixIdentity(),
+      // outline test 
+      // NOTE : ADD draw mesh -> flag
+      RenderTypeFlags flag = 0;
+      flag |= RenderType::kOutline;
+      _renderer->DrawMesh(handle, XMMatrixIdentity(),flag,
                           skeletalMeshComp->boneTransforms);
     }
   }

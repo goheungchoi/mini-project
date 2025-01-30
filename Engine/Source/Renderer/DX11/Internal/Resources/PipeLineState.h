@@ -17,6 +17,9 @@ private:
     ComPtr<ID3D11BlendState> blentState;
     ComPtr<ID3D11DepthStencilState> depthStencilState;
     ComPtr<ID3D11DepthStencilState> depthDisableStencilState;
+    ComPtr<ID3D11DepthStencilState> depthstencilWriteState;
+    ComPtr<ID3D11DepthStencilState> depthstencilReadState;
+    ComPtr<ID3D11DepthStencilView> outLineStencilView;
   };
 
   struct Rasterizer
@@ -58,8 +61,13 @@ public:
     ComPtr<ID3D11Texture2D> pDepthTexture = nullptr;
     HR_T(_device->GetDevice()->CreateTexture2D(&depthTexdesc, NULL,
                                                pDepthTexture.GetAddressOf()));
+    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
+    descDSV.Format =
+        DXGI_FORMAT_D24_UNORM_S8_UINT; // Depth 24-bit + Stencil 8-bit;
+    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    descDSV.Texture2D.MipSlice = 0;
     HR_T(_device->GetDevice()->CreateDepthStencilView(
-        pDepthTexture.Get(), NULL, _backBuffer->mainDSV.GetAddressOf()));
+        pDepthTexture.Get(), &descDSV, _backBuffer->mainDSV.GetAddressOf()));
     // depth stencil test state
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc = CreateDepthStencilDesc(
         true, D3D11_DEPTH_WRITE_MASK_ALL, D3D11_COMPARISON_LESS, false);
@@ -79,6 +87,49 @@ public:
     // set main render target
     _device->GetImmContext()->OMSetRenderTargets(
         1, _backBuffer->mainRTV.GetAddressOf(), _backBuffer->mainDSV.Get());
+
+    // 스텐실 쓰기를 위한 상태 설정
+    D3D11_DEPTH_STENCIL_DESC stencilDescWrite = {};
+    stencilDescWrite.DepthEnable = FALSE; // 깊이 버퍼 사용
+    stencilDescWrite.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    stencilDescWrite.DepthFunc = D3D11_COMPARISON_ALWAYS;
+
+    stencilDescWrite.StencilEnable = TRUE; // 스텐실 사용
+    stencilDescWrite.StencilWriteMask = 0xFF; // 스텐실의 모든 비트 쓰기 가능
+    stencilDescWrite.StencilReadMask = 0xFF; // 스텐실의 모든 비트 읽기 가능
+
+    // 전면 페이스에서의 스텐실 연산
+    stencilDescWrite.FrontFace.StencilFailOp =
+        D3D11_STENCIL_OP_KEEP; // 스텐실 테스트 실패 시 유지
+    stencilDescWrite.FrontFace.StencilDepthFailOp =
+        D3D11_STENCIL_OP_KEEP; // 깊이 테스트 실패 시 유지
+    stencilDescWrite.FrontFace.StencilPassOp =
+        D3D11_STENCIL_OP_REPLACE; // 테스트 통과 시 교체
+    stencilDescWrite.FrontFace.StencilFunc =
+        D3D11_COMPARISON_ALWAYS; // 항상 통과
+    stencilDescWrite.BackFace = stencilDescWrite.FrontFace;
+    HR_T(_device->GetDevice()->CreateDepthStencilState(
+        &stencilDescWrite, _om->depthstencilWriteState.GetAddressOf()));
+    // 스텐실 읽기(테스트)를 위한 상태 설정
+    D3D11_DEPTH_STENCIL_DESC stencilDescRead = {};
+    stencilDescRead.DepthEnable = FALSE;
+    stencilDescRead.DepthWriteMask =
+        D3D11_DEPTH_WRITE_MASK_ZERO; // 깊이 쓰기 비활성화
+    stencilDescRead.DepthFunc = D3D11_COMPARISON_LESS;
+
+    stencilDescRead.StencilEnable = TRUE;
+    stencilDescRead.StencilReadMask = 0xFF;  // 읽기 마스크
+    stencilDescRead.StencilWriteMask = 0x00; // 쓰기 비활성화
+    // 전면 페이스에서의 스텐실 연산
+    stencilDescRead.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+    stencilDescRead.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP; // 유지
+    stencilDescRead.FrontFace.StencilFailOp =
+        D3D11_STENCIL_OP_KEEP; // 실패 시 유지
+    stencilDescRead.FrontFace.StencilDepthFailOp =
+        D3D11_STENCIL_OP_KEEP; // 깊이 실패 시 유지
+    stencilDescRead.BackFace = stencilDescRead.FrontFace;
+    HR_T(_device->GetDevice()->CreateDepthStencilState(
+        &stencilDescRead, _om->depthstencilReadState.GetAddressOf()));
     // Output Merger End
     //
     // 2.Rasterizer Start
@@ -129,8 +180,9 @@ public:
   }
   void ClearBackBufferDSV()
   {
-    _device->GetImmContext()->ClearDepthStencilView(_backBuffer->mainDSV.Get(),
-                                                    D3D11_CLEAR_DEPTH, 1.f, 0);
+    _device->GetImmContext()->ClearDepthStencilView(
+        _backBuffer->mainDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+        1.f, 0);
   }
   void SetBlendOnEnable(BOOL blendEnable)
   {
@@ -178,5 +230,16 @@ public:
   {
     _device->GetImmContext()->OMSetDepthStencilState(
         _om->depthDisableStencilState.Get(), 1);
+  }
+
+  void SetStencilWrite()
+  {
+    _device->GetImmContext()->OMSetDepthStencilState(
+        _om->depthstencilWriteState.Get(), 1);
+  }
+  void SetStencilRead()
+  {
+    _device->GetImmContext()->OMSetDepthStencilState(
+        _om->depthstencilReadState.Get(), 1);
   }
 };
