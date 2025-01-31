@@ -44,6 +44,7 @@ public:
   void EnableDebugDraw();
   void DisableDebugDraw();
   BOOL GetDebugDrawFlag() { return _bDebugDrawFlag; };
+  void UpdateDebugDrawMatrix();
 #endif
 
 	void RegisterRigidBodyToWorld();
@@ -52,9 +53,15 @@ public:
 	void BeginOverlap(RigidbodyComponent* other);
   void EndOverlap(RigidbodyComponent* other);
 
-private:
+
+
   XMMATRIX offsetMatrix = Matrix::Identity;
-  XMMATRIX offsetInvMatrix = Matrix::Identity;
+  XMMATRIX debugDrawMatrix = Matrix::Identity;
+  XMVECTOR offsetScale = {1,1,1};
+  XMVECTOR offsetRotation = {0,0,0,1};
+  XMVECTOR offsetTranslation = {0,0,0};
+
+private:
 
   TransformComponent* GetTransformComponent();
   IRigidBody* _rigidbody = nullptr;

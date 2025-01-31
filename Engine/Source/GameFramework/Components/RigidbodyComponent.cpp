@@ -6,27 +6,23 @@
 #include "PhyjixWorld.h"
 
 void RigidbodyComponent::Initialize(
-    const DirectX::SimpleMath::Vector3& offsetTranslation,
+    const DirectX::SimpleMath::Vector3& _offsetTranslation,
     const DirectX::SimpleMath::Quaternion& offsetQuaternion,
     const DirectX::SimpleMath::Vector3& offsetSize, ColliderShape cShape,
     BOOL isStatic, BOOL isKinematic, IPhyjixWorld* world)
 {
   _world = world;
-  offsetMatrix = Matrix::CreateScale(offsetSize) *
-                 Matrix::CreateFromQuaternion(offsetQuaternion) *
-                 Matrix::CreateTranslation(offsetTranslation);
-  offsetInvMatrix = XMMatrixInverse(nullptr, offsetMatrix);
-
-
-  XMMATRIX offsetMat = offsetMatrix;
-  XMMATRIX worldMat = GetTransformComponent()->GetLocalTransform();
-  offsetMat = worldMat * offsetMat;
-  XMVECTOR pos, rot, scale;
-  XMMatrixDecompose(&scale,&rot,&pos,offsetMat);
-  _rigidbody =
-      _world->AddRigidBody(pos, scale,
+  _rigidbody = _world->AddRigidBody(_offsetTranslation, offsetQuaternion,
+                                    offsetSize,
                                     cShape, isStatic,
                                     isKinematic);
+  offsetScale = offsetSize;
+  offsetRotation = offsetQuaternion;
+  offsetTranslation = _offsetTranslation;
+  offsetMatrix = XMMatrixScalingFromVector(offsetScale) *
+                 XMMatrixRotationQuaternion(offsetRotation) *
+                 XMMatrixTranslationFromVector(offsetTranslation);
+
   RegisterRigidBodyToWorld();
 }
 
@@ -40,17 +36,8 @@ void RigidbodyComponent::SetOffsetTransform(const Vector3& offsetTranslation,
                                             const Quaternion& offsetQuaternion,
                                             const Vector3& offsetSize)
 {
-  XMMATRIX parentMatrix = GetTransformComponent()->GetGlobalTransform();
-  offsetMatrix = XMMatrixScalingFromVector(offsetSize) *
-                          XMMatrixRotationQuaternion(offsetQuaternion) *
-                          XMMatrixTranslationFromVector(offsetTranslation);
-  offsetInvMatrix = XMMatrixInverse(nullptr, offsetMatrix);
-  XMMATRIX WorldMatrix = parentMatrix * offsetMatrix;
 
-  XMVECTOR pos, rot, scale;
-  XMMatrixDecompose(&scale, &rot, &pos, WorldMatrix);
-
-  _rigidbody->SetWorldTransform(pos, rot);
+  _rigidbody->SetWorldTransform(offsetTranslation, offsetQuaternion);
 }
 
 
@@ -103,12 +90,10 @@ void RigidbodyComponent::DisableGravity()
 
 void RigidbodyComponent::UpdateFromTransform()
 {
-  XMMATRIX WorldMatrix =
-      GetTransformComponent()->GetGlobalTransform() * offsetMatrix;
-  XMVECTOR pos, rot, scale;
-  XMMatrixDecompose(&scale,&rot,&pos,WorldMatrix);
 
-  _rigidbody->SetWorldTransform(pos,rot);
+  _rigidbody->SetWorldTransform(
+      GetTransformComponent()->GetGlobalTranslation(),
+      GetTransformComponent()->GetGlobalQuaternion());
  // _prevTransform = _rigidbody->GetWorldTransform();
 
 
@@ -121,11 +106,10 @@ void RigidbodyComponent::UpdateToTransform()
   XMVECTOR _R = _rigidbody->GetWorldRotation();
   XMVECTOR _T = _rigidbody->GetWorldPosition();
 
-  XMMATRIX transform = XMMatrixScalingFromVector(_S) *
+  XMMATRIX transform = XMMatrixScalingFromVector(_S)*
                        XMMatrixRotationQuaternion(_R) *
                        XMMatrixTranslationFromVector(_T);
-  transform *= offsetInvMatrix;
-  GetTransformComponent()->SetLocalTransform(transform);
+  GetTransformComponent()->globalTransform =  transform;
 }
 
 void RigidbodyComponent::EnableDebugDraw()
@@ -136,6 +120,15 @@ void RigidbodyComponent::EnableDebugDraw()
 void RigidbodyComponent::DisableDebugDraw()
 {
   _bDebugDrawFlag = false;
+}
+
+void RigidbodyComponent::UpdateDebugDrawMatrix()
+{
+  debugDrawMatrix = XMMatrixScalingFromVector(offsetScale) *
+                    XMMatrixRotationQuaternion(
+                        GetTransformComponent()->GetGlobalQuaternion()) *
+                    XMMatrixTranslationFromVector(
+                        GetTransformComponent()->GetGlobalTranslation());
 }
 
 void RigidbodyComponent::RegisterRigidBodyToWorld() {
