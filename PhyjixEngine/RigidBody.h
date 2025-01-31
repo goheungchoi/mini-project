@@ -10,6 +10,8 @@ class RigidBody : public IRigidBody, public ICollisionEvent
 
 public:
    RigidBody(physx::PxPhysics* physics, const DirectX::SimpleMath::Vector3& position,
+            const DirectX::SimpleMath::Quaternion& rotation,
+
             const DirectX::SimpleMath::Vector3& size, ColliderShape shape,
             BOOL isStatic, BOOL isKinematic, PhyjixWorld* world);
   ~RigidBody();

@@ -2,13 +2,14 @@
 #include "RigidBody.h"
 RigidBody::RigidBody(physx::PxPhysics* physics,
                      const DirectX::SimpleMath::Vector3& position,
+                     const DirectX::SimpleMath::Quaternion& rotation,
                      const DirectX::SimpleMath::Vector3& size,
-                     ColliderShape cShape, BOOL isStatic, BOOL isKinematic,
+                     ColliderShape cShape, BOOL _isStatic, BOOL isKinematic,
                      PhyjixWorld* world)
 {
   _world = world;
   physx::PxTransform transform(PhyjixUtil::VecToPxVec(position));
-  isStatic = isStatic;
+  isStatic = _isStatic;
   if (!isStatic)
   {
     _actor = physics->createRigidDynamic(transform);
@@ -17,32 +18,24 @@ RigidBody::RigidBody(physx::PxPhysics* physics,
   }
   else
     _actor = physics->createRigidStatic(transform);
-
   shape = cShape;
-  physx::PxMaterial* material = physics->createMaterial(0.5f, 0.5f, 1.f);
+
+  physx::PxMaterial* material = physics->createMaterial(1.f, 0.f, 0.f);
   switch (cShape)
   {
   case ColliderShape::eCubeCollider:
     _defaultShape =
-        physics->createShape(physx::PxBoxGeometry(size.x, size.y, size.z),
-                             *material);
-    _nonElasticShape =
-        physics->createShape(physx::PxBoxGeometry(size.x, size.y, size.z),
-                             *material);
+        physics->createShape(physx::PxBoxGeometry(size.x, size.y, size.z), *material);
+    _defaultShape->setLocalPose(physx::PxTransform(PhyjixUtil::VecToPxVec(position),PhyjixUtil::VecToPxQuat(rotation)));
     break;
 
   case ColliderShape::eSphereCollider:
     _defaultShape = physics->createShape(
         physx::PxSphereGeometry(size.x), *physics->createMaterial(0.5f, 0.5f, 0.6f));
-    _nonElasticShape = physics->createShape(
-        physx::PxSphereGeometry(size.x), *physics->createMaterial(0.5f, 0.5f, 0.6f));
     break;
 
   case ColliderShape::eCapsuleCollider:
     _defaultShape =
-        physics->createShape(physx::PxCapsuleGeometry(size.x, size.y),
-                             *physics->createMaterial(0.5f, 0.5f, 0.6f));
-    _nonElasticShape =
         physics->createShape(physx::PxCapsuleGeometry(size.x, size.y),
                              *physics->createMaterial(0.5f, 0.5f, 0.6f));
     break;
@@ -56,8 +49,6 @@ RigidBody::~RigidBody()
 {
   if (_defaultShape)
     _defaultShape->release();
-  if (_nonElasticShape)
-    _nonElasticShape->release();
   if (_actor)
     _actor->release();
 }

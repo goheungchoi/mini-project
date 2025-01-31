@@ -10,6 +10,9 @@ Engine/*.filters
 # Assets
 Asset/*
 
+# Resources
+Library/Resource/*
+
 # User-specific files
 *.rsuser
 *.suo

@@ -45,7 +45,7 @@ Character::Character(World* world) : GameObject(world)
   // animator->SetState(state);
   // animator->AdjustAnimationPlaySpeed(0.1f);
 
-	body = world->CreateGameObject();
+	/*body = world->CreateGameObject();
   head = world->CreateGameObject();
   AddChildGameObject(body);
   AddChildGameObject(head);
@@ -66,7 +66,7 @@ Character::Character(World* world) : GameObject(world)
   headRigidBody->DisableGravity();
   headRigidBody->EnableDebugDraw();
   head->SetTranslation(0, 1.8f, 0);
-  head->SetScaling(0.2f, 0.2f, 0.2f);
+  head->SetScaling(0.2f, 0.2f, 0.2f);*/
 }
 
 Character::~Character() {

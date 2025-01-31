@@ -196,6 +196,8 @@
 		<ClInclude Include="Include\Core\Math\MathUtils.h" />
 		<ClInclude Include="Include\Core\Time\TimeSystem.h" />
 		<ClInclude Include="Include\Core\Types\AnimationData.h" />
+		<ClCompile Include="Include\Core\Types\Billboard.cpp" />
+		<ClInclude Include="Include\Core\Types\Billboard.h" />
 		<ClInclude Include="Include\Core\Types\BoneData.h" />
 		<ClInclude Include="Include\Core\Types\LightData.h" />
 		<ClInclude Include="Include\Core\Types\LightTypes.h" />
@@ -290,6 +292,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShaderModule.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShadowPass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\ResourceStorage.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\BillboardQuad.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Buffer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\ConstantBuffer.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\GeometryPrimitive.h" />

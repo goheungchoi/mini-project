@@ -10,7 +10,7 @@ void GameLevel::PrepareLevel()
   animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
   handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 
-  mapMeshHandle = LoadModel("Models\\Maps\\Museum\\Map_Museum.glb");
+  mapMeshHandle = LoadModel("Models\\Maps\\Map_001_Bar\\Map_001.glb");
 }
 
 void GameLevel::BeginLevel()

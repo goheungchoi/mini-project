@@ -19,6 +19,7 @@ public:
   void CreateDefaultGround() override;
 
   IRigidBody* AddRigidBody(const DirectX::SimpleMath::Vector3& position,
+                           const DirectX::SimpleMath::Quaternion& Rotation,
                            const DirectX::SimpleMath::Vector3& size,
                            ColliderShape shape, bool isStatic = false,
                            bool isKinematic = true) override;

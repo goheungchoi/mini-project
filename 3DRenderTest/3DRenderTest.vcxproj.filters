@@ -184,5 +184,8 @@
 		<ClCompile Include="Contents\AnimationStates\DeadState.cpp">
 			<Filter>Contents\AnimationStates</Filter>
 		</ClCompile>
+		<ClCompile Include="Contents\GameObjects\TestGameObject.cpp">
+			<Filter>Contents\GameObjects</Filter>
+		</ClCompile>
 	</ItemGroup>
 </Project>

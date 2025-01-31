@@ -17,6 +17,7 @@
 #include <stdexcept>
 #include <vector>
 #include <unordered_map>
+using namespace DirectX::SimpleMath;
 class com_exception : public std::exception
 {
 public:

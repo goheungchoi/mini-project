@@ -11,7 +11,8 @@
 
 Map::Map(World* world) : GameObject(world)
 {
-  animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
+  //animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
+  animTestHandle = LoadModel("Models\\Charactor\\Enemy\\untitled.fbx");
 
   grid = world->CreateGameObject<GridObject>();
   grid->CreateGrid(6, 6, 1.4f);
