@@ -44,6 +44,8 @@ bool D2DRenderer::Init(Device* device, SwapChain* swapChain,
   // Font 초기화
   _pFont = new Font;
 
+  Sprite::SetDevice(device);
+
   return true;
 }
 
@@ -171,7 +173,7 @@ void D2DRenderer::DrawLine(Color color, Vector2 startPt, Vector2 endPt,
 void D2DRenderer::CreateSprite(LPCSTR path, Vector2 pos)
 {
   // IMG 객체를 생성하고 반환
-  auto newSprite = _SpriteManager.GetSprite(path, _pDevice);
+  auto newSprite = _SpriteManager.GetSprite(path);
   newSprite->SetPos(pos);
 }
 

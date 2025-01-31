@@ -9,8 +9,8 @@
 #include "GameFramework/World/World.h"
 
 
-#include "Contents/Prototype/GridLevel.h"
-#include "Contents/Prototype/GameLevel.h"
+#include "Contents/Prototype/Grid/GridLevel.h"
+#include "Contents/Prototype/Game/GameLevel.h"
 #include "Contents/Levels/TestLevel.h"
 
 static GridLevel* gridLevel;
@@ -42,7 +42,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
 	_world->AddLevel(gridLevel);
   _world->AddLevel(testLevel);
   _world->AddLevel(gameLevel);
-  _world->PrepareChangeLevel(testLevel->name);
+  _world->PrepareChangeLevel(gameLevel->name);
   _world->CommitLevelChange();
 }
 
@@ -64,16 +64,14 @@ void GameApp::ProcessInput(float dt)
 
 void GameApp::FixedUpdate(float fixedRate)
 {
- // _world->FixedUpdate(fixedRate);
- // _world->PhysicsUpdate(fixedRate);
 }
 
 void GameApp::Update(float dt)
 {
   _world->ProcessInput(dt);
   _world->PreUpdate(dt);
-  _world->Update(dt);
   _world->AnimationUpdate(dt);
+  _world->Update(dt);
   _world->PostUpdate(dt);
 }
 

@@ -3,16 +3,16 @@
 #include "../Device.h"
 #include "../Objects/Swapchain.h"
 #include "../RenderFrameworks/DeferredPass.h"
+#include "../RenderFrameworks/PostProcess/OutLinePass.h"
 #include "../RenderFrameworks/Shader.h"
 #include "../RenderFrameworks/ShadowPass.h"
-#include "../RenderFrameworks/PostProcess/OutLinePass.h"
 #include "../Resources/ConstantBuffer.h"
 #include "../Resources/GeometryPrimitive.h"
 #include "../Resources/PipeLineState.h"
 #include "../Resources/Sampler.h"
 #include "../Resources/SkyBox.h"
-#include "Core/Types/RenderType.h"
 #include "Core/Common.h"
+#include "Core/Types/RenderType.h"
 using namespace RenderMesh;
 namespace Renderer
 {
@@ -124,7 +124,7 @@ public:
     SAFE_RELEASE(_skyBox);
     SAFE_RELEASE(_geometry);
   }
-  
+
 public:
   void SetCamera(Vector4 eye, Matrix view, Matrix projection)
   {
@@ -132,14 +132,10 @@ public:
     _camera.projection = projection;
     _camera.eye = eye;
   }
-  void SetMainLightDir(DirectionalLight mainLight)
-  {
-    _mainLight = mainLight;
-  }
- 
-  void ClassifyPass(MeshBuffer* buff, Matrix world,
-                    vector<XMMATRIX> boneMatrix,
-                    RenderTypeFlags flags)
+  void SetMainLightDir(DirectionalLight mainLight) { _mainLight = mainLight; }
+
+  void ClassifyPass(MeshBuffer* buff, Matrix world, vector<XMMATRIX> boneMatrix,
+                    RenderTypeFlags flags, Color outlineColor)
   {
     if (boneMatrix.empty())
     {
@@ -164,7 +160,7 @@ public:
             Vector4::Transform(worldPos, _camera.view); // 뷰 공간으로 변환
         float viewZ = viewPos.z; // 뷰 공간 Z값 추출
         if (!buff->material->doubleSided)
-          _staticTransMeshes[0].insert({{viewZ, max},mesh});
+          _staticTransMeshes[0].insert({{viewZ, max}, mesh});
         else
           _staticTransMeshes[1].insert({{viewZ, max}, mesh});
 
@@ -218,7 +214,6 @@ public:
       }
     }
 
-    //NOTE : renderflags 확인해서 outline 처리해주기.
     if (flags & RenderType::kOutline)
     {
       if (boneMatrix.empty())
@@ -226,6 +221,7 @@ public:
         StaticMesh mesh;
         mesh.buffer = buff;
         mesh.world = world;
+        mesh.outlineColor = outlineColor;
         _outLine->_staticMesh.push_back(mesh);
       }
       else
@@ -234,6 +230,7 @@ public:
         mesh.buffer = buff;
         mesh.world = world;
         mesh.boneMatrix = boneMatrix;
+        mesh.outlineColor = outlineColor;
         _outLine->_skelMesh.push_back(mesh);
       }
     }
@@ -325,17 +322,17 @@ public:
     _vShaders.insert(
         {"Shadow", _compiler->CompileVertexShader(macros, "shadow_vs_main")});
     macros.clear();
-    macros = {{"Shadow", "1"}, {"Skinning", "1"} ,{nullptr, nullptr}};
-    _vShaders.insert(
-        {"SkinningShadow", _compiler->CompileVertexShader(macros, "shadow_vs_main")});
+    macros = {{"Shadow", "1"}, {"Skinning", "1"}, {nullptr, nullptr}};
+    _vShaders.insert({"SkinningShadow", _compiler->CompileVertexShader(
+                                            macros, "shadow_vs_main")});
     macros.clear();
     macros = {{"OutLine", "1"}, {nullptr, nullptr}};
     _vShaders.insert({"StaticOutLine", _compiler->CompileVertexShader(
-                                            macros, "outline_vs_main")});
+                                           macros, "outline_vs_main")});
     macros.clear();
     macros = {{"OutLine", "1"}, {"Skinning", "1"}, {nullptr, nullptr}};
     _vShaders.insert({"SkinningOutLine", _compiler->CompileVertexShader(
-                                            macros, "outline_vs_main")});
+                                             macros, "outline_vs_main")});
     // ps
     macros = {{"Deffered", "1"}, {nullptr, nullptr}};
     _pShaders.insert(
@@ -360,8 +357,8 @@ public:
 #endif
     macros.clear();
     macros = {{"OutLine", "1"}, {nullptr, nullptr}};
-    _pShaders.insert({"OutLine", _compiler->CompilePixelShader(
-                                       macros, "outline_ps_main")});
+    _pShaders.insert(
+        {"OutLine", _compiler->CompilePixelShader(macros, "outline_ps_main")});
   }
   void CreateSamplers()
   {
@@ -472,7 +469,7 @@ private:
     dc->IASetIndexBuffer(_geometry->box.buffer->indexBuffer.Get(),
                          DXGI_FORMAT_R32_UINT, 0);
     std::ranges::for_each(_boxes, [this, dc](const auto& pair) {
-      const auto& [first, second] = pair; 
+      const auto& [first, second] = pair;
       Constant::World world = {first.Transpose()};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
       Constant::PixelData data = {.albedoFactor = second};
@@ -646,8 +643,7 @@ private:
     dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
     std::ranges::for_each(_skelOpaqueMesh[0], [this, dc](SkelMesh mesh) {
       Constant::BoneMatrix boneMat = {};
-      std::copy(mesh.boneMatrix.begin(), mesh.boneMatrix.end(),
-                boneMat.matrix);
+      std::copy(mesh.boneMatrix.begin(), mesh.boneMatrix.end(), boneMat.matrix);
 
       _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
       dc->VSSetShaderResources(15, 1, mesh.buffer->boneIDSrv.GetAddressOf());
@@ -737,7 +733,7 @@ private:
     dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
     std::ranges::for_each(_staticTransMeshes[0], [this, dc](const auto& iter) {
       const auto& [z, mesh] = iter;
-      
+
       dc->IASetVertexBuffers(0, 1, mesh.buffer->vertexBuffer.GetAddressOf(),
                              &(mesh.buffer->stride), &(mesh.buffer->offset));
       dc->IASetIndexBuffer(mesh.buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
@@ -829,7 +825,7 @@ private:
       dc->DrawIndexed(mesh.buffer->nIndices, 0, 0);
     });
   }
-  
+
   void DrawOutline(ID3D11DeviceContext* dc)
   {
     // write stencil only nead vertex shader

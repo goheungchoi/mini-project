@@ -79,4 +79,4 @@ private:
   bool _handleOut = false;
 };
 
-#define Input (*InputSystem::GetInstance())
+#define INPUT (*InputSystem::GetInstance())

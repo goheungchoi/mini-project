@@ -172,11 +172,11 @@ void Map::OnAwake() {
 }
 
 void Map::Update(float dt) {
-  if (Input.IsKeyPress(Key::Q))
+  if (INPUT.IsKeyPress(Key::Q))
   {
     parent->RotateAroundYAxis(dt);
   }
-  if (Input.IsKeyPress(Key::E))
+  if (INPUT.IsKeyPress(Key::E))
   {
     parent->RotateAroundYAxis(-dt);
   }
@@ -185,7 +185,7 @@ void Map::Update(float dt) {
   {
     if (isActionTriggered)
     {
-      if (Input.IsKeyPress(Key::R))
+      if (INPUT.IsKeyPress(Key::R))
       {
         ResetGame();
       }
@@ -202,21 +202,21 @@ void Map::Update(float dt) {
 		TranslatePlaceholder();
     
 		// Cancel placement mode.
-		if (Input.IsKeyDown(Key::Escape))
+		if (INPUT.IsKeyDown(Key::Escape))
     {
       TurnOffPlacementMode();
       return;
 		}
 
 		// Change the direction of the placeholder.
-    if (Input.IsKeyDown(Key::Tab))
+    if (INPUT.IsKeyDown(Key::Tab))
     {
       uint32_t dir = placeholder->GetDirection();
       placeholder->SetDirection((Direction)((dir + 1) % kNumDirections));
 		}
 
 		// Place the character.
-		if (Input.IsKeyDown(MouseState::LB))
+		if (INPUT.IsKeyDown(MouseState::LB))
     {
       if (grid->selectedCell)
       {
@@ -233,30 +233,30 @@ void Map::Update(float dt) {
 	}
   else
   {
-    if (Input.IsKeyPress(Key::D1))
+    if (INPUT.IsKeyPress(Key::D1))
     {
       TurnOnPlacementMode(kBrawler);
       return;
-		}
+    }
 
-		if (Input.IsKeyPress(Key::D2))
+    if (INPUT.IsKeyPress(Key::D2))
     {
       TurnOnPlacementMode(kSlasher);
       return;
     }
 
-		if (Input.IsKeyPress(Key::D3))
+    if (INPUT.IsKeyPress(Key::D3))
     {
       TurnOnPlacementMode(kGunman);
       return;
     }
 
-    if (Input.IsKeyPress(Key::Space))
+    if (INPUT.IsKeyPress(Key::Space))
     {
       TriggerAction();
       return;
     }
-	}
+  }
 }
 
 XMVECTOR Map::GetCursorPosition() const
@@ -265,8 +265,8 @@ XMVECTOR Map::GetCursorPosition() const
   // y = 0, intersection between mouse pointer ray and p = (x, 0, z), n =
   // (0, 1, 0) plane. The placeholder character is translated to the
   // intersection point.
-  Vector2 mousePos{(float)Input.GetCurrMouseState().x,
-                   (float)Input.GetCurrMouseState().y};
+  Vector2 mousePos{(float)INPUT.GetCurrMouseState().x,
+                   (float)INPUT.GetCurrMouseState().y};
   Ray cursorRay = world->GetScreenCursorRay(mousePos);
   Plane xzPlane{{0, 0, 0}, {0, 1, 0}};
 
