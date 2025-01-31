@@ -22,7 +22,7 @@
 #endif
 
 #include "GameFramework/UI/Canvas/Canvas.h"
-// #define USED2D
+#define USED2D
 
 void World::Initialize(HWND hwnd, const std::wstring& title)
 {
@@ -40,7 +40,7 @@ void World::Initialize(HWND hwnd, const std::wstring& title)
   _phyjixWorld->CreateDefaultGround();
   _phyjixWorld->CreateRay(
       _defaultCamera->GetPosition(),
-      Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
+      Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
       _defaultCamera->GetViewTransform(), _defaultCamera->GetProjectionMatrix(),
       Vector2(kScreenWidth, kScreenHeight));
 
@@ -412,7 +412,7 @@ void World::ProcessInput(float dt)
 {
   InputSystem::GetInstance()->Update(dt);
 
-  if (Input.IsKeyDown(MouseState::LB))
+  if (INPUT.IsKeyDown(MouseState::LB))
   {
     _phyjixWorld->LeftClick();
   }
@@ -454,7 +454,7 @@ void World::Update(float dt)
   // phjix simulate
   _phyjixWorld->UpdateRay(
       _defaultCamera->GetPosition(),
-      Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
+      Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
       _defaultCamera->GetViewTransform(), _defaultCamera->GetProjectionMatrix(),
       Vector2(kScreenWidth, kScreenHeight));
   _phyjixWorld->CastRay();

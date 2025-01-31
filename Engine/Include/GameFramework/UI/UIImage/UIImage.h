@@ -8,7 +8,7 @@ public:
   virtual ~UIImage();
 
 public:
-  void SetSprite(std::wstring path);
+  void SetSprite(LPCSTR path);
   void SetSprite(class Sprite* sprite) { sprite = _sprite; }
 
   void SetOpacity(float opacity) { opacity = _opacity; }

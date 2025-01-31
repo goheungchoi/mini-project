@@ -151,8 +151,8 @@ void GridObject::FindHoveredCell()
 {
   bool anyHover{false};
 
-  Vector2 mousePos{(float)Input.GetCurrMouseState().x,
-                   (float)Input.GetCurrMouseState().y};
+  Vector2 mousePos{(float)INPUT.GetCurrMouseState().x,
+                   (float)INPUT.GetCurrMouseState().y};
   Ray cursorRay = world->GetScreenCursorRay(mousePos);
   float t;
   for (auto* cell : grid)

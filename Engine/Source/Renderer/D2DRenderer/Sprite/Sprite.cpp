@@ -2,10 +2,11 @@
 #include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/Resources/Material.h"
 
-Sprite::Sprite(LPCSTR path, Device* pDevice)
+Device* Sprite::_pDevice = nullptr;
+
+Sprite::Sprite(LPCSTR path)
 {
   _path = path;
-  _pDevice = pDevice;
 
   Init(path);
 }
@@ -83,7 +84,7 @@ SpriteManager* SpriteManager::GetInstance()
   return m_pInstance;
 }
 
-std::shared_ptr<Sprite> SpriteManager::GetSprite(LPCSTR path, Device* pDevice)
+std::shared_ptr<Sprite> SpriteManager::GetSprite(LPCSTR path)
 {
   auto it = _spritePool.find(path);
   if (it != _spritePool.end())
@@ -92,7 +93,7 @@ std::shared_ptr<Sprite> SpriteManager::GetSprite(LPCSTR path, Device* pDevice)
   }
   else
   {
-    auto newSprite = std::make_shared<Sprite>(path, pDevice);
+    auto newSprite = std::make_shared<Sprite>(path);
     _spritePool[path] = newSprite;
     return newSprite;
   }
