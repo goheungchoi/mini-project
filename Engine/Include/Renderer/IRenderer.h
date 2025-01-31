@@ -2,6 +2,7 @@
 #include "Core/Common.h"
 #include "Core/Handle/ResourceHandle.h"
 #include "Core/Types/LightTypes.h"
+#include "Core/Types/Billboard.h"
 #include "Core/Types/RenderType.h"
 using namespace std;
 /**
@@ -49,6 +50,7 @@ public:
                         Color outlineColor = Color(1.f, 1.f, 0.f, 1.f),
                         vector<DirectX::XMMATRIX> boneTransforms =
                             vector<DirectX::XMMATRIX>()) = 0;
+  //virtual void DrawBillboard()
   /**
    * @brief still working on it....
    */
@@ -96,6 +98,7 @@ public:
    * @brief About Particle
    */
   virtual void CreateParticle() = 0;
+  virtual void CreateBillboard(Billboard* billboard) = 0;
   /**
    * @brief About Particle
    */

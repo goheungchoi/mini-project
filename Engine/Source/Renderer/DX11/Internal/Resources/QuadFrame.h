@@ -40,6 +40,7 @@ public:
         DirectX::SimpleMath::Vector4(-1.0f, -1.0f, 0.0f, 1.0f); // Bottom left
     vertices[3].position =
         DirectX::SimpleMath::Vector4(1.0f, -1.0f, 0.0f, 1.0f); // Bottom right
+    
     vertices[0].uv = DirectX::SimpleMath::Vector2(0.0f, 0.0f); // Top left
     vertices[1].uv = DirectX::SimpleMath::Vector2(1.0f, 0.0f); // Top right
     vertices[2].uv = DirectX::SimpleMath::Vector2(0.0f, 1.0f); // Bottom left

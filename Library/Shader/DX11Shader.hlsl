@@ -66,7 +66,7 @@ cbuffer PixelData : register(b3)
 
 cbuffer BoneMatrix : register(b4)
 {
-    Matrix boneMatrix[256];
+    Matrix boneMatrix[512];
 }
 
 struct VS_INPUT
@@ -257,10 +257,7 @@ DEFFERED_PS_OUT ps_main(PS_INPUT input)
     float depth = input.position.z;
     float4 albedo = texAlbedo.Sample(samLinear, input.uv);
     clip(albedo.a - alphaCutoff);
-    if (albedo.x == 0)
-    {
-        albedo = albedoFactor;
-    }
+
     output.AlbedoDepth.xyz = albedo;
     output.AlbedoDepth.a = depth;
     output.ShadowPosition = input.positionShadow / input.positionShadow.w;
@@ -364,10 +361,6 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
 {
     float3 albedo = texAlbedo.Sample(samLinear, input.uv).xyz;
     albedo = pow(albedo, 2.2);
-    if (length(albedo) == 0.f)
-    {
-        albedo = albedoFactor.rgb;
-    }
     //gamma correction
     float4 metallRoughColor = texMetallicRoughness.Sample(samAnisotropy, input.uv);
     float metallic = metallRoughColor.r;

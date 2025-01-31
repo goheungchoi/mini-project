@@ -12,6 +12,7 @@
 #include "GameFramework/Components/SkeletalMeshComponent.h"
 #include "GameFramework/Components/TransformComponent.h"
 #include "GameFramework/Components/RigidbodyComponent.h"
+#include "GameFramework/Components/BillboardComponent.h"
 
 class GameObject
 {
