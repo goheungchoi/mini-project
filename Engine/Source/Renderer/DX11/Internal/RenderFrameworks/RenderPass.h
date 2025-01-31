@@ -853,6 +853,16 @@ private:
   }
   void Clear()
   {
+    // Transparent meshes
+    for (auto& m : _staticTransMeshes)
+    {
+      m.clear();
+    }
+
+    for (auto& m : _skelTransMeshes)
+    {
+      m.clear();
+    }
     // Opaque meshes
     for (auto& meshes : _staticOpaqueMesh)
     {
