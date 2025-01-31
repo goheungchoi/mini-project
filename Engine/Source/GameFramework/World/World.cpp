@@ -615,6 +615,9 @@ void World::RenderGameObjects()
     }
   }
 #ifdef _DEBUG
+
+  _renderer->DrawDebugBox(XMMatrixScalingFromVector({10, 0.001f, 10}),
+                          Color(1, 0, 1));
   for (auto object : _currentLevel->GetGameObjectList())
   {
     if (auto rigidbody = object->GetComponent<RigidbodyComponent>())
@@ -622,14 +625,16 @@ void World::RenderGameObjects()
       auto transform = object->GetComponent<TransformComponent>();
       if (rigidbody->GetDebugDrawFlag())
       {
+        rigidbody->UpdateDebugDrawMatrix();
+        XMMATRIX offsetMat = rigidbody->debugDrawMatrix;
         switch (rigidbody->GetRigidBody()->GetColliderShapeType())
         {
         case ColliderShape::eCubeCollider:
-          _renderer->DrawDebugBox(transform->GetGlobalTransform(),
+          _renderer->DrawDebugBox(offsetMat,
                                   Color(1, 0, 1));
           break;
         case ColliderShape::eSphereCollider:
-          _renderer->DrawDebugSphere(transform->GetGlobalTransform(),
+          _renderer->DrawDebugSphere(offsetMat,
                                      Color(1, 0, 1));
           break;
         default:

@@ -51,11 +51,12 @@ PhyjixWorld::~PhyjixWorld()
 
 IRigidBody* PhyjixWorld::AddRigidBody(
     const DirectX::SimpleMath::Vector3& position,
+    const DirectX::SimpleMath::Quaternion& rotation,
     const DirectX::SimpleMath::Vector3& size, ColliderShape cShape,
     bool isStatic, bool isKinematic)
 {
-  IRigidBody* physxbody = new RigidBody(_physics, position, size, cShape,
-                                        isStatic, isKinematic, this);
+  IRigidBody* physxbody = new RigidBody(_physics, position, rotation, size,
+                                        cShape, isStatic, isKinematic, this);
 
   _scene->addActor(*(static_cast<RigidBody*>(physxbody)->_actor));
   return physxbody;
@@ -187,10 +188,12 @@ void PhyjixWorld::UpdateRay(DirectX::SimpleMath::Vector3 camerapos,
 
 void PhyjixWorld::CreateDefaultGround()
 {
-  mMaterial = _physics->createMaterial(0.5f, 0.5f, 0.f);
+  mMaterial = _physics->createMaterial(0.5f, 0.f, 0.f);
   groundPlane =
-      PxCreatePlane(*_physics, physx::PxPlane(0, 1, 0, 1), *mMaterial);
-  groundrigidbody = new RigidBody(_physics,{0, 0, 0}, {1, 1, 1}, ColliderShape::eCubeCollider, true, false,this);
+      PxCreatePlane(*_physics, physx::PxPlane(0, 1, 0, 1.35f), *mMaterial);
+  groundrigidbody =
+      new RigidBody(_physics, {0, 0, 0}, {0, 0, 0, 1}, {1, 1, 1},
+                    ColliderShape::eCubeCollider, true, false, this);
   groundPlane->userData = groundrigidbody;
   groundrigidbody->_actor = groundPlane;
   _scene->addActor(*groundrigidbody->_actor);

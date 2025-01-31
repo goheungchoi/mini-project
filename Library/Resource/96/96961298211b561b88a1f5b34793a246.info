@@ -1,0 +1,294 @@
+{
+    "uuid": "96961298211b561b88a1f5b34793a246",
+    "import_path": "Models\\Maps\\MuseumCamera\\Map_Museum_camera.glb",
+    "resource_type": "model",
+    "details": {
+        "name": "Scene",
+        "nodes": [
+            {
+                "name": "ROOT",
+                "idx": 0,
+                "level": 0,
+                "parent": -1,
+                "first_child": 1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "Arch001",
+                "idx": 1,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 2,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0260.mesh"
+                ]
+            },
+            {
+                "name": "Arch002",
+                "idx": 2,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 3,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0270.mesh"
+                ]
+            },
+            {
+                "name": "Cell001.001",
+                "idx": 3,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 4,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0280.mesh"
+                ]
+            },
+            {
+                "name": "Column002",
+                "idx": 4,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 5,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0290.mesh"
+                ]
+            },
+            {
+                "name": "Column_low",
+                "idx": 5,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 6,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0300.mesh"
+                ]
+            },
+            {
+                "name": "Cube.030",
+                "idx": 6,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 7,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0310.mesh"
+                ]
+            },
+            {
+                "name": "Floor",
+                "idx": 7,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 8,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0320.mesh"
+                ]
+            },
+            {
+                "name": "Paint",
+                "idx": 8,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 9,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0330.mesh"
+                ]
+            },
+            {
+                "name": "RetopoFlow",
+                "idx": 9,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 10,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\RetopoFlow.0020.mesh"
+                ]
+            },
+            {
+                "name": "Stand",
+                "idx": 10,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 11,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0340.mesh"
+                ]
+            },
+            {
+                "name": "Wall",
+                "idx": 11,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 12,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0350.mesh"
+                ]
+            },
+            {
+                "name": "WallArch001",
+                "idx": 12,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 13,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0360.mesh"
+                ]
+            },
+            {
+                "name": "WallArch002",
+                "idx": 13,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 14,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0370.mesh"
+                ]
+            },
+            {
+                "name": "WallT",
+                "idx": 14,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 15,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0380.mesh"
+                ]
+            },
+            {
+                "name": "Window_low",
+                "idx": 15,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 16,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0390.mesh"
+                ]
+            },
+            {
+                "name": "Window_low.001",
+                "idx": 16,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 17,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0400.mesh"
+                ]
+            },
+            {
+                "name": "Cylinder.009",
+                "idx": 17,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 18,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cylinder.0020.mesh"
+                ]
+            },
+            {
+                "name": "Circle",
+                "idx": 18,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 19,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Circle.0020.mesh"
+                ]
+            },
+            {
+                "name": "Cube.007",
+                "idx": 19,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 20,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0050.mesh"
+                ]
+            },
+            {
+                "name": "Cube",
+                "idx": 20,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": [
+                    "Models\\Maps\\MuseumCamera\\Cube.0040.mesh"
+                ]
+            }
+        ],
+        "meshes": [
+            "Models\\Maps\\MuseumCamera\\Cube.0310.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0260.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0300.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0270.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0280.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0290.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0320.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0330.mesh",
+            "Models\\Maps\\MuseumCamera\\RetopoFlow.0020.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0340.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0350.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0360.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0370.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0380.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0390.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0400.mesh",
+            "Models\\Maps\\MuseumCamera\\Cylinder.0020.mesh",
+            "Models\\Maps\\MuseumCamera\\Circle.0020.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0050.mesh",
+            "Models\\Maps\\MuseumCamera\\Cube.0040.mesh"
+        ],
+        "materials": [
+            "Models\\Maps\\MuseumCamera\\wall.0020.mat",
+            "Models\\Maps\\MuseumCamera\\wall.0021.mat",
+            "Models\\Maps\\MuseumCamera\\wall.0022.mat",
+            "Models\\Maps\\MuseumCamera\\wall.0023.mat",
+            "Models\\Maps\\MuseumCamera\\Moum.0020.mat",
+            "Models\\Maps\\MuseumCamera\\Material.0090.mat",
+            "Models\\Maps\\MuseumCamera\\Moum.0022.mat",
+            "Models\\Maps\\MuseumCamera\\MuseumTile.0020.mat",
+            "Models\\Maps\\MuseumCamera\\wall.0024.mat",
+            "Models\\Maps\\MuseumCamera\\Moum.0021.mat",
+            "Models\\Maps\\MuseumCamera\\Moum.0023.mat",
+            "Models\\Maps\\MuseumCamera\\wall.0025.mat",
+            "Models\\Maps\\MuseumCamera\\wall.0026.mat",
+            "Models\\Maps\\MuseumCamera\\wall.0027.mat",
+            "Models\\Maps\\MuseumCamera\\Moum.0024.mat",
+            "Models\\Maps\\MuseumCamera\\Moum.0025.mat",
+            "Models\\Maps\\MuseumCamera\\Moum.0026.mat",
+            "Models\\Maps\\MuseumCamera\\Material.0070.mat",
+            "Models\\Maps\\MuseumCamera\\Material.0071.mat",
+            "Models\\Maps\\MuseumCamera\\Material.0080.mat"
+        ],
+        "textures": [
+            "Models\\Maps\\MuseumCamera\\*0",
+            "Models\\Maps\\MuseumCamera\\*1",
+            "Models\\Maps\\MuseumCamera\\*2",
+            "Models\\Maps\\MuseumCamera\\*3",
+            "Models\\Maps\\MuseumCamera\\*4",
+            "Models\\Maps\\MuseumCamera\\*5",
+            "Models\\Maps\\MuseumCamera\\*6",
+            "Models\\Maps\\MuseumCamera\\*7",
+            "Models\\Maps\\MuseumCamera\\*8"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "uuid": "9d02fe6afbcd5955939370efc34011a8",
+    "import_path": "Models\\Maps\\MuseumCamera\\Cube.0390.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Cube.0390",
+        "bounding_box": [
+            [
+                -0.16017058491706848,
+                -0.10266904532909393,
+                -1.0712614059448242
+            ],
+            [
+                0.14979709684848785,
+                3.6738452911376953,
+                1.0712623596191406
+            ]
+        ],
+        "num_vertices": 412,
+        "num_indices": 1236,
+        "material": "Models\\Maps\\MuseumCamera\\Moum.0025.mat",
+        "num_bones": 0
+    }
+}
