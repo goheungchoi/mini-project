@@ -10,7 +10,7 @@ Bullet::Bullet(World* world) : GameObject(world)
   // Create a hand gun game object.
   auto* rigidBody = CreateComponent<RigidbodyComponent>();
   rigidBody->Initialize({0, 0, 0}, {1.f, 1.f, 1.f},
-                            ColliderShape::eCubeCollider, true, false,
+                            ColliderShape::eCubeCollider, false, false,
                             world->_phyjixWorld);
   rigidBody->EnableDebugDraw();
 }

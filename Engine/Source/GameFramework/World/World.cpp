@@ -317,17 +317,17 @@ void World::RegisterRigidBodyComponent(RigidbodyComponent* rigidBody) {
   {
     other->SetCollisionEvent(
         rigidBody->GetRigidBody(), eCollisionEventType::eCollisionEnter,
-        [&]() { other->BeginOverlap(rigidBody); });
+        [=]() { other->BeginOverlap(rigidBody); });
     other->SetCollisionEvent(rigidBody->GetRigidBody(),
                              eCollisionEventType::eCollisionExit,
-                             [&]() { other->EndOverlap(rigidBody); });
+                             [=]() { other->EndOverlap(rigidBody); });
 
 		rigidBody->SetCollisionEvent(other->GetRigidBody(),
                              eCollisionEventType::eCollisionEnter,
-                                 [&]() { rigidBody->BeginOverlap(other); });
+                                 [=]() { rigidBody->BeginOverlap(other); });
     rigidBody->SetCollisionEvent(other->GetRigidBody(),
                              eCollisionEventType::eCollisionExit,
-                                 [&]() { rigidBody->EndOverlap(other); });
+                                 [=]() { rigidBody->EndOverlap(other); });
 	}
 
 	rigidBodyComponents.push_back(rigidBody);
@@ -583,10 +583,8 @@ void World::RenderGameObjects() {
       const auto& transform = gameObject->GetWorldTransform();
       for (auto handle : meshComp->GetSubMeshes())
       {
-        // NOTE : ADD draw mesh -> flag
-        RenderTypeFlags flag = 0;
         // _renderer->BeginDraw(handle, transform);
-        _renderer->DrawMesh(handle, transform,flag);
+        _renderer->DrawMesh(handle, transform, meshComp->renderTypeFlags);
 			}
     }
     // Draw skeletal mesh
@@ -597,10 +595,8 @@ void World::RenderGameObjects() {
       // const auto& transform = skeletalMeshComp->rootBone->GetGlobalTransform();
       // _renderer->BeginDraw(handle, transform);
       // outline test 
-      // NOTE : ADD draw mesh -> flag
-      RenderTypeFlags flag = 0;
-      flag |= RenderType::kOutline;
-      _renderer->DrawMesh(handle, XMMatrixIdentity(),flag,
+      _renderer->DrawMesh(handle, XMMatrixIdentity(),
+                          skeletalMeshComp->renderTypeFlags,
                           skeletalMeshComp->boneTransforms);
     }
   }
