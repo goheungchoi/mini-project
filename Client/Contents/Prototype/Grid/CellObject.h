@@ -29,6 +29,8 @@ public:
   int w{-1}, h{-1};
   BoundingOrientedBox obb{{0, 0, 0}, {0.5, 0.0005f, 0.5}, {0, 0, 0, 1.f}};
 
+  bool isVisible {false};
+
   CellObject(World* world);
   ~CellObject();
 

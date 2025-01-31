@@ -5,11 +5,11 @@
 Bullet::Bullet(World* world) : GameObject(world)
 {
 	// Set a tag
-  SetGameObjectTag("bullet");
+  SetGameObjectTag("weapon");
 
   // Create a hand gun game object.
   auto* rigidBody = CreateComponent<RigidbodyComponent>();
-  rigidBody->Initialize({0, 0, 0}, {1.f, 1.f, 1.f},
+  rigidBody->Initialize({0, 0, 0}, Quaternion::Identity, {1.f, 1.f, 1.f},
                             ColliderShape::eCubeCollider, false, false,
                             world->_phyjixWorld);
   rigidBody->EnableDebugDraw();

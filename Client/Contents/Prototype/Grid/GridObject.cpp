@@ -129,10 +129,13 @@ std::pair<float, float> GridObject::GetActualPositionAt(uint32_t w, uint32_t h)
 void GridObject::TurnOnSelectionMode() {
   isSelectionMode = true;
 
-	for (auto* cell : grid)
+  for (uint32_t i = 0; i < grid.size(); ++i)
   {
-    cell->SetVisible();
-	}
+    if (!placements[i])
+    {
+      grid[i]->SetVisible();
+    }
+  }
 }
 
 void GridObject::TurnOffSelectionMode() {
@@ -159,7 +162,8 @@ void GridObject::FindHoveredCell()
   {
     BoundingOrientedBox obb;
     cell->obb.Transform(obb, cell->transform->GetGlobalTransform());
-    if (!anyHover && obb.Intersects(cursorRay.position, cursorRay.direction, t))
+    if (cell->isVisible && !anyHover &&
+        obb.Intersects(cursorRay.position, cursorRay.direction, t))
     {
       cell->SetCellType(CellType_Red);
       selectedCell = cell;
@@ -168,7 +172,7 @@ void GridObject::FindHoveredCell()
     else
     {
       cell->SetCellType(CellType_Green);
-		}
+    }
   }
 
 	if (!anyHover)

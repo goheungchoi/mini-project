@@ -361,22 +361,27 @@ void World::InitialStage()
     {
       // Awake the game objects and activate it.
       UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
-        object->OnAwake();
-        object->OnActivated();
-        object->isActive = true;
-        object->status = EStatus_Active;
-        object->bShouldActivate = false;
+        if (object->status == EStatus_Awake && object->bShouldActivate)
+        {
+          object->OnAwake();
+          object->OnActivated();
+          object->isActive = true;
+          object->status = EStatus_Active;
+          object->bShouldActivate = false;        }
       });
     }
 
     if (gameObject->status == EStatus_Inactive && gameObject->bShouldActivate)
     {
       UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
-        // Activate the game object.
-        object->OnActivated();
-        object->isActive = true;
-        object->status = EStatus_Active;
-        object->bShouldActivate = false;
+        if (object->status == EStatus_Inactive && object->bShouldActivate)
+        {
+          // Activate the game object.
+          object->OnActivated();
+          object->isActive = true;
+          object->status = EStatus_Active;
+          object->bShouldActivate = false;
+        }
       });
     }
   }
@@ -445,11 +450,11 @@ void World::Update(float dt)
     gameObject->Update(dt);
   }
 
-  ////Rigidbody updatefromtransform
-  // for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
-  //{
-  //   component->UpdateFromTransform();
-  // }
+  //Rigidbody updatefromtransform
+  for (RigidbodyComponent* component : rigidBodyComponents)
+  {
+    component->UpdateFromTransform();
+  }
 
   // phjix simulate
   _phyjixWorld->UpdateRay(
