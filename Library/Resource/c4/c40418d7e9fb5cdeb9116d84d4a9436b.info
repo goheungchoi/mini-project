@@ -1,0 +1,24 @@
+{
+    "uuid": "c40418d7e9fb5cdeb9116d84d4a9436b",
+    "import_path": "Models\\Maps\\Museum\\Cube.0020.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Cube.0020",
+        "bounding_box": [
+            [
+                -1.3282660245895386,
+                4.921807885693852e-07,
+                -0.36541295051574707
+            ],
+            [
+                1.3282660245895386,
+                3.5196335315704346,
+                7.840924354240997e-07
+            ]
+        ],
+        "num_vertices": 208,
+        "num_indices": 672,
+        "material": "Models\\Maps\\Museum\\wall.0011.mat",
+        "num_bones": 0
+    }
+}

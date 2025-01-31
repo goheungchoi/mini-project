@@ -1,0 +1,242 @@
+{
+    "uuid": "e53a3ca7efcd5e1ca9e44a9454606f70",
+    "import_path": "Models\\Maps\\Map_Museum.glb",
+    "resource_type": "model",
+    "details": {
+        "name": "Scene",
+        "nodes": [
+            {
+                "name": "ROOT",
+                "idx": 0,
+                "level": 0,
+                "parent": -1,
+                "first_child": 1,
+                "next_sibling": -1,
+                "meshes": []
+            },
+            {
+                "name": "Arch001",
+                "idx": 1,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 2,
+                "meshes": [
+                    "Models\\Maps\\Cube.0010.mesh"
+                ]
+            },
+            {
+                "name": "Arch002",
+                "idx": 2,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 3,
+                "meshes": [
+                    "Models\\Maps\\Cube.0020.mesh"
+                ]
+            },
+            {
+                "name": "Cell001.001",
+                "idx": 3,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 4,
+                "meshes": [
+                    "Models\\Maps\\Cube.0030.mesh"
+                ]
+            },
+            {
+                "name": "Column002",
+                "idx": 4,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 5,
+                "meshes": [
+                    "Models\\Maps\\Cube.0050.mesh"
+                ]
+            },
+            {
+                "name": "Column_low",
+                "idx": 5,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 6,
+                "meshes": [
+                    "Models\\Maps\\Cube.0060.mesh"
+                ]
+            },
+            {
+                "name": "Cube.030",
+                "idx": 6,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 7,
+                "meshes": [
+                    "Models\\Maps\\Cube.0070.mesh"
+                ]
+            },
+            {
+                "name": "Floor",
+                "idx": 7,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 8,
+                "meshes": [
+                    "Models\\Maps\\Cube.0080.mesh"
+                ]
+            },
+            {
+                "name": "Paint",
+                "idx": 8,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 9,
+                "meshes": [
+                    "Models\\Maps\\Cube.0090.mesh"
+                ]
+            },
+            {
+                "name": "RetopoFlow",
+                "idx": 9,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 10,
+                "meshes": [
+                    "Models\\Maps\\RetopoFlow.0010.mesh"
+                ]
+            },
+            {
+                "name": "Stand",
+                "idx": 10,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 11,
+                "meshes": [
+                    "Models\\Maps\\Cube.0100.mesh"
+                ]
+            },
+            {
+                "name": "Wall",
+                "idx": 11,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 12,
+                "meshes": [
+                    "Models\\Maps\\Cube.0110.mesh"
+                ]
+            },
+            {
+                "name": "WallArch001",
+                "idx": 12,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 13,
+                "meshes": [
+                    "Models\\Maps\\Cube.0120.mesh"
+                ]
+            },
+            {
+                "name": "WallArch002",
+                "idx": 13,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 14,
+                "meshes": [
+                    "Models\\Maps\\Cube.0130.mesh"
+                ]
+            },
+            {
+                "name": "WallT",
+                "idx": 14,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 15,
+                "meshes": [
+                    "Models\\Maps\\Cube.0140.mesh"
+                ]
+            },
+            {
+                "name": "Window_low",
+                "idx": 15,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": 16,
+                "meshes": [
+                    "Models\\Maps\\Cube.0150.mesh"
+                ]
+            },
+            {
+                "name": "Window_low.001",
+                "idx": 16,
+                "level": 1,
+                "parent": 0,
+                "first_child": -1,
+                "next_sibling": -1,
+                "meshes": [
+                    "Models\\Maps\\Cube.0160.mesh"
+                ]
+            }
+        ],
+        "meshes": [
+            "Models\\Maps\\Cube.0090.mesh",
+            "Models\\Maps\\Cube.0010.mesh",
+            "Models\\Maps\\Cube.0020.mesh",
+            "Models\\Maps\\Cube.0030.mesh",
+            "Models\\Maps\\Cube.0050.mesh",
+            "Models\\Maps\\Cube.0060.mesh",
+            "Models\\Maps\\Cube.0070.mesh",
+            "Models\\Maps\\Cube.0080.mesh",
+            "Models\\Maps\\RetopoFlow.0010.mesh",
+            "Models\\Maps\\Cube.0100.mesh",
+            "Models\\Maps\\Cube.0110.mesh",
+            "Models\\Maps\\Cube.0120.mesh",
+            "Models\\Maps\\Cube.0130.mesh",
+            "Models\\Maps\\Cube.0140.mesh",
+            "Models\\Maps\\Cube.0150.mesh",
+            "Models\\Maps\\Cube.0160.mesh"
+        ],
+        "materials": [
+            "Models\\Maps\\wall.0010.mat",
+            "Models\\Maps\\wall.0011.mat",
+            "Models\\Maps\\Moum.0010.mat",
+            "Models\\Maps\\wall.0012.mat",
+            "Models\\Maps\\Moum.0011.mat",
+            "Models\\Maps\\wall.0013.mat",
+            "Models\\Maps\\MuseumTile.0010.mat",
+            "Models\\Maps\\wall.0014.mat",
+            "Models\\Maps\\Moum.0012.mat",
+            "Models\\Maps\\Moum.0013.mat",
+            "Models\\Maps\\wall.0015.mat",
+            "Models\\Maps\\wall.0016.mat",
+            "Models\\Maps\\wall.0017.mat",
+            "Models\\Maps\\Moum.0014.mat",
+            "Models\\Maps\\Moum.0015.mat",
+            "Models\\Maps\\Moum.0016.mat"
+        ],
+        "textures": [
+            "Models\\Maps\\*0",
+            "Models\\Maps\\*1",
+            "Models\\Maps\\*2",
+            "Models\\Maps\\*3",
+            "Models\\Maps\\*4",
+            "Models\\Maps\\*5",
+            "Models\\Maps\\*6",
+            "Models\\Maps\\*7",
+            "Models\\Maps\\*8"
+        ]
+    }
+}

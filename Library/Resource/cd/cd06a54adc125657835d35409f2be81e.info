@@ -19,7 +19,6 @@
         "num_vertices": 8,
         "num_indices": 12,
         "material": "Models\\Maps\\wall0.mat",
-        "bones": [],
-        "bone_weights": []
+        "num_bones": 0
     }
 }

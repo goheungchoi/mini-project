@@ -19,7 +19,6 @@
         "num_vertices": 640,
         "num_indices": 738,
         "material": "Models\\Maps\\Moum3.mat",
-        "bones": [],
-        "bone_weights": []
+        "num_bones": 0
     }
 }

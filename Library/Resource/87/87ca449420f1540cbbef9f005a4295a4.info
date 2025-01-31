@@ -1,0 +1,27 @@
+{
+    "uuid": "87ca449420f1540cbbef9f005a4295a4",
+    "import_path": "Models\\Maps\\Museum\\Moum.0014.mat",
+    "resource_type": "model",
+    "details": {
+        "name": "Moum.0014",
+        "albedo_factor": [
+            [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ]
+        ],
+        "albedo_texture": "Models\\Maps\\Museum\\*3",
+        "metallic_factor": 1.0,
+        "roughness_factor": 1.0,
+        "metallic_roughness_texture": "Models\\Maps\\Museum\\*4",
+        "normal_texture": "Models\\Maps\\Museum\\*5",
+        "occlusion_texture": "",
+        "emissive_factor": 0.0,
+        "emissive_texture": "",
+        "alpha_mode": "AlphaMode_kBlend",
+        "alpha_cutoff": 0.5,
+        "double_sided": true
+    }
+}
