@@ -27,6 +27,22 @@ void RigidbodyComponent::SetCollisionEvent(IRigidBody* other,
   _rigidbody->SetCollisionEvent(eventType, other, event);
 }
 
+void RigidbodyComponent::SetTranslationAndRotation(Vector3& position,
+    Quaternion& quaternion)
+{
+  Matrix parentMatrix = Matrix(GetTransformComponent()->GetGlobalTransform());
+  Matrix WorldMatrix = parentMatrix * Matrix::CreateFromQuaternion(quaternion) *
+                       Matrix::CreateTranslation(position);
+
+  Vector3 pos, scale;
+  Quaternion rot;
+  WorldMatrix.Decompose(scale, rot, pos);
+
+  _rigidbody->SetWorldTransform(WorldMatrix.Translation(), rot);
+}
+
+
+
 RigidbodyComponent::~RigidbodyComponent() {
   _world->RemoveRigidBody(_rigidbody);
   UnregisterRigidBodyFromWorld();
