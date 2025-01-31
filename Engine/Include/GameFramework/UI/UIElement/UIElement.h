@@ -70,6 +70,7 @@ protected:
   class World* _world = nullptr;
   Vector2 _position{};
   Vector2 _size{100, 100};  // width, height
+  float _opacity = 1.0f;
 
   bool bShouldActivate;
   bool bShouldDeactivate;

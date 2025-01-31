@@ -3,4 +3,18 @@
 
 class UIImage : public UIElement
 {
+public:
+  UIImage(class World* world);
+  virtual ~UIImage();
+
+public:
+  void SetSprite(std::wstring path);
+  void SetSprite(class Sprite* sprite) { sprite = _sprite; }
+
+  void SetOpacity(float opacity) { opacity = _opacity; }
+
+  void Render() override;
+
+private:
+  class Sprite* _sprite{};
 };
