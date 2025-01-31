@@ -1,10 +1,10 @@
 #pragma once
 #include "Common.h"
+#include "Font/Font.h"
 
 class Device;
 class SwapChain;
 class Sprite;
-class Font;
 class Text;
 class UIRenderer;
 class Texture;
@@ -38,6 +38,10 @@ public:
   void CreateSprite(LPCSTR path, Vector2 pos);
   void CreateText(const wchar_t* format, Vector4 rect,
                   const std::wstring& fontName, Color color);
+
+  void DrawTexts(const wchar_t* format, Vector4 rect,
+                 Color color,
+                 const TextFormatInfo* textFormatInfo);
 
 private:
   void RenderSprites();

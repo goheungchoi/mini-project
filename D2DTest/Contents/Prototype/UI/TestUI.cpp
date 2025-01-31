@@ -7,22 +7,27 @@ TestUI::TestUI(World* world) : UIPanel(world)
 {
   testIMG = CreateUI<UIImage>(L"TestIMG");
   testIMG->SetSprite("Textures\\Test_QuestUI_1.png");
-  //testIMG->SetPosition({0, 300}); // 지금 이거 동작 안됨.
+  testIMG->SetPosition({22, 20});
 
   testBtn = CreateUI<UIButton>(L"TestButton");
   testBtn->SetPosition({200, 200});
   
   testBtn->AddOnClickHandler([this]() {
-    _world->_renderer->CreateText(L"클릭", {0, 0, 200, 200}, L"궁서");
+    _world->_renderer->CreateText(L"사라진 아이들에 대한 단서 찾기",
+        {0, 0, testIMG->GetSize().x, testIMG->GetSize().y}, L"궁서",
+                                  {0, 0, 0, 1});
   });
 
   testBtn->AddOnHoveredHandler([this]() {
     _world->_renderer->CreateSprite("Textures\\Test_CombatUI_1.png",
-                                    {100, 100});
+                                    {1550, 850});
   });
 
   testBtn->AddOnPressedHandler([this]() {
-    _world->_renderer->CreateText(L"Pressed", {0, 0, 300, 100}, L"Agency FB");
+    _world->_renderer->CreateText(
+        L"All Enemies Defeated",
+        {0, 0, testIMG->GetSize().x, testIMG->GetSize().y + 90}, L"Agency FB",
+        {0, 0, 0, 1});
   });
 
   //testBtn->AddOnUnHoveredHandler([this]() {

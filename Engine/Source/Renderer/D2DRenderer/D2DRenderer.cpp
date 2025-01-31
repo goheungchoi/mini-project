@@ -1,5 +1,4 @@
 ﻿#include "D2DRenderer.h"
-#include "Font/Font.h"
 #include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/SwapChain.h"
 #include "Sprite/Sprite.h"
@@ -185,6 +184,45 @@ void D2DRenderer::CreateText(const wchar_t* format, Vector4 rect,
   newText->_fontName = fontName;
   newText->_color = color;
 }
+
+void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
+                            const TextFormatInfo* textFormatInfo)
+{
+  IDWriteTextFormat* textFormat = nullptr;
+
+  // 텍스트 포멧 설정
+  HR_T(_pFont->GetIDWriteFactory()->CreateTextFormat(
+      textFormatInfo->_fontName.c_str(), // 글꼴 이름
+      NULL,             // 글꼴 컬렉션 (NULL은 시스템 기본 사용)
+      static_cast<DWRITE_FONT_WEIGHT>(textFormatInfo->_fontWeight),
+      static_cast<DWRITE_FONT_STYLE>(textFormatInfo->_fontStyle),
+      static_cast<DWRITE_FONT_STRETCH>(textFormatInfo->_fontStretch),
+      textFormatInfo->_fontSize, // 글꼴 크기
+      L"ko-KR", // 로케일
+      &textFormat));
+
+  // 텍스트 정렬
+  textFormat->SetTextAlignment(
+      static_cast<DWRITE_TEXT_ALIGNMENT>(textFormatInfo->_textAlignment));
+  textFormat->SetParagraphAlignment(
+      static_cast<DWRITE_PARAGRAPH_ALIGNMENT>(textFormatInfo->_paragraphAlignment));
+
+
+  // 텍스트 그리기
+  D2D1_RECT_F rec =
+      D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
+
+  D2D1_COLOR_F clr =
+      D2D1::ColorF(color.x, color.y, color.z, color.w);
+
+  _pBrush->SetColor(clr);
+  _pBrush->SetOpacity(1.0f);
+
+
+  _pD2D1DeviceContext->DrawText(format, lstrlen(format) + 1, textFormat,
+                                rec, _pBrush);
+}
+
 
 void D2DRenderer::RenderSprites()
 {
