@@ -5,7 +5,7 @@
 Bullet::Bullet(World* world) : GameObject(world)
 {
 	// Set a tag
-  SetGameObjectTag("bullet");
+  SetGameObjectTag("weapon");
 
   // Create a hand gun game object.
   auto* rigidBody = CreateComponent<RigidbodyComponent>();

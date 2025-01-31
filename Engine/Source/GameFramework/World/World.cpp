@@ -359,40 +359,29 @@ void World::InitialStage()
   {
     if (gameObject->status == EStatus_Awake && gameObject->bShouldActivate)
     {
-      auto* transform = gameObject->transform;
-      transform->UpdateLocalTransform();
-    }
-  }
-
-  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
-  {
-    if (gameObject->status == EStatus_Awake && gameObject->bShouldActivate)
-    {
-      // Update hierarchical transforms
-      auto* transform = gameObject->transform;
-      UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
-        auto* transform = object->transform;
-        transform->UpdateGlobalTransform();
-      });
-
       // Awake the game objects and activate it.
       UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
-        object->OnAwake();
-        object->OnActivated();
-        object->isActive = true;
-        object->status = EStatus_Active;
-        object->bShouldActivate = false;
+        if (object->status == EStatus_Awake && object->bShouldActivate)
+        {
+          object->OnAwake();
+          object->OnActivated();
+          object->isActive = true;
+          object->status = EStatus_Active;
+          object->bShouldActivate = false;        }
       });
     }
 
     if (gameObject->status == EStatus_Inactive && gameObject->bShouldActivate)
     {
       UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
-        // Activate the game object.
-        object->OnActivated();
-        object->isActive = true;
-        object->status = EStatus_Active;
-        object->bShouldActivate = false;
+        if (object->status == EStatus_Inactive && object->bShouldActivate)
+        {
+          // Activate the game object.
+          object->OnActivated();
+          object->isActive = true;
+          object->status = EStatus_Active;
+          object->bShouldActivate = false;
+        }
       });
     }
   }

@@ -96,7 +96,7 @@ std::pair<uint32_t, uint32_t> Character::GetGridLocation()
 }
 
 void Character::OnBeginOverlap(GameObject* other) {
-  if (other->GetGameObjectTag() == "bullet")
+  if (other->GetGameObjectTag() == "weapon")
   {
     health -= 1;
 	}
