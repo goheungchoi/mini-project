@@ -1,6 +1,7 @@
 ﻿#include "TestUI.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
+#include "GameFramework/UI/UIText/UIText.h"
 
 TestUI::TestUI(World* world) : UIPanel(world)
 {

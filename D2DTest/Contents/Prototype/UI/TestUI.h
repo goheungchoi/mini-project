@@ -12,4 +12,5 @@ public:
 private:
   class UIButton* testBtn{nullptr};
   class UIImage* testIMG{nullptr};
+  class UIText* testTxt{nullptr};
 };
