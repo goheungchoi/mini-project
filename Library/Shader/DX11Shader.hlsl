@@ -642,6 +642,6 @@ PS_INPUT outline_vs_main(VS_INPUT input)
 
 float4 outline_ps_main(PS_INPUT input) :SV_Target0
 {
-    return float4(1.f, 1.f, 0.f, 1.f);
+    return albedoFactor;
 }
 #endif 

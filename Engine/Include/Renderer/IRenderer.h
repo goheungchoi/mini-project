@@ -36,11 +36,17 @@ public:
    * @param world : world matrix of mesh
    */
   virtual void BeginDraw(MeshHandle handle, Matrix world) = 0;
+
   /**
-   * @brief call per mesh
-   * @param handle : mesh handle owned by mesh
+   * @brief draw per mesh
+   * @param handle mesh handle
+   * @param world mesh world matrix
+   * @param type render type, flags ex)|=kOutLine
+   * @param boneTransforms skeletal meshes bone matrixs
+   * @param outlineColor when you draw outline, line color
    */
   virtual void DrawMesh(MeshHandle handle, Matrix world, RenderTypeFlags type,
+                        Color outlineColor = Color(1.f, 1.f, 0.f, 1.f),
                         vector<DirectX::XMMATRIX> boneTransforms =
                             vector<DirectX::XMMATRIX>()) = 0;
   /**

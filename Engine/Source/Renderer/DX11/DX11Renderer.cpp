@@ -7,7 +7,7 @@
 #include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
 #include "Renderer/D2DRenderer/D2DRenderer.h"
-//#define USED2D
+// #define USED2D
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
@@ -95,8 +95,8 @@ void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
   }
 }
 
-void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world, RenderTypeFlags type,
-
+void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world,
+                            RenderTypeFlags type, Color outlineColor,
                             vector<DirectX::XMMATRIX> boneTransforms)
 {
   auto buffer = _storage->meshMap.find(handle);
@@ -105,7 +105,8 @@ void DX11Renderer::DrawMesh(MeshHandle handle, Matrix world, RenderTypeFlags typ
     throw std::exception("buffer not registered");
   }
 
-  _passMgr->ClassifyPass(buffer->second, world, boneTransforms,type);
+  _passMgr->ClassifyPass(buffer->second, world, boneTransforms, type,
+                         outlineColor);
 }
 
 void DX11Renderer::EndDraw() {}
@@ -338,7 +339,6 @@ void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
 }
 
-
 #endif
 void DX11Renderer::BeginImGuiDraw()
 {
@@ -368,7 +368,7 @@ void DX11Renderer::CreateSprite(LPCSTR path, Vector2 pos)
 }
 
 void DX11Renderer::CreateText(const wchar_t* format, Vector4 rect,
-                           const std::wstring& fontName, Color color)
+                              const std::wstring& fontName, Color color)
 {
   _d2dRenderer->CreateText(format, rect, fontName, color);
 }

@@ -14,6 +14,7 @@ public:
   bool isVisible{true};
   bool bCastShadow{true};
   RenderTypeFlags renderTypeFlags{};
+  Color outlineColor{};
 
   std::unordered_map<std::string, Bone> boneNameMap;
   std::vector<XMMATRIX> boneTransforms;

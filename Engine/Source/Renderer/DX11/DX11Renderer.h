@@ -25,6 +25,7 @@ public:
                   DirectionalLight mainLight) override;
   void BeginDraw(MeshHandle handle, Matrix world) override;
   void DrawMesh(MeshHandle handle, Matrix world, RenderTypeFlags type,
+                Color outlineColor = Color(1.f, 1.f, 0.f, 1.f),
                 vector<DirectX::XMMATRIX> boneTransforms =
                     vector<DirectX::XMMATRIX>()) override;
   void EndDraw() override;

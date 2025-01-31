@@ -2,15 +2,15 @@
 
 #include "Renderer/DX11/DX11Renderer.h"
 
-#include "Core/Input/InputSystem.h"
 #include "Core/Camera/Camera.h"
+#include "Core/Input/InputSystem.h"
 
 #include "GameFramework/Components/Animation/AnimatorComponent.h"
 #include "GameFramework/Components/LightComponent.h"
 #include "GameFramework/Components/MeshComponent.h"
+#include "GameFramework/Components/RigidbodyComponent.h"
 #include "GameFramework/Components/SkeletalMeshComponent.h"
 #include "GameFramework/Components/TransformComponent.h"
-#include "GameFramework/Components/RigidbodyComponent.h"
 
 #include "Interface.h"
 #include "PhyjixEngine.h"
@@ -22,7 +22,7 @@
 #endif
 
 #include "GameFramework/UI/Canvas/Canvas.h"
-//#define USED2D
+// #define USED2D
 
 void World::Initialize(HWND hwnd, const std::wstring& title)
 {
@@ -41,8 +41,7 @@ void World::Initialize(HWND hwnd, const std::wstring& title)
   _phyjixWorld->CreateRay(
       _defaultCamera->GetPosition(),
       Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
-      _defaultCamera->GetViewTransform(), 
-      _defaultCamera->GetProjectionMatrix(),
+      _defaultCamera->GetViewTransform(), _defaultCamera->GetProjectionMatrix(),
       Vector2(kScreenWidth, kScreenHeight));
 
   SetMainCamera(_defaultCamera);
@@ -60,12 +59,13 @@ World* World::CreateWorld(HWND hwnd, const std::wstring& title)
   return newWorld;
 }
 
-void World::PrepareChangeLevel(const std::string& levelName) {
+void World::PrepareChangeLevel(const std::string& levelName)
+{
   /* TODO: */
   if (auto it = _levelMap.find(levelName); it != _levelMap.end())
   {
     _preparingLevel = it->second;
-    
+
     _preparingLevel->PrepareLevel();
   }
   else
@@ -74,7 +74,8 @@ void World::PrepareChangeLevel(const std::string& levelName) {
   }
 }
 
-bool World::IsLevelChangeReady() {
+bool World::IsLevelChangeReady()
+{
   if (!_preparingLevel)
     return false;
 
@@ -84,41 +85,43 @@ bool World::IsLevelChangeReady() {
   return f.valid() && f.wait_for(0s) == std::future_status::ready && f.get();
 }
 
-void World::CommitLevelChange() {
-  //async::executor.async([&]() {
-  //  auto& f = _levelPreparedMap[_preparingLevel->name];
-  //  f.get();
+void World::CommitLevelChange()
+{
+  // async::executor.async([&]() {
+  //   auto& f = _levelPreparedMap[_preparingLevel->name];
+  //   f.get();
 
   //  while (!readyToChangeLevel) {}  // Wait until
-    changingLevel = true;
-    
-    if (_currentLevel)
-    {
-      _currentLevel->DestroyLevel();
-      _currentLevel->CleanupLevel();
+  changingLevel = true;
 
-			rigidBodyComponents.clear();
+  if (_currentLevel)
+  {
+    _currentLevel->DestroyLevel();
+    _currentLevel->CleanupLevel();
+
+    rigidBodyComponents.clear();
 
 #ifdef USED2D
-      delete _canvas;
-      _canvas = new Canvas(this);
+    delete _canvas;
+    _canvas = new Canvas(this);
 #endif // USED2D
-    }
-    
+  }
 
-    _currentLevel = _preparingLevel;
-    _currentLevel->BeginLevel();
+  _currentLevel = _preparingLevel;
+  _currentLevel->BeginLevel();
 
-    changingLevel = false;
+  changingLevel = false;
   // });
 }
 
-void World::AddLevel(Level* level) {
+void World::AddLevel(Level* level)
+{
   level->world = this;
   _levelMap[level->name] = level;
 }
 
-void World::SetMainCamera(Camera* camera) {
+void World::SetMainCamera(Camera* camera)
+{
   if (camera)
     mainCamera = camera;
   else
@@ -217,7 +220,7 @@ void World::RegisterGameObjectName(GameObject* gameObject)
   if (!_currentLevel || !gameObject)
     return;
 
-	_currentLevel->gameObjectNameMap.insert({gameObject->name, gameObject});
+  _currentLevel->gameObjectNameMap.insert({gameObject->name, gameObject});
 }
 
 void World::UnregisterGameObjectName(GameObject* gameObject)
@@ -225,7 +228,7 @@ void World::UnregisterGameObjectName(GameObject* gameObject)
   if (!_currentLevel || !gameObject)
     return;
 
-	auto it = _currentLevel->gameObjectNameMap.find(gameObject->name);
+  auto it = _currentLevel->gameObjectNameMap.find(gameObject->name);
   while (it != _currentLevel->gameObjectNameMap.end() &&
          it->first == gameObject->name)
   {
@@ -243,7 +246,7 @@ void World::RegisterGameObjectTag(GameObject* gameObject)
   if (!_currentLevel || !gameObject)
     return;
 
-	_currentLevel->gameObjectTagMap.insert({gameObject->tag, gameObject});
+  _currentLevel->gameObjectTagMap.insert({gameObject->tag, gameObject});
 }
 
 void World::UnregisterGameObjectTag(GameObject* gameObject)
@@ -251,7 +254,7 @@ void World::UnregisterGameObjectTag(GameObject* gameObject)
   if (!_currentLevel || !gameObject)
     return;
 
-	auto it = _currentLevel->gameObjectTagMap.find(gameObject->tag);
+  auto it = _currentLevel->gameObjectTagMap.find(gameObject->tag);
   while (it != _currentLevel->gameObjectTagMap.end() &&
          it->first == gameObject->tag)
   {
@@ -264,11 +267,12 @@ void World::UnregisterGameObjectTag(GameObject* gameObject)
   }
 }
 
-void World::UnregisterGameObjectType(GameObject* gameObject) {
+void World::UnregisterGameObjectType(GameObject* gameObject)
+{
   if (!_currentLevel || !gameObject)
     return;
 
-	auto it = _currentLevel->gameObjectTypeMap.find(gameObject->typeIndex);
+  auto it = _currentLevel->gameObjectTypeMap.find(gameObject->typeIndex);
   while (it != _currentLevel->gameObjectTypeMap.end() &&
          it->first == gameObject->typeIndex)
   {
@@ -286,7 +290,7 @@ void World::RegisterMeshComponent(MeshComponent* meshComp)
   if (!meshComp)
     return;
 
-	if (meshComp->bCastShadow)
+  if (meshComp->bCastShadow)
   {
     for (auto handle : meshComp->GetSubMeshes())
     {
@@ -300,10 +304,11 @@ void World::RegisterMeshComponent(MeshComponent* meshComp)
     {
       _renderer->CreateMesh(handle);
     }
-	}
+  }
 }
 
-void World::RegisterMeshComponent(SkeletalMeshComponent* skeletalMeshComp) {
+void World::RegisterMeshComponent(SkeletalMeshComponent* skeletalMeshComp)
+{
   if (!skeletalMeshComp)
     return;
 
@@ -312,33 +317,37 @@ void World::RegisterMeshComponent(SkeletalMeshComponent* skeletalMeshComp) {
     _renderer->AddShadow(skeletalMeshComp->GetHandle());
 }
 
-void World::RegisterRigidBodyComponent(RigidbodyComponent* rigidBody) {
+void World::RegisterRigidBodyComponent(RigidbodyComponent* rigidBody)
+{
   for (auto* other : rigidBodyComponents)
   {
-    other->SetCollisionEvent(
-        rigidBody->GetRigidBody(), eCollisionEventType::eCollisionEnter,
-        [=]() { other->BeginOverlap(rigidBody); });
+    other->SetCollisionEvent(rigidBody->GetRigidBody(),
+                             eCollisionEventType::eCollisionEnter,
+                             [=]() { other->BeginOverlap(rigidBody); });
     other->SetCollisionEvent(rigidBody->GetRigidBody(),
                              eCollisionEventType::eCollisionExit,
                              [=]() { other->EndOverlap(rigidBody); });
 
-		rigidBody->SetCollisionEvent(other->GetRigidBody(),
-                             eCollisionEventType::eCollisionEnter,
+    rigidBody->SetCollisionEvent(other->GetRigidBody(),
+                                 eCollisionEventType::eCollisionEnter,
                                  [=]() { rigidBody->BeginOverlap(other); });
     rigidBody->SetCollisionEvent(other->GetRigidBody(),
-                             eCollisionEventType::eCollisionExit,
+                                 eCollisionEventType::eCollisionExit,
                                  [=]() { rigidBody->EndOverlap(other); });
-	}
+  }
 
-	rigidBodyComponents.push_back(rigidBody);
+  rigidBodyComponents.push_back(rigidBody);
 }
 
-void World::UnregisterRigidBodyComponent(RigidbodyComponent* rigidBody) {
-  auto it = std::remove(rigidBodyComponents.begin(), rigidBodyComponents.end(), rigidBody);
+void World::UnregisterRigidBodyComponent(RigidbodyComponent* rigidBody)
+{
+  auto it = std::remove(rigidBodyComponents.begin(), rigidBodyComponents.end(),
+                        rigidBody);
   rigidBodyComponents.erase(it, rigidBodyComponents.end());
 }
 
-void World::InitialStage() {
+void World::InitialStage()
+{
   if (!_currentLevel || changingLevel)
     return;
 
@@ -358,7 +367,7 @@ void World::InitialStage() {
         object->status = EStatus_Active;
         object->bShouldActivate = false;
       });
-    } 
+    }
 
     if (gameObject->status == EStatus_Inactive && gameObject->bShouldActivate)
     {
@@ -378,40 +387,39 @@ void World::InitialStage() {
 #endif // USED2D
 }
 
-//void World::FixedUpdate(float fixedRate)
+// void World::FixedUpdate(float fixedRate)
 //{
-//  if (!_currentLevel || changingLevel)
-//    return;
+//   if (!_currentLevel || changingLevel)
+//     return;
 //
-//  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
-//  {
-//    if (!(gameObject->status == EStatus_Active))
-//      continue;
+//   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
+//   {
+//     if (!(gameObject->status == EStatus_Active))
+//       continue;
 //
-//    gameObject->FixedUpdate(fixedRate);
-//  }
-//}
+//     gameObject->FixedUpdate(fixedRate);
+//   }
+// }
 //
-//void World::PhysicsUpdate(float fixedRate) {
-//  if (!_currentLevel || changingLevel)
-//    return;
+// void World::PhysicsUpdate(float fixedRate) {
+//   if (!_currentLevel || changingLevel)
+//     return;
 //
-//  // TODO:
-//}
-
-
+//   // TODO:
+// }
 
 void World::ProcessInput(float dt)
 {
   InputSystem::GetInstance()->Update(dt);
 
-	if (Input.IsKeyDown(MouseState::LB))
+  if (Input.IsKeyDown(MouseState::LB))
   {
     _phyjixWorld->LeftClick();
   }
 }
 
-void World::PreUpdate(float dt) {
+void World::PreUpdate(float dt)
+{
   if (!_currentLevel || changingLevel)
     return;
 
@@ -438,13 +446,12 @@ void World::Update(float dt)
   }
 
   ////Rigidbody updatefromtransform
-  //for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
+  // for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
   //{
-  //  component->UpdateFromTransform();
-  //}
+  //   component->UpdateFromTransform();
+  // }
 
-
-  //phjix simulate
+  // phjix simulate
   _phyjixWorld->UpdateRay(
       _defaultCamera->GetPosition(),
       Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
@@ -466,7 +473,6 @@ void World::Update(float dt)
 #ifdef USED2D
   _canvas->Update(dt);
 #endif // USED2D
-
 }
 
 void World::AnimationUpdate(float dt)
@@ -530,7 +536,6 @@ void World::AnimationUpdate(float dt)
   }
 }
 
-
 void World::PostUpdate(float dt)
 {
   if (!_currentLevel || changingLevel)
@@ -546,7 +551,8 @@ void World::PostUpdate(float dt)
 }
 
 static DirectionalLight _mainLight;
-void World::RenderGameObjects() {
+void World::RenderGameObjects()
+{
   if (!_currentLevel || changingLevel)
     return;
 
@@ -554,7 +560,7 @@ void World::RenderGameObjects() {
   Matrix projection = mainCamera->GetProjectionMatrix();
   _renderer->BeginFrame(mainCamera->GetPosition(), view, projection,
                         _mainLight);
-  #ifdef _DEBUG
+#ifdef _DEBUG
   if (ImGui::Begin("main Light"))
   {
     float _mainLightDir[3] = {_mainLight.direction.x, _mainLight.direction.y,
@@ -566,7 +572,7 @@ void World::RenderGameObjects() {
     _mainLight.radiance = {1.f, 1.f, 1.f, 1.f};
   }
   ImGui::End();
-  #endif
+#endif
 
   // Rendering stage
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
@@ -584,20 +590,23 @@ void World::RenderGameObjects() {
       for (auto handle : meshComp->GetSubMeshes())
       {
         // _renderer->BeginDraw(handle, transform);
-        _renderer->DrawMesh(handle, transform, meshComp->renderTypeFlags);
-			}
+        _renderer->DrawMesh(handle, transform, meshComp->renderTypeFlags,
+                            meshComp->outlineColor);
+      }
     }
     // Draw skeletal mesh
-    else if (auto* skeletalMeshComp = gameObject->GetComponent<SkeletalMeshComponent>();
+    else if (auto* skeletalMeshComp =
+                 gameObject->GetComponent<SkeletalMeshComponent>();
              skeletalMeshComp && skeletalMeshComp->isVisible)
     {
       auto handle = skeletalMeshComp->GetHandle();
-      // const auto& transform = skeletalMeshComp->rootBone->GetGlobalTransform();
+      // const auto& transform =
+      // skeletalMeshComp->rootBone->GetGlobalTransform();
       // _renderer->BeginDraw(handle, transform);
-      // outline test 
-      _renderer->DrawMesh(handle, XMMatrixIdentity(),
-                          skeletalMeshComp->renderTypeFlags,
-                          skeletalMeshComp->boneTransforms);
+      // outline test
+      _renderer->DrawMesh(
+          handle, XMMatrixIdentity(), skeletalMeshComp->renderTypeFlags,
+          skeletalMeshComp->outlineColor, skeletalMeshComp->boneTransforms);
     }
   }
 #ifdef _DEBUG
@@ -620,26 +629,25 @@ void World::RenderGameObjects() {
           break;
         default:
           break;
-
         }
       }
     }
   }
 #endif
 
-
-
   _renderer->EndFrame();
 }
 
-void World::RenderUI() {
+void World::RenderUI()
+{
   // TODO:
 #ifdef USED2D
   _canvas->Render();
 #endif // USED2D
 }
 
-void World::CleanupStage() {
+void World::CleanupStage()
+{
   if (!_currentLevel || changingLevel)
     return;
 
@@ -666,7 +674,7 @@ void World::CleanupStage() {
       });
     }
 
-		// Begin destroy
+    // Begin destroy
     if (gameObject->bShouldDestroy)
     {
       UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
@@ -674,10 +682,10 @@ void World::CleanupStage() {
         object->isActive = false;
         object->bShouldDestroy = false;
 
-				// Remove hierarchical relationships
+        // Remove hierarchical relationships
         if (object->parent)
-					object->parent->RemoveChildGameObject(object);
-				// Remove it from the search registrations
+          object->parent->RemoveChildGameObject(object);
+        // Remove it from the search registrations
         object->SetName("");
         object->SetGameObjectTag("");
         object->RemoveFromTypeRegistration();
@@ -692,7 +700,7 @@ void World::CleanupStage() {
     GameObject* gameObject = *it;
     if (gameObject->status == EStatus_Destroyed)
     {
-       it = _currentLevel->gameObjects.erase(it);
+      it = _currentLevel->gameObjects.erase(it);
     }
     else
     {
@@ -724,5 +732,3 @@ void World::UpdateGameObjectHierarchy(GameObject* gameObject,
     }
   }
 }
-
-
