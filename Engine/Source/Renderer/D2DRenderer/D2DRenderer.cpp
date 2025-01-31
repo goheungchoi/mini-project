@@ -200,7 +200,7 @@ void D2DRenderer::RenderSprites()
   // 모든 Sprite Render
   if (!_SpriteManager._spritePool.empty())
   {
-    for (auto sprite : _SpriteManager._spritePool)
+    for (auto sprite : (*SpriteManager::GetInstance())._spritePool)
     {
       sprite.second->Render(_pSpriteBatch.get());
     }
@@ -219,7 +219,7 @@ void D2DRenderer::RenderTexts()
     return;
   }
 
-  for (auto txt : _TextManager._textList)
+  for (auto txt : (*TextManager::GetInstance())._textList)
   {
     // 텍스트 그리기
     D2D1_RECT_F rect =

@@ -5,9 +5,9 @@ UIImage::UIImage(World* world) : UIElement(world) {}
 
 UIImage::~UIImage() {}
 
-void UIImage::SetSprite(LPCSTR path)
+void UIImage::SetSprite(LPCSTR path, Vector2 pos)
 {
-  _sprite = new Sprite(path);
+  _sprite = _SpriteManager.GetSprite(path).get();
+  _size = _sprite->GetTextureSize();
+  _sprite->SetPos(pos);
 }
-
-void UIImage::Render() {}

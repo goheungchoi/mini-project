@@ -16,7 +16,9 @@ private:
 public:
   void Render(DirectX::SpriteBatch* pSpriteBatch);
   void SetPos(Vector2 pos) { _pos = pos; }
-  
+  Vector2 GetTextureSize() { return _textureSize; }
+  Vector2 GetPos() { return _pos; }
+
   static void SetDevice(Device* pDevice) { _pDevice = pDevice; }
 
 private:
@@ -27,7 +29,6 @@ private:
   Vector2 _textureSize{};
   Vector2 _pos{};
 
-  //Device* _pDevice = nullptr;
 };
 
 class SpriteManager
