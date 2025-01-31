@@ -1,0 +1,14 @@
+{
+    "import_path": "Models\\Maps\\MuseumCamera\\*3",
+    "export_path": "C:\\Users\\user\\Desktop\\svn\\Team_Rebellion\\5_Project\\mini-project\\Library\\Resource\\80\\80250c41ff7c5f57b2a5b5582ee41c6b",
+    "resource_type": "texture",
+    "details": {
+        "is_normal": false,
+        "is_cube": false,
+        "color_space": "kSRGB",
+        "alpha_mode": "kTransparent",
+        "format": "DXGI_FORMAT_BC7_UNORM_SRGB",
+        "mipmap": true,
+        "mipmapCount": 13
+    }
+}

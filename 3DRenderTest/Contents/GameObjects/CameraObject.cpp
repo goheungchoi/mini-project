@@ -57,11 +57,11 @@ void CameraObject::Update(float dt)
   }
   if (Input.IsKeyPress(Key::OemMinus))
   {
-    cam->AddMoveSpeed(-10);
+    cam->AddMoveSpeed(-0.3);
   }
   if (Input.IsKeyPress(Key::OemPlus))
   {
-    cam->AddMoveSpeed(+10);
+    cam->AddMoveSpeed(+0.3);
   }
 
   if (Input.IsKeyDown(MouseState::RB))
