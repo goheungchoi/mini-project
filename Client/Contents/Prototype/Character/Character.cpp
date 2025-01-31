@@ -45,28 +45,10 @@ Character::Character(World* world) : GameObject(world)
   // animator->SetState(state);
   // animator->AdjustAnimationPlaySpeed(0.1f);
 
-	body = world->CreateGameObject();
-  head = world->CreateGameObject();
-  AddChildGameObject(body);
-  AddChildGameObject(head);
+  /*body->SetTranslation(0, 1.f, 0);
+  body->SetScaling(0.4f, 1.2f, 0.2f);*/
 
-	auto* bodyRigidBody = body->CreateComponent<RigidbodyComponent>();
-  bodyRigidBody->Initialize({0, 0, 0}, {1.f, 1.f, 1.f},
-                            ColliderShape::eCubeCollider, false, false,
-                            world->_phyjixWorld);
-  bodyRigidBody->DisableGravity();
-  bodyRigidBody->EnableDebugDraw();
-  body->SetTranslation(0, 1.f, 0);
-  body->SetScaling(0.4f, 1.2f, 0.2f);
-
-	auto* headRigidBody = head->CreateComponent<RigidbodyComponent>();
-  headRigidBody->Initialize({0, 5.f, 0}, {1.f, 1.f, 1.f},
-                            ColliderShape::eSphereCollider, false, false,
-                            world->_phyjixWorld);
-  headRigidBody->DisableGravity();
-  headRigidBody->EnableDebugDraw();
-  head->SetTranslation(0, 1.8f, 0);
-  head->SetScaling(0.2f, 0.2f, 0.2f);
+	
 }
 
 Character::~Character() {
@@ -141,6 +123,21 @@ void Character::OnAwake()
   {
     ApplyChangedDirection();
   }
+
+
+  auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
+  bodyRigidBody->Initialize({0, 0, 0}, Quaternion::Identity,{0.4f, 1.2f, 0.2f},
+                            ColliderShape::eCubeCollider, false, false,
+                            world->_phyjixWorld);
+  bodyRigidBody->DisableGravity();
+  bodyRigidBody->EnableDebugDraw();
+  bodyRigidBody->DisableCollision();
+  XMMATRIX global = transform->GetGlobalTransform();
+  
+  Vector3 t = {0, 0.f, 0};
+  Quaternion q = {0, 0, 0, 1};
+  // body->GetComponent<RigidbodyComponent>()->SetTranslationAndRotation(t, q);
+  //GetComponent<RigidbodyComponent>()->SetOffsetTransform(t, q, {1,1,1});
 }
 
 // TODO:
@@ -159,6 +156,7 @@ void Character::OnAwake()
 
 void Character::Update(float dt) {
 
+  
 	if (isDead)
   {
 		// TODO: 

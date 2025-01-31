@@ -8,12 +8,10 @@ public:
   virtual ~UIImage();
 
 public:
-  void SetSprite(std::wstring path);
+  void SetSprite(LPCSTR path, Vector2 pos = {0.0f, 0.0f});
   void SetSprite(class Sprite* sprite) { sprite = _sprite; }
 
   void SetOpacity(float opacity) { opacity = _opacity; }
-
-  void Render() override;
 
 private:
   class Sprite* _sprite{};

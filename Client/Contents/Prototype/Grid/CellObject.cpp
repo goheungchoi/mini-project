@@ -43,6 +43,8 @@ void CellObject::SetInvisible() {
   {
     greenMeshComp->SetVisible(false);
 	}
+
+  isVisible = false;
 }
 
 void CellObject::SetVisible() {
@@ -56,6 +58,8 @@ void CellObject::SetVisible() {
   {
     greenMeshComp->SetVisible(true);
   }
+
+  isVisible = true;
 }
 
 void CellObject::SetCellType(CellType type) {

@@ -31,45 +31,45 @@ void CameraObject::Update(float dt)
   if (!cam)
     return;
 
-  if (Input.IsKeyPress(Key::Q))
+  if (INPUT.IsKeyPress(Key::Q))
   {
     cam->MoveDownUp(-dt);
   }
-  if (Input.IsKeyPress(Key::E))
+  if (INPUT.IsKeyPress(Key::E))
   {
     cam->MoveDownUp(dt);
   }
-  if (Input.IsKeyPress(Key::A))
+  if (INPUT.IsKeyPress(Key::A))
   {
     cam->MoveLeftRight(-dt);
   }
-  if (Input.IsKeyPress(Key::D))
+  if (INPUT.IsKeyPress(Key::D))
   {
     cam->MoveLeftRight(dt);
   }
-  if (Input.IsKeyPress(Key::W))
+  if (INPUT.IsKeyPress(Key::W))
   {
     cam->MoveBackForward(dt);
   }
-  if (Input.IsKeyPress(Key::S))
+  if (INPUT.IsKeyPress(Key::S))
   {
     cam->MoveBackForward(-dt);
   }
-  if (Input.IsKeyPress(Key::OemMinus))
+  if (INPUT.IsKeyPress(Key::OemMinus))
   {
-    cam->AddMoveSpeed(-10);
+    cam->AddMoveSpeed(-0.3);
   }
-  if (Input.IsKeyPress(Key::OemPlus))
+  if (INPUT.IsKeyPress(Key::OemPlus))
   {
-    cam->AddMoveSpeed(+10);
+    cam->AddMoveSpeed(+0.3);
   }
 
-  if (Input.IsKeyDown(MouseState::RB))
+  if (INPUT.IsKeyDown(MouseState::RB))
   {
     bMouseRightButtonPressed = true;
     ShowCursor(false); 
   }
-  if (Input.IsKeyUp(MouseState::RB))
+  if (INPUT.IsKeyUp(MouseState::RB))
   {
     bMouseRightButtonPressed = false;
     ShowCursor(true);
@@ -77,7 +77,7 @@ void CameraObject::Update(float dt)
 
   if (bMouseRightButtonPressed)
   {
-    Vector2 mouseDelta = Input.GetMouseDelta();
+    Vector2 mouseDelta = INPUT.GetMouseDelta();
     float x = -mouseDelta.x;
     float y = -mouseDelta.y;
 

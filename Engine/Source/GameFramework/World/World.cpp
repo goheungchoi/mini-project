@@ -22,7 +22,7 @@
 #endif
 
 #include "GameFramework/UI/Canvas/Canvas.h"
-// #define USED2D
+//#define USED2D
 
 void World::Initialize(HWND hwnd, const std::wstring& title)
 {
@@ -40,7 +40,7 @@ void World::Initialize(HWND hwnd, const std::wstring& title)
   _phyjixWorld->CreateDefaultGround();
   _phyjixWorld->CreateRay(
       _defaultCamera->GetPosition(),
-      Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
+      Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
       _defaultCamera->GetViewTransform(), _defaultCamera->GetProjectionMatrix(),
       Vector2(kScreenWidth, kScreenHeight));
 
@@ -361,22 +361,27 @@ void World::InitialStage()
     {
       // Awake the game objects and activate it.
       UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
-        object->OnAwake();
-        object->OnActivated();
-        object->isActive = true;
-        object->status = EStatus_Active;
-        object->bShouldActivate = false;
+        if (object->status == EStatus_Awake && object->bShouldActivate)
+        {
+          object->OnAwake();
+          object->OnActivated();
+          object->isActive = true;
+          object->status = EStatus_Active;
+          object->bShouldActivate = false;        }
       });
     }
 
     if (gameObject->status == EStatus_Inactive && gameObject->bShouldActivate)
     {
       UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
-        // Activate the game object.
-        object->OnActivated();
-        object->isActive = true;
-        object->status = EStatus_Active;
-        object->bShouldActivate = false;
+        if (object->status == EStatus_Inactive && object->bShouldActivate)
+        {
+          // Activate the game object.
+          object->OnActivated();
+          object->isActive = true;
+          object->status = EStatus_Active;
+          object->bShouldActivate = false;
+        }
       });
     }
   }
@@ -412,7 +417,7 @@ void World::ProcessInput(float dt)
 {
   InputSystem::GetInstance()->Update(dt);
 
-  if (Input.IsKeyDown(MouseState::LB))
+  if (INPUT.IsKeyDown(MouseState::LB))
   {
     _phyjixWorld->LeftClick();
   }
@@ -445,16 +450,16 @@ void World::Update(float dt)
     gameObject->Update(dt);
   }
 
-  ////Rigidbody updatefromtransform
-  // for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
-  //{
-  //   component->UpdateFromTransform();
-  // }
+  //Rigidbody updatefromtransform
+  for (RigidbodyComponent* component : rigidBodyComponents)
+  {
+    component->UpdateFromTransform();
+  }
 
   // phjix simulate
   _phyjixWorld->UpdateRay(
       _defaultCamera->GetPosition(),
-      Vector2(Input.GetCurrMouseState().x, Input.GetCurrMouseState().y),
+      Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
       _defaultCamera->GetViewTransform(), _defaultCamera->GetProjectionMatrix(),
       Vector2(kScreenWidth, kScreenHeight));
   _phyjixWorld->CastRay();

@@ -37,7 +37,7 @@ void FixedCameraObject::UnsetAsMainCamera() {
 void FixedCameraObject::Update(float dt)
 {
   static bool set{true};
-  if (Input.IsKeyPress(Key::R))
+  if (INPUT.IsKeyPress(Key::R))
   {
     set = !set;
     if (set)

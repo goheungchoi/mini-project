@@ -41,9 +41,6 @@ public:
   ModelData* characterModelData;
 	SkeletonHandle skeletonHandle;
   AnimatorComponent* animator;
-	
-	GameObject* body;
-  GameObject* head;
 
 	// Properties
   bool bGridLocationChanged{false};

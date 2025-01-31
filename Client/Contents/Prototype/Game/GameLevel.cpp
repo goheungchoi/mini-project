@@ -10,7 +10,7 @@ void GameLevel::PrepareLevel()
   animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
   handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 
-  mapMeshHandle = LoadModel("Models\\Maps\\Museum\\Map_Museum.glb");
+  mapMeshHandle = LoadModel("Models\\Maps\\Map_001_Bar\\Map_001.glb");
 }
 
 void GameLevel::BeginLevel()
@@ -42,9 +42,9 @@ void GameLevel::CreateMap() {
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
 
-	map->CreateEnemyAt(4, 4, kEast);
-  map->CreateEnemyAt(3, 3, kEast);
-  map->CreateEnemyAt(2, 1, kEast);
+	// map->CreateEnemyAt(4, 4, kEast);
+  // map->CreateEnemyAt(3, 3, kEast);
+  // map->CreateEnemyAt(2, 1, kEast);
 
   // map->CreateAllyAt(kBrawler, 4, 5, kWest);
   // map->CreateAllyAt(kSlasher, 3, 5, kWest);

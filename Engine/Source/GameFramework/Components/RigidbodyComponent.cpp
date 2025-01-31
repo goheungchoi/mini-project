@@ -6,16 +6,25 @@
 #include "PhyjixWorld.h"
 
 void RigidbodyComponent::Initialize(
-    const DirectX::SimpleMath::Vector3& position,
-    const DirectX::SimpleMath::Vector3& size, ColliderShape cShape,
+    const DirectX::SimpleMath::Vector3& offsetTranslation,
+    const DirectX::SimpleMath::Quaternion& offsetQuaternion,
+    const DirectX::SimpleMath::Vector3& offsetSize, ColliderShape cShape,
     BOOL isStatic, BOOL isKinematic, IPhyjixWorld* world)
 {
   _world = world;
-  XMMATRIX translationMat = XMMatrixTranslationFromVector(position);
+  offsetMatrix = Matrix::CreateScale(offsetSize) *
+                 Matrix::CreateFromQuaternion(offsetQuaternion) *
+                 Matrix::CreateTranslation(offsetTranslation);
+  offsetInvMatrix = XMMatrixInverse(nullptr, offsetMatrix);
+
+
+  XMMATRIX offsetMat = offsetMatrix;
   XMMATRIX worldMat = GetTransformComponent()->GetLocalTransform();
-  translationMat = worldMat * translationMat;
-  XMVECTOR vec = translationMat.r[3];
-  _rigidbody = _world->AddRigidBody(translationMat.r[3], size,
+  offsetMat = worldMat * offsetMat;
+  XMVECTOR pos, rot, scale;
+  XMMatrixDecompose(&scale,&rot,&pos,offsetMat);
+  _rigidbody =
+      _world->AddRigidBody(pos, scale,
                                     cShape, isStatic,
                                     isKinematic);
   RegisterRigidBodyToWorld();
@@ -27,18 +36,21 @@ void RigidbodyComponent::SetCollisionEvent(IRigidBody* other,
   _rigidbody->SetCollisionEvent(eventType, other, event);
 }
 
-void RigidbodyComponent::SetTranslationAndRotation(Vector3& position,
-    Quaternion& quaternion)
+void RigidbodyComponent::SetOffsetTransform(const Vector3& offsetTranslation,
+                                            const Quaternion& offsetQuaternion,
+                                            const Vector3& offsetSize)
 {
-  Matrix parentMatrix = Matrix(GetTransformComponent()->GetGlobalTransform());
-  Matrix WorldMatrix = parentMatrix * Matrix::CreateFromQuaternion(quaternion) *
-                       Matrix::CreateTranslation(position);
+  XMMATRIX parentMatrix = GetTransformComponent()->GetGlobalTransform();
+  offsetMatrix = XMMatrixScalingFromVector(offsetSize) *
+                          XMMatrixRotationQuaternion(offsetQuaternion) *
+                          XMMatrixTranslationFromVector(offsetTranslation);
+  offsetInvMatrix = XMMatrixInverse(nullptr, offsetMatrix);
+  XMMATRIX WorldMatrix = parentMatrix * offsetMatrix;
 
-  Vector3 pos, scale;
-  Quaternion rot;
-  WorldMatrix.Decompose(scale, rot, pos);
+  XMVECTOR pos, rot, scale;
+  XMMatrixDecompose(&scale, &rot, &pos, WorldMatrix);
 
-  _rigidbody->SetWorldTransform(WorldMatrix.Translation(), rot);
+  _rigidbody->SetWorldTransform(pos, rot);
 }
 
 
@@ -91,15 +103,20 @@ void RigidbodyComponent::DisableGravity()
 
 void RigidbodyComponent::UpdateFromTransform()
 {
-  _rigidbody->SetWorldTransform(GetTransformComponent()->GetTranslation(),
-                                GetTransformComponent()->GetQuaternion());
-  _prevTransform = _rigidbody->GetWorldTransform();
+  XMMATRIX WorldMatrix =
+      GetTransformComponent()->GetGlobalTransform() * offsetMatrix;
+  XMVECTOR pos, rot, scale;
+  XMMatrixDecompose(&scale,&rot,&pos,WorldMatrix);
+
+  _rigidbody->SetWorldTransform(pos,rot);
+ // _prevTransform = _rigidbody->GetWorldTransform();
 
 
 }
 
 void RigidbodyComponent::UpdateToTransform()
 {
+
   XMVECTOR _S = GetTransformComponent()->GetScaling();
   XMVECTOR _R = _rigidbody->GetWorldRotation();
   XMVECTOR _T = _rigidbody->GetWorldPosition();
@@ -107,6 +124,7 @@ void RigidbodyComponent::UpdateToTransform()
   XMMATRIX transform = XMMatrixScalingFromVector(_S) *
                        XMMatrixRotationQuaternion(_R) *
                        XMMatrixTranslationFromVector(_T);
+  transform *= offsetInvMatrix;
   GetTransformComponent()->SetLocalTransform(transform);
 }
 

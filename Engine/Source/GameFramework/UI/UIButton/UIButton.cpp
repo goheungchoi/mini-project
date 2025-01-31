@@ -7,7 +7,8 @@ UIButton::~UIButton() {}
 
 void UIButton::Update(float dt)
 {
-  Vector2 mousePos = {static_cast<float>(Input.GetCurrMouseState().x), static_cast<float>(Input.GetCurrMouseState().y)};
+  Vector2 mousePos = {static_cast<float>(INPUT.GetCurrMouseState().x),
+                      static_cast<float>(INPUT.GetCurrMouseState().y)};
 
   int left = _position.x - (_size.x / 2);
   int top = _position.y - (_size.y / 2);
@@ -17,14 +18,14 @@ void UIButton::Update(float dt)
   if (left < mousePos.x && mousePos.x < right && top < mousePos.y &&
       mousePos.y < bottom)
   {
-    if (Input.IsKeyUp(MouseState::LB) || Input.IsKeyUp(MouseState::RB) ||
-        Input.IsKeyUp(MouseState::WM))
+    if (INPUT.IsKeyUp(MouseState::LB) || INPUT.IsKeyUp(MouseState::RB) ||
+        INPUT.IsKeyUp(MouseState::WM))
     {
       _state = BS_Clicked;
       OnClicked();
     }
-    else if (Input.IsKeyDown(MouseState::LB) ||
-             Input.IsKeyDown(MouseState::RB) || Input.IsKeyDown(MouseState::WM))
+    else if (INPUT.IsKeyDown(MouseState::LB) ||
+             INPUT.IsKeyDown(MouseState::RB) || INPUT.IsKeyDown(MouseState::WM))
     {
       _state = BS_Pressed;
       OnPressed();

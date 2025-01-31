@@ -13,26 +13,27 @@ Map::Map(World* world) : GameObject(world)
 {
   animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
 
-	grid = world->CreateGameObject<GridObject>();
+  grid = world->CreateGameObject<GridObject>();
   grid->CreateGrid(6, 6, 1.4f);
   grid->Translate(-0.6f, +0.01f, -0.8f);
 
-	AddChildGameObject(grid);
+  AddChildGameObject(grid);
 }
 
 Map::~Map() {}
 
-void Map::TurnOnPlacementMode(CharactorType type) {
+void Map::TurnOnPlacementMode(CharactorType type)
+{
   if (isPlacementModeOn)
   {
     return;
-	}
+  }
 
-	// Turn on the placement mode on grid.
+  // Turn on the placement mode on grid.
   grid->TurnOnSelectionMode();
 
-	// TODO: Placeholder's model should be transparent.
-	switch (type)
+  // TODO: Placeholder's model should be transparent.
+  switch (type)
   {
   case kBrawler: {
     Brawler* brawler =
@@ -59,18 +60,19 @@ void Map::TurnOnPlacementMode(CharactorType type) {
   break;
   }
 
-	TranslatePlaceholder();
+  TranslatePlaceholder();
 
   isPlacementModeOn = true;
 }
 
-void Map::TurnOffPlacementMode() {
+void Map::TurnOffPlacementMode()
+{
   if (!isPlacementModeOn)
   {
     return;
-	}
+  }
 
-	// Turn of the selection mode on grid
+  // Turn of the selection mode on grid
   grid->TurnOffSelectionMode();
 
   // Remove the placeholder.
@@ -81,28 +83,30 @@ void Map::TurnOffPlacementMode() {
   isPlacementModeOn = false;
 }
 
-void Map::TurnOnSimulationMode() {
-	// TODO:
+void Map::TurnOnSimulationMode()
+{
+  // TODO:
 }
 
-void Map::TriggerAction() {
+void Map::TriggerAction()
+{
   isActionTriggered = true;
 
   for (Character* enemy : enemies)
   {
     enemy->TriggerAction();
-	}
+  }
 
-	for (Character* ally : allies)
+  for (Character* ally : allies)
   {
     ally->TriggerAction();
-	}
+  }
 }
 
-void Map::ResetGame() {
-	// TODO:
+void Map::ResetGame()
+{
+  // TODO:
   isActionTriggered = false;
-
 }
 
 void Map::CreateEnemyAt(uint32_t w, uint32_t h, Direction dir)
@@ -113,10 +117,11 @@ void Map::CreateEnemyAt(uint32_t w, uint32_t h, Direction dir)
   gunman->SetDirection(dir);
   enemies.push_back(gunman);
 
-	AddChildGameObject(gunman);
+  AddChildGameObject(gunman);
 }
 
-void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir)
+void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h,
+                       Direction dir)
 {
   switch (type)
   {
@@ -166,57 +171,57 @@ void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
 
 void Map::CreateObstacleAt(uint32_t w, uint32_t h) {}
 
-void Map::OnAwake() {
+void Map::OnAwake()
+{
   // Translate({-4.f, 0.f, -4.f});
-
 }
 
 void Map::Update(float dt) {
-  if (Input.IsKeyPress(Key::Q))
-  {
-    parent->RotateAroundYAxis(dt);
-  }
-  if (Input.IsKeyPress(Key::E))
-  {
-    parent->RotateAroundYAxis(-dt);
-  }
+  //if (Input.IsKeyPress(Key::Q))
+  //{
+  //  parent->RotateAroundYAxis(dt);
+  //}
+  //if (Input.IsKeyPress(Key::E))
+  //{
+  //  parent->RotateAroundYAxis(-dt);
+  //}
 
-	if (isActionTriggered)
+  if (isActionTriggered)
   {
     if (isActionTriggered)
     {
-      if (Input.IsKeyPress(Key::R))
+      if (INPUT.IsKeyPress(Key::R))
       {
         ResetGame();
       }
     }
-	}
-	else if (isPlacementModeOn)
+  }
+  else if (isPlacementModeOn)
   {
-		// If a placeholder is not set
+    // If a placeholder is not set
     if (!placeholder)
     {
       isPlacementModeOn = false;
-		}
+    }
 
-		TranslatePlaceholder();
-    
-		// Cancel placement mode.
-		if (Input.IsKeyDown(Key::Escape))
+    TranslatePlaceholder();
+
+    // Cancel placement mode.
+    if (INPUT.IsKeyDown(Key::Escape))
     {
       TurnOffPlacementMode();
       return;
-		}
+    }
 
-		// Change the direction of the placeholder.
-    if (Input.IsKeyDown(Key::Tab))
+    // Change the direction of the placeholder.
+    if (INPUT.IsKeyDown(Key::Tab))
     {
       uint32_t dir = placeholder->GetDirection();
       placeholder->SetDirection((Direction)((dir + 1) % kNumDirections));
-		}
+    }
 
-		// Place the character.
-		if (Input.IsKeyDown(MouseState::LB))
+    // Place the character.
+    if (INPUT.IsKeyDown(MouseState::LB))
     {
       if (grid->selectedCell)
       {
@@ -228,35 +233,35 @@ void Map::Update(float dt) {
 
         // Turn off the placement mode
         TurnOffPlacementMode();
-			}
-		}
-	}
+      }
+    }
+  }
   else
   {
-    if (Input.IsKeyPress(Key::D1))
+    if (INPUT.IsKeyPress(Key::D1))
     {
       TurnOnPlacementMode(kBrawler);
       return;
-		}
+    }
 
-		if (Input.IsKeyPress(Key::D2))
+    if (INPUT.IsKeyPress(Key::D2))
     {
       TurnOnPlacementMode(kSlasher);
       return;
     }
 
-		if (Input.IsKeyPress(Key::D3))
+    if (INPUT.IsKeyPress(Key::D3))
     {
       TurnOnPlacementMode(kGunman);
       return;
     }
 
-    if (Input.IsKeyPress(Key::Space))
+    if (INPUT.IsKeyPress(Key::Space))
     {
       TriggerAction();
       return;
     }
-	}
+  }
 }
 
 XMVECTOR Map::GetCursorPosition() const
@@ -265,8 +270,8 @@ XMVECTOR Map::GetCursorPosition() const
   // y = 0, intersection between mouse pointer ray and p = (x, 0, z), n =
   // (0, 1, 0) plane. The placeholder character is translated to the
   // intersection point.
-  Vector2 mousePos{(float)Input.GetCurrMouseState().x,
-                   (float)Input.GetCurrMouseState().y};
+  Vector2 mousePos{(float)INPUT.GetCurrMouseState().x,
+                   (float)INPUT.GetCurrMouseState().y};
   Ray cursorRay = world->GetScreenCursorRay(mousePos);
   Plane xzPlane{{0, 0, 0}, {0, 1, 0}};
 
@@ -277,7 +282,8 @@ XMVECTOR Map::GetCursorPosition() const
   return intersection;
 }
 
-void Map::TranslatePlaceholder() {
+void Map::TranslatePlaceholder()
+{
   if (!placeholder)
     return;
 
@@ -300,4 +306,3 @@ void Map::TranslatePlaceholder() {
     placeholder->SetTranslation(cursorPos);
   }
 }
-

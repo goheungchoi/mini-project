@@ -149,6 +149,7 @@ public:
     albedoFactor = data.albedoFactor;
     metallicFactor = data.metallicFactor;
     roughnessFactor = data.roughnessFactor;
+    doubleSided = data.doubleSided;
     if (alphaMode == AlphaMode::kBlend || alphaMode == AlphaMode::kMask)
     {
       alphaCutoff = data.alphaCutoff;
