@@ -45,28 +45,31 @@ Character::Character(World* world) : GameObject(world)
   // animator->SetState(state);
   // animator->AdjustAnimationPlaySpeed(0.1f);
 
-	body = world->CreateGameObject();
+	// body = world->CreateGameObject();
   head = world->CreateGameObject();
-  AddChildGameObject(body);
+  // AddChildGameObject(body);
   AddChildGameObject(head);
 
-	auto* bodyRigidBody = body->CreateComponent<RigidbodyComponent>();
-  bodyRigidBody->Initialize({0, 0, 0}, {1.f, 1.f, 1.f},
+  /*body->SetTranslation(0, 1.f, 0);
+  body->SetScaling(0.4f, 1.2f, 0.2f);*/
+
+	auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
+  bodyRigidBody->Initialize({0, 0, 0}, {0.4f, 1.2f, 0.2f},
                             ColliderShape::eCubeCollider, false, false,
                             world->_phyjixWorld);
   bodyRigidBody->DisableGravity();
   bodyRigidBody->EnableDebugDraw();
-  body->SetTranslation(0, 1.f, 0);
-  body->SetScaling(0.4f, 1.2f, 0.2f);
+
+  head->SetTranslation(0, 1.8f, 0);
+  head->SetScaling(0.2f, 0.2f, 0.2f);
 
 	auto* headRigidBody = head->CreateComponent<RigidbodyComponent>();
-  headRigidBody->Initialize({0, 5.f, 0}, {1.f, 1.f, 1.f},
+  headRigidBody->Initialize({0, 0, 0}, {0.2f, 0.2f, 0.2f},
                             ColliderShape::eSphereCollider, false, false,
                             world->_phyjixWorld);
   headRigidBody->DisableGravity();
   headRigidBody->EnableDebugDraw();
-  head->SetTranslation(0, 1.8f, 0);
-  head->SetScaling(0.2f, 0.2f, 0.2f);
+  
 }
 
 Character::~Character() {
@@ -128,6 +131,14 @@ void Character::OnBeginOverlap(GameObject* other) {
 
 void Character::OnAwake()
 {
+  XMMATRIX global = transform->GetGlobalTransform();
+
+  Vector3 t = {0, 0.f, 0};
+  Quaternion q = {0, 0, 0, 1};
+  // body->GetComponent<RigidbodyComponent>()->SetTranslationAndRotation(t, q);
+  head->GetComponent<RigidbodyComponent>()->SetTranslationAndRotation(t, q);
+
+
   grid = world->FindGameObjectByType<GridObject>();
   if (!grid)
   {
@@ -159,6 +170,7 @@ void Character::OnAwake()
 
 void Character::Update(float dt) {
 
+  
 	if (isDead)
   {
 		// TODO: 

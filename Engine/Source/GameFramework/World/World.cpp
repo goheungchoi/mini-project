@@ -437,12 +437,11 @@ void World::Update(float dt)
     gameObject->Update(dt);
   }
 
-  ////Rigidbody updatefromtransform
-  //for (RigidbodyComponent* component : _currentLevel->GetRigidbodyList())
-  //{
-  //  component->UpdateFromTransform();
-  //}
-
+  //Rigidbody updatefromtransform
+  for (RigidbodyComponent* component : rigidBodyComponents)
+  {
+    component->UpdateFromTransform();
+  }
 
   //phjix simulate
   _phyjixWorld->UpdateRay(
