@@ -11,7 +11,13 @@ void RigidbodyComponent::Initialize(
     BOOL isStatic, BOOL isKinematic, IPhyjixWorld* world)
 {
   _world = world;
-  _rigidbody = _world->AddRigidBody(position, size, cShape, isStatic, isKinematic);
+  XMMATRIX translationMat = XMMatrixTranslationFromVector(position);
+  XMMATRIX worldMat = GetTransformComponent()->GetLocalTransform();
+  translationMat = worldMat * translationMat;
+  XMVECTOR vec = translationMat.r[3];
+  _rigidbody = _world->AddRigidBody(translationMat.r[3], size,
+                                    cShape, isStatic,
+                                    isKinematic);
   RegisterRigidBodyToWorld();
 }
 
