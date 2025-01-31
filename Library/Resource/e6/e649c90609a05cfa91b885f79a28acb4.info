@@ -1,0 +1,27 @@
+{
+    "uuid": "e649c90609a05cfa91b885f79a28acb4",
+    "import_path": "Models\\Maps\\MuseumCamera\\MuseumTile.0020.mat",
+    "resource_type": "model",
+    "details": {
+        "name": "MuseumTile.0020",
+        "albedo_factor": [
+            [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ]
+        ],
+        "albedo_texture": "Models\\Maps\\MuseumCamera\\*6",
+        "metallic_factor": 1.0,
+        "roughness_factor": 1.0,
+        "metallic_roughness_texture": "Models\\Maps\\MuseumCamera\\*7",
+        "normal_texture": "Models\\Maps\\MuseumCamera\\*8",
+        "occlusion_texture": "",
+        "emissive_factor": 0.0,
+        "emissive_texture": "",
+        "alpha_mode": "AlphaMode_kOpaque",
+        "alpha_cutoff": 0.5,
+        "double_sided": true
+    }
+}

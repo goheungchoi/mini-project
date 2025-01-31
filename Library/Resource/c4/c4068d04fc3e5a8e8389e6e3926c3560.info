@@ -1,0 +1,24 @@
+{
+    "uuid": "c4068d04fc3e5a8e8389e6e3926c3560",
+    "import_path": "Models\\Maps\\MuseumCamera\\Cylinder.0020.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Cylinder.0020",
+        "bounding_box": [
+            [
+                -0.6976932883262634,
+                -9.313225746154785e-10,
+                -0.20266927778720856
+            ],
+            [
+                0.6976932883262634,
+                1.9546947479248047,
+                0.18626587092876434
+            ]
+        ],
+        "num_vertices": 1562,
+        "num_indices": 6726,
+        "material": "Models\\Maps\\MuseumCamera\\Material.0090.mat",
+        "num_bones": 0
+    }
+}

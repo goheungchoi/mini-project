@@ -350,6 +350,22 @@ void World::InitialStage() {
   {
     if (gameObject->status == EStatus_Awake && gameObject->bShouldActivate)
     {
+      auto* transform = gameObject->transform;
+      transform->UpdateLocalTransform();
+    }
+  }
+
+  for (GameObject* gameObject : _currentLevel->GetGameObjectList())
+  {
+    if (gameObject->status == EStatus_Awake && gameObject->bShouldActivate)
+    {
+      // Update hierarchical transforms
+      auto* transform = gameObject->transform;
+      UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
+        auto* transform = object->transform;
+        transform->UpdateGlobalTransform();
+      });
+
       // Awake the game objects and activate it.
       UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
         object->OnAwake();
