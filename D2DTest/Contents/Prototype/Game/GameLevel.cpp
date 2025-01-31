@@ -3,7 +3,7 @@
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 #include "Contents/Prototype/UI/TestUI.h"
-#define USED2D
+//#define USED2D
 
 void GameLevel::PrepareLevel()
 {
