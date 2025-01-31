@@ -13,14 +13,16 @@ class RigidbodyComponent : public ComponentBase
 public:
 
   //rigidbody initalize
-  void Initialize(const DirectX::SimpleMath::Vector3& position,
+  void Initialize(const DirectX::SimpleMath::Vector3& offsetTranslation,
+                  const DirectX::SimpleMath::Quaternion& offsetQuaternion,
                   const DirectX::SimpleMath::Vector3& size,
                   ColliderShape cShape, BOOL isStatic, BOOL isKinematic,
                   IPhyjixWorld* world);
 
   //wrapper of the iRigidbody collision setting
   void SetCollisionEvent(IRigidBody* other, eCollisionEventType eventType, Event event);
-  void SetTranslationAndRotation(Vector3& position,Quaternion& quaternion);
+  void SetOffsetTransform(const Vector3& position, const Quaternion& quaternion,
+                          const Vector3& scale);
 
 
   RigidbodyComponent(class GameObject* owner) : ComponentBase(owner) {}
@@ -51,7 +53,8 @@ public:
   void EndOverlap(RigidbodyComponent* other);
 
 private:
-
+  XMMATRIX offsetMatrix = Matrix::Identity;
+  XMMATRIX offsetInvMatrix = Matrix::Identity;
 
   TransformComponent* GetTransformComponent();
   IRigidBody* _rigidbody = nullptr;

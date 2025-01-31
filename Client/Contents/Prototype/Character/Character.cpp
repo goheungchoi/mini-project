@@ -126,18 +126,18 @@ void Character::OnAwake()
 
 
   auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
-  bodyRigidBody->Initialize({0, 0, 0}, {0.4f, 1.2f, 0.2f},
+  bodyRigidBody->Initialize({0, 0, 0}, Quaternion::Identity,{0.4f, 1.2f, 0.2f},
                             ColliderShape::eCubeCollider, false, false,
                             world->_phyjixWorld);
   bodyRigidBody->DisableGravity();
   bodyRigidBody->EnableDebugDraw();
-
+  bodyRigidBody->DisableCollision();
   XMMATRIX global = transform->GetGlobalTransform();
   
   Vector3 t = {0, 0.f, 0};
   Quaternion q = {0, 0, 0, 1};
   // body->GetComponent<RigidbodyComponent>()->SetTranslationAndRotation(t, q);
-  GetComponent<RigidbodyComponent>()->SetTranslationAndRotation(t, q);
+  //GetComponent<RigidbodyComponent>()->SetOffsetTransform(t, q, {1,1,1});
 }
 
 // TODO:
