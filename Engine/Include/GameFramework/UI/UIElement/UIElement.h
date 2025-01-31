@@ -23,7 +23,7 @@ public:
 
   void SetownerPanel(class UIPanel* ownerPanel) { _ownerPanel = ownerPanel; }
   
-  void SetPosition(Vector2 pos) { _position = pos; }
+  void SetPosition(Vector2 pos);
   Vector2 GetPosition() { return _position; }
 
   void SetSize(Vector2 size) { _size = size; }
