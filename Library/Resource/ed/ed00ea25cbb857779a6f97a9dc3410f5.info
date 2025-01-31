@@ -1,0 +1,24 @@
+{
+    "uuid": "ed00ea25cbb857779a6f97a9dc3410f5",
+    "import_path": "Models\\Maps\\RetopoFlow.0010.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "RetopoFlow.0010",
+        "bounding_box": [
+            [
+                -0.41553646326065063,
+                -5.961919669061899e-08,
+                -0.41416192054748535
+            ],
+            [
+                0.4155363440513611,
+                1.4957871437072754,
+                0.41405031085014343
+            ]
+        ],
+        "num_vertices": 782,
+        "num_indices": 948,
+        "material": "Models\\Maps\\Moum.0012.mat",
+        "num_bones": 0
+    }
+}

@@ -20,6 +20,8 @@ public:
 
   //wrapper of the iRigidbody collision setting
   void SetCollisionEvent(IRigidBody* other, eCollisionEventType eventType, Event event);
+  void SetTranslationAndRotation(Vector3& position,Quaternion& quaternion);
+
 
   RigidbodyComponent(class GameObject* owner) : ComponentBase(owner) {}
   ~RigidbodyComponent();

@@ -11,7 +11,13 @@ void RigidbodyComponent::Initialize(
     BOOL isStatic, BOOL isKinematic, IPhyjixWorld* world)
 {
   _world = world;
-  _rigidbody = _world->AddRigidBody(position, size, cShape, isStatic, isKinematic);
+  XMMATRIX translationMat = XMMatrixTranslationFromVector(position);
+  XMMATRIX worldMat = GetTransformComponent()->GetLocalTransform();
+  translationMat = worldMat * translationMat;
+  XMVECTOR vec = translationMat.r[3];
+  _rigidbody = _world->AddRigidBody(translationMat.r[3], size,
+                                    cShape, isStatic,
+                                    isKinematic);
   RegisterRigidBodyToWorld();
 }
 
@@ -20,6 +26,22 @@ void RigidbodyComponent::SetCollisionEvent(IRigidBody* other,
 {
   _rigidbody->SetCollisionEvent(eventType, other, event);
 }
+
+void RigidbodyComponent::SetTranslationAndRotation(Vector3& position,
+    Quaternion& quaternion)
+{
+  Matrix parentMatrix = Matrix(GetTransformComponent()->GetGlobalTransform());
+  Matrix WorldMatrix = parentMatrix * Matrix::CreateFromQuaternion(quaternion) *
+                       Matrix::CreateTranslation(position);
+
+  Vector3 pos, scale;
+  Quaternion rot;
+  WorldMatrix.Decompose(scale, rot, pos);
+
+  _rigidbody->SetWorldTransform(WorldMatrix.Translation(), rot);
+}
+
+
 
 RigidbodyComponent::~RigidbodyComponent() {
   _world->RemoveRigidBody(_rigidbody);

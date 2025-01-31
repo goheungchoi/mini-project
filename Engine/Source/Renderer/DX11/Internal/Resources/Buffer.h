@@ -69,11 +69,13 @@ struct StaticMesh
 {
   MeshBuffer* buffer = nullptr;
   Matrix world;
+  Color outlineColor;
 };
 struct SkelMesh
 {
   MeshBuffer* buffer = nullptr;
   Matrix world;
   std::vector<XMMATRIX> boneMatrix;
+  Color outlineColor;
 };
 }

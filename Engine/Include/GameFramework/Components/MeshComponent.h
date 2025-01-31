@@ -4,11 +4,15 @@
 
 #include "Core/Handle/ResourceHandle.h"
 
+#include "Core/Types/RenderType.h"
+
 class MeshComponent : public ComponentBase
 {
 public:
   bool isVisible{true};
   bool bCastShadow{true};
+  RenderTypeFlags renderTypeFlags{};
+  Color outlineColor{};
   std::vector<MeshHandle> subMeshHandles;
 
 	MeshComponent(class GameObject* owner) : ComponentBase(owner) {}

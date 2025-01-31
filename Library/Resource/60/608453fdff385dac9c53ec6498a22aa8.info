@@ -19,7 +19,6 @@
         "num_vertices": 54,
         "num_indices": 150,
         "material": "Models\\Maps\\Moum5.mat",
-        "bones": [],
-        "bone_weights": []
+        "num_bones": 0
     }
 }

@@ -6,11 +6,15 @@
 
 #include "Core/Handle/ResourceHandle.h"
 
+#include "Core/Types/RenderType.h"
+
 class SkeletalMeshComponent : public ComponentBase
 {
 public:
   bool isVisible{true};
   bool bCastShadow{true};
+  RenderTypeFlags renderTypeFlags{};
+  Color outlineColor{};
 
   std::unordered_map<std::string, Bone> boneNameMap;
   std::vector<XMMATRIX> boneTransforms;

@@ -1,5 +1,6 @@
 {
     "import_path": "Models\\Maps\\*1",
+    "export_path": "C:\\Users\\user\\Desktop\\svn\\Team_Rebellion\\5_Project\\mini-project\\Library\\Resource\\bd\\bd54a51659885942be4c36817753827d",
     "resource_type": "texture",
     "details": {
         "is_normal": false,
