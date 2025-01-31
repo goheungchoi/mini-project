@@ -176,16 +176,15 @@ void Map::OnAwake()
   // Translate({-4.f, 0.f, -4.f});
 }
 
-void Map::Update(float dt)
-{
-  if (INPUT.IsKeyPress(Key::Q))
-  {
-    parent->RotateAroundYAxis(dt);
-  }
-  if (INPUT.IsKeyPress(Key::E))
-  {
-    parent->RotateAroundYAxis(-dt);
-  }
+void Map::Update(float dt) {
+  //if (Input.IsKeyPress(Key::Q))
+  //{
+  //  parent->RotateAroundYAxis(dt);
+  //}
+  //if (Input.IsKeyPress(Key::E))
+  //{
+  //  parent->RotateAroundYAxis(-dt);
+  //}
 
   if (isActionTriggered)
   {

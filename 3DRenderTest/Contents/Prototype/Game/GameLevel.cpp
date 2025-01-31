@@ -1,5 +1,4 @@
 #include "GameLevel.h"
-
 #include "Map.h"
 
 void GameLevel::PrepareLevel()
@@ -15,9 +14,10 @@ void GameLevel::PrepareLevel()
 
 void GameLevel::BeginLevel()
 {
-  gameCamera = world->CreateGameObject<FixedCameraObject>();
-  gameCamera->SetCameraPosition({-10.f, 10.f, -10.f});
-  gameCamera->SetFocus({1.f, 1.f, 1.f});
+  gameCamera = world->CreateGameObject<CameraObject>();
+  gameCamera->InitCamera(kScreenWidth, kScreenHeight,XM_PIDIV4);
+ /* gameCamera->SetCameraPosition({-10.f, 10.f, -10.f});
+  gameCamera->SetFocus({1.f, 1.f, 1.f});*/
   gameCamera->SetAsMainCamera();
 
   
@@ -41,7 +41,7 @@ void GameLevel::CreateMap() {
   map = world->CreateGameObjectFromModel<Map>(mapMeshHandle);
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
-
+  
 	map->CreateEnemyAt(4, 4, kEast);
   map->CreateEnemyAt(3, 3, kEast);
   map->CreateEnemyAt(2, 1, kEast);

@@ -1,0 +1,24 @@
+{
+    "uuid": "487f994011115040b384c6b3f4869c65",
+    "import_path": "Models\\Maps\\MuseumCamera\\Circle.0020.mesh",
+    "resource_type": "model",
+    "details": {
+        "name": "Circle.0020",
+        "bounding_box": [
+            [
+                -0.2128131091594696,
+                1.2581555843353271,
+                -0.2004336416721344
+            ],
+            [
+                0.2128131091594696,
+                1.9657894372940063,
+                0.15180110931396484
+            ]
+        ],
+        "num_vertices": 389,
+        "num_indices": 1584,
+        "material": "Models\\Maps\\MuseumCamera\\Material.0070.mat",
+        "num_bones": 0
+    }
+}
