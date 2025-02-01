@@ -59,6 +59,8 @@ public:
 
   // D2D Renderer
   void CreateSprite(LPCSTR path, Vector2 pos) override;
+  void DrawTexts(const wchar_t* format, Vector4 rect, Color color,
+                 const TextFormatInfo* textFormatInfo) override;
   void CreateText(const wchar_t* format, Vector4 rect,
                   const std::wstring& fontName = L"Agency FB",
                   Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) override;

@@ -7,7 +7,7 @@
 #include "Internal/Resources/PipeLineState.h"
 #include "Internal/SwapChain.h"
 #include "Renderer/D2DRenderer/D2DRenderer.h"
-//#define USED2D
+#define USED2D
 DX11Renderer::~DX11Renderer() {}
 bool DX11Renderer::Init_Win32(int width, int height, void* hInstance,
                               void* hwnd)
@@ -369,6 +369,12 @@ void DX11Renderer::DrawImGui()
 void DX11Renderer::CreateSprite(LPCSTR path, Vector2 pos)
 {
   _d2dRenderer->CreateSprite(path, pos);
+}
+
+void DX11Renderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
+                             const TextFormatInfo* textFormatInfo)
+{
+  _d2dRenderer->DrawTexts(format, rect, color, textFormatInfo);
 }
 
 void DX11Renderer::CreateText(const wchar_t* format, Vector4 rect,

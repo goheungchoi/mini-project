@@ -16,4 +16,9 @@ TestGameObject::TestGameObject(World* world)
 void TestGameObject::OnRender() 
 {
   GetWorld()->_renderer->DrawRectangle({1, 1, 1, 1}, {0, 0, 200, 200}, 1.0f);
+
+  TextFormatInfo txtinfo;
+  txtinfo._fontName = L"궁서";
+  GetWorld()->_renderer->DrawTexts(L"텍스트Test1234", {300, 500, 1000, 1000},
+                                   {0, 1, 0, 1}, &txtinfo);
 }

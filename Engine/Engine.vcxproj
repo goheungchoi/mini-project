@@ -199,6 +199,7 @@
 		<ClCompile Include="Include\Core\Types\Billboard.cpp" />
 		<ClInclude Include="Include\Core\Types\Billboard.h" />
 		<ClInclude Include="Include\Core\Types\BoneData.h" />
+		<ClInclude Include="Include\Core\Types\FontType.h" />
 		<ClInclude Include="Include\Core\Types\LightData.h" />
 		<ClInclude Include="Include\Core\Types\LightTypes.h" />
 		<ClInclude Include="Include\Core\Types\MaterialData.h" />
@@ -235,6 +236,7 @@
 		<ClInclude Include="Include\GameFramework\UI\UIText\UIText.h" />
 		<ClInclude Include="Include\GameFramework\World\World.h" />
 		<ClInclude Include="Include\Renderer\IRenderer.h" />
+		<ClInclude Include="Include\Resource2DManager\Resource2DManager.h" />
 		<ClInclude Include="Include\ResourceManager\ResourceManager.h" />
 		<ClInclude Include="Include\WinApp\WinApp.h" />
 		<ClInclude Include="Include\WindowManager\WindowManager.h" />
@@ -267,6 +269,8 @@
 		<ClCompile Include="Source\GameFramework\UI\UIPanel\UIPanel.cpp" />
 		<ClCompile Include="Source\GameFramework\UI\UIText\UIText.cpp" />
 		<ClCompile Include="Source\GameFramework\World\World.cpp" />
+		<ClCompile Include="Source\Renderer\D2DRenderer\Animation2D\Animation2D.cpp" />
+		<ClInclude Include="Source\Renderer\D2DRenderer\Animation2D\Animation2D.h" />
 		<ClInclude Include="Source\Renderer\D2DRenderer\Common.h" />
 		<ClCompile Include="Source\Renderer\D2DRenderer\D2DRenderer.cpp" />
 		<ClInclude Include="Source\Renderer\D2DRenderer\D2DRenderer.h" />
@@ -306,6 +310,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\Types.h" />
 		<None Include="Source\Renderer\DX11\Shader\DX11Shader.hlsl" />
 		<None Include="Source\Renderer\DX11\Shader\utility.hlsli" />
+		<ClCompile Include="Source\Resource2DManager\Resource2DManager.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\AnimationResourcePool.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\MaterialResourcePool.cpp" />

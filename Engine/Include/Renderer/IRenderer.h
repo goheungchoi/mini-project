@@ -4,6 +4,8 @@
 #include "Core/Types/LightTypes.h"
 #include "Core/Types/Billboard.h"
 #include "Core/Types/RenderType.h"
+#include "Core/Types/FontType.h"
+
 using namespace std;
 /**
  * @brief
@@ -126,6 +128,9 @@ public:
 
   // D2D Renderer
   virtual void CreateSprite(LPCSTR path, Vector2 pos) = 0;
+
+  virtual void DrawTexts(const wchar_t* format, Vector4 rect, Color color,
+                         const TextFormatInfo* textFormatInfo) = 0;
 
   virtual void CreateText(const wchar_t* format, Vector4 rect,
                           const std::wstring& fontName = L"Agency FB",

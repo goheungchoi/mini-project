@@ -11,11 +11,12 @@ TestUI::TestUI(World* world) : UIPanel(world)
 
   testBtn = CreateUI<UIButton>(L"TestButton");
   testBtn->SetPosition({200, 200});
-  
+
   testBtn->AddOnClickHandler([this]() {
-    _world->_renderer->CreateText(L"사라진 아이들에 대한 단서 찾기",
+    _world->_renderer->CreateText(
+        L"사라진 아이들에 대한 단서 찾기",
         {0, 0, testIMG->GetSize().x, testIMG->GetSize().y}, L"궁서",
-                                  {0, 0, 0, 1});
+        {0, 0, 0, 1});
   });
 
   testBtn->AddOnHoveredHandler([this]() {
@@ -30,16 +31,22 @@ TestUI::TestUI(World* world) : UIPanel(world)
         {0, 0, 0, 1});
   });
 
-  //testBtn->AddOnUnHoveredHandler([this]() {
-  //  _world->_renderer->CreateSprite("Textures\\Test_QuestUI_1.png", {0, 0});
-  //});
-
+  // testBtn->AddOnUnHoveredHandler([this]() {
+  //   _world->_renderer->CreateSprite("Textures\\Test_QuestUI_1.png", {0, 0});
+  // });
 }
 
 TestUI::~TestUI() {}
 
-void TestUI::Render() 
+void TestUI::Render()
 {
-    // 작동안됨... 렌더 구조 잘못짜서 그런듯... TestGameObject와 비교 해볼 것
+  // 작동안됨... 렌더 구조 잘못짜서 그런듯... TestGameObject와 비교 해볼 것
+  // 주석 풀고 text 출력되는지 확인하면서 구조 짜기
+  
   //_world->_renderer->DrawRectangle({0, 1, 1, 1}, {50, 50, 100, 100}, 2.0f);
+
+  //TextFormatInfo txtinfo;
+  //txtinfo._fontName = L"궁서";
+  //_world->_renderer->DrawTexts(L"텍스트Test1234", {300, 300, 1000, 1000},
+  //                             {0, 1, 0, 1}, &txtinfo);
 }
