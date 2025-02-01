@@ -101,11 +101,9 @@ void RigidbodyComponent::DisableSimulation()
 
 void RigidbodyComponent::UpdateFromTransform()
 {
-
-  _rigidbody->SetWorldTransform(
-      GetTransformComponent()->GetGlobalTranslation(),
-      GetTransformComponent()->GetGlobalQuaternion());
- // _prevTransform = _rigidbody->GetWorldTransform();
+  _rigidbody->SetWorldTransform(GetTransformComponent()->GetTranslation(),
+                                GetTransformComponent()->GetQuaternion());
+  _prevTransform = _rigidbody->GetWorldTransform();
 
 
 }
@@ -120,7 +118,7 @@ void RigidbodyComponent::UpdateToTransform()
   XMMATRIX transform = XMMatrixScalingFromVector(_S)*
                        XMMatrixRotationQuaternion(_R) *
                        XMMatrixTranslationFromVector(_T);
-  GetTransformComponent()->globalTransform =  transform;
+  GetTransformComponent()->SetLocalTransform(transform);
 }
 
 void RigidbodyComponent::EnableDebugDraw()

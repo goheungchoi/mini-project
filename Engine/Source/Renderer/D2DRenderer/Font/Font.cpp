@@ -20,7 +20,7 @@ void Font::Init()
 {
   CreateIDWriteFactory();
 
-  CreateTextFormat(L"Agency FB", 100.0f);
+  CreateTextFormat(L"Agency FB", 30.0f);
   CreateTextFormat(L"궁서", 32.0f);
 }
 
@@ -57,8 +57,9 @@ void Font::CreateTextFormat(const std::wstring& fontName, float size,
   HR_T(pDWriteFactory->CreateTextFormat(
       fontName.c_str(), // 글꼴 이름
       NULL,             // 글꼴 컬렉션 (NULL은 시스템 기본 사용)
-      static_cast<DWRITE_FONT_WEIGHT>(fontWeight), DWRITE_FONT_STYLE_NORMAL,
-      DWRITE_FONT_STRETCH_NORMAL,
+      static_cast<DWRITE_FONT_WEIGHT>(fontWeight),
+      static_cast<DWRITE_FONT_STYLE> (FontStyle::NORMAL),
+      static_cast<DWRITE_FONT_STRETCH>(FontStretch::NORMAL),
       size,     // 글꼴 크기
       L"ko-KR", // 로케일
       &pTextFormat));
@@ -71,7 +72,6 @@ void Font::CreateTextFormat(const std::wstring& fontName, float size,
 
   _Fonts.insert({fontName, pTextFormat});
 }
-
 
 
 IDWriteTextFormat* Font::FindFont(const std::wstring& fontName)

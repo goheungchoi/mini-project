@@ -323,6 +323,10 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
 }
 void DX11Renderer::CreateParticle() {}
 void DX11Renderer::DeleteParticle() {}
+void DX11Renderer::CreateBillboard(Billboard* billboard) 
+{
+  billboard = new Billboard(_device);
+}
 #ifdef _DEBUG
 void DX11Renderer::DrawDebugSphere(Matrix world, Color color)
 {

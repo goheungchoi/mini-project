@@ -24,7 +24,7 @@ struct Frame
 struct World
 {
   Matrix world;
-  Color color;
+  //Color color;
 };
 
 struct PixelData
@@ -37,7 +37,7 @@ struct PixelData
 };
 struct BoneMatrix
 {
-  XMMATRIX matrix[256] = {};
+  XMMATRIX matrix[512] = {};
 };
 } // namespace Constant
 

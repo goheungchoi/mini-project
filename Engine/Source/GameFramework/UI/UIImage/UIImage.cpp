@@ -11,3 +11,8 @@ void UIImage::SetSprite(LPCSTR path, Vector2 pos)
   _size = _sprite->GetTextureSize();
   _sprite->SetPos(pos);
 }
+
+void UIImage::SetPosition(Vector2 pos) 
+{
+  _sprite->SetPos(pos);
+}

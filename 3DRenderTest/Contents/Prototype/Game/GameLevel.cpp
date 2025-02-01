@@ -6,10 +6,10 @@ void GameLevel::PrepareLevel()
   redCellModelHandle = LoadModel("Models\\RedCell\\RedCell.glb");
   greenCellModelHandle = LoadModel("Models\\GreenCell\\GreenCell.glb");
 
-  animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
+  animTestHandle = LoadModel("Models\\Charactor\\Enemy\\Enemy.fbx");
   handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 
-  mapMeshHandle = LoadModel("Models\\Maps\\Museum\\Map_Museum.glb");
+  mapMeshHandle = LoadModel("Models\\Map_001_Bar\\Map_001.glb");
 }
 
 void GameLevel::BeginLevel()
@@ -20,6 +20,7 @@ void GameLevel::BeginLevel()
   gameCamera->SetFocus({1.f, 1.f, 1.f});*/
   gameCamera->SetAsMainCamera();
 
+  pBillboard = world->CreateGameObject<TestGameObject>();
   
   // map->Translate(0.6f, -0.01f, 0.8f);
   CreateMap();

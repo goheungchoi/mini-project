@@ -12,7 +12,6 @@
 #include "Contents/Prototype/Grid/GridLevel.h"
 #include "Contents/Prototype/Game/GameLevel.h"
 #include "Contents/Levels/TestLevel.h"
-
 static GridLevel* gridLevel;
 static TestLevel* testLevel;
 

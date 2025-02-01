@@ -67,6 +67,7 @@ public:
 
 private:
 
+
   TransformComponent* GetTransformComponent();
   IRigidBody* _rigidbody = nullptr;
   IPhyjixWorld* _world = nullptr;
