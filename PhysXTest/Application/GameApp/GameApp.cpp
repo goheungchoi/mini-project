@@ -1,4 +1,4 @@
-#include "GameApp.h"
+ï»¿#include "GameApp.h"
 
 #include "Core/Input/InputSystem.h"
 #include "Core/Time/TimeSystem.h"
@@ -8,9 +8,10 @@
 #include "GameFramework/Level/Level.h"
 #include "GameFramework/World/World.h"
 
+
+#include "Contents/Prototype/Grid/GridLevel.h"
+#include "Contents/Prototype/Game/GameLevel.h"
 #include "Contents/Levels/TestLevel.h"
-#include "Contents/Prototype/GameLevel.h"
-#include "Contents/Prototype/GridLevel.h"
 
 static GridLevel* gridLevel;
 static TestLevel* testLevel;
@@ -22,8 +23,8 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
 {
   Super::Initialize(screenWidth, screenHeight, title);
 
-  // µğ¹ö±×¿ë ÄÜ¼ÖÃ¢ »ı¼º *Debug*
-  bool bUseConsole = true; // ÀÌ°Å true·Î ¹Ù²Ù¸é ÄÜ¼ÖÃ¢ ¶ä.
+  // ë””ë²„ê·¸ìš© ì½˜ì†”ì°½ ìƒì„± *Debug*
+  bool bUseConsole = true; // ì´ê±° trueë¡œ ë°”ê¾¸ë©´ ì½˜ì†”ì°½ ëœ¸.
   if (bUseConsole)
   {
     AllocConsole();
@@ -33,12 +34,12 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
 
   _world = World::CreateWorld(_hwnd, title);
 
-  gridLevel = new GridLevel("Test Grid Level", 5, 5);
+	gridLevel = new GridLevel("Test Grid Level", 5, 5);
   testLevel = new TestLevel();
 
-  gameLevel = new GameLevel("Test Game Level");
+	gameLevel = new GameLevel("Test Game Level");
 
-  _world->AddLevel(gridLevel);
+	_world->AddLevel(gridLevel);
   _world->AddLevel(testLevel);
   _world->AddLevel(gameLevel);
   _world->PrepareChangeLevel(gameLevel->name);
@@ -63,16 +64,14 @@ void GameApp::ProcessInput(float dt)
 
 void GameApp::FixedUpdate(float fixedRate)
 {
-  //_world->FixedUpdate(fixedRate);
-  //_world->PhysicsUpdate(fixedRate);
 }
 
 void GameApp::Update(float dt)
 {
   _world->ProcessInput(dt);
   _world->PreUpdate(dt);
-  _world->Update(dt);
   _world->AnimationUpdate(dt);
+  _world->Update(dt);
   _world->PostUpdate(dt);
 }
 
@@ -84,7 +83,7 @@ void GameApp::Render()
 
 bool GameApp::OnActivated()
 {
-  // TODO: °ÔÀÓÀÌ È°¼ºÈ­µÈ À©µµ¿ì°¡ µË´Ï´Ù.
+  // TODO: ê²Œì„ì´ í™œì„±í™”ëœ ìœˆë„ìš°ê°€ ë©ë‹ˆë‹¤.
 
   std::cout << "GameApp::OnActivated()" << std::endl;
 
@@ -93,7 +92,7 @@ bool GameApp::OnActivated()
 
 bool GameApp::OnDeactivated()
 {
-  // TODO: °ÔÀÓÀÌ ¹é±×¶ó¿îµå À©µµ¿ì·Î ÀüÈ¯µË´Ï´Ù.
+  // TODO: ê²Œì„ì´ ë°±ê·¸ë¼ìš´ë“œ ìœˆë„ìš°ë¡œ ì „í™˜ë©ë‹ˆë‹¤.
 
   std::cout << "GameApp::OnDeactivated()" << std::endl;
 
@@ -102,7 +101,7 @@ bool GameApp::OnDeactivated()
 
 bool GameApp::OnSuspending()
 {
-  // TODO: °ÔÀÓÀÌ ÀıÀü ¸ğµå·Î ÀüÈ¯µË´Ï´Ù(¶Ç´Â ÃÖ¼ÒÈ­µË´Ï´Ù).
+  // TODO: ê²Œì„ì´ ì ˆì „ ëª¨ë“œë¡œ ì „í™˜ë©ë‹ˆë‹¤(ë˜ëŠ” ìµœì†Œí™”ë©ë‹ˆë‹¤).
 
   std::cout << "GameApp::OnSuspending()" << std::endl;
 
@@ -111,7 +110,7 @@ bool GameApp::OnSuspending()
 
 bool GameApp::OnResuming()
 {
-  // TODO: °ÔÀÓÀÌ ÀıÀü ¸ğµå¿¡¼­ º¹±Í(¶Ç´Â ÃÖ¼ÒÈ­ º¹±Í)ÇÕ´Ï´Ù.
+  // TODO: ê²Œì„ì´ ì ˆì „ ëª¨ë“œì—ì„œ ë³µê·€(ë˜ëŠ” ìµœì†Œí™” ë³µê·€)í•©ë‹ˆë‹¤.
 
   std::cout << "GameApp::OnResuming()" << std::endl;
 
@@ -120,7 +119,7 @@ bool GameApp::OnResuming()
 
 bool GameApp::OnWindowResized()
 {
-  // TODO: °ÔÀÓ À©µµ¿ì Å©±â°¡ Á¶Á¤µË´Ï´Ù.
+  // TODO: ê²Œì„ ìœˆë„ìš° í¬ê¸°ê°€ ì¡°ì •ë©ë‹ˆë‹¤.
 
   std::cout << "GameApp::OnWindowResized()" << std::endl;
 
@@ -131,10 +130,10 @@ void GameApp::Run()
 {
   TimeSystem::Reset();
 
-  double dt = 0.0;               // µ¨Å¸ Å¸ÀÓ
-  double dtThreshole = 0.25;     // ÃÖ´ë µ¨Å¸ Å¸ÀÓ
-  double fixedRate = kFixedRate; // ÇÈ½º Å¸ÀÓ
-  double accumulator = 0.0;      // ÇÈ½º Å¸ÀÓ Æ®·¹Å·
+  double dt = 0.0;               // ë¸íƒ€ íƒ€ì„
+  double dtThreshole = 0.25;     // ìµœëŒ€ ë¸íƒ€ íƒ€ì„
+  double fixedRate = kFixedRate; // í”½ìŠ¤ íƒ€ì„
+  double accumulator = 0.0;      // í”½ìŠ¤ íƒ€ì„ íŠ¸ë ˆí‚¹
 
   // Main Loop
   MSG msg = {};
@@ -164,16 +163,16 @@ void GameApp::Run()
 
       _world->InitialStage();
 
-      // °ÔÀÓ ·çÇÁ ¼Ò¿ëµ¹ÀÌ¸¦ ¹æ¾îÇÏ±â À§ÇØ µ¨Å¸Å¸ÀÓÀÌ ÀÏÁ¤½Ã°£ ÀÌ»ó ³Ñ¾î°¡¸é
-      // ÇÈ½º ÇÕ´Ï´Ù.
+      // ê²Œì„ ë£¨í”„ ì†Œìš©ëŒì´ë¥¼ ë°©ì–´í•˜ê¸° ìœ„í•´ ë¸íƒ€íƒ€ì„ì´ ì¼ì •ì‹œê°„ ì´ìƒ ë„˜ì–´ê°€ë©´
+      // í”½ìŠ¤ í•©ë‹ˆë‹¤.
       dtThreshole = 0.25;
       if (dt > dtThreshole)
         dt = dtThreshole; // Clamp the frame time
 
-      // ÇÁ·¹ÀÓ Å¸ÀÓÀ» ´©ÀûÇØ¼­ ÇÈ½º Å¸ÀÓÀ» ÃßÀûÇÕ´Ï´Ù.
+      // í”„ë ˆì„ íƒ€ì„ì„ ëˆ„ì í•´ì„œ í”½ìŠ¤ íƒ€ì„ì„ ì¶”ì í•©ë‹ˆë‹¤.
       accumulator += dt;
-      // ÀÏÁ¤ ½Ã°£¸¶´Ù ÇÈ½º ¾÷µ¥ÀÌÆ®¸¦ ½ÇÇàÇÕ´Ï´Ù.
-      fixedRate = kFixedRate * dt; // ½ºÄÉÀÏ µÈ ÇÈ½º Å¸ÀÓ
+      // ì¼ì • ì‹œê°„ë§ˆë‹¤ í”½ìŠ¤ ì—…ë°ì´íŠ¸ë¥¼ ì‹¤í–‰í•©ë‹ˆë‹¤.
+      fixedRate = kFixedRate * dt; // ìŠ¤ì¼€ì¼ ëœ í”½ìŠ¤ íƒ€ì„
       while (accumulator >= fixedRate)
       {
         FixedUpdate(fixedRate); // Update physics at a fixed rate

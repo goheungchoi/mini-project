@@ -13,7 +13,9 @@ bool PhyjixEngine::Initialize()
 	_pvd->connect(*_transport, physx::PxPvdInstrumentationFlag::eALL);
 #endif
 #ifdef _DEBUG
-	_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, physx::PxTolerancesScale(),true, _pvd);
+  physx::PxTolerancesScale tolscale = physx::PxTolerancesScale(1.f);
+  _pPhysics =
+      PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, tolscale, true, _pvd);
 
 #else
 	_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, physx::PxTolerancesScale());

@@ -36,6 +36,9 @@ public:
   void DisableCollision();
   void EnableGravity();
   void DisableGravity();
+  void EnableSimulation();
+  void DisableSimulation();
+
   IRigidBody* GetRigidBody() { return _rigidbody; };
 
   void UpdateFromTransform();
@@ -45,6 +48,7 @@ public:
   void DisableDebugDraw();
   BOOL GetDebugDrawFlag() { return _bDebugDrawFlag; };
   void UpdateDebugDrawMatrix();
+  static float scalingFactor;
 #endif
 
 	void RegisterRigidBodyToWorld();

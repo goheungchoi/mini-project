@@ -11,8 +11,9 @@ class RigidBody : public IRigidBody, public ICollisionEvent
 public:
    RigidBody(physx::PxPhysics* physics, const DirectX::SimpleMath::Vector3& position,
             const DirectX::SimpleMath::Quaternion& rotation,
-
-            const DirectX::SimpleMath::Vector3& size, ColliderShape shape,
+                     const DirectX::SimpleMath::Vector3& offsetpos,
+            const DirectX::SimpleMath::Quaternion& offsetrot,
+            const DirectX::SimpleMath::Vector3& offsetsize, ColliderShape shape,
             BOOL isStatic, BOOL isKinematic, PhyjixWorld* world);
   ~RigidBody();
 
@@ -30,6 +31,10 @@ public:
   void DisableCollision() override;
   void EnableGravity() override;
   void DisableGravity() override;
+
+  void EnableSimulation() override;
+  void DisableSimulation() override;
+
   void WakeUp() override;
   void Sleep() override;
 
@@ -77,4 +82,6 @@ private:
   physx::PxRigidDynamic* GetDynamicActor();
 
 public:
+  
+
 };

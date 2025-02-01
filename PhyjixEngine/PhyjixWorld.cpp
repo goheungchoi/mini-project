@@ -5,7 +5,7 @@ PhyjixWorld::PhyjixWorld(physx::PxPhysics* physics, physx::PxDefaultCpuDispatche
 {
   physx::PxSceneDesc sceneDesc(physics->getTolerancesScale());
   sceneDesc.cpuDispatcher = dispatcher;
-  sceneDesc.gravity = physx::PxVec3(0, -9.8f, 0);
+  sceneDesc.gravity = physx::PxVec3(0, -98.f, 0);
   sceneDesc.filterShader =
       [](physx::PxFilterObjectAttributes attributes0,
          physx::PxFilterData filterData0,
@@ -52,10 +52,13 @@ PhyjixWorld::~PhyjixWorld()
 IRigidBody* PhyjixWorld::AddRigidBody(
     const DirectX::SimpleMath::Vector3& position,
     const DirectX::SimpleMath::Quaternion& rotation,
-    const DirectX::SimpleMath::Vector3& size, ColliderShape cShape,
+    const DirectX::SimpleMath::Vector3& offsetpos,
+    const DirectX::SimpleMath::Quaternion& offsetrot,
+    const DirectX::SimpleMath::Vector3& offsetsize,
+    ColliderShape cShape,
     bool isStatic, bool isKinematic)
 {
-  IRigidBody* physxbody = new RigidBody(_physics, position, rotation, size,
+  IRigidBody* physxbody = new RigidBody(_physics, position, rotation, offsetpos, offsetrot, offsetsize,
                                         cShape, isStatic, isKinematic, this);
 
   _scene->addActor(*(static_cast<RigidBody*>(physxbody)->_actor));
@@ -188,11 +191,12 @@ void PhyjixWorld::UpdateRay(DirectX::SimpleMath::Vector3 camerapos,
 
 void PhyjixWorld::CreateDefaultGround()
 {
-  mMaterial = _physics->createMaterial(0.5f, 0.f, 0.f);
+  mMaterial = _physics->createMaterial(0.5f, 0.5f, 0.f);
   groundPlane =
-      PxCreatePlane(*_physics, physx::PxPlane(0, 1, 0, 1.35f), *mMaterial);
+      PxCreatePlane(*_physics, physx::PxPlane(0, 1, 0, 0.f), *mMaterial);
   groundrigidbody =
-      new RigidBody(_physics, {0, 0, 0}, {0, 0, 0, 1}, {1, 1, 1},
+      new RigidBody(_physics, {0, 0, 0}, {0, 0, 0, 1}, {0, 0, 0}, {0, 0, 0, 1},
+                    {1, 1, 1},
                     ColliderShape::eCubeCollider, true, false, this);
   groundPlane->userData = groundrigidbody;
   groundrigidbody->_actor = groundPlane;

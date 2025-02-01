@@ -4,7 +4,7 @@
 #include "GameFramework/World/World.h"
 
 #include "PhyjixWorld.h"
-
+float RigidbodyComponent::scalingFactor = 2.0f;
 void RigidbodyComponent::Initialize(
     const DirectX::SimpleMath::Vector3& _offsetTranslation,
     const DirectX::SimpleMath::Quaternion& offsetQuaternion,
@@ -12,7 +12,8 @@ void RigidbodyComponent::Initialize(
     BOOL isStatic, BOOL isKinematic, IPhyjixWorld* world)
 {
   _world = world;
-  _rigidbody = _world->AddRigidBody(_offsetTranslation, offsetQuaternion,
+  _rigidbody = _world->AddRigidBody(GetTransformComponent()->GetGlobalTranslation(),GetTransformComponent()->GetGlobalQuaternion(),
+      _offsetTranslation, offsetQuaternion,
                                     offsetSize,
                                     cShape, isStatic,
                                     isKinematic);
@@ -86,6 +87,16 @@ void RigidbodyComponent::DisableGravity()
 {
   _rigidbody->DisableGravity();
 }
+
+void RigidbodyComponent::EnableSimulation()
+{
+  _rigidbody->EnableSimulation();
+}
+
+void RigidbodyComponent::DisableSimulation()
+{
+  _rigidbody->DisableSimulation();
+}
 #ifdef _DEBUG
 
 void RigidbodyComponent::UpdateFromTransform()
@@ -124,7 +135,9 @@ void RigidbodyComponent::DisableDebugDraw()
 
 void RigidbodyComponent::UpdateDebugDrawMatrix()
 {
-  debugDrawMatrix = XMMatrixScalingFromVector(offsetScale) *
+  debugDrawMatrix = XMMatrixScalingFromVector(offsetScale*scalingFactor) *
+                    XMMatrixRotationQuaternion(offsetRotation) *
+                    XMMatrixTranslationFromVector(offsetTranslation) *
                     XMMatrixRotationQuaternion(
                         GetTransformComponent()->GetGlobalQuaternion()) *
                     XMMatrixTranslationFromVector(
