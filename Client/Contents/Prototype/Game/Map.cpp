@@ -109,7 +109,7 @@ void Map::TurnOnPlacementMode(CharactorType type) {
   {
   case kBrawler: {
     Brawler* brawler =
-        world->CreateGameObjectFromModel<Brawler>(animTestHandle);
+        world->CreateGameObjectFromModel<Brawler>(allyBrawlerModelHandle);
     brawler->SetFaction(kAlly);
     brawler->SetDirection(kNorth);
     placeholder = brawler;
@@ -117,14 +117,15 @@ void Map::TurnOnPlacementMode(CharactorType type) {
   break;
   case kSlasher: {
     Slasher* slasher =
-        world->CreateGameObjectFromModel<Slasher>(animTestHandle);
+        world->CreateGameObjectFromModel<Slasher>(allySlasherModelHandle);
     slasher->SetFaction(kAlly);
     slasher->SetDirection(kNorth);
     placeholder = slasher;
   }
   break;
   case kGunman: {
-    Gunman* gunman = world->CreateGameObjectFromModel<Gunman>(animTestHandle);
+    Gunman* gunman =
+        world->CreateGameObjectFromModel<Gunman>(allyGunmanModelHandle);
     gunman->SetFaction(kAlly);
     gunman->SetDirection(kNorth);
     placeholder = gunman;
@@ -232,6 +233,7 @@ void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir
 
 void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
 {
+	// TODO: Civilian model
   Civilian* civilian =
       world->CreateGameObjectFromModel<Civilian>(animTestHandle);
   civilian->SetGridLocation(w, h);
