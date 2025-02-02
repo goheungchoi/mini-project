@@ -34,12 +34,33 @@ class Character : public GameObject
 
 public:
 
-  ModelHandle indicatorModelHandle;
-  GameObject* indicator;
+	static ModelData* enemyModelData;
+  static SkeletonHandle enemySkeletonHandle;
+	
+  static ModelData* playerModelData;
+	static SkeletonHandle playerSkeletonHandle;
 
-  ModelHandle characterModelHandle;
-  ModelData* characterModelData;
-	SkeletonHandle skeletonHandle;
+	static ModelData* civilianModelData;
+  static SkeletonHandle civilianSkeletonHandle;
+	
+	static AnimationHandle deadAnimation;
+  static AnimationHandle idleAnimation;
+  
+	static AnimationHandle brawlerActionAnimation;
+	
+	static AnimationHandle slashReadyAnimation;
+  static AnimationHandle slashActionAnimation;
+	
+	static AnimationHandle gunReady1Animation;
+  static AnimationHandle gunReady2Animation;
+  static AnimationHandle gunFireAnimation;
+
+
+	static ModelHandle enemyIndicatorModelHandle;
+  static ModelHandle playerIndicatorModelHandle;
+  GameObject* enemyIndicator{nullptr};
+  GameObject* playerIndicator{nullptr};
+
   AnimatorComponent* animator;
 
 	// Properties

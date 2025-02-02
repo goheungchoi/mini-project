@@ -1,18 +1,22 @@
 #include "pch.h"
 #include "RigidBody.h"
 RigidBody::RigidBody(physx::PxPhysics* physics,
-                     const DirectX::SimpleMath::Vector3& position,
+                      const DirectX::SimpleMath::Vector3& position,
                      const DirectX::SimpleMath::Quaternion& rotation,
-                     const DirectX::SimpleMath::Vector3& size,
+                     const DirectX::SimpleMath::Vector3& offsetpos,
+                     const DirectX::SimpleMath::Quaternion& offsetrot,
+                     const DirectX::SimpleMath::Vector3& offsetsize,
                      ColliderShape cShape, BOOL _isStatic, BOOL isKinematic,
                      PhyjixWorld* world)
 {
   _world = world;
-  physx::PxTransform transform(PhyjixUtil::VecToPxVec(position));
+  physx::PxTransform transform(PhyjixUtil::VecToPxVec(position),
+                               PhyjixUtil::VecToPxQuat(rotation));
   isStatic = _isStatic;
   if (!isStatic)
   {
     _actor = physics->createRigidDynamic(transform);
+    //GetDynamicActor()->setMass(1.f);
     if (isKinematic)
       static_cast<physx::PxRigidDynamic*>(_actor)->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
   }
@@ -20,26 +24,32 @@ RigidBody::RigidBody(physx::PxPhysics* physics,
     _actor = physics->createRigidStatic(transform);
   shape = cShape;
 
-  physx::PxMaterial* material = physics->createMaterial(1.f, 0.f, 0.f);
+  physx::PxMaterial* material = physics->createMaterial(0.5f, 0.5f, 0.f);
   switch (cShape)
   {
   case ColliderShape::eCubeCollider:
-    _defaultShape =
-        physics->createShape(physx::PxBoxGeometry(size.x, size.y, size.z), *material);
-    _defaultShape->setLocalPose(physx::PxTransform(PhyjixUtil::VecToPxVec(position),PhyjixUtil::VecToPxQuat(rotation)));
+    
+    _defaultShape = physx::PxRigidActorExt::createExclusiveShape(
+        *_actor, physx::PxBoxGeometry(offsetsize.x, offsetsize.y, offsetsize.z),
+        *material);
+    _defaultShape->setLocalPose(physx::PxTransform(
+        PhyjixUtil::VecToPxVec(offsetpos), PhyjixUtil::VecToPxQuat(offsetrot)));
     break;
 
   case ColliderShape::eSphereCollider:
-    _defaultShape = physics->createShape(
-        physx::PxSphereGeometry(size.x), *physics->createMaterial(0.5f, 0.5f, 0.6f));
+    _defaultShape = physx::PxRigidActorExt::createExclusiveShape(
+        *_actor, physx::PxSphereGeometry(offsetsize.x), *material);
+    _defaultShape->setLocalPose(physx::PxTransform(
+        PhyjixUtil::VecToPxVec(offsetpos), PhyjixUtil::VecToPxQuat(offsetrot)));
     break;
 
   case ColliderShape::eCapsuleCollider:
-    _defaultShape =
-        physics->createShape(physx::PxCapsuleGeometry(size.x, size.y),
+    _defaultShape = physics->createShape(
+        physx::PxCapsuleGeometry(offsetsize.x, offsetsize.y),
                              *physics->createMaterial(0.5f, 0.5f, 0.6f));
     break;
   }
+  
   _actor->attachShape(*_defaultShape);
   _actor->userData = this;
 
@@ -195,20 +205,26 @@ void RigidBody::EnableCollision()
   {
     GetDynamicActor()->getShapes(&shape, 1, 0);
     if (shape)
-      shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+    {
+      //shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+      shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
+    }
   }
 }
 
 void RigidBody::DisableCollision()
 {
-  _actor->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
   physx::PxShape* shape = nullptr;
   physx::PxU32 shapeCount = GetDynamicActor()->getNbShapes();
   if (shapeCount > 0)
   {
     GetDynamicActor()->getShapes(&shape, 1, 0);
+
     if (shape)
+    {
       shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
+      shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, true);
+    }
 
   }
 }
@@ -221,6 +237,22 @@ void RigidBody::EnableGravity()
 void RigidBody::DisableGravity()
 {
   _actor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, true);
+}
+
+void RigidBody::EnableSimulation()
+{
+    if (isStatic)
+      return;
+  GetDynamicActor()->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, false);
+  GetDynamicActor()->wakeUp();
+}
+
+void RigidBody::DisableSimulation()
+{
+  if (isStatic)
+    return;
+  GetDynamicActor()->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
+  
 }
 
 void RigidBody::WakeUp()

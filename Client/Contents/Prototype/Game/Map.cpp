@@ -13,14 +13,87 @@ Map::Map(World* world) : GameObject(world)
 {
   animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
 
+	// The base models.
+	enemyModelHandle = LoadModel("Models\\Character\\Enemy\\Enemy.glb");
+	playerModelHandle = LoadModel("Models\\Character\\Player\\Player.glb");
+
+	// Set character static data.
+  Character::enemyIndicatorModelHandle =
+      LoadModel("Models\\Indicator\\Indicator.glb");
+  Character::playerIndicatorModelHandle =
+      LoadModel("Models\\Indicator\\Indicator.glb");
+
+	Character::enemyModelData = &AccessModelData(enemyModelHandle);
+  Character::enemySkeletonHandle = Character::enemyModelData->skeleton;
+
+	Character::playerModelData = &AccessModelData(playerModelHandle);
+  Character::playerSkeletonHandle = Character::playerModelData->skeleton;
+
+	auto animIt = Character::playerModelData->animations.begin();
+
+  Character::deadAnimation = *std::next(animIt, 1);
+  Character::idleAnimation = *std::next(animIt, 6);
+
+  Character::brawlerActionAnimation = *std::next(animIt, 7);
+
+  Character::slashReadyAnimation = *std::next(animIt, 0);
+  Character::slashActionAnimation = *std::next(animIt, 5);
+
+  Character::gunReady1Animation = *std::next(animIt, 3);
+  Character::gunReady2Animation = *std::next(animIt, 4);
+  Character::gunFireAnimation = *std::next(animIt, 2);
+
+
+	// Get the player model data.
+	ModelData& playerModel = AccessModelData(playerModelHandle);
+
+	// Apply different materials to the models.
+	allyBrawlerModelHandle = CloneModel(playerModelHandle);
+  allySlasherModelHandle = CloneModel(playerModelHandle);
+  allyGunmanModelHandle = CloneModel(playerModelHandle);
+
+	// Clone version of the model, transparent.
+	clonedAllyBrawlerModelHandle = CloneModel(allyBrawlerModelHandle);
+  clonedAllySlasherModelHandle = CloneModel(allySlasherModelHandle);
+  clonedAllyGunmanModelHandle = CloneModel(allyGunmanModelHandle);
+
+	ModelData& clonedAllyBrawlerModelData =
+      AccessModelData(clonedAllyBrawlerModelHandle);
+  for (auto matHandle : clonedAllyBrawlerModelData.materials)
+  {
+    MaterialData& matData = AccessMaterialData(matHandle);
+    matData.alphaMode = AlphaMode::kBlend;
+	}
+
+	ModelData& clonedAllySlasherModelData =
+      AccessModelData(clonedAllySlasherModelHandle);
+  for (auto matHandle : clonedAllySlasherModelData.materials)
+  {
+    MaterialData& matData = AccessMaterialData(matHandle);
+    matData.alphaMode = AlphaMode::kBlend;
+  }
+
+	ModelData& clonedAllyGunmanModelData =
+      AccessModelData(clonedAllyGunmanModelHandle);
+  for (auto matHandle : clonedAllyGunmanModelData.materials)
+  {
+    MaterialData& matData = AccessMaterialData(matHandle);
+    matData.alphaMode = AlphaMode::kBlend;
+  }
+
+	// Create a grid.
 	grid = world->CreateGameObject<GridObject>();
   grid->CreateGrid(6, 6, 1.4f);
   grid->Translate(-0.6f, +0.01f, -0.8f);
-
 	AddChildGameObject(grid);
 }
 
-Map::~Map() {}
+Map::~Map() {
+
+
+  UnloadModel(playerModelHandle);
+  UnloadModel(enemyModelHandle);
+}
 
 void Map::TurnOnPlacementMode(CharactorType type) {
   if (isPlacementModeOn)
@@ -36,7 +109,7 @@ void Map::TurnOnPlacementMode(CharactorType type) {
   {
   case kBrawler: {
     Brawler* brawler =
-        world->CreateGameObjectFromModel<Brawler>(animTestHandle);
+        world->CreateGameObjectFromModel<Brawler>(allyBrawlerModelHandle);
     brawler->SetFaction(kAlly);
     brawler->SetDirection(kNorth);
     placeholder = brawler;
@@ -44,14 +117,15 @@ void Map::TurnOnPlacementMode(CharactorType type) {
   break;
   case kSlasher: {
     Slasher* slasher =
-        world->CreateGameObjectFromModel<Slasher>(animTestHandle);
+        world->CreateGameObjectFromModel<Slasher>(allySlasherModelHandle);
     slasher->SetFaction(kAlly);
     slasher->SetDirection(kNorth);
     placeholder = slasher;
   }
   break;
   case kGunman: {
-    Gunman* gunman = world->CreateGameObjectFromModel<Gunman>(animTestHandle);
+    Gunman* gunman =
+        world->CreateGameObjectFromModel<Gunman>(allyGunmanModelHandle);
     gunman->SetFaction(kAlly);
     gunman->SetDirection(kNorth);
     placeholder = gunman;
@@ -107,7 +181,8 @@ void Map::ResetGame() {
 
 void Map::CreateEnemyAt(uint32_t w, uint32_t h, Direction dir)
 {
-  Gunman* gunman = world->CreateGameObjectFromModel<Gunman>(animTestHandle);
+  Gunman* gunman =
+      world->CreateGameObjectFromModel<Gunman>(enemyModelHandle);
   gunman->SetFaction(kEnemy);
   gunman->SetGridLocation(w, h);
   gunman->SetDirection(dir);
@@ -122,7 +197,7 @@ void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir
   {
   case kBrawler: {
     Brawler* brawler =
-        world->CreateGameObjectFromModel<Brawler>(animTestHandle);
+        world->CreateGameObjectFromModel<Brawler>(allyBrawlerModelHandle);
     brawler->SetFaction(kAlly);
     brawler->SetGridLocation(w, h);
     brawler->SetDirection(dir);
@@ -133,7 +208,7 @@ void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir
   break;
   case kSlasher: {
     Slasher* slasher =
-        world->CreateGameObjectFromModel<Slasher>(animTestHandle);
+        world->CreateGameObjectFromModel<Slasher>(allySlasherModelHandle);
     slasher->SetFaction(kAlly);
     slasher->SetGridLocation(w, h);
     slasher->SetDirection(dir);
@@ -143,7 +218,8 @@ void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir
   }
   break;
   case kGunman: {
-    Gunman* gunman = world->CreateGameObjectFromModel<Gunman>(animTestHandle);
+    Gunman* gunman =
+        world->CreateGameObjectFromModel<Gunman>(allyGunmanModelHandle);
     gunman->SetFaction(kAlly);
     gunman->SetGridLocation(w, h);
     gunman->SetDirection(dir);
@@ -157,6 +233,7 @@ void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir
 
 void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
 {
+	// TODO: Civilian model
   Civilian* civilian =
       world->CreateGameObjectFromModel<Civilian>(animTestHandle);
   civilian->SetGridLocation(w, h);
@@ -181,16 +258,17 @@ void Map::Update(float dt) {
     parent->RotateAroundYAxis(-dt);
   }
 
+	// Action mode
 	if (isActionTriggered)
   {
-    if (isActionTriggered)
+		// TODO: Remove a simulating character.
+
+    if (INPUT.IsKeyPress(Key::R))
     {
-      if (INPUT.IsKeyPress(Key::R))
-      {
-        ResetGame();
-      }
+      ResetGame();
     }
 	}
+	// Placement mode
 	else if (isPlacementModeOn)
   {
 		// If a placeholder is not set

@@ -51,7 +51,7 @@ void QtModelImportDialog::onOKButtonClicked()
   if (!res)
   {
     QMessageBox::critical(this, "Error",
-                          "Failed to generate texture resource file.");
+                          "Failed to export a model.");
   }
   else
   {

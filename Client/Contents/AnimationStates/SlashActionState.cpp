@@ -10,6 +10,7 @@ void SlashActionState::Enter(AnimatorComponent* animator) {
 
 void SlashActionState::Toggle(AnimatorComponent* animator)
 {
+  animator->SetVariable<bool>("done", true);
   animator->SetState(_stateDependency["idle"]);
 }
 

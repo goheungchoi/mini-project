@@ -38,6 +38,10 @@ void SkeletalMeshComponent::UpdateBoneTransforms()
 #ifndef NDEBUG
       std::string n = child->GetOwner()->name;
 #endif // !NDEBUG
+      if (index >= boneNameMap.size())
+      {
+        continue;
+      }
 
       if (auto it = boneNameMap.find(child->GetOwner()->name);
           it != boneNameMap.end())

@@ -150,7 +150,7 @@ public:
         &rasterizerDesc, _rsDefault->rasterizerState.GetAddressOf()));
     // wireFrame
     rasterizerDesc =
-        CreateRaterizerDesc(D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, false, 0,
+        CreateRaterizerDesc(D3D11_FILL_WIREFRAME, D3D11_CULL_NONE, false, 0,
                             0.f, 0.f, true, false, false, true);
     HR_T(_device->GetDevice()->CreateRasterizerState(
         &rasterizerDesc, _rsWireFrame->rasterizerState.GetAddressOf()));

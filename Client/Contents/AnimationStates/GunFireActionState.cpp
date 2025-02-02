@@ -10,12 +10,13 @@ void GunFireActionState::Enter(AnimatorComponent* animator)
 }
 
 void GunFireActionState::Toggle(AnimatorComponent* animator) {
+  animator->SetVariable<bool>("done", true);
+
   if (animator->GetVariable<bool>("dead"))
   {
     animator->SetState(_stateDependency["dead"]);
     return;
   }
-  // animator->SetState(_stateDependency["idle"]);
 }
 
 

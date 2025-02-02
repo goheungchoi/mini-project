@@ -66,7 +66,13 @@ public:
     _handleTable.ReleaseHandle(handle);
   }
 
-	Handle Clone(const Handle& handle) { return Handle::kInvalidHandle; }
+	Handle Clone(const Handle& handle) { 
+		if (!IsValidHandle(handle))
+      // TODO: Error message
+      throw std::exception("Invalid handle!");
+
+    return _handleTable.Clone(handle);
+	}
 
   bool IsValidHandle(const Handle& handle) const
   {

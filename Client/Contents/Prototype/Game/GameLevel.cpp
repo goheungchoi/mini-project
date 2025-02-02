@@ -42,7 +42,7 @@ void GameLevel::CreateMap() {
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
 
-	// map->CreateEnemyAt(4, 4, kEast);
+	map->CreateEnemyAt(4, 4, kEast);
   // map->CreateEnemyAt(3, 3, kEast);
   // map->CreateEnemyAt(2, 1, kEast);
 

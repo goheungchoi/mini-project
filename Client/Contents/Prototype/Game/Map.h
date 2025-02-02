@@ -10,6 +10,20 @@ class Map : public GameObject
 	// Resource handle
   ModelHandle animTestHandle;
 
+	ModelHandle enemyModelHandle;
+  ModelHandle playerModelHandle;
+  ModelHandle civilianModelHandle;
+
+	ModelHandle enemyGunmanModelHandle;
+
+	ModelHandle allyBrawlerModelHandle;
+  ModelHandle allySlasherModelHandle;
+  ModelHandle allyGunmanModelHandle;
+
+	ModelHandle clonedAllyBrawlerModelHandle;
+	ModelHandle clonedAllySlasherModelHandle;
+	ModelHandle clonedAllyGunmanModelHandle;
+
 public:
 
   // Game Objects
@@ -27,6 +41,11 @@ public:
 	// Placement
 	bool isPlacementModeOn{false};
   Character* placeholder{nullptr};
+
+
+	// Simulation
+  bool isSimulating{false};
+  Character* simulatingCharacter{nullptr};
 
 public:
 

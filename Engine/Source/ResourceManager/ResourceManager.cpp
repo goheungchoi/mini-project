@@ -120,25 +120,49 @@ static ModelHandle __CloneModel__(ModelHandle handle) {
     ModelData& clonedModel =
         _m().modelPool.AccessResourceData(clonedModelHandle);
 
-		//// Duplicate the handles
-		//for (auto material : clonedModel.materials)
-  //  {
-  //    _m().materialPool.du
-		//}
+		// Duplicate the materials
+		std::unordered_set<MaterialHandle> originalMaterials =
+        clonedModel.materials;
+    clonedModel.materials.clear();
 
+		std::unordered_map<MaterialHandle, MaterialHandle> matHandleMap;
+
+    for (auto material : originalMaterials)
+    {
+      auto clonedMat = _m().materialPool.Clone(material);
+      matHandleMap[material] = clonedMat;
+      clonedModel.materials.insert(clonedMat);
+		}
+
+		// Duplicate the meshes
 		std::unordered_set<MeshHandle> originalMeshes = clonedModel.meshes;
     clonedModel.meshes.clear();
 		
 		std::unordered_set<MeshHandle> clonedMeshes;
     for (auto originalMesh : originalMeshes)
     {
-      clonedMeshes.insert(_m().meshPool.Clone(originalMesh));
+      MeshHandle clonedMeshHandle = _m().meshPool.Clone(originalMesh);
+      MeshData& clonedMeshData =
+          _m().meshPool.AccessResourceData(clonedMeshHandle);
+
+			if (clonedMeshData.material.IsInvalid())
+      {
+        // Bind the cloned material instead of the original material.
+        if (auto it = matHandleMap.find(clonedMeshData.material);
+            it != matHandleMap.end())
+          clonedMeshData.material = it->second;
+			}
+			
+      clonedMeshes.insert(clonedMeshHandle);
 		}
 
 		clonedModel.meshes = std::move(clonedMeshes);
     return clonedModelHandle;
+  }
+  else
+  {
+		return ModelHandle();
 	}
-	return ModelHandle();
 }	
 static void __UnloadModel__(ModelHandle handle) {}
 

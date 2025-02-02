@@ -9,12 +9,14 @@ Civilian::Civilian(World* world) : Character(world) {
   type = kCivilian;
   range = 0;
 
+	// 
+	animator->BindSkeleton(civilianSkeletonHandle);
 
 	// Create animation states
-	idle = new Animation(*characterModelData->animations.begin(), true);
+  idle = new Animation(idleAnimation, true);
 	idleState = new AnimationState(idle);
 
-	dead = new Animation(*characterModelData->animations.begin(), false);
+	dead = new Animation(deadAnimation, false);
   deadState = new AnimationState(dead);
 
 	idleState->AddAnimationStateDependency("dead", deadState);

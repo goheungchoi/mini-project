@@ -37,6 +37,9 @@ public:
   virtual void EnableGravity() = 0;
   virtual void DisableGravity() = 0;
 
+  virtual void EnableSimulation() = 0;
+  virtual void DisableSimulation() = 0;
+
   virtual void WakeUp() = 0;
   virtual void Sleep() = 0;
 

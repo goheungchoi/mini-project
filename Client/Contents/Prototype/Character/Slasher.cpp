@@ -21,16 +21,16 @@ Slasher::Slasher(World* world) : Character(world) {
   animator->DeclareVariable<bool>("action");
 
 	// Create animation states
-  dead = new Animation(*characterModelData->animations.begin(), false);
+  dead = new Animation(deadAnimation, false);
   deadState = new DeadState(dead);
 
-  idle = new Animation(*characterModelData->animations.begin(), true);
+  idle = new Animation(idleAnimation, true);
   idleState = new IdleState(idle);
 
-  ready = new Animation(*characterModelData->animations.begin(), false);
+  ready = new Animation(slashReadyAnimation, false);
   readyState = new SlashReadyState(ready);
 
-  action = new Animation(*characterModelData->animations.begin(), false);
+  action = new Animation(slashActionAnimation, false);
   actionState = new SlashActionState(action);
 
 	animator->DeclareVariable<bool>("fire", false);
