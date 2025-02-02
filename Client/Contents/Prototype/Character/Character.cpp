@@ -12,50 +12,50 @@ static AnimationState* state;
 
 int Character::count = 0;
 
+ModelData* Character::enemyModelData{nullptr};
+SkeletonHandle Character::enemySkeletonHandle;
+
+ModelData* Character::playerModelData{nullptr};
+SkeletonHandle Character::playerSkeletonHandle;
+
+ModelData* Character::civilianModelData{nullptr};
+SkeletonHandle Character::civilianSkeletonHandle;
+
+AnimationHandle Character::deadAnimation;
+AnimationHandle Character::idleAnimation;
+
+AnimationHandle Character::brawlerActionAnimation;
+
+AnimationHandle Character::slashReadyAnimation;
+AnimationHandle Character::slashActionAnimation;
+
+AnimationHandle Character::gunReady1Animation;
+AnimationHandle Character::gunReady2Animation;
+AnimationHandle Character::gunFireAnimation;
+
+ModelHandle Character::enemyIndicatorModelHandle;
+ModelHandle Character::playerIndicatorModelHandle;
+
 Character::Character(World* world) : GameObject(world)
 {
   count++;
-	// Fetch the indicator model data.
-  indicatorModelHandle = LoadModel("Models\\Indicator\\Indicator.glb");
 	// Create an indicator
 	// TODO: Indicator game object.
-  indicator = world->CreateGameObjectFromModel(indicatorModelHandle);
-  indicator->SetTranslation(0.f, 2.22f, 0.f);
-  AddChildGameObject(indicator);
-
-	// Fetch the character model data.
-  characterModelHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
-  characterModelData = &AccessModelData(characterModelHandle);
-
-	// Grab the skeleton handle
-  skeletonHandle = characterModelData->skeleton;
-
-	
+  playerIndicator =
+      world->CreateGameObjectFromModel(playerIndicatorModelHandle);
+  playerIndicator->SetTranslation(0.f, 2.22f, 0.f);
+  AddChildGameObject(playerIndicator);
 
 	// Create an Animator component
   animator = CreateComponent<AnimatorComponent>();
-  animator->BindSkeleton(skeletonHandle);
+  animator->BindSkeleton(playerSkeletonHandle);
   
   animator->DeclareVariable<bool>("dead");
   animator->DeclareVariable<bool>("triggered");
-
-	// NOTE: Test animation and state.
-  /*anim = new Animation(*characterModelData->animations.begin(), true);
-  state = new AnimationState(anim);*/
-  // animator->SetState(state);
-  // animator->AdjustAnimationPlaySpeed(0.1f);
-
-  /*body->SetTranslation(0, 1.f, 0);
-  body->SetScaling(0.4f, 1.2f, 0.2f);*/
-
-	
+  animator->DeclareVariable<bool>("done");
 }
 
-Character::~Character() {
-  UnloadModel(characterModelHandle);
-  UnloadModel(indicatorModelHandle);
-  characterModelData = nullptr;
-}
+Character::~Character() {}
 
 void Character::TriggerAction()
 {
@@ -66,6 +66,15 @@ void Character::TriggerAction()
 void Character::SetFaction(Faction faction) {
   this->faction = faction;
 	SetGameObjectTag(kFactionTags[faction]);
+
+	if (faction == Faction::kAlly)
+  {
+    animator->BindSkeleton(playerSkeletonHandle);
+	}
+	else if (faction == Faction::kEnemy)
+  {
+    animator->BindSkeleton(enemySkeletonHandle);
+	}
 }
 
 Faction Character::GetFaction()
@@ -115,23 +124,16 @@ void Character::OnAwake()
   {
     throw std::runtime_error("Can'f find grid!");
   }
+
   if (bGridLocationChanged)
   {
     ApplyChangedGridLocation();
   }
+
   if (bDirectionChanged)
   {
     ApplyChangedDirection();
   }
-
-
-  auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
-  bodyRigidBody->Initialize({0, 1.f, 0}, Quaternion::Identity,{0.7f, 2.5f, 0.7f},
-                            ColliderShape::eCubeCollider, false, false,
-                            world->_phyjixWorld);
-  bodyRigidBody->EnableGravity();
-  bodyRigidBody->EnableDebugDraw();
-  bodyRigidBody->DisableCollision();
 }
 
 // TODO:
@@ -149,8 +151,6 @@ void Character::OnAwake()
 //}
 
 void Character::Update(float dt) {
-
-  
 	if (isDead)
   {
 		// TODO: 
@@ -172,11 +172,11 @@ void Character::Update(float dt) {
   if (isTargetInRange)
   {
 		// TODO: Indicator on
-    indicator->Activate();
+    playerIndicator->Activate();
 	}
   else
   {
-    indicator->Deactivate();
+    playerIndicator->Deactivate();
 	}
 }
 

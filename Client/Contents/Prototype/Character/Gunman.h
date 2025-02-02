@@ -33,11 +33,11 @@ public:
 	Gunman(World* world);
   ~Gunman();
 
-	  // Interaction
-  virtual void OnBeginCursorOver() {};
-  virtual void OnEndCursorOver() {};
-  virtual void OnClicked() {};
-  virtual void OnPressed() {};
+	// Interaction
+  virtual void OnBeginCursorOver() override;
+  virtual void OnEndCursorOver() override;
+  virtual void OnClicked() override;
+  virtual void OnPressed() override;
 
   // Game loop events
   void OnAwake() override;

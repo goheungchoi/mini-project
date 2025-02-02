@@ -15,7 +15,7 @@ Gunman::Gunman(World* world) : Character(world) {
   range = 5;
 
 	// Create a hand gun game object.
-  handgunModelHandle = LoadModel("Models\\HandGun\\HandGun.glb");
+  handgunModelHandle = LoadModel("Models\\Pistol\\Pistol.glb");
 	handgun = world->CreateGameObjectFromModel(handgunModelHandle);
 
 	muzzleModelHandle = LoadModel("Models\\Bullet\\Bullet.glb");
@@ -27,19 +27,19 @@ Gunman::Gunman(World* world) : Character(world) {
 
 
 	// Create animation states
-  dead = new Animation(*characterModelData->animations.begin(), false);
+  dead = new Animation(deadAnimation, false);
   deadState = new DeadState(dead);
 
-  idle = new Animation(*characterModelData->animations.begin(), true);
+  idle = new Animation(idleAnimation, true);
   idleState = new IdleState(idle);
 
-  ready1 = new Animation(*characterModelData->animations.begin(), false);
+  ready1 = new Animation(gunReady1Animation, false);
   ready1State = new GunFireReady1State(ready1);
 
-  ready2 = new Animation(*characterModelData->animations.begin(), false);
+  ready2 = new Animation(gunReady2Animation, false);
   ready2State = new GunFireReady2State(ready2);
 
-  fire = new Animation(*characterModelData->animations.begin(), false);
+  fire = new Animation(gunFireAnimation, false);
   fireState = new GunFireActionState(fire);
 
 	animator->DeclareVariable<bool>("fire", false);
@@ -62,6 +62,19 @@ Gunman::Gunman(World* world) : Character(world) {
 Gunman::~Gunman() {
   UnloadModel(handgunModelHandle);
 }
+
+void Gunman::OnBeginCursorOver() {
+	// Spawn a clone.
+}
+void Gunman::OnEndCursorOver() {
+	// Remove a clone.
+	}
+void Gunman::OnClicked() {
+
+	}
+void Gunman::OnPressed() {
+
+	}
 
 void Gunman::OnAwake() {
   Super::OnAwake();
