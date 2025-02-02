@@ -104,6 +104,20 @@ std::pair<uint32_t, uint32_t> Character::GetGridLocation()
   return {grid_w, grid_h};
 }
 
+// TODO:
+// void Character::OnHit(GameObject* object) {
+//	if (object == "bullet")
+//	{
+//    health -= 1;
+//	}
+//
+//	if (health <= 0)
+//  {
+//    animator->SetVariable<bool>("dead", true, true);
+//		isDead = true;
+//	}
+//}
+
 void Character::OnBeginOverlap(GameObject* other) {
   if (other->GetGameObjectTag() == "weapon")
   {
@@ -134,21 +148,26 @@ void Character::OnAwake()
   {
     ApplyChangedDirection();
   }
-}
 
-// TODO:
-//void Character::OnHit(GameObject* object) {
-//	if (object == "bullet")
-//	{
-//    health -= 1;
-//	}
-//
-//	if (health <= 0)
-//  {
-//    animator->SetVariable<bool>("dead", true, true);
-//		isDead = true;
-//	}
-//}
+	auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
+  bodyRigidBody->Initialize({0, 1.0f, 0}, Quaternion::Identity,
+                            {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
+                            false, false, world->_phyjixWorld);
+
+  // bodyRigidBody->EnableGravity();
+  // bodyRigidBody->DisableGravity();
+  // bodyRigidBody->DisableCollision();
+  // bodyRigidBody->EnableDebugDraw();
+  bodyRigidBody->ClearForce();
+  bodyRigidBody->ClearTorque();
+  //  bodyRigidBody->DisableSimulation();
+  // bodyRigidBody->DisableDebugDraw();
+  bodyRigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eLClick,
+                                   [=]() {
+                                     bodyRigidBody->EnableDebugDraw();
+                                     bodyRigidBody->ClearForce();
+                                   });
+}
 
 void Character::Update(float dt) {
 	if (isDead)
