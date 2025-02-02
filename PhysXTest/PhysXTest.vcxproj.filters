@@ -22,6 +22,18 @@
 		<Filter Include="Contents\Prototype">
 			<UniqueIdentifier>{124D7136-2F96-483D-9365-EA270362C9E2}</UniqueIdentifier>
 		</Filter>
+		<Filter Include="Contents\Prototype\Bullet">
+			<UniqueIdentifier>{E281F221-C80E-47A3-8DA7-37DACB329B92}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Contents\Prototype\Grid">
+			<UniqueIdentifier>{B65DB8F1-7292-4AB1-8F29-A8D59A0D8D31}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Contents\Prototype\Game">
+			<UniqueIdentifier>{02514477-923D-47F9-9501-3D9DDE53DA72}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Contents\Prototype\Character">
+			<UniqueIdentifier>{253ABB1C-550A-4160-A553-047EF070246B}</UniqueIdentifier>
+		</Filter>
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="Application\GameApp\GameApp.h">
@@ -43,41 +55,134 @@
 		<ClInclude Include="Contents\AnimationStates\TestAnimationState.h">
 			<Filter>Contents\AnimationStates</Filter>
 		</ClInclude>
-		<ClInclude Include="Contents\Prototype\Character.h">
-			<Filter>Contents\Prototype</Filter>
-		</ClInclude>
-		<ClCompile Include="Contents\Prototype\CameraObject.cpp">
-			<Filter>Contents\Prototype</Filter>
+		<ClCompile Include="Contents\Prototype\Character\Character.cpp">
+			<Filter>Contents\Prototype\Character</Filter>
 		</ClCompile>
-		<ClInclude Include="Contents\Prototype\GridObject.h">
-			<Filter>Contents\Prototype</Filter>
-		</ClInclude>
-		<ClInclude Include="Contents\Prototype\GridLevel.h">
-			<Filter>Contents\Prototype</Filter>
-		</ClInclude>
-		<ClCompile Include="Contents\Prototype\GameLevel.cpp">
-			<Filter>Contents\Prototype</Filter>
+		<ClCompile Include="Contents\Prototype\Grid\GridObject.cpp">
+			<Filter>Contents\Prototype\Grid</Filter>
 		</ClCompile>
-		<ClCompile Include="Contents\Prototype\CellObject.cpp">
-			<Filter>Contents\Prototype</Filter>
-		</ClCompile>
-		<ClInclude Include="Contents\Prototype\CameraObject.h">
-			<Filter>Contents\Prototype</Filter>
+		<ClInclude Include="Contents\Prototype\Grid\CellObject.h">
+			<Filter>Contents\Prototype\Grid</Filter>
 		</ClInclude>
-		<ClCompile Include="Contents\Prototype\GridLevel.cpp">
-			<Filter>Contents\Prototype</Filter>
-		</ClCompile>
-		<ClCompile Include="Contents\Prototype\Character.cpp">
-			<Filter>Contents\Prototype</Filter>
-		</ClCompile>
-		<ClInclude Include="Contents\Prototype\CellObject.h">
-			<Filter>Contents\Prototype</Filter>
+		<ClInclude Include="Contents\Prototype\Game\GameLevel.h">
+			<Filter>Contents\Prototype\Game</Filter>
 		</ClInclude>
-		<ClCompile Include="Contents\Prototype\GridObject.cpp">
-			<Filter>Contents\Prototype</Filter>
+		<ClCompile Include="Contents\Prototype\Character\Brawler.cpp">
+			<Filter>Contents\Prototype\Character</Filter>
 		</ClCompile>
-		<ClInclude Include="Contents\Prototype\GameLevel.h">
-			<Filter>Contents\Prototype</Filter>
+		<ClCompile Include="Contents\Prototype\Grid\CellObject.cpp">
+			<Filter>Contents\Prototype\Grid</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\AnimationStates\IdleState.cpp">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\Prototype\Bullet\Bullet.h">
+			<Filter>Contents\Prototype\Bullet</Filter>
 		</ClInclude>
+		<ClInclude Include="Contents\Prototype\Character\Civilian.h">
+			<Filter>Contents\Prototype\Character</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\AnimationStates\GunFireReady2State.h">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\AnimationStates\GunFireActionState.cpp">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\AnimationStates\SlashReadyState.cpp">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\Prototype\Character\Gunman.h">
+			<Filter>Contents\Prototype\Character</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\Prototype\Character\Gunman.cpp">
+			<Filter>Contents\Prototype\Character</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\Prototype\Grid\GridObject.h">
+			<Filter>Contents\Prototype\Grid</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\Character\Slasher.h">
+			<Filter>Contents\Prototype\Character</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\AnimationStates\SlashActionState.h">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\Game\FixedCameraObject.h">
+			<Filter>Contents\Prototype\Game</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\Prototype\Game\FixedCameraObject.cpp">
+			<Filter>Contents\Prototype\Game</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\Game\Map.cpp">
+			<Filter>Contents\Prototype\Game</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\AnimationStates\DeadState.cpp">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\AnimationStates\GunFireReady1State.h">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\GameObjects\CameraObject.h">
+			<Filter>Contents\GameObjects</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\Prototype\Character\Character.h">
+			<Filter>Contents\Prototype\Character</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\AnimationStates\SlashActionState.cpp">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\Character\Civilian.cpp">
+			<Filter>Contents\Prototype\Character</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\Prototype\Grid\GridLevel.h">
+			<Filter>Contents\Prototype\Grid</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\AnimationStates\GunFireReady1State.cpp">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\AnimationStates\GunFireReady2State.cpp">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\AnimationStates\BrawlerActionState.h">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\Prototype\Game\GameLevel.cpp">
+			<Filter>Contents\Prototype\Game</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\Bullet\Bullet.cpp">
+			<Filter>Contents\Prototype\Bullet</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\Prototype\Game\Map.h">
+			<Filter>Contents\Prototype\Game</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\AnimationStates\GunFireActionState.h">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\AnimationStates\SlashReadyState.h">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClInclude>
+		<ClInclude Include="Contents\AnimationStates\IdleState.h">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\GameObjects\CameraObject.cpp">
+			<Filter>Contents\GameObjects</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\Prototype\Character\Brawler.h">
+			<Filter>Contents\Prototype\Character</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\AnimationStates\BrawlerActionState.cpp">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\AnimationStates\TestGameObject.cpp">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClCompile>
+		<ClInclude Include="Contents\AnimationStates\DeadState.h">
+			<Filter>Contents\AnimationStates</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\Prototype\Grid\GridLevel.cpp">
+			<Filter>Contents\Prototype\Grid</Filter>
+		</ClCompile>
+		<ClCompile Include="Contents\Prototype\Character\Slasher.cpp">
+			<Filter>Contents\Prototype\Character</Filter>
+		</ClCompile>
 	</ItemGroup>
 </Project>

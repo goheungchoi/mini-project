@@ -38,11 +38,7 @@ void World::Initialize(HWND hwnd, const std::wstring& title)
   _phyjixEngine->Initialize();
   _phyjixWorld = _phyjixEngine->CreateWorld();
   _phyjixWorld->CreateDefaultGround();
-  _phyjixWorld->CreateRay(
-      _defaultCamera->GetPosition(),
-      Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
-      _defaultCamera->GetViewTransform(), _defaultCamera->GetProjectionMatrix(),
-      Vector2(kScreenWidth, kScreenHeight));
+
 
   SetMainCamera(_defaultCamera);
 
@@ -109,6 +105,11 @@ void World::CommitLevelChange()
 
   _currentLevel = _preparingLevel;
   _currentLevel->BeginLevel();
+  _phyjixWorld->CreateRay(
+      mainCamera->GetPosition(),
+      Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
+      mainCamera->GetViewTransform(), mainCamera->GetProjectionMatrix(),
+      Vector2(kScreenWidth, kScreenHeight));
 
   changingLevel = false;
   // });
@@ -457,10 +458,12 @@ void World::Update(float dt)
   }
 
   // phjix simulate
+  if (INPUT.IsKeyPress(MouseState::LB)) _phyjixWorld->LeftClick();
+  if (INPUT.IsKeyPress(MouseState::RB)) _phyjixWorld->RightClick();
   _phyjixWorld->UpdateRay(
-      _defaultCamera->GetPosition(),
+      mainCamera->GetPosition(),
       Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
-      _defaultCamera->GetViewTransform(), _defaultCamera->GetProjectionMatrix(),
+      mainCamera->GetViewTransform(), mainCamera->GetProjectionMatrix(),
       Vector2(kScreenWidth, kScreenHeight));
   _phyjixWorld->CastRay();
   _phyjixEngine->Update(dt);
@@ -616,8 +619,9 @@ void World::RenderGameObjects()
   }
 #ifdef _DEBUG
 
-  _renderer->DrawDebugBox(XMMatrixScalingFromVector({10, 0.001f, 10}),
-                          Color(1, 0, 1));
+  //_renderer->DrawDebugCylinder(XMMatrixScalingFromVector({0.001f, 20, 20}) *
+  //                                 XMMatrixRotationAxis({0,0,1},XM_PIDIV2),
+  //                        Color(1, 0, 1));
   for (auto object : _currentLevel->GetGameObjectList())
   {
     if (auto rigidbody = object->GetComponent<RigidbodyComponent>())

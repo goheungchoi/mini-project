@@ -48,8 +48,6 @@ public:
     animator->SetState(animState);
     animator->BindSkeleton(testAnimModel.skeleton);
 
-
-
   }
 
   virtual void DestroyLevel() override {}
