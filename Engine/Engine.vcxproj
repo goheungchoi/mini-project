@@ -229,6 +229,7 @@
 		<ClInclude Include="Include\GameFramework\Level\Level.h" />
 		<ClInclude Include="Include\GameFramework\Systems\RenderSystem.h" />
 		<ClInclude Include="Include\GameFramework\UI\Canvas\Canvas.h" />
+		<ClInclude Include="Include\GameFramework\UI\UIAnim\UIAnim.h" />
 		<ClInclude Include="Include\GameFramework\UI\UIButton\UIButton.h" />
 		<ClInclude Include="Include\GameFramework\UI\UIElement\UIElement.h" />
 		<ClInclude Include="Include\GameFramework\UI\UIImage\UIImage.h" />
@@ -263,6 +264,7 @@
 		<ClCompile Include="Source\GameFramework\Level\Level.cpp" />
 		<ClCompile Include="Source\GameFramework\Systems\RenderSystem.cpp" />
 		<ClCompile Include="Source\GameFramework\UI\Canvas\Canvas.cpp" />
+		<ClCompile Include="Source\GameFramework\UI\UIAnim\UIAnim.cpp" />
 		<ClCompile Include="Source\GameFramework\UI\UIButton\UIButton.cpp" />
 		<ClCompile Include="Source\GameFramework\UI\UIElement\UIElement.cpp" />
 		<ClCompile Include="Source\GameFramework\UI\UIImage\UIImage.cpp" />
