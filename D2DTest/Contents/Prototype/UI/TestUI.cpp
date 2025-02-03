@@ -48,7 +48,7 @@ void TestUI::Render()
   // 작동안됨... 렌더 구조 잘못짜서 그런듯... TestGameObject와 비교 해볼 것
   // 주석 풀고 text 출력되는지 확인하면서 구조 짜기
   
-  _world->_renderer->DrawRectangle({0, 1, 1, 1}, {50, 50, 100, 100}, 2.0f);
+  _world->_renderer->DrawRectangle({0, 1, 1, 1}, {200, 200, 300, 300}, 2.0f);
 
   TextFormatInfo txtinfo(L"궁서");
   _world->_renderer->DrawTexts(L"TestUI 테스트", {300, 300, 1000, 1000},

@@ -2,6 +2,7 @@
 #include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/SwapChain.h"
 #include "Sprite/Sprite.h"
+#include "Resource2DManager/Resource2DManager.h"
 
 D2DRenderer::~D2DRenderer()
 {
@@ -79,7 +80,7 @@ void D2DRenderer::CreateD2DRenderTarget()
 
 void D2DRenderer::UnInit()
 {
-  _SpriteManager.Destory();
+  Resource2DManager::GetInstance()->Destroy();
   // SpriteBatch의 해제
   if (_pSpriteBatch)
   {
@@ -176,7 +177,7 @@ void D2DRenderer::DrawLine(Color color, Vector2 startPt, Vector2 endPt,
 void D2DRenderer::CreateSprite(LPCSTR path, Vector2 pos)
 {
   // IMG 객체를 생성하고 반환
-  auto newSprite = _SpriteManager.GetSprite(path);
+  auto newSprite = Resource2DManager::GetInstance()->GetSprite(path);
   newSprite->SetPos(pos);
 }
 
@@ -229,9 +230,9 @@ void D2DRenderer::RenderSprites()
   _pSpriteBatch->Begin();
 
   // 모든 Sprite Render
-  if (!_SpriteManager._spritePool.empty())
+  if (!(Resource2DManager::GetInstance()->_SpriteMap.empty()))
   {
-    for (auto sprite : (*SpriteManager::GetInstance())._spritePool)
+    for (auto sprite : Resource2DManager::GetInstance()->_SpriteMap)
     {
       sprite.second->Render(_pSpriteBatch.get());
     }

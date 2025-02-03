@@ -1,5 +1,6 @@
 #include "GameFramework/UI/UIImage/UIImage.h"
 #include "Renderer/D2DRenderer/Sprite/Sprite.h"
+#include "Resource2DManager/Resource2DManager.h"
 
 UIImage::UIImage(World* world) : UIElement(world) {}
 
@@ -7,7 +8,7 @@ UIImage::~UIImage() {}
 
 void UIImage::SetSprite(LPCSTR path, Vector2 pos)
 {
-  _sprite = _SpriteManager.GetSprite(path).get();
+  _sprite = Resource2DManager::GetInstance()->GetSprite(path).get();
   _size = _sprite->GetTextureSize();
   _sprite->SetPos(pos);
 }
