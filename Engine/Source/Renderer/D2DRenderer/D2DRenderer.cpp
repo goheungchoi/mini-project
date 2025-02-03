@@ -85,7 +85,6 @@ void D2DRenderer::UnInit()
   {
     _pSpriteBatch.reset();
   }
-  _TextManager.Destory();
   SAFE_RELEASE(_pFont);
   Com::SAFE_RELEASE(_pBrush);
   Com::SAFE_RELEASE(_pID2D1Bitmap);
@@ -109,7 +108,6 @@ void D2DRenderer::BeginDraw()
 void D2DRenderer::EndDraw()
 {
   RenderSprites();
-  RenderTexts();
 
   _render2DQueue.ExecuteRender2DCmd();
 
@@ -119,13 +117,16 @@ void D2DRenderer::EndDraw()
 void D2DRenderer::DrawRectangle(Color color, Vector4 rect, float stroke,
                                 float opacity)
 {
-  D2D1_COLOR_F clr = D2D1::ColorF(color.x, color.y, color.z, color.w);
-  D2D1_RECT_F rt = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
-                             //  left,    top,  right, bottom
+  _render2DQueue.AddRender2DCmd([=]()
+  {
+    D2D1_COLOR_F clr = D2D1::ColorF(color.x, color.y, color.z, color.w);
+    D2D1_RECT_F rt = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
+    //  left,    top,  right, bottom
 
-  _pBrush->SetColor(clr);
-  _pBrush->SetOpacity(opacity);
-  _pD2D1DeviceContext->DrawRectangle(rt, _pBrush, stroke);
+    _pBrush->SetColor(clr);
+    _pBrush->SetOpacity(opacity);
+    _pD2D1DeviceContext->DrawRectangle(rt, _pBrush, stroke);
+  });
 }
 
 void D2DRenderer::DrawEllipse(Color color, Vector2 ellipsePT, Vector2 radius,
@@ -179,51 +180,40 @@ void D2DRenderer::CreateSprite(LPCSTR path, Vector2 pos)
   newSprite->SetPos(pos);
 }
 
-void D2DRenderer::CreateText(const wchar_t* format, Vector4 rect,
-                             const std::wstring& fontName, Color color)
-{
-  Text* newText = _TextManager.GetText(format);
-  newText->_rect = rect;
-  newText->_fontName = fontName;
-  newText->_color = color;
-}
-
 void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
-                            const TextFormatInfo* textFormatInfo)
+                            const TextFormatInfo& textFormatInfo)
 {
-  IDWriteTextFormat* textFormat = nullptr;
+  _render2DQueue.AddRender2DCmd([=]() {
+    IDWriteTextFormat* textFormat = nullptr;
 
-  // 텍스트 포멧 설정
-  HR_T(_pFont->GetIDWriteFactory()->CreateTextFormat(
-      textFormatInfo->_fontName.c_str(), // 글꼴 이름
-      NULL,             // 글꼴 컬렉션 (NULL은 시스템 기본 사용)
-      static_cast<DWRITE_FONT_WEIGHT>(textFormatInfo->_fontWeight),
-      static_cast<DWRITE_FONT_STYLE>(textFormatInfo->_fontStyle),
-      static_cast<DWRITE_FONT_STRETCH>(textFormatInfo->_fontStretch),
-      textFormatInfo->_fontSize, // 글꼴 크기
-      L"ko-KR", // 로케일
-      &textFormat));
+    // 텍스트 포멧 설정
+    HR_T(_pFont->GetIDWriteFactory()->CreateTextFormat(
+        textFormatInfo._fontName.c_str(), // 글꼴 이름
+        NULL, // 글꼴 컬렉션 (NULL은 시스템 기본 사용)
+        static_cast<DWRITE_FONT_WEIGHT>(textFormatInfo._fontWeight),
+        static_cast<DWRITE_FONT_STYLE>(textFormatInfo._fontStyle),
+        static_cast<DWRITE_FONT_STRETCH>(textFormatInfo._fontStretch),
+        textFormatInfo._fontSize, // 글꼴 크기
+        L"ko-KR",                  // 로케일
+        &textFormat));
 
-  // 텍스트 정렬
-  textFormat->SetTextAlignment(
-      static_cast<DWRITE_TEXT_ALIGNMENT>(textFormatInfo->_textAlignment));
-  textFormat->SetParagraphAlignment(
-      static_cast<DWRITE_PARAGRAPH_ALIGNMENT>(textFormatInfo->_paragraphAlignment));
+    // 텍스트 정렬
+    textFormat->SetTextAlignment(
+        static_cast<DWRITE_TEXT_ALIGNMENT>(textFormatInfo._textAlignment));
+    textFormat->SetParagraphAlignment(static_cast<DWRITE_PARAGRAPH_ALIGNMENT>(
+        textFormatInfo._paragraphAlignment));
 
+    // 텍스트 그리기
+    D2D1_RECT_F rec = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
 
-  // 텍스트 그리기
-  D2D1_RECT_F rec =
-      D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
+    D2D1_COLOR_F clr = D2D1::ColorF(color.x, color.y, color.z, color.w);
 
-  D2D1_COLOR_F clr =
-      D2D1::ColorF(color.x, color.y, color.z, color.w);
+    _pBrush->SetColor(clr);
+    _pBrush->SetOpacity(1.0f);
 
-  _pBrush->SetColor(clr);
-  _pBrush->SetOpacity(1.0f);
-
-
-  _pD2D1DeviceContext->DrawText(format, lstrlen(format) + 1, textFormat,
-                                rec, _pBrush);
+    _pD2D1DeviceContext->DrawText(format, lstrlen(format) + 1, textFormat, rec,
+                                  _pBrush);
+  });
 }
 
 
@@ -251,31 +241,4 @@ void D2DRenderer::RenderSprites()
 
   // DepthStencilState 복원
   _pDevice->GetImmContext()->OMSetDepthStencilState(prevDepthState, stencilRef);
-}
-
-void D2DRenderer::RenderTexts()
-{
-  if (_TextManager._textList.empty())
-  {
-    return;
-  }
-
-  for (auto txt : (*TextManager::GetInstance())._textList)
-  {
-    // 텍스트 그리기
-    D2D1_RECT_F rect =
-        D2D1_RECT_F(txt->_rect.x, txt->_rect.y, txt->_rect.z, txt->_rect.w);
-
-    D2D1_COLOR_F clr = D2D1::ColorF(txt->_color.x, txt->_color.y, txt->_color.z,
-                                    txt->_color.w);
-
-    _pBrush->SetColor(clr);
-    _pBrush->SetOpacity(1.0f);
-
-    IDWriteTextFormat* txtformat = _pFont->FindFont(txt->_fontName);
-
-    _pD2D1DeviceContext->DrawText(txt->_format.c_str(),
-                                  lstrlen(txt->_format.c_str()) + 1, txtformat,
-                                  rect, _pBrush);
-  }
 }

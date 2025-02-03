@@ -372,15 +372,9 @@ void DX11Renderer::CreateSprite(LPCSTR path, Vector2 pos)
 }
 
 void DX11Renderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
-                             const TextFormatInfo* textFormatInfo)
+                             const TextFormatInfo& textFormatInfo)
 {
   _d2dRenderer->DrawTexts(format, rect, color, textFormatInfo);
-}
-
-void DX11Renderer::CreateText(const wchar_t* format, Vector4 rect,
-                              const std::wstring& fontName, Color color)
-{
-  _d2dRenderer->CreateText(format, rect, fontName, color);
 }
 
 void DX11Renderer::DrawRectangle(Color color, Vector4 rect, float stroke,

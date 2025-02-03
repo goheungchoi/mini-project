@@ -57,4 +57,7 @@ struct TextFormatInfo
   FontStretch _fontStretch = FontStretch::NORMAL;
   TextAlignment _textAlignment = TextAlignment::CENTER;
   ParagraphAlignment _paragraphAlignment = ParagraphAlignment::CENTEr;
+
+  TextFormatInfo(){}
+  TextFormatInfo(std::wstring fontName) : _fontName(fontName) {}
 };
