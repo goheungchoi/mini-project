@@ -32,7 +32,7 @@ bool ModelExporter::ExportModel(const char* path, ModelFileFormat fileFormat,
 
   uint32_t flags = aiProcess_Triangulate | aiProcess_ConvertToLeftHanded |
                    aiProcess_GenNormals | aiProcess_CalcTangentSpace |
-                   aiProcess_JoinIdenticalVertices | aiProcess_GenBoundingBoxes;
+                   aiProcess_LimitBoneWeights | aiProcess_GenBoundingBoxes;
   if (fileFormat == ModelFileFormat::kFBX)
   {
     importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, 0);
@@ -1074,10 +1074,60 @@ void ModelExporter::ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
                                               const aiScene* scene)
 {
 	// Get the number of bones.
-  const uint32_t numBones = mesh->mNumBones;
+  uint32_t numBones = mesh->mNumBones;
 	if (numBones == 0)
     return;
 
+  // Get necessity map.
+  std::vector<bool> necessityMap(_skeleton.bones.size());
+  for (BoneId boneIdx = 0; boneIdx < mesh->mNumBones; ++boneIdx)
+  {
+    aiBone* currBone = mesh->mBones[boneIdx];
+
+    // Find the bone id in the skeleton.
+    const std::string boneName{currBone->mName.C_Str()};
+    const uint32_t boneId = _skeleton.boneNameIdMap[boneName];
+
+    // Get the bone.
+    const Bone& bone = _skeleton.bones[boneId];
+    
+    necessityMap[boneId] = true;
+
+    // Find the skeletal node to travels the hierarchy.
+    auto it = std::find_if(
+        _skeleton.nodes.begin(), _skeleton.nodes.end(),
+        [boneId](const SkeletonNode& node) { return boneId == node.boneId; });
+
+    if (it == _skeleton.nodes.end())
+    {
+      throw std::runtime_error("Bone node is not found!");
+    }
+
+    SkeletonNode node = *it;
+    if (node.parent < 0)
+      continue;
+
+    node = _skeleton.nodes[node.parent];
+
+    // Mark all of its parents.
+    while (node.boneId != -1 && node.parent != -1)
+    {
+      if (necessityMap[node.boneId])
+        break;
+      else
+        necessityMap[node.boneId] = true; 
+
+      node = _skeleton.nodes[node.parent];
+    }
+  }
+
+  // Count all the necessary bones.
+  numBones = 0;
+  for (bool b : necessityMap)
+  {
+    numBones += b;
+  }
+  
 	// Reserve the space to store the bone data
 	geoMesh.bones.resize(numBones);
   geoMesh.vertexBoneWeights.resize(geoMesh.vertices.size());
@@ -1086,45 +1136,84 @@ void ModelExporter::ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
     weightVector.reserve(kMaxBoneInfluences);
 	}
 
-	// Original bone index mapper
-  std::unordered_map<BoneId, uint32_t> boneIdOriginalIndexMap;
-
-  // Process bone influences
+  // Process bone offset matrices.
   for (BoneId boneIdx = 0; boneIdx < mesh->mNumBones; ++boneIdx)
   {
     aiBone* currBone = mesh->mBones[boneIdx];
 
 		const std::string boneName{currBone->mName.C_Str()};
 		const uint32_t boneId = _skeleton.boneNameIdMap[boneName];
-    if (boneId == 59)
-    {
-      int a = 0;
-		}
-
-		// Map the original bone index to the boneId
-		boneIdOriginalIndexMap[boneId] = boneIdx;
-		
+    
 		// Retrieve the bone info
 		Bone& bone = _skeleton.bones[boneId];
 		bone.offset = currBone->mOffsetMatrix;
     bone.offset.Transpose();
-    geoMesh.bones[boneIdx] = bone;
+  }
+
+  // Map the bone to the meshes.
+  // Original bone index mapper
+  std::unordered_map<BoneId, uint32_t> boneIdOriginalIndexMap;
+  uint32_t count = 0;
+  for (BoneId boneIdx = 0; boneIdx < necessityMap.size(); ++boneIdx)
+  {
+    if (!necessityMap[boneIdx])
+      continue;
+
+    // aiBone* currBone = mesh->mBones[boneIdx];
+
+    // const std::string boneName{currBone->mName.C_Str()};
+    // const uint32_t boneId = _skeleton.boneNameIdMap[boneName];
+    Bone& bone = _skeleton.bones[boneIdx];
+
+    // Map the original bone index to the boneId
+    boneIdOriginalIndexMap[bone.id] = count;
+
+    // Retrieve the bone info
+    geoMesh.bones[count] = bone;
+
+    count++;
   }
 
 	// Sort the bone array, so that the root node comes first.
   std::sort(geoMesh.bones.begin(), geoMesh.bones.end(),
             [](const Bone& lhs, const Bone& rhs) { return lhs.id < rhs.id; });
 
-	int sortedIndex = 0;
-	for (Bone& bone : geoMesh.bones)
-  {
-    if (sortedIndex == 59)
-    {
-      int a = 0;
-		}
+	//int sortedIndex = 0;
+	//for (Bone& bone : geoMesh.bones)
+ // {
+ //   uint32_t originalIndex = boneIdOriginalIndexMap[bone.id];
+ //   aiBone* currBone = mesh->mBones[originalIndex];
 
-    uint32_t originalIndex = boneIdOriginalIndexMap[bone.id];
-    aiBone* currBone = mesh->mBones[originalIndex];
+ //   // Retrieve the influences of the bone to vertices
+ //   uint32_t numWeights = currBone->mNumWeights;
+ //   auto* vertexWeights = currBone->mWeights;
+ //   for (uint32_t weightIdx = 0; weightIdx < numWeights; ++weightIdx)
+ //   {
+ //     uint32_t vertexId = vertexWeights[weightIdx].mVertexId;
+ //     float weight = vertexWeights[weightIdx].mWeight;
+ //     geoMesh.vertexBoneWeights[vertexId].push_back({sortedIndex, weight});
+ //   }
+	//	// Next sorted index of the bone.
+ //   sortedIndex++;
+ // }
+
+  // int sortedIndex = 0;
+  for (uint32_t i = 0; i < mesh->mNumBones; ++i)
+  {
+    aiBone* currBone = mesh->mBones[i];
+
+    const std::string boneName{currBone->mName.C_Str()};
+    const uint32_t boneId = _skeleton.boneNameIdMap[boneName];
+
+    int sortedIndex = 0;
+    for (Bone& bone : geoMesh.bones)
+    {
+      if (bone.id == boneId)
+      {
+        break;
+      }
+      sortedIndex++;
+    }
 
     // Retrieve the influences of the bone to vertices
     uint32_t numWeights = currBone->mNumWeights;
@@ -1135,8 +1224,8 @@ void ModelExporter::ExtractMeshBoneInfluences(Mesh& geoMesh, aiMesh* mesh,
       float weight = vertexWeights[weightIdx].mWeight;
       geoMesh.vertexBoneWeights[vertexId].push_back({sortedIndex, weight});
     }
-		// Next sorted index of the bone.
-    sortedIndex++;
+    // Next sorted index of the bone.
+    // sortedIndex++;
   }
 
   // Post-process bone influence info for optimization

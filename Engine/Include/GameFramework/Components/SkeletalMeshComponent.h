@@ -25,7 +25,7 @@ public:
 
   void SetHandle(MeshHandle handle) { 
     const MeshData& data = AccessMeshData(handle);
-    boneTransforms.resize(data.bones.size());
+    boneTransforms.resize(data.bones.size(), XMMatrixIdentity());
     boneNameMap.reserve(data.bones.size());
     for (auto& bone : data.bones)
     {

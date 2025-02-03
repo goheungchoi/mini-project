@@ -44,6 +44,8 @@ Map::Map(World* world) : GameObject(world)
   Character::gunFireAnimation = *std::next(animIt, 2);
 
 
+  ModelData& enemyModel = AccessModelData(enemyModelHandle);
+
 	// Get the player model data.
 	ModelData& playerModel = AccessModelData(playerModelHandle);
 

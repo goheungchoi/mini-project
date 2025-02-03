@@ -15,10 +15,14 @@ void GameLevel::PrepareLevel()
 
 void GameLevel::BeginLevel()
 {
-  gameCamera = world->CreateGameObject<FixedCameraObject>();
+  /*gameCamera = world->CreateGameObject<FixedCameraObject>();
   gameCamera->SetCameraPosition({-10.f, 10.f, -10.f});
   gameCamera->SetFocus({1.f, 1.f, 1.f});
-  gameCamera->SetAsMainCamera();
+  gameCamera->SetAsMainCamera();*/
+
+  testCamera = world->CreateGameObject<CameraObject>();
+  testCamera->InitCamera(kScreenWidth, kScreenHeight);
+  testCamera->SetAsMainCamera();
 
   
   // map->Translate(0.6f, -0.01f, 0.8f);
