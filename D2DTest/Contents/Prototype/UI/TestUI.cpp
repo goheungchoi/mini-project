@@ -45,8 +45,8 @@ void TestUI::Render()
   
   //_world->_renderer->DrawRectangle({0, 1, 1, 1}, {50, 50, 100, 100}, 2.0f);
 
-  //TextFormatInfo txtinfo;
-  //txtinfo._fontName = L"궁서";
-  //_world->_renderer->DrawTexts(L"텍스트Test1234", {300, 300, 1000, 1000},
-  //                             {0, 1, 0, 1}, &txtinfo);
+  TextFormatInfo txtinfo;
+  txtinfo._fontName = L"궁서";
+  _world->_renderer->DrawTexts(L"TestUI 테스트", {300, 300, 1000, 1000},
+                               {0, 1, 0, 1}, &txtinfo);
 }

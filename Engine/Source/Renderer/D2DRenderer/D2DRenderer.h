@@ -9,6 +9,31 @@ class Text;
 class UIRenderer;
 class Texture;
 
+class Render2DQueue
+{
+public:
+  Render2DQueue() = default;
+  ~Render2DQueue() = default;
+
+public:
+  void AddRender2DCmd(std::function<void()> command)
+  {
+    _Render2DCmds.push_back(command);
+  }
+  void ExecuteRender2DCmd()
+  {
+    for (auto& command : _Render2DCmds)
+    {
+      command();
+    }
+
+    _Render2DCmds.clear(); // 명령 실행 수 Queue 비우기
+  }
+
+private:
+  std::vector<std::function<void()>> _Render2DCmds;
+};
+
 class D2DRenderer // D2D.ver
 {
 public:
@@ -66,4 +91,6 @@ private:
   ID2D1Bitmap1* _pID2D1Bitmap = nullptr;
 
   std::unique_ptr<DirectX::SpriteBatch> _pSpriteBatch = nullptr;
+
+  Render2DQueue _render2DQueue;
 };

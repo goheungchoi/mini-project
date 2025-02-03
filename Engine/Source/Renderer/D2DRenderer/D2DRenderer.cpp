@@ -110,6 +110,9 @@ void D2DRenderer::EndDraw()
 {
   RenderSprites();
   RenderTexts();
+
+  _render2DQueue.ExecuteRender2DCmd();
+
   _pD2D1DeviceContext->EndDraw();
 }
 
