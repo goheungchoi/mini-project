@@ -24,7 +24,8 @@ Character::Character(World* world) : GameObject(world)
   AddChildGameObject(indicator);
 
 	// Fetch the character model data.
-  characterModelHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
+  characterModelHandle =
+      LoadModel("Models\\Character\\Enemy\\Enemy.glb");
   characterModelData = &AccessModelData(characterModelHandle);
 
 	// Grab the skeleton handle

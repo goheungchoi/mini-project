@@ -6,7 +6,7 @@ void GameLevel::PrepareLevel()
   redCellModelHandle = LoadModel("Models\\RedCell\\RedCell.glb");
   greenCellModelHandle = LoadModel("Models\\GreenCell\\GreenCell.glb");
 
-  animTestHandle = LoadModel("Models\\Charactor\\Enemy\\Enemy.fbx");
+  animTestHandle = LoadModel("Models\\Character\\Enemy\\Enemy.glb");
   handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 
   mapMeshHandle = LoadModel("Models\\Map_001_Bar\\Map_001.glb");

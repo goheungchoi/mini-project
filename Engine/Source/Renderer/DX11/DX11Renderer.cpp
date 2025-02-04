@@ -321,8 +321,7 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
   _passMgr->SetSkyBox(envPath, specularBRDFPath, diffuseIrrPath,
                       specularIBLPath);
 }
-void DX11Renderer::CreateParticle() {}
-void DX11Renderer::DeleteParticle() {}
+
 void DX11Renderer::CreateBillboard(Billboard* billboard) 
 {
   billboard = new Billboard(_device);
@@ -341,6 +340,11 @@ void DX11Renderer::DrawDebugBox(Matrix world, Color color)
 void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
 {
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
+}
+
+void DX11Renderer::DrawBillBoard(Billboard* billboard)
+{
+  
 }
 
 #endif

@@ -305,19 +305,19 @@ PS_INPUT vs_main(VS_INPUT input)
                                boneIDBuffer[input.vertexID * 8 + 1],
                                boneIDBuffer[input.vertexID * 8 + 2],
                                boneIDBuffer[input.vertexID * 8 + 3]);
-    uint4 boneIndices1 = uint4(boneIDBuffer[input.vertexID * 8 + 4],
-                               boneIDBuffer[input.vertexID * 8 + 5],
-                               boneIDBuffer[input.vertexID * 8 + 6],
-                               boneIDBuffer[input.vertexID * 8 + 7]);
+    //uint4 boneIndices1 = uint4(boneIDBuffer[input.vertexID * 8 + 4],
+    //                           boneIDBuffer[input.vertexID * 8 + 5],
+    //                           boneIDBuffer[input.vertexID * 8 + 6],
+    //                           boneIDBuffer[input.vertexID * 8 + 7]);
 
     float4 boneWeights0 = float4(boneWeightBuffer[input.vertexID * 8 + 0],
                                  boneWeightBuffer[input.vertexID * 8 + 1],
                                  boneWeightBuffer[input.vertexID * 8 + 2],
                                  boneWeightBuffer[input.vertexID * 8 + 3]);
-    float4 boneWeights1 = float4(boneWeightBuffer[input.vertexID * 8 + 4],
-                                 boneWeightBuffer[input.vertexID * 8 + 5],
-                                 boneWeightBuffer[input.vertexID * 8 + 6],
-                                 boneWeightBuffer[input.vertexID * 8 + 7]);
+    //float4 boneWeights1 = float4(boneWeightBuffer[input.vertexID * 8 + 4],
+    //                             boneWeightBuffer[input.vertexID * 8 + 5],
+    //                             boneWeightBuffer[input.vertexID * 8 + 6],
+    //                             boneWeightBuffer[input.vertexID * 8 + 7]);
   
     boneTransform += mul(boneWeights0.x, boneMatrix[boneIndices0.x]);
     boneTransform += mul(boneWeights0.y, boneMatrix[boneIndices0.y]);
@@ -325,10 +325,10 @@ PS_INPUT vs_main(VS_INPUT input)
     boneTransform += mul(boneWeights0.w, boneMatrix[boneIndices0.w]);
   
 
-    boneTransform += mul(boneWeights1.x, boneMatrix[boneIndices1.x]);
-    boneTransform += mul(boneWeights1.y, boneMatrix[boneIndices1.y]);
-    boneTransform += mul(boneWeights1.z, boneMatrix[boneIndices1.z]);
-    boneTransform += mul(boneWeights1.w, boneMatrix[boneIndices1.w]);
+    //boneTransform += mul(boneWeights1.x, boneMatrix[boneIndices1.x]);
+    //boneTransform += mul(boneWeights1.y, boneMatrix[boneIndices1.y]);
+    //boneTransform += mul(boneWeights1.z, boneMatrix[boneIndices1.z]);
+    //boneTransform += mul(boneWeights1.w, boneMatrix[boneIndices1.w]);
   
 
     matWolrd =  boneTransform;
@@ -520,19 +520,19 @@ PS_INPUT shadow_vs_main(VS_INPUT input)
                                boneIDBuffer[input.vertexID * 8 + 1],
                                boneIDBuffer[input.vertexID * 8 + 2],
                                boneIDBuffer[input.vertexID * 8 + 3]);
-    uint4 boneIndices1 = uint4(boneIDBuffer[input.vertexID * 8 + 4],
-                               boneIDBuffer[input.vertexID * 8 + 5],
-                               boneIDBuffer[input.vertexID * 8 + 6],
-                               boneIDBuffer[input.vertexID * 8 + 7]);
+    //uint4 boneIndices1 = uint4(boneIDBuffer[input.vertexID * 8 + 4],
+    //                           boneIDBuffer[input.vertexID * 8 + 5],
+    //                           boneIDBuffer[input.vertexID * 8 + 6],
+    //                           boneIDBuffer[input.vertexID * 8 + 7]);
 
     float4 boneWeights0 = float4(boneWeightBuffer[input.vertexID * 8 + 0],
                                  boneWeightBuffer[input.vertexID * 8 + 1],
                                  boneWeightBuffer[input.vertexID * 8 + 2],
                                  boneWeightBuffer[input.vertexID * 8 + 3]);
-    float4 boneWeights1 = float4(boneWeightBuffer[input.vertexID * 8 + 4],
-                                 boneWeightBuffer[input.vertexID * 8 + 5],
-                                 boneWeightBuffer[input.vertexID * 8 + 6],
-                                 boneWeightBuffer[input.vertexID * 8 + 7]);
+    //float4 boneWeights1 = float4(boneWeightBuffer[input.vertexID * 8 + 4],
+    //                             boneWeightBuffer[input.vertexID * 8 + 5],
+    //                             boneWeightBuffer[input.vertexID * 8 + 6],
+    //                             boneWeightBuffer[input.vertexID * 8 + 7]);
   
     boneTransform += mul(boneWeights0.x, boneMatrix[boneIndices0.x]);
     boneTransform += mul(boneWeights0.y, boneMatrix[boneIndices0.y]);
@@ -540,10 +540,10 @@ PS_INPUT shadow_vs_main(VS_INPUT input)
     boneTransform += mul(boneWeights0.w, boneMatrix[boneIndices0.w]);
   
 
-    boneTransform += mul(boneWeights1.x, boneMatrix[boneIndices1.x]);
-    boneTransform += mul(boneWeights1.y, boneMatrix[boneIndices1.y]);
-    boneTransform += mul(boneWeights1.z, boneMatrix[boneIndices1.z]);
-    boneTransform += mul(boneWeights1.w, boneMatrix[boneIndices1.w]);
+    //boneTransform += mul(boneWeights1.x, boneMatrix[boneIndices1.x]);
+    //boneTransform += mul(boneWeights1.y, boneMatrix[boneIndices1.y]);
+    //boneTransform += mul(boneWeights1.z, boneMatrix[boneIndices1.z]);
+    //boneTransform += mul(boneWeights1.w, boneMatrix[boneIndices1.w]);
   
     pos = mul(pos, boneTransform);
 #endif
@@ -583,19 +583,19 @@ PS_INPUT outline_vs_main(VS_INPUT input)
                                boneIDBuffer[input.vertexID * 8 + 1],
                                boneIDBuffer[input.vertexID * 8 + 2],
                                boneIDBuffer[input.vertexID * 8 + 3]);
-    uint4 boneIndices1 = uint4(boneIDBuffer[input.vertexID * 8 + 4],
-                               boneIDBuffer[input.vertexID * 8 + 5],
-                               boneIDBuffer[input.vertexID * 8 + 6],
-                               boneIDBuffer[input.vertexID * 8 + 7]);
+    //uint4 boneIndices1 = uint4(boneIDBuffer[input.vertexID * 8 + 4],
+    //                           boneIDBuffer[input.vertexID * 8 + 5],
+    //                           boneIDBuffer[input.vertexID * 8 + 6],
+    //                           boneIDBuffer[input.vertexID * 8 + 7]);
 
     float4 boneWeights0 = float4(boneWeightBuffer[input.vertexID * 8 + 0],
                                  boneWeightBuffer[input.vertexID * 8 + 1],
                                  boneWeightBuffer[input.vertexID * 8 + 2],
                                  boneWeightBuffer[input.vertexID * 8 + 3]);
-    float4 boneWeights1 = float4(boneWeightBuffer[input.vertexID * 8 + 4],
-                                 boneWeightBuffer[input.vertexID * 8 + 5],
-                                 boneWeightBuffer[input.vertexID * 8 + 6],
-                                 boneWeightBuffer[input.vertexID * 8 + 7]);
+    //float4 boneWeights1 = float4(boneWeightBuffer[input.vertexID * 8 + 4],
+    //                             boneWeightBuffer[input.vertexID * 8 + 5],
+    //                             boneWeightBuffer[input.vertexID * 8 + 6],
+    //                             boneWeightBuffer[input.vertexID * 8 + 7]);
   
     boneTransform += mul(boneWeights0.x, boneMatrix[boneIndices0.x]);
     boneTransform += mul(boneWeights0.y, boneMatrix[boneIndices0.y]);
@@ -603,10 +603,10 @@ PS_INPUT outline_vs_main(VS_INPUT input)
     boneTransform += mul(boneWeights0.w, boneMatrix[boneIndices0.w]);
   
 
-    boneTransform += mul(boneWeights1.x, boneMatrix[boneIndices1.x]);
-    boneTransform += mul(boneWeights1.y, boneMatrix[boneIndices1.y]);
-    boneTransform += mul(boneWeights1.z, boneMatrix[boneIndices1.z]);
-    boneTransform += mul(boneWeights1.w, boneMatrix[boneIndices1.w]);
+    //boneTransform += mul(boneWeights1.x, boneMatrix[boneIndices1.x]);
+    //boneTransform += mul(boneWeights1.y, boneMatrix[boneIndices1.y]);
+    //boneTransform += mul(boneWeights1.z, boneMatrix[boneIndices1.z]);
+    //boneTransform += mul(boneWeights1.w, boneMatrix[boneIndices1.w]);
   
     
     matWolrd =  boneTransform;

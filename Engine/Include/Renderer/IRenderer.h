@@ -96,15 +96,15 @@ public:
    */
   virtual void DrawDebugCylinder(Matrix world, Color color) = 0;
 #endif
+  virtual void DrawBillBoard(Billboard* billboard) = 0;
   /**
    * @brief About Particle
    */
-  virtual void CreateParticle() = 0;
+
   virtual void CreateBillboard(Billboard* billboard) = 0;
   /**
    * @brief About Particle
    */
-  virtual void DeleteParticle() = 0;
 
   virtual void BindPipeline() = 0;
 

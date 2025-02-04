@@ -9,7 +9,7 @@ public:
   int _vertexCount = 0;
   int _indexCount = 0;
   Device* _device = nullptr;
-
+  
   Vector4 position{};
   Vector3 scale{};
 

@@ -7,6 +7,7 @@
 #include "GameFramework/Components/Animation/AnimationState.h"
 
 #include "FixedCameraObject.h"
+#include "Contents/GameObjects/CameraObject.h"
 
 class GameLevel : public Level
 {
@@ -21,6 +22,7 @@ protected:
   ModelHandle handGunHandle;
 
 	FixedCameraObject* gameCamera;
+  CameraObject* testCamera;
 
 	GameObject* pivot{nullptr};
 	class Map* map{nullptr};

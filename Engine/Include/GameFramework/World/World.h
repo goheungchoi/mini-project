@@ -175,7 +175,7 @@ public:
       // Bind the root bones to the skeletal mesh.
       for (auto [skeletalMesh, boneId] : skeletalMeshRootBonePair)
       {
-        auto* gameObject = gameObjectBoneId[boneId];
+        auto* gameObject = gameObjectBoneId[0];
         skeletalMesh->SetRootTransform(gameObject->transform);
       }
     }
