@@ -101,7 +101,7 @@ public:
    * @brief About Particle
    */
 
-  virtual void CreateBillboard(Billboard* billboard) = 0;
+  virtual void CreateBillboard(Billboard*& billboard) = 0;
   /**
    * @brief About Particle
    */

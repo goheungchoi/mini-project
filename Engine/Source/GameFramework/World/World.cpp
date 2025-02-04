@@ -22,7 +22,7 @@
 #endif
 
 #include "GameFramework/UI/Canvas/Canvas.h"
-#define USED2D
+// #define USED2D
 
 void World::Initialize(HWND hwnd, const std::wstring& title)
 {
@@ -38,7 +38,6 @@ void World::Initialize(HWND hwnd, const std::wstring& title)
   _phyjixEngine->Initialize();
   _phyjixWorld = _phyjixEngine->CreateWorld();
   _phyjixWorld->CreateDefaultGround();
-
 
   SetMainCamera(_defaultCamera);
 
@@ -368,7 +367,8 @@ void World::InitialStage()
           object->OnActivated();
           object->isActive = true;
           object->status = EStatus_Active;
-          object->bShouldActivate = false;        }
+          object->bShouldActivate = false;
+        }
       });
     }
 
@@ -451,15 +451,17 @@ void World::Update(float dt)
     gameObject->Update(dt);
   }
 
-  //Rigidbody updatefromtransform
+  // Rigidbody updatefromtransform
   for (RigidbodyComponent* component : rigidBodyComponents)
   {
     component->UpdateFromTransform();
   }
 
   // phjix simulate
-  if (INPUT.IsKeyPress(MouseState::LB)) _phyjixWorld->LeftClick();
-  if (INPUT.IsKeyPress(MouseState::RB)) _phyjixWorld->RightClick();
+  if (INPUT.IsKeyPress(MouseState::LB))
+    _phyjixWorld->LeftClick();
+  if (INPUT.IsKeyPress(MouseState::RB))
+    _phyjixWorld->RightClick();
   _phyjixWorld->UpdateRay(
       mainCamera->GetPosition(),
       Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
@@ -585,8 +587,8 @@ void World::RenderGameObjects()
   // Rendering stage
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (!(gameObject->status == EStatus_Active))
-      continue;
+    /*if (!(gameObject->status == EStatus_Active))
+      continue;*/
 
     gameObject->OnRender();
 
@@ -616,6 +618,12 @@ void World::RenderGameObjects()
           handle, XMMatrixIdentity(), skeletalMeshComp->renderTypeFlags,
           skeletalMeshComp->outlineColor, skeletalMeshComp->boneTransforms);
     }
+    else if (auto* billboardComp =
+                 gameObject->GetComponent<BillboardComponent>();
+             billboardComp && billboardComp->isVisible)
+    {
+       _renderer->DrawBillBoard(billboardComp->billboard);
+    }
   }
 #ifdef _DEBUG
 
@@ -634,12 +642,10 @@ void World::RenderGameObjects()
         switch (rigidbody->GetRigidBody()->GetColliderShapeType())
         {
         case ColliderShape::eCubeCollider:
-          _renderer->DrawDebugBox(offsetMat,
-                                  Color(1, 0, 1));
+          _renderer->DrawDebugBox(offsetMat, Color(1, 0, 1));
           break;
         case ColliderShape::eSphereCollider:
-          _renderer->DrawDebugSphere(offsetMat,
-                                     Color(1, 0, 1));
+          _renderer->DrawDebugSphere(offsetMat, Color(1, 0, 1));
           break;
         default:
           break;

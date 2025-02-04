@@ -1,5 +1,6 @@
 #pragma once
 #include "QuadFrame.h"
+#include "Material.h"
 class BillboardQuad
 {
 public:
@@ -9,9 +10,13 @@ public:
   int _vertexCount = 0;
   int _indexCount = 0;
   Device* _device = nullptr;
-  
+
   Vector4 position{};
   Vector3 scale{};
+  UINT stride;
+  UINT offset;
+  Material* material=nullptr;
+
 
 public:
   BillboardQuad(Device* device) : _device{device}
@@ -42,6 +47,15 @@ public:
         indices.data(), sizeof(UINT) * _indexCount, D3D11_BIND_INDEX_BUFFER);
     delete[] vertices;
     vertices = 0;
+    material = new Material;
+    stride = sizeof(Quad::Vertex);
+    offset = 0;
   }
   ~BillboardQuad() {}
+
+public:
+  void SetTexture(TextureHandle handle)
+  {
+    material->CreateAlbedo(_device, AccessTextureData(handle));
+  }
 };

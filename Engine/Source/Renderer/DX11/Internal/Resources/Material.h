@@ -225,4 +225,21 @@ public:
         static_cast<UINT>(type), 1,
         _textures[static_cast<int>(type)]->GetResource().GetAddressOf());
   }
+
+  void CreateAlbedo(Device* device,TextureData texData)
+  { 
+    if (_textures.empty())
+    {
+      Texture* albedo = Texture::CreateSRV(device, texData);
+      _textures.push_back(albedo);
+      return;
+    }
+    if (!_textures[0])
+    {
+      SAFE_RELEASE(_textures[0]);
+      Texture* albedo = Texture::CreateSRV(device, texData);
+      _textures[0] = albedo;
+      return;
+    }
+  }
 };

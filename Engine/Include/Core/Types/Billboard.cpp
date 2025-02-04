@@ -12,9 +12,17 @@ Billboard::~Billboard()
 }
 
 
-void Billboard::SetPosition() 
+void Billboard::SetPosition(Vector4 position)
 {
-
+  _quad->position = position;
 }
 
-void Billboard::SetSize() {}
+void Billboard::SetSize(Vector3 scale) 
+{
+  _quad->scale = scale;
+}
+
+void Billboard::SetTexture(TextureHandle texHandle)
+{
+  _quad->SetTexture(texHandle);
+}

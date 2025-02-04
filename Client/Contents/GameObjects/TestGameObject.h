@@ -2,16 +2,7 @@
 
 #include "GameFramework/GameObject/GameObject.h"
 
-class TestGameObject : public GameObject
-{
+#include "Contents/Prototype/Game/Map.h"
 
-public:
-	
-	TestGameObject(World* world) : GameObject(world) {}
-
-
-
-
-};
 
 

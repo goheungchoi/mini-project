@@ -8,13 +8,7 @@
 #include "GameFramework/Level/Level.h"
 #include "GameFramework/World/World.h"
 
-
-#include "Contents/Prototype/Grid/GridLevel.h"
-#include "Contents/Prototype/Game/GameLevel.h"
-#include "Contents/Levels/TestLevel.h"
-
-static GridLevel* gridLevel;
-static TestLevel* testLevel;
+#include "Contents/Levels/GameLevel.h"
 
 static GameLevel* gameLevel;
 
@@ -34,13 +28,8 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
 
   _world = World::CreateWorld(_hwnd, title);
 
-	gridLevel = new GridLevel("Test Grid Level", 5, 5);
-  testLevel = new TestLevel();
+	gameLevel = new GameLevel("Game Level");
 
-	gameLevel = new GameLevel("Test Game Level");
-
-	_world->AddLevel(gridLevel);
-  _world->AddLevel(testLevel);
   _world->AddLevel(gameLevel);
   _world->PrepareChangeLevel(gameLevel->name);
   _world->CommitLevelChange();
