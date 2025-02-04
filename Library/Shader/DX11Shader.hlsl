@@ -556,7 +556,7 @@ PS_INPUT billboard_vs_main(VS_INPUT input)
 }
 float4 billboard_ps_main(PS_INPUT input) : SV_Target0
 {
-    //return texAlbedo.Sample(samLinear, input.uv);
-    return float4(1.f, 1.f, 1.f, 1.f);
+    return texAlbedo.Sample(samLinear, input.uv);
+    //return float4(1.f, 1.f, 1.f, 1.f);
 }
 #endif
