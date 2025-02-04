@@ -13,10 +13,10 @@ Civilian::Civilian(World* world) : Character(world) {
 	animator->BindSkeleton(civilianSkeletonHandle);
 
 	// Create animation states
-  idle = new Animation(idleAnimation, true);
+  idle = new Animation(civilianIdleAnimation, true);
 	idleState = new AnimationState(idle);
 
-	surrender = new Animation(civilianDeadAnimation, true);
+	surrender = new Animation(civilianSurrenderAnimation, true);
   surrenderState = new AnimationState(surrender);
 
 	dead = new Animation(civilianDeadAnimation, false);

@@ -164,24 +164,24 @@ void Character::OnAwake()
     ApplyChangedDirection();
   }
 
-	auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
-  bodyRigidBody->Initialize({0, 1.0f, 0}, Quaternion::Identity,
-                            {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
-                            false, false, world->_phyjixWorld);
+	//auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
+ // bodyRigidBody->Initialize({0, 1.0f, 0}, Quaternion::Identity,
+ //                           {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
+ //                           false, false, world->_phyjixWorld);
 
-  // bodyRigidBody->EnableGravity();
-  // bodyRigidBody->DisableGravity();
-  // bodyRigidBody->DisableCollision();
-  // bodyRigidBody->EnableDebugDraw();
-  bodyRigidBody->ClearForce();
-  bodyRigidBody->ClearTorque();
-  //  bodyRigidBody->DisableSimulation();
-  // bodyRigidBody->DisableDebugDraw();
-  bodyRigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eLClick,
-                                   [=]() {
-                                     bodyRigidBody->EnableDebugDraw();
-                                     bodyRigidBody->ClearForce();
-                                   });
+ // // bodyRigidBody->EnableGravity();
+ // // bodyRigidBody->DisableGravity();
+ // // bodyRigidBody->DisableCollision();
+ // // bodyRigidBody->EnableDebugDraw();
+ // bodyRigidBody->ClearForce();
+ // bodyRigidBody->ClearTorque();
+ // //  bodyRigidBody->DisableSimulation();
+ // // bodyRigidBody->DisableDebugDraw();
+ // bodyRigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eLClick,
+ //                                  [=]() {
+ //                                    bodyRigidBody->EnableDebugDraw();
+ //                                    bodyRigidBody->ClearForce();
+ //                                  });
 }
 
 void Character::Update(float dt) {
@@ -238,9 +238,7 @@ void Character::PostUpdate(float dt) {
       billboard->SetPosition(
           inactiveIndicator->transform->GetGlobalTranslation());
     }
-  
   }
-  
 }
 
 void Character::ApplyChangedGridLocation() {

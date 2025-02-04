@@ -16,7 +16,7 @@ Map::Map(World* world) : GameObject(world)
 	// The base models.
 	enemyModelHandle = LoadModel("Models\\Character\\Enemy\\Enemy.glb");
 	playerModelHandle = LoadModel("Models\\Character\\Player\\Player.glb");
-  civilianModelHandle = LoadModel("Models\\Civilian\\Animation_003.glb");
+  civilianModelHandle = LoadModel("Models\\Civilian\\Eliza.glb");
 
 	// Set character static data.
   brawlerInactiveIndicatorTextureHandle =
@@ -45,8 +45,10 @@ Map::Map(World* world) : GameObject(world)
 
   Character::civilianModelData = &AccessModelData(civilianModelHandle);
   Character::civilianSkeletonHandle = Character::civilianModelData->skeleton;
-  Character::civilianDeadAnimation =
-      *Character::civilianModelData->animations.begin();
+  auto civilAnimIt = Character::civilianModelData->animations.begin();
+  Character::civilianIdleAnimation = *std::next(civilAnimIt, 0);
+  Character::civilianSurrenderAnimation = *std::next(civilAnimIt, 0);
+  Character::civilianDeadAnimation = *std::next(civilAnimIt, 0);
 
 	auto animIt = Character::playerModelData->animations.begin();
 
@@ -192,6 +194,11 @@ void Map::TriggerAction() {
   {
     ally->TriggerAction();
 	}
+
+  for (Character* civilian : civilians)
+  {
+    civilian->TriggerAction();
+  }
 }
 
 void Map::ResetGame() {
@@ -356,10 +363,10 @@ void Map::CreateObstacleAt(uint32_t w, uint32_t h) {}
 
 void Map::OnAwake() {
   // Translate({-4.f, 0.f, -4.f});
-  this->Deactivate();
 }
 
 void Map::Update(float dt) {
+  // Rotate this map.
   /*if (INPUT.IsKeyPress(Key::Q))
   {
     parent->RotateAroundYAxis(dt);
