@@ -15,7 +15,7 @@ public:
   void Resume() { map->Activate(); }
 
   // Game loop events
-  virtual void OnAwake() {}
+  virtual void OnAwake();
   virtual void OnActivated() {}
 
   virtual void FixedUpdate(float fixedRate) {}
