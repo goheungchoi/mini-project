@@ -20,7 +20,7 @@ public:
   static Resource2DManager* GetInstance();
   void Destroy();
 
-  //bool LoadSprite(LPCSTR path);
+  bool LoadSprite(LPCSTR path);
   std::shared_ptr<Sprite> GetSprite(LPCSTR path);
 
   //bool LoadAnim2DAsset(LPCSTR spritePath, LPCSTR animCSV);
