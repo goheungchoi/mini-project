@@ -342,12 +342,11 @@ void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
 }
 
+#endif
 void DX11Renderer::DrawBillBoard(Billboard* billboard)
 {
   _passMgr->AddBillBoard(billboard->_quad);
 }
-
-#endif
 void DX11Renderer::BeginImGuiDraw()
 {
   ImGui_ImplDX11_NewFrame();
