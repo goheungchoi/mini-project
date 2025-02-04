@@ -13,12 +13,17 @@ RigidBody::RigidBody(physx::PxPhysics* physics,
   physx::PxTransform transform(PhyjixUtil::VecToPxVec(position),
                                PhyjixUtil::VecToPxQuat(rotation));
   isStatic = _isStatic;
+  bIsKinematic = isKinematic;
   if (!isStatic)
   {
     _actor = physics->createRigidDynamic(transform);
     //GetDynamicActor()->setMass(1.f);
+    GetDynamicActor()->setRigidBodyFlag(
+        physx::PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
     if (isKinematic)
-      static_cast<physx::PxRigidDynamic*>(_actor)->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
+      GetDynamicActor()->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC,
+                                          true);
+
   }
   else
     _actor = physics->createRigidStatic(transform);
@@ -32,15 +37,16 @@ RigidBody::RigidBody(physx::PxPhysics* physics,
     _defaultShape = physx::PxRigidActorExt::createExclusiveShape(
         *_actor, physx::PxBoxGeometry(offsetsize.x, offsetsize.y, offsetsize.z),
         *material);
-    _defaultShape->setLocalPose(physx::PxTransform(
-        PhyjixUtil::VecToPxVec(offsetpos), PhyjixUtil::VecToPxQuat(offsetrot)));
+    _triggerShape = physx::PxRigidActorExt::createExclusiveShape(
+        *_actor, physx::PxBoxGeometry(offsetsize.x, offsetsize.y, offsetsize.z),
+        *material);
     break;
 
   case ColliderShape::eSphereCollider:
     _defaultShape = physx::PxRigidActorExt::createExclusiveShape(
         *_actor, physx::PxSphereGeometry(offsetsize.x), *material);
-    _defaultShape->setLocalPose(physx::PxTransform(
-        PhyjixUtil::VecToPxVec(offsetpos), PhyjixUtil::VecToPxQuat(offsetrot)));
+    _triggerShape = physx::PxRigidActorExt::createExclusiveShape(
+        *_actor, physx::PxSphereGeometry(offsetsize.x), *material);
     break;
 
   case ColliderShape::eCapsuleCollider:
@@ -49,10 +55,20 @@ RigidBody::RigidBody(physx::PxPhysics* physics,
                              *physics->createMaterial(0.5f, 0.5f, 0.6f));
     break;
   }
+  _defaultShape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+  _triggerShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+  if (isKinematic)
+  {
+    _defaultShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
+    _defaultShape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, true);
+  }
   
-  _actor->attachShape(*_defaultShape);
+  //_actor->attachShape(*_defaultShape);
+  _defaultShape->setLocalPose(physx::PxTransform(
+      PhyjixUtil::VecToPxVec(offsetpos), PhyjixUtil::VecToPxQuat(offsetrot)));
+  _triggerShape->setLocalPose(physx::PxTransform(
+      PhyjixUtil::VecToPxVec(offsetpos), PhyjixUtil::VecToPxQuat(offsetrot)));
   _actor->userData = this;
-
 }
 
 RigidBody::~RigidBody()
@@ -118,6 +134,18 @@ void RigidBody::OnRightClick()
       event();
 }
 
+void RigidBody::OnOverlapBegin(IRigidBody* other)
+{
+  if (OverlapBeginEventMap.find(other) != OverlapBeginEventMap.end())
+    OverlapBeginEventMap[other]();
+}
+
+void RigidBody::OnOverlapEnd(IRigidBody* other)
+{
+  if (OverlapEndEventMap.find(other) != OverlapEndEventMap.end())
+    OverlapEndEventMap[other]();
+}
+
 physx::PxRigidDynamic* RigidBody::GetDynamicActor()
 {
   return static_cast<physx::PxRigidDynamic*>(_actor);
@@ -151,7 +179,14 @@ void RigidBody::SetCollisionEvent(eCollisionEventType collisiontype, IRigidBody*
     case eCollisionEventType::eRClick:
       RClickEventMap.push_back(event);
       break;
-
+    case eCollisionEventType::eOverlapBegin:
+      OverlapBeginEventMap.insert({other, event});
+      break;
+    case eCollisionEventType::eOverlapEnd:
+      OverlapEndEventMap.insert({other, event});
+      break;
+    default:
+      break;
   }
 }
 
@@ -197,36 +232,24 @@ float RigidBody::GetMaxAngVelocity()
   return GetDynamicActor()->getMaxAngularVelocity();
 }
 
+void RigidBody::KinematicMoveTo(DirectX::SimpleMath::Vector3 pos,
+                                DirectX::SimpleMath::Vector4 rot)
+{
+  GetDynamicActor()->setKinematicTarget(physx::PxTransform(
+      PhyjixUtil::VecToPxVec(pos), PhyjixUtil::VecToPxQuat(rot)));
+
+}
+
 void RigidBody::EnableCollision()
 {
-  physx::PxShape* shape = nullptr;
-  physx::PxU32 shapeCount = GetDynamicActor()->getNbShapes();
-  if (shapeCount > 0)
-  {
-    GetDynamicActor()->getShapes(&shape, 1, 0);
-    if (shape)
-    {
-      //shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
-      shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
-    }
-  }
+  _defaultShape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
+  _defaultShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
 }
 
 void RigidBody::DisableCollision()
 {
-  physx::PxShape* shape = nullptr;
-  physx::PxU32 shapeCount = GetDynamicActor()->getNbShapes();
-  if (shapeCount > 0)
-  {
-    GetDynamicActor()->getShapes(&shape, 1, 0);
-
-    if (shape)
-    {
-      shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
-      shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, true);
-    }
-
-  }
+  _defaultShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
+  _defaultShape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, true);
 }
 
 void RigidBody::EnableGravity()
@@ -245,6 +268,7 @@ void RigidBody::EnableSimulation()
       return;
   GetDynamicActor()->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, false);
   GetDynamicActor()->wakeUp();
+  bIsKinematic = false;
 }
 
 void RigidBody::DisableSimulation()
@@ -252,6 +276,7 @@ void RigidBody::DisableSimulation()
   if (isStatic)
     return;
   GetDynamicActor()->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
+  bIsKinematic = true;
   
 }
 
@@ -272,15 +297,15 @@ DirectX::SimpleMath::Vector3 RigidBody::GetWorldPosition()
         static_cast<physx::PxRigidStatic*>(_actor)->getGlobalPose().p);
   else
     return PhyjixUtil::PxVecToVec(GetDynamicActor()->getGlobalPose().p);
-
 }
 
 DirectX::SimpleMath::Vector4 RigidBody::GetWorldRotation()
 {
   if (isStatic)
-      return PhyjixUtil::PxQuatToVec(static_cast<physx::PxRigidStatic*>(_actor)->getGlobalPose().q);
-  else 
-      return PhyjixUtil::PxQuatToVec(GetDynamicActor()->getGlobalPose().q);
+    return PhyjixUtil::PxQuatToVec(
+        static_cast<physx::PxRigidStatic*>(_actor)->getGlobalPose().q);
+  else
+    return PhyjixUtil::PxQuatToVec(GetDynamicActor()->getGlobalPose().q);
 }
 
 physx::PxTransform RigidBody::GetWorldTransform()
@@ -289,8 +314,9 @@ physx::PxTransform RigidBody::GetWorldTransform()
     return static_cast<physx::PxRigidStatic*>(_actor)->getGlobalPose();
   else
     return GetDynamicActor()->getGlobalPose();
+
 }
-  void RigidBody::SetWorldTransform(DirectX::SimpleMath::Vector3 pos,
+void RigidBody::SetWorldTransform(DirectX::SimpleMath::Vector3 pos,
                                   DirectX::SimpleMath::Vector4 rot)
 {
   if (isStatic)

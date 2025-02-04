@@ -1,27 +1,45 @@
 #include "pch.h"
 #include "PhyjixWorld.h"
+bool collisionMatrix[4][4] = {{true, true, true, true},
+                              {true, true, true, true},
+                              {true, true, true, true},
+                              {true, true, true, true}};
+
+
 
 PhyjixWorld::PhyjixWorld(physx::PxPhysics* physics, physx::PxDefaultCpuDispatcher* dispatcher)
 {
   physx::PxSceneDesc sceneDesc(physics->getTolerancesScale());
   sceneDesc.cpuDispatcher = dispatcher;
   sceneDesc.gravity = physx::PxVec3(0, -98.f, 0);
-  sceneDesc.filterShader =
-      [](physx::PxFilterObjectAttributes attributes0,
-         physx::PxFilterData filterData0,
-         physx::PxFilterObjectAttributes attributes1,
-         physx::PxFilterData filterData1, physx::PxPairFlags& pairFlags,
-         const void* constantBlock,
-         physx::PxU32 constantBlockSize) -> physx::PxFilterFlags {
-    pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT |
-                physx::PxPairFlag::eTRIGGER_DEFAULT |
-                physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
-    return physx::PxFilterFlag::eDEFAULT;
+  //sceneDesc.flags |= physx::PxSceneFlag::eENABLE_CCD; // 고속 이동 대비
+
+  sceneDesc.kineKineFilteringMode = physx::PxPairFilteringMode::eKEEP;
+
+ sceneDesc.filterShader =
+      [](physx::PxFilterObjectAttributes at0, physx::PxFilterData fd0,
+         physx::PxFilterObjectAttributes at1, physx::PxFilterData fd1,
+         physx::PxPairFlags& pairFlags, const void* constantBlock,
+         physx::PxU32 constantBlockSize) -> physx::PxFilterFlags
+  {
+         
+    if ((physx::PxFilterObjectIsTrigger(at0) ||
+         physx::PxFilterObjectIsTrigger(at1)))
+    {
+      pairFlags = physx::PxPairFlag::eTRIGGER_DEFAULT;
+      return physx::PxFilterFlag::eDEFAULT;
+    }
+    return physx::PxDefaultSimulationFilterShader(
+        at0, fd0, at1, fd1, pairFlags, constantBlock, constantBlockSize);
   };
+
   _eventhandler = new PhyjixEventHandler();
   sceneDesc.simulationEventCallback = _eventhandler;
 
   
+
+  sceneDesc.kineKineFilteringMode = physx::PxPairFilteringMode::eKEEP;
+
 
   _scene = physics->createScene(sceneDesc);
   _physics = physics;
@@ -30,13 +48,16 @@ PhyjixWorld::PhyjixWorld(physx::PxPhysics* physics, physx::PxDefaultCpuDispatche
   pvdClient = _scene->getScenePvdClient();
   if (pvdClient)
   {
+
+    _scene->setVisualizationParameter(
+        physx::PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
+
     pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS,
                                true);
     pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
     pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES,
                                true);
   }
-
 }
 
 PhyjixWorld::~PhyjixWorld()
@@ -113,15 +134,14 @@ void PhyjixWorld::Update(float deltaTime)
 {
   isLClicked = false;
   isRClicked = false;
-  UpdateCharacterControllers(deltaTime);
-  _scene->simulate(deltaTime);
+  //UpdateCharacterControllers(deltaTime);
+  elapsedTimer += deltaTime;
+  if (elapsedTimer >= 0.0166f)
+  {
+   _scene->simulate(deltaTime);
   _scene->fetchResults(true);
-
-  //elapsedTimer += deltaTime;
-  //if (elapsedTimer >= 0.0166f)
-  //{
-  //  elapsedTimer -= 0.0166f;
-  //}
+    elapsedTimer -= 0.0166f;
+  }
 }
 
 IRigidBody* PhyjixWorld::GetGroundActor()
@@ -188,6 +208,7 @@ void PhyjixWorld::UpdateRay(DirectX::SimpleMath::Vector3 camerapos,
   _ray->ScreenSize = ScreenSize;
   _ray->UpdateRay(camerapos, mousepos, view, projection);
 }
+
 
 void PhyjixWorld::CreateDefaultGround()
 {

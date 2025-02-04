@@ -27,6 +27,12 @@ public:
   float GetMaxLinVelocity() override;
   DirectX::SimpleMath::Vector3 GetAngVelocity() override;
   float GetMaxAngVelocity() override;
+  void KinematicMoveTo(DirectX::SimpleMath::Vector3 pos,
+                       DirectX::SimpleMath::Vector4 rot) override;
+  bool isKinematic() override { return bIsKinematic; };
+
+
+
   void EnableCollision() override;
   void DisableCollision() override;
   void EnableGravity() override;
@@ -58,30 +64,33 @@ public:
   void OnHover() override;
   void OnLeftClick() override;
   void OnRightClick() override;
+  void OnOverlapBegin(IRigidBody* other) override;
+  void OnOverlapEnd(IRigidBody* other) override;
 
   physx::PxRigidActor* _actor = nullptr;
 
 private:
   bool isStatic = false;
+  bool bIsKinematic = false;
   PhyjixWorld* _world = nullptr;
   physx::PxShape* _defaultShape = nullptr;
+  physx::PxShape* _triggerShape = nullptr;
   ColliderShape shape;
 
-  //test
-  physx::PxShape* _nonElasticShape = nullptr;
 
   std::unordered_map<IRigidBody*, std::function<void(void)>> CollisionEnterEventMap;
   std::unordered_map<IRigidBody*, std::function<void(void)>> CollisionExitEventMap;
+
   std::unordered_map<IRigidBody*, std::function<void(void)>> TriggerEventMap;
   std::vector<std::function<void(void)>> WakeEventMap;
   std::vector<std::function<void(void)>> SleepEventMap;
   std::vector<std::function<void(void)>> HoverEventMap;
   std::vector<std::function<void(void)>> LClickEventMap;
   std::vector<std::function<void(void)>> RClickEventMap;
+  std::unordered_map<IRigidBody*, std::function<void(void)>>
+      OverlapBeginEventMap;
+  std::unordered_map<IRigidBody*, std::function<void(void)>> OverlapEndEventMap;
 
   physx::PxRigidDynamic* GetDynamicActor();
-
-public:
-  
-
 };
+

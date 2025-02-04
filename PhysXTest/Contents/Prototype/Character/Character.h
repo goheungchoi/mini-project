@@ -91,6 +91,11 @@ public:
   virtual void OnPressed() {};
 
 	void OnBeginOverlap(GameObject* other);
+	void OnEndOverlap(GameObject* other);
+
+
+  //test
+  bool isoverlapping = false;
 
   // Game loop events
   void OnAwake();
