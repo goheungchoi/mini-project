@@ -238,7 +238,12 @@ void D2DRenderer::BeginSprites()
 {
   _pDevice->GetImmContext()->OMGetDepthStencilState(&_prevDepthState,
                                                     &_stencilRef);
-  _pSpriteBatch->Begin();
+
+  float blendFactor[4] = {0, 0, 0, 0};
+  UINT* psamplemask = new UINT[1];
+  _pDevice->GetImmContext()->OMGetBlendState(&_blendState, blendFactor,psamplemask);
+
+  _pSpriteBatch->Begin(DirectX::DX11::SpriteSortMode_Deferred,_blendState);
 }
 
 void D2DRenderer::EndSprites()

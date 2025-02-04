@@ -119,6 +119,8 @@ private:
 
   std::unique_ptr<DirectX::SpriteBatch> _pSpriteBatch = nullptr;
   ID3D11DepthStencilState* _prevDepthState = nullptr;
+  ID3D11BlendState* _blendState = nullptr;
+
   UINT _stencilRef{};
 
   Render2DQueue _d2dRenderQueue;
