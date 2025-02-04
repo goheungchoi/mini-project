@@ -9,6 +9,13 @@ class Text;
 class UIRenderer;
 class Texture;
 
+// 렌더링 패스 타입
+enum class PassType2D
+{
+  SPRITE_BATCH,
+  DEFAULT
+};
+
 class Render2DQueue
 {
 public:
@@ -16,13 +23,17 @@ public:
   ~Render2DQueue() = default;
 
 public:
-  void AddRender2DCmd(std::function<void()> command)
+  void AddRender2DCmd(std::function<void()> command,
+                      PassType2D type = PassType2D::DEFAULT)
   {
-    _Render2DCmds.push_back(command);
+    _Render2DCmds.emplace_back(type, command);
   }
   void ExecuteRender2DCmd()
   {
-    for (auto& command : _Render2DCmds)
+    std::sort(_Render2DCmds.begin(), _Render2DCmds.end(),
+              [](const auto& a, const auto& b) { return a.first < b.first; });
+
+    for (auto& [type, command] : _Render2DCmds)
     {
       command();
     }
@@ -31,7 +42,7 @@ public:
   }
 
 private:
-  std::vector<std::function<void()>> _Render2DCmds;
+  std::vector<std::pair<PassType2D, std::function<void()>>> _Render2DCmds;
 };
 
 class D2DRenderer // D2D.ver
@@ -67,6 +78,8 @@ public:
 
 private:
   void RenderSprites();
+  void BeginSprites();
+  void EndSprites();
 
 public:
   // Font

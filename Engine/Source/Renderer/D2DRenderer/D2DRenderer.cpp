@@ -243,3 +243,12 @@ void D2DRenderer::RenderSprites()
   // DepthStencilState 복원
   _pDevice->GetImmContext()->OMSetDepthStencilState(prevDepthState, stencilRef);
 }
+
+void D2DRenderer::BeginSprites()
+{
+  //_pDevice->GetImmContext()->OMGetDepthStencilState(&_prevDepthState,
+  //                                                  &_stencilRef);
+  //_pSpriteBatch->Begin();
+}
+
+void D2DRenderer::EndSprites() {}
