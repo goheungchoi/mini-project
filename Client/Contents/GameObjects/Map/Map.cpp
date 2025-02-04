@@ -532,6 +532,23 @@ void Map::Update(float dt) {
 	}
   else
   {
+    if (INPUT.IsKeyDown(MouseState::LB))
+    {
+      // TODO: Character selection -> Placement mode.
+      //if (grid->selectedCell)
+      //{
+      //  // Detect which grid cell is pointed.
+      //  auto [w, h] = grid->selectedCell->GetCellPosition();
+
+      //  // Create a character at the cell
+      //  CreateAllyAt(placeholder->type, w, h, placeholder->dir);
+
+      //  // Turn off the placement mode
+      //  TurnOffPlacementMode();
+      //}
+      return;
+    }
+
     if (INPUT.IsKeyPress(Key::D1))
     {
       TurnOnPlacementMode(kBrawler);

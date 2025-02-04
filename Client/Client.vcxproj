@@ -207,6 +207,8 @@
 		<ClInclude Include="Contents\GameObjects\Map\Grid\GridObject.h" />
 		<ClCompile Include="Contents\GameObjects\Map\Map.cpp" />
 		<ClInclude Include="Contents\GameObjects\Map\Map.h" />
+		<ClCompile Include="Contents\GameObjects\Map\Obstacle\Obstacle.cpp" />
+		<ClInclude Include="Contents\GameObjects\Map\Obstacle\Obstacle.h" />
 		<ClCompile Include="Contents\GameObjects\Map\Weapons\Bullet\Bullet.cpp" />
 		<ClInclude Include="Contents\GameObjects\Map\Weapons\Bullet\Bullet.h" />
 		<ClCompile Include="Contents\GameObjects\Map\Weapons\Fist\Fist.cpp" />
