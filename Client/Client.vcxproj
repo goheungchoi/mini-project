@@ -217,5 +217,6 @@
 		<ClCompile Include="Contents\Prototype\Grid\GridObject.cpp" />
 		<ClInclude Include="Contents\Prototype\Grid\GridObject.h" />
 		<None Include="imgui.ini" />
+		<None Include="untitled.glb" />
 	</ItemGroup>
 </Project>

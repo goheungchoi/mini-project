@@ -322,7 +322,7 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                       specularIBLPath);
 }
 
-void DX11Renderer::CreateBillboard(Billboard* billboard) 
+void DX11Renderer::CreateBillboard(Billboard*& billboard) 
 {
   billboard = new Billboard(_device);
 }
@@ -344,7 +344,7 @@ void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
 
 void DX11Renderer::DrawBillBoard(Billboard* billboard)
 {
-  
+  _passMgr->AddBillBoard(billboard->_quad);
 }
 
 #endif

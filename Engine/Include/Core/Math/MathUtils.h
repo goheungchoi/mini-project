@@ -198,4 +198,30 @@ inline XMVECTOR GetScalingFromMatrix(const XMMATRIX& matrix)
   );
 }
 
+} // namespace MathUtil
+// 회전 축을 계산하는 함수
+inline Vector3 AxisBillBoardRotate(const Matrix& local,
+                                   const Vector3& cameraPos,
+                                   const Vector3& worldPos)
+{
+  // 로컬 행렬에서 Forward 벡터 추출
+  Vector3 forward = local.Forward();
+  forward.Normalize();
+
+  // 카메라 방향 벡터
+  Vector3 targetDir = cameraPos - worldPos;
+  targetDir.Normalize();
+
+  // 회전 축 계산 (Forward와 카메라 방향 벡터의 외적)
+  Vector3 axis = forward.Cross(targetDir);
+  if (axis.LengthSquared() == 0.0f)
+  {
+    axis = Vector3(0.f, 1.f, 0.f); // 회전 축이 없을 경우 기본적으로 Y축 사용
+  }
+  else
+  {
+    axis.Normalize();
+  }
+
+  return axis;
 }
