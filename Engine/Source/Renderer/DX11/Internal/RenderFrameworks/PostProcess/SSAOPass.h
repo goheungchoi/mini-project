@@ -52,7 +52,7 @@ public:
     HR_T(_device->GetDevice()->CreateTexture2D(&texDesc, nullptr,
                                                _depTexture.GetAddressOf()));
     D3D11_DEPTH_STENCIL_VIEW_DESC dsvdesc;
-    ZeroMemory(&dsvdesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+    ZeroMemory(&dsvdesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
     dsvdesc.Format = DXGI_FORMAT_D32_FLOAT;
     dsvdesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     HR_T(_device->GetDevice()->CreateDepthStencilView(
