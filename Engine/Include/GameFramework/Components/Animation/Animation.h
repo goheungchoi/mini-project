@@ -238,7 +238,10 @@ public:
    */
   float GetTicksPerSecond() const { return data->ticksPerSecond; }
   float GetDuration() const { return data->duration; }
-
+  float GetCurrentAnimationTime() const
+  {
+    return (float) _currentAnimTime / data->duration;
+  }
 
   bool IsLoop() const { return isLoop; }
   void SetLoop(float isLoop) { this->isLoop = isLoop; }

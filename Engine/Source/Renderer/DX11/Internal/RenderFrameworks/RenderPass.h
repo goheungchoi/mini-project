@@ -4,8 +4,10 @@
 #include "../Objects/Swapchain.h"
 #include "../RenderFrameworks/DeferredPass.h"
 #include "../RenderFrameworks/PostProcess/OutLinePass.h"
+#include "../RenderFrameworks/PostProcess/SSAOPass.h"
 #include "../RenderFrameworks/Shader.h"
 #include "../RenderFrameworks/ShadowPass.h"
+#include "../Resources/BillboardQuad.h"
 #include "../Resources/ConstantBuffer.h"
 #include "../Resources/GeometryPrimitive.h"
 #include "../Resources/PipeLineState.h"
@@ -13,6 +15,7 @@
 #include "../Resources/SkyBox.h"
 #include "Core/Common.h"
 #include "Core/Types/RenderType.h"
+#include "Core/Math/MathUtils.h"
 using namespace RenderMesh;
 namespace Renderer
 {
@@ -39,21 +42,23 @@ private:
   // 0 : single sided 1 : double sided
   vector<vector<StaticMesh>> _staticShadowMesh;
   vector<vector<SkelMesh>> _skelShadowMesh;
-  // outline
-  OutLinePass* _outLine = nullptr;
   SkyBox* _skyBox = nullptr;
   GeometryPrimitive* _geometry = nullptr;
   // Constant Buffer
   MeshConstantBuffer* _CB;
   FrameConstantBuffer* _frameCB;
-  // pass
-  ShadowPass* _shadow;
-  DefferedPass* _deffered;
   // sampler
   vector<Sampler*> _samplers;
   // shader
   unordered_map<std::string, VertexShader*> _vShaders;
   unordered_map<std::string, PixelShader*> _pShaders;
+  // Billboard
+  vector<BillboardQuad*> _billboards;
+  // pass
+  ShadowPass* _shadow = nullptr;
+  DefferedPass* _deffered = nullptr;
+  OutLinePass* _outLine = nullptr;
+  SSAOPass* _ssao = nullptr;
 
 private:
   // renderer에서 생성한 deive 참조.
@@ -79,6 +84,7 @@ public:
     _skyBox = new SkyBox(_device);
     _geometry = new GeometryPrimitive(_device);
     _outLine = new OutLinePass(_CB);
+    _ssao = new SSAOPass(_device);
     ID3D11DeviceContext* dc = _device->GetImmContext();
     dc->VSSetConstantBuffers(
         2, 1,
@@ -235,12 +241,14 @@ public:
       }
     }
   }
+
   void ProcessPass()
   {
     ID3D11DeviceContext* dc = _device->GetImmContext();
     _pso->ClearBackBufferDSV();
     _pso->SetMainRS();
     _pso->TurnZBufferOn();
+    dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     // Shadow pass
     this->DrawShadow(dc);
     //--------------------------------------------------------------------------------------//
@@ -254,6 +262,7 @@ public:
     //--------------------------------------------------------------------------------------//
     // OutLine
     this->DrawOutline(dc);
+    this->DrawBillBoard(dc);
 // wireFrame pass -> Forward rendering
 #ifdef _DEBUG
     this->DrawGeometryPrimitveWireFrame(dc);
@@ -265,6 +274,8 @@ public:
     // max값 초기화
     max = std::numeric_limits<int>::max();
   }
+
+  void AddBillBoard(BillboardQuad* quad) { _billboards.push_back(quad); }
   /**
    * @brief call per frame, update frame constantBuffer
    */
@@ -333,6 +344,11 @@ public:
     macros = {{"OutLine", "1"}, {"Skinning", "1"}, {nullptr, nullptr}};
     _vShaders.insert({"SkinningOutLine", _compiler->CompileVertexShader(
                                              macros, "outline_vs_main")});
+    macros.clear();
+    macros = {{"Billboard", "1"}, {nullptr, nullptr}};
+    _vShaders.insert({"Billboard", _compiler->CompileVertexShader(
+                                       macros, "billboard_vs_main")});
+
     // ps
     macros = {{"Deffered", "1"}, {nullptr, nullptr}};
     _pShaders.insert(
@@ -359,6 +375,10 @@ public:
     macros = {{"OutLine", "1"}, {nullptr, nullptr}};
     _pShaders.insert(
         {"OutLine", _compiler->CompilePixelShader(macros, "outline_ps_main")});
+    macros.clear();
+    macros = {{"Billboard", "1"}, {nullptr, nullptr}};
+    _pShaders.insert({"Billboard", _compiler->CompilePixelShader(
+                                       macros, "billboard_ps_main")});
   }
   void CreateSamplers()
   {
@@ -612,13 +632,13 @@ private:
     _pso->SetMainViewPort();
     _pso->SetMainRS();
     _deffered->Prepare(_pso->_backBuffer);
-    dc->IASetInputLayout(_vShaders["SkyBox"]->layout.Get());
-    dc->VSSetShader(_vShaders["SkyBox"]->shader.Get(), nullptr, 0);
-    dc->PSSetShader(_pShaders["SkyBox"]->shader.Get(), nullptr, 0);
-    Constant::World world = {_skyBox->GetMesh()->world.Transpose()};
-    _CB->UpdateContantBuffer(world, MeshCBType::World);
-    _skyBox->Render();
-    // static one side meshes
+    // dc->IASetInputLayout(_vShaders["SkyBox"]->layout.Get());
+    // dc->VSSetShader(_vShaders["SkyBox"]->shader.Get(), nullptr, 0);
+    // dc->PSSetShader(_pShaders["SkyBox"]->shader.Get(), nullptr, 0);
+    // Constant::World world = {_skyBox->GetMesh()->world.Transpose()};
+    //_CB->UpdateContantBuffer(world, MeshCBType::World);
+    //_skyBox->Render();
+    //  static one side meshes
     dc->PSSetShader(_pShaders["Deffered"]->shader.Get(), nullptr, 0);
     dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
     dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
@@ -847,6 +867,51 @@ private:
     dc->VSSetShader(_vShaders["SkinningOutLine"]->shader.Get(), nullptr, 0);
     _outLine->DrawSkelOutline(dc);
   }
+
+  void DrawBillBoard(ID3D11DeviceContext* dc)
+  {
+    //_pso->SetMainRS();
+    _pso->TurnZBufferOn();
+    dc->VSSetShader(_vShaders["Billboard"]->shader.Get(), nullptr, 0);
+    dc->IASetInputLayout(_vShaders["Billboard"]->layout.Get());
+    dc->PSSetShader(_pShaders["Billboard"]->shader.Get(), nullptr, 0);
+    UINT stride = sizeof(Quad::Vertex);
+    UINT offset = 0;
+    if (!_billboards.empty())
+    {
+      dc->IASetVertexBuffers(0, 1, _billboards[0]->_vertexBuffer.GetAddressOf(),
+                             &stride, &offset);
+      dc->IASetIndexBuffer(_billboards[0]->_indexBuffer.Get(),
+                           DXGI_FORMAT_R32_UINT, 0);
+    }
+    std::ranges::for_each(_billboards, [this, dc](BillboardQuad* quad) {
+      Matrix s = Matrix::CreateScale(quad->scale);
+      
+      Vector3 forward = _camera.eye - (Vector3)quad->position;
+      forward.Normalize();
+      
+      Vector3 cameraUp = Vector3::Up;
+      Vector3 right = cameraUp.Cross(forward);
+      right.Normalize();
+      Vector3 up = forward.Cross(right);
+      up.Normalize();
+      Matrix r =
+          Matrix(
+            right.x, right.y, right.z, 0.0f,
+            up.x, up.y, up.z, 0.0f,
+            forward.x, forward.y, forward.z, 0.0f, 
+            0.0f, 0.0f, 0.0f, 1.0f);
+     
+
+      Matrix t = Matrix::CreateTranslation(quad->position.x, quad->position.y,
+                                           quad->position.z);
+      Matrix w = s * r * t;
+      Constant::World world = {w.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      quad->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(quad->_indexCount, 0, 0);
+    });
+  }
   void Clear()
   {
     // Transparent meshes
@@ -882,6 +947,7 @@ private:
       meshes.clear();
     }
     _outLine->ClearMeshes();
+    _billboards.clear();
 #ifdef _DEBUG
     _spheres.clear();
     _boxes.clear();

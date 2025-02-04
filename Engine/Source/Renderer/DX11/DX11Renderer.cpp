@@ -79,11 +79,10 @@ void DX11Renderer::BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
   BeginImGuiDraw();
   _passMgr->UpdateVariable();
 #endif
-#ifdef USED2D
 
-  _d2dRenderer->BeginDraw();
-
-#endif //  USED2D
+//#ifdef USED2D
+//  _d2dRenderer->BeginDraw();
+//#endif //  USED2D
 }
 
 void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
@@ -321,9 +320,8 @@ void DX11Renderer::CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
   _passMgr->SetSkyBox(envPath, specularBRDFPath, diffuseIrrPath,
                       specularIBLPath);
 }
-void DX11Renderer::CreateParticle() {}
-void DX11Renderer::DeleteParticle() {}
-void DX11Renderer::CreateBillboard(Billboard* billboard) 
+
+void DX11Renderer::CreateBillboard(Billboard*& billboard) 
 {
   billboard = new Billboard(_device);
 }
@@ -341,6 +339,11 @@ void DX11Renderer::DrawDebugBox(Matrix world, Color color)
 void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
 {
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
+}
+
+void DX11Renderer::DrawBillBoard(Billboard* billboard)
+{
+  _passMgr->AddBillBoard(billboard->_quad);
 }
 
 #endif
@@ -372,15 +375,9 @@ void DX11Renderer::CreateSprite(LPCSTR path, Vector2 pos)
 }
 
 void DX11Renderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
-                             const TextFormatInfo* textFormatInfo)
+                             const TextFormatInfo& textFormatInfo)
 {
   _d2dRenderer->DrawTexts(format, rect, color, textFormatInfo);
-}
-
-void DX11Renderer::CreateText(const wchar_t* format, Vector4 rect,
-                              const std::wstring& fontName, Color color)
-{
-  _d2dRenderer->CreateText(format, rect, fontName, color);
 }
 
 void DX11Renderer::DrawRectangle(Color color, Vector4 rect, float stroke,

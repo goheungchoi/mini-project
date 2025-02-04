@@ -1,8 +1,10 @@
 ﻿#include "Sprite.h"
+#include "Renderer/D2DRenderer/D2DRenderer.h"
 #include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/Resources/Material.h"
 
 Device* Sprite::_pDevice = nullptr;
+D2DRenderer* Sprite::_pD2DRenderer = nullptr;
 
 Sprite::Sprite(LPCSTR path)
 {
@@ -61,53 +63,14 @@ Vector2 Sprite::CalculateTextureSize()
   return Vector2(desc.Width, desc.Height);
 }
 
-void Sprite::Render(DirectX::SpriteBatch* pSpriteBatch)
+void Sprite::Render()
 {
-  auto textureSRV = _pTexture->GetResource().Get();
 
-  pSpriteBatch->Draw(textureSRV, _pos);
-}
-
-
-
-
-SpriteManager* SpriteManager::m_pInstance = nullptr;
-
-
-SpriteManager* SpriteManager::GetInstance()
-{
-  if (m_pInstance == nullptr)
-  {
-    m_pInstance = new SpriteManager();
-  }
-
-  return m_pInstance;
-}
-
-std::shared_ptr<Sprite> SpriteManager::GetSprite(LPCSTR path)
-{
-  auto it = _spritePool.find(path);
-  if (it != _spritePool.end())
-  {
-    return it->second;
-  }
-  else
-  {
-    auto newSprite = std::make_shared<Sprite>(path);
-    _spritePool[path] = newSprite;
-    return newSprite;
-  }
-}
-
-void SpriteManager::Destory()
-{
-  if (m_pInstance)
-  {
-    // 스프라이트 풀 비우기
-    _spritePool.clear();
-
-    // 인스턴스 삭제
-    delete m_pInstance;
-    m_pInstance = nullptr;
-  }
+  _pD2DRenderer->_d2dRenderQueue.AddRender2DCmd(
+      [=]() {
+        auto textureSRV = _pTexture->GetResource().Get();
+        _pD2DRenderer->_pSpriteBatch->Draw(textureSRV, _pos);
+      },
+      PassType2D::SPRITE_BATCH // SpriteBatch 전용 패스 사용
+  );
 }

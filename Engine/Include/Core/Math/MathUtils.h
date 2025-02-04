@@ -137,7 +137,7 @@ inline XMVECTOR RotateToward(XMVECTOR quatRot, XMVECTOR target,
   direction = XMVector3Normalize(direction);
 
   // Extract the current forward vector from the quaternion
-  XMVECTOR forward = XMVector3Rotate(XMVectorSet(0.f, 0.f, 1.f, 0.f), quatRot);
+  XMVECTOR forward = XMVector3Rotate(XMVectorSet(0.f, 0.f, -1.f, 0.f), quatRot);
 
   // Compute the angle between the forward vector and the target direction
   float dotProduct = XMVectorGetX(XMVector3Dot(forward, direction));
@@ -172,6 +172,120 @@ inline XMVECTOR RotateToward(XMVECTOR quatRot, XMVECTOR target,
   return XMQuaternionNormalize(resQuatRot);
 }
 
+inline XMMATRIX RotateToward(XMVECTOR target, XMMATRIX transform)
+{
+  // Extract the position from the transform matrix
+  XMVECTOR position = transform.r[3];
+
+  // Compute the direction to the target
+  XMVECTOR directionToTarget = XMVector3Normalize(target - position);
+
+  // Extract the forward vector from the transform matrix (assuming it's in the
+  // -Z direction)
+  XMVECTOR forward = -transform.r[2];
+
+  // Compute the rotation axis (cross product of forward and direction to
+  // target)
+  XMVECTOR rotationAxis = XMVector3Cross(forward, directionToTarget);
+
+  // Compute the rotation angle (dot product of forward and direction to target)
+  XMVECTOR dotProduct = XMVector3Dot(forward, directionToTarget);
+  float angle = acos(XMVectorGetX(dotProduct));
+
+  // Create a rotation matrix around the computed axis and angle
+  XMMATRIX rotationMatrix = XMMatrixRotationAxis(rotationAxis, angle);
+
+  // Apply the rotation to the original transform
+  return rotationMatrix * transform;
+}
+
+inline XMMATRIX LookAtLH(XMVECTOR objectPosition, XMVECTOR targetPosition, XMVECTOR up)
+{
+  // Calculate the direction to the target
+  XMVECTOR direction = XMVector3Normalize(targetPosition - objectPosition);
+
+  // Compute the right and new up vectors
+  XMVECTOR right = XMVector3Normalize(XMVector3Cross(up, direction));
+  XMVECTOR newUp = XMVector3Normalize(XMVector3Cross(direction, right));
+
+  // Construct the rotation matrix
+  XMMATRIX rotationMatrix =
+      XMMatrixSet(right.m128_f32[0], right.m128_f32[1], right.m128_f32[2], 0.0f,
+                  newUp.m128_f32[0], newUp.m128_f32[1], newUp.m128_f32[2], 0.0f,
+                  direction.m128_f32[0], direction.m128_f32[1],
+                  direction.m128_f32[2], 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+
+  return rotationMatrix;
+}
+
+inline XMVECTOR AxisBillBoardRotate(XMVECTOR forward, XMVECTOR cameraPos,
+                             XMVECTOR worldPos)
+{
+  forward = XMVector3Normalize(forward);
+
+  XMVECTOR targetDir = XMVectorSubtract(cameraPos, worldPos);
+  targetDir = XMVector3Normalize(targetDir);
+
+  XMVECTOR axis = XMVector3Cross(targetDir,forward);
+
+    axis = XMVector3Normalize(axis);
+  
+  return axis;
+}
+inline float AngleBillBoardRotate(XMVECTOR forward, XMVECTOR cameraPos,
+  XMVECTOR worldPos)
+{
+  forward = XMVector3Normalize(forward);
+
+  XMVECTOR targetDir = XMVectorSubtract(cameraPos, worldPos);
+  targetDir = XMVector3Normalize(targetDir);
+
+  float dotProduct = XMVectorGetX(XMVector3Dot(forward, targetDir));
+
+  dotProduct = std::clamp(dotProduct, -1.0f, 1.0f);
+  float angle = acosf(dotProduct);
+  return angle;
+}
+
+inline XMMATRIX BillboardMatrix(XMVECTOR objectPos, XMVECTOR cameraPos,
+                         XMVECTOR worldUp = XMVectorSet(0, 1, 0, 0))
+{
+  XMVECTOR forward = XMVector3Normalize(cameraPos - objectPos);
+  XMVECTOR right = XMVector3Normalize(XMVector3Cross(worldUp, forward));
+  XMVECTOR up = XMVector3Cross(forward, right);
+
+  return XMMATRIX(right.m128_f32[0], right.m128_f32[1], right.m128_f32[2], 0.0f,
+                  up.m128_f32[0], up.m128_f32[1], up.m128_f32[2], 0.0f,
+                  forward.m128_f32[0], forward.m128_f32[1], forward.m128_f32[2],
+                  0.0f, objectPos.m128_f32[0], objectPos.m128_f32[1],
+                  objectPos.m128_f32[2], 1.0f);
+}
+
+inline XMMATRIX GetBillboardMatrix(XMVECTOR objectPos, XMVECTOR cameraPos,
+                            XMVECTOR up = MathUtil::kUp)
+{
+  // 카메라와 객체 간의 방향 벡터 계산
+  XMVECTOR forward = cameraPos - objectPos;
+  forward = XMVector3Normalize(forward);
+
+  // 우측 벡터 계산 (기본적으로 X축 방향)
+  
+  XMVECTOR right = XMVector3Cross(up, forward);
+  right = XMVector3Normalize(right);
+
+  // 새로운 Up 벡터 계산
+  XMVECTOR newUp = XMVector3Cross(forward, right);
+  newUp = XMVector3Normalize(newUp);
+
+  // 4x4 행렬 생성 (LookAt 방식)
+  return XMMatrixSet(XMVectorGetX(right), XMVectorGetY(right), XMVectorGetZ(right),
+              0.f, XMVectorGetX(newUp), XMVectorGetY(newUp),
+              XMVectorGetZ(newUp), 0.f, XMVectorGetX(forward),
+              XMVectorGetY(forward), XMVectorGetZ(forward), 0.f,
+              XMVectorGetX(objectPos), XMVectorGetY(objectPos),
+              XMVectorGetZ(objectPos), 1.f);
+}
+
 inline XMVECTOR GetTranslationFromMatrix(const XMMATRIX& matrix)
 {
   // Extract the translation vector from the matrix (fourth column)
@@ -198,4 +312,30 @@ inline XMVECTOR GetScalingFromMatrix(const XMMATRIX& matrix)
   );
 }
 
+} // namespace MathUtil
+// 회전 축을 계산하는 함수
+inline Vector3 AxisBillBoardRotate(const Matrix& local,
+                                   const Vector3& cameraPos,
+                                   const Vector3& worldPos)
+{
+  // 로컬 행렬에서 Forward 벡터 추출
+  Vector3 forward = local.Forward();
+  forward.Normalize();
+
+  // 카메라 방향 벡터
+  Vector3 targetDir = cameraPos - worldPos;
+  targetDir.Normalize();
+
+  // 회전 축 계산 (Forward와 카메라 방향 벡터의 외적)
+  Vector3 axis = forward.Cross(targetDir);
+  if (axis.LengthSquared() == 0.0f)
+  {
+    axis = Vector3(0.f, 1.f, 0.f); // 회전 축이 없을 경우 기본적으로 Y축 사용
+  }
+  else
+  {
+    axis.Normalize();
+  }
+
+  return axis;
 }

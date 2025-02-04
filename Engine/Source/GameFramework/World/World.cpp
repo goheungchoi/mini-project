@@ -39,7 +39,6 @@ void World::Initialize(HWND hwnd, const std::wstring& title)
   _phyjixWorld = _phyjixEngine->CreateWorld();
   _phyjixWorld->CreateDefaultGround();
 
-
   SetMainCamera(_defaultCamera);
 
 #ifdef USED2D
@@ -377,7 +376,8 @@ void World::InitialStage()
           object->OnActivated();
           object->isActive = true;
           object->status = EStatus_Active;
-          object->bShouldActivate = false;        }
+          object->bShouldActivate = false;
+        }
       });
     }
 
@@ -460,7 +460,7 @@ void World::Update(float dt)
     gameObject->Update(dt);
   }
 
-  //Rigidbody updatefromtransform
+  // Rigidbody updatefromtransform
   for (RigidbodyComponent* component : rigidBodyComponents)
   {
     component->UpdateFromTransform();
@@ -469,8 +469,10 @@ void World::Update(float dt)
   }
 
   // phjix simulate
-  if (INPUT.IsKeyPress(MouseState::LB)) _phyjixWorld->LeftClick();
-  if (INPUT.IsKeyPress(MouseState::RB)) _phyjixWorld->RightClick();
+  if (INPUT.IsKeyPress(MouseState::LB))
+    _phyjixWorld->LeftClick();
+  if (INPUT.IsKeyPress(MouseState::RB))
+    _phyjixWorld->RightClick();
   _phyjixWorld->UpdateRay(
       mainCamera->GetPosition(),
       Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
@@ -596,8 +598,8 @@ void World::RenderGameObjects()
   // Rendering stage
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (!(gameObject->status == EStatus_Active))
-      continue;
+    /*if (!(gameObject->status == EStatus_Active))
+      continue;*/
 
     gameObject->OnRender();
 
@@ -626,6 +628,12 @@ void World::RenderGameObjects()
       _renderer->DrawMesh(
           handle, XMMatrixIdentity(), skeletalMeshComp->renderTypeFlags,
           skeletalMeshComp->outlineColor, skeletalMeshComp->boneTransforms);
+    }
+    else if (auto* billboardComp =
+                 gameObject->GetComponent<BillboardComponent>();
+             billboardComp && billboardComp->isVisible)
+    {
+       _renderer->DrawBillBoard(billboardComp->billboard);
     }
   }
 #ifdef _DEBUG
@@ -659,15 +667,16 @@ void World::RenderGameObjects()
   }
 #endif
 
-  _renderer->EndFrame();
+
 }
 
 void World::RenderUI()
 {
-  // TODO:
 #ifdef USED2D
   _canvas->Render();
 #endif // USED2D
+
+  _renderer->EndFrame();
 }
 
 void World::CleanupStage()

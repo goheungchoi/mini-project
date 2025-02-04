@@ -53,27 +53,3 @@ public:
   Color _color = Color(0.0f, 0.0f, 0.0f, 1.0f);
 
 };
-
-class TextManager
-{
-private:
-  TextManager() = default;
-  ~TextManager() = default;
-
-  TextManager(const TextManager&) = delete;
-  TextManager& operator=(const TextManager&) = delete;
-  TextManager(TextManager&&) noexcept = delete;
-  TextManager& operator=(TextManager&&) noexcept = delete;
-
-  static TextManager* m_pInstance;
-
-public:
-  static TextManager* GetInstance();
-  Text* GetText(const wchar_t* format);
-  void Destory();
-
-public:
-  std::list<Text*> _textList;
-};
-
-#define _TextManager (*TextManager::GetInstance())

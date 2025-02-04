@@ -2,6 +2,7 @@
 #include "Renderer/D2DRenderer/Common.h"
 
 class Device;
+class D2DRenderer;
 class Sprite
 {
 public:
@@ -14,15 +15,20 @@ private:
   Vector2 CalculateTextureSize();
 
 public:
-  void Render(DirectX::SpriteBatch* pSpriteBatch);
+  void Render();
   void SetPos(Vector2 pos) { _pos = pos; }
   Vector2 GetTextureSize() { return _textureSize; }
   Vector2 GetPos() { return _pos; }
 
   static void SetDevice(Device* pDevice) { _pDevice = pDevice; }
+  static void SetD2DRenderer(D2DRenderer* pD2DRenderer)
+  {
+    _pD2DRenderer = pD2DRenderer;
+  }
 
 private:
   static Device* _pDevice;
+  static D2DRenderer* _pD2DRenderer;
 
   LPCSTR _path{};
   class Texture* _pTexture = nullptr;
@@ -30,27 +36,3 @@ private:
   Vector2 _pos{};
 
 };
-
-class SpriteManager
-{
-private:
-  SpriteManager() = default;
-  ~SpriteManager() = default;
-
-  SpriteManager(const SpriteManager&) = delete;
-  SpriteManager& operator=(const SpriteManager&) = delete;
-  SpriteManager(SpriteManager&&) noexcept = delete;
-  SpriteManager& operator=(SpriteManager&&) noexcept = delete;
-
-  static SpriteManager* m_pInstance;
-
-public:
-  static SpriteManager* GetInstance();
-  std::shared_ptr<Sprite> GetSprite(LPCSTR path);
-  void Destory();
-
-public:
-  std::unordered_map<std::string, std::shared_ptr<Sprite>> _spritePool;
-};
-
-#define _SpriteManager (*SpriteManager::GetInstance())

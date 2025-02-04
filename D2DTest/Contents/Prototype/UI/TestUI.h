@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 
 class TestUI : public UIPanel

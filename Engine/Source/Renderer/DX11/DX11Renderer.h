@@ -44,14 +44,15 @@ public:
   bool DestoryComputeEffect() override;
   void CreateSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath,
                     LPCSTR diffuseIrrPath, LPCSTR specularIBLPath) override;
-  void CreateParticle() override;
-  void DeleteParticle() override;
-  void CreateBillboard(Billboard* billboard) override;
+
+  void CreateBillboard(Billboard*& billboard) override;
 #ifdef _DEBUG
   void DrawDebugSphere(Matrix world, Color color) override;
   void DrawDebugBox(Matrix world, Color color) override;
   void DrawDebugCylinder(Matrix world, Color color) override;
 #endif
+  void DrawBillBoard(Billboard* billboard) override;
+
 public:
   // Render ImGui graphical interface.
   void BeginImGuiDraw();
@@ -60,10 +61,8 @@ public:
   // D2D Renderer
   void CreateSprite(LPCSTR path, Vector2 pos) override;
   void DrawTexts(const wchar_t* format, Vector4 rect, Color color,
-                 const TextFormatInfo* textFormatInfo) override;
-  void CreateText(const wchar_t* format, Vector4 rect,
-                  const std::wstring& fontName = L"Agency FB",
-                  Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) override;
+                 const TextFormatInfo& textFormatInfo) override;
+
   void DrawRectangle(Color color, Vector4 rect, float stroke = 1.0f,
                      float opacity = 1.0f) override;
 
