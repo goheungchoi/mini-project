@@ -1,8 +1,10 @@
 ﻿#include "Sprite.h"
 #include "Renderer/DX11/Internal/Device.h"
+#include "Renderer/D2DRenderer/D2DRenderer.h"
 #include "Renderer/DX11/Internal/Resources/Material.h"
 
 Device* Sprite::_pDevice = nullptr;
+D2DRenderer* Sprite::_pD2DRenderer = nullptr;
 
 Sprite::Sprite(LPCSTR path)
 {
@@ -61,9 +63,10 @@ Vector2 Sprite::CalculateTextureSize()
   return Vector2(desc.Width, desc.Height);
 }
 
-void Sprite::Render(DirectX::SpriteBatch* pSpriteBatch)
+void Sprite::Render()
 {
-  auto textureSRV = _pTexture->GetResource().Get();
-
-  pSpriteBatch->Draw(textureSRV, _pos);
+  //_pD2DRenderer->_d2dRenderQueue.AddRender2DCmd([=]() {
+    auto textureSRV = _pTexture->GetResource().Get();
+    _pD2DRenderer->_pSpriteBatch->Draw(textureSRV, _pos);
+  //}, PassType2D::SPRITE_BATCH);
 }

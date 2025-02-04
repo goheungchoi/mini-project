@@ -10,10 +10,10 @@ void UIButton::Update(float dt)
   Vector2 mousePos = {static_cast<float>(INPUT.GetCurrMouseState().x),
                       static_cast<float>(INPUT.GetCurrMouseState().y)};
 
-  int left = _position.x - (_size.x / 2);
-  int top = _position.y - (_size.y / 2);
-  int right = _position.x + (_size.x / 2);
-  int bottom = _position.y + (_size.y / 2);
+  int left = _position.x;
+  int top = _position.y;
+  int right = _position.x + _size.x;
+  int bottom = _position.y + _size.y;
 
   if (left < mousePos.x && mousePos.x < right && top < mousePos.y &&
       mousePos.y < bottom)

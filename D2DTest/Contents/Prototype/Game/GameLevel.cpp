@@ -3,6 +3,7 @@
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 #include "Contents/Prototype/UI/TestUI.h"
+#include "Contents/Prototype/UI/MainMenuUI/MainMenuUI.h"
 //#define USED2D
 
 void GameLevel::PrepareLevel()
@@ -27,7 +28,8 @@ void GameLevel::BeginLevel()
 
 #ifdef USED2D 
   testObj = world->CreateGameObject<TestGameObject>();
-  world->_canvas->CreatePanel<TestUI>(L"TestUI");
+  //world->_canvas->CreatePanel<TestUI>(L"TestUI");
+  world->_canvas->CreatePanel<MainMenuUI>(L"MainMenuUI");
 #endif // USED2D
 }
 

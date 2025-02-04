@@ -26,27 +26,44 @@ public:
   void AddRender2DCmd(std::function<void()> command,
                       PassType2D type = PassType2D::DEFAULT)
   {
-    _Render2DCmds.emplace_back(type, command);
+    if (type == PassType2D::DEFAULT)
+    {
+      _2DRenderCmds.push_back(command);
+    }
+    else if (type == PassType2D::SPRITE_BATCH)
+    {
+      _SpriteRenderCmds.push_back(command);
+    }
   }
-  void ExecuteRender2DCmd()
+  void Execute2DRenderCmd()
   {
-    std::sort(_Render2DCmds.begin(), _Render2DCmds.end(),
-              [](const auto& a, const auto& b) { return a.first < b.first; });
-
-    for (auto& [type, command] : _Render2DCmds)
+    for (auto& command : _2DRenderCmds)
     {
       command();
     }
 
-    _Render2DCmds.clear(); // 명령 실행 수 Queue 비우기
+    _2DRenderCmds.clear(); // 명령 실행 수 Queue 비우기
+  }
+
+  void ExecuteSpriteRenderCmd()
+  {
+    for (auto& command : _SpriteRenderCmds)
+    {
+      command();
+    }
+
+    _SpriteRenderCmds.clear();
   }
 
 private:
-  std::vector<std::pair<PassType2D, std::function<void()>>> _Render2DCmds;
+  std::vector<std::function<void()>> _2DRenderCmds;
+  std::vector<std::function<void()>> _SpriteRenderCmds;
 };
 
 class D2DRenderer // D2D.ver
 {
+  friend class Sprite;
+
 public:
   D2DRenderer() = default;
   ~D2DRenderer();
@@ -72,9 +89,10 @@ public:
                 float stroke = 1.0f, float opacity = 1.0f);
 
   void CreateSprite(LPCSTR path, Vector2 pos);
-  void DrawTexts(const wchar_t* format, Vector4 rect,
-                 Color color,
+  void DrawTexts(const wchar_t* format, Vector4 rect, Color color,
                  const TextFormatInfo& textFormatInfo);
+
+
 
 private:
   void RenderSprites();
@@ -100,6 +118,8 @@ private:
   ID2D1Bitmap1* _pID2D1Bitmap = nullptr;
 
   std::unique_ptr<DirectX::SpriteBatch> _pSpriteBatch = nullptr;
+  ID3D11DepthStencilState* _prevDepthState = nullptr;
+  UINT _stencilRef{};
 
-  Render2DQueue _render2DQueue;
+  Render2DQueue _d2dRenderQueue;
 };
