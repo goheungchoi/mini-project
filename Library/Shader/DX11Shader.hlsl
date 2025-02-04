@@ -17,18 +17,6 @@ float3 GetWorldPosition(float2 screenUV, float depth)
 
     return worldPosition.xyz;
 }
-struct QUAD_VS_INPUT
-{
-    float4 position : POSITION;
-    float2 uv : TEXCOORD0;
-};
-
-struct QUAD_PS_INPUT
-{
-    float4 position : SV_Position;
-    float2 uv : TEXCOORD0;
-    float4 positionShadow : POSITION;
-};
 
 QUAD_PS_INPUT quad_vs_main(QUAD_VS_INPUT input)
 {
@@ -544,9 +532,9 @@ float4 outline_ps_main(PS_INPUT input) :SV_Target0
 //---------------------------define billboard--------------------------------------------
 
 #ifdef Billboard
-PS_INPUT billboard_vs_main(VS_INPUT input)
+QUAD_PS_INPUT billboard_vs_main(QUAD_VS_INPUT  input)
 {
-    PS_INPUT output;
+    QUAD_PS_INPUT output;
     output.position = mul(input.position, world);
     output.position = mul(output.position, view);
     output.position = mul(output.position,projection);
@@ -554,7 +542,7 @@ PS_INPUT billboard_vs_main(VS_INPUT input)
 
     return output;
 }
-float4 billboard_ps_main(PS_INPUT input) : SV_Target0
+float4 billboard_ps_main(QUAD_PS_INPUT input) : SV_Target0
 {
     return texAlbedo.Sample(samLinear, input.uv);
     //return float4(1.f, 1.f, 1.f, 1.f);

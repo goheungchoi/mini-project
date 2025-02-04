@@ -90,3 +90,16 @@ struct PS_INPUT
     float2 uv : TEXCOORD;
     float4 worldPosition : WORLD;
 };
+
+struct QUAD_VS_INPUT
+{
+    float4 position : POSITION;
+    float2 uv : TEXCOORD0;
+};
+
+struct QUAD_PS_INPUT
+{
+    float4 position : SV_Position;
+    float2 uv : TEXCOORD0;
+    float4 positionShadow : POSITION;
+};
