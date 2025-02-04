@@ -84,7 +84,7 @@ public:
     _skyBox = new SkyBox(_device);
     _geometry = new GeometryPrimitive(_device);
     _outLine = new OutLinePass(_CB);
-    _ssao = new SSAOPass();
+    _ssao = new SSAOPass(_device);
     ID3D11DeviceContext* dc = _device->GetImmContext();
     dc->VSSetConstantBuffers(
         2, 1,
@@ -870,7 +870,7 @@ private:
 
   void DrawBillBoard(ID3D11DeviceContext* dc)
   {
-    _pso->SetCullNone();
+    //_pso->SetMainRS();
     _pso->TurnZBufferOn();
     dc->VSSetShader(_vShaders["Billboard"]->shader.Get(), nullptr, 0);
     dc->IASetInputLayout(_vShaders["Billboard"]->layout.Get());

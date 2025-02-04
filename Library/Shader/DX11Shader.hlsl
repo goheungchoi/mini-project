@@ -33,7 +33,7 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     
     float3 albedo = deferredAlbedoDepth.Sample(samAnisotropy, input.uv).xyz;
     albedo = pow(albedo, 2.2);
-    if (depthColor.r == 1)
+    if (depthColor == 1)
     {
         return float4(pow(albedo, 1 / 2.2), 1.f);
     }
@@ -147,7 +147,10 @@ DEFFERED_PS_OUT ps_main(PS_INPUT input)
     float depth = input.position.z;
     float4 albedo = texAlbedo.Sample(samLinear, input.uv);
     clip(albedo.a - alphaCutoff);
-
+    if(length(albedo)==0)
+    {
+        albedo = albedoFactor;
+    }
     output.AlbedoDepth.xyz = albedo;
     output.AlbedoDepth.a = depth;
     output.ShadowPosition = input.positionShadow / input.positionShadow.w;
@@ -250,7 +253,15 @@ PS_INPUT vs_main(VS_INPUT input)
 float4 ps_main(PS_INPUT input) : SV_TARGET0
 {
     float3 albedo = texAlbedo.Sample(samLinear, input.uv).xyz;
-    albedo = pow(albedo, 2.2);
+    
+    if(length(albedo)==0)
+    {
+        albedo = albedoFactor;
+    }
+    else
+    {
+        albedo = pow(albedo, 2.2);
+    }
     //gamma correction
     float4 metallRoughColor = texMetallicRoughness.Sample(samAnisotropy, input.uv);
     float metallic = metallRoughColor.r;
