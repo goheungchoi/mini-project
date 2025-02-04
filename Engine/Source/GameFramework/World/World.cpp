@@ -585,8 +585,8 @@ void World::RenderGameObjects()
   // Rendering stage
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (!(gameObject->status == EStatus_Active))
-      continue;
+    /*if (!(gameObject->status == EStatus_Active))
+      continue;*/
 
     gameObject->OnRender();
 
