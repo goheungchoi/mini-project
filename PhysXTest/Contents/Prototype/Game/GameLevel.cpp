@@ -15,13 +15,13 @@ void GameLevel::PrepareLevel()
 
 void GameLevel::BeginLevel()
 {
-  gameCamera2 = world->CreateGameObject<CameraObject>();
-  gameCamera2->InitCamera(1920, 1080);
-  gameCamera2->SetAsMainCamera();
-  //gameCamera = world->CreateGameObject<FixedCameraObject>();
-  //gameCamera->SetCameraPosition({-10.f, 10.f, -10.f});
-  //gameCamera->SetFocus({1.f, 1.f, 1.f});
-  //gameCamera->SetAsMainCamera();
+  //gameCamera2 = world->CreateGameObject<CameraObject>();
+  //gameCamera2->InitCamera(1920, 1080);
+  //gameCamera2->SetAsMainCamera();
+  gameCamera = world->CreateGameObject<FixedCameraObject>();
+  gameCamera->SetCameraPosition({-10.f, 10.f, -10.f});
+  gameCamera->SetFocus({1.f, 1.f, 1.f});
+  gameCamera->SetAsMainCamera();
 
 
 

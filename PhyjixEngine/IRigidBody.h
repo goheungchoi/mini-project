@@ -10,6 +10,8 @@ enum class eCollisionEventType
   eHover,
   eLClick,
   eRClick,
+  eOverlapBegin,
+  eOverlapEnd,
   eCollisionTypeEnd,
 };
 
@@ -21,6 +23,7 @@ public:
   virtual void SetCollisionEvent(eCollisionEventType collisiontype,
                                  IRigidBody* other,
                                  std::function<void(void)> event) = 0;
+
   virtual void SetLinVelocity(DirectX::SimpleMath::Vector3 vel) = 0;
   virtual void SetMaxLinVelocity(float vel) = 0;
   virtual void SetAngVelocity(DirectX::SimpleMath::Vector3 vel) = 0;
@@ -30,6 +33,9 @@ public:
   virtual float GetMaxLinVelocity() = 0;
   virtual DirectX::SimpleMath::Vector3 GetAngVelocity() = 0;
   virtual float GetMaxAngVelocity() = 0;
+
+  virtual void KinematicMoveTo(DirectX::SimpleMath::Vector3 pos,
+                               DirectX::SimpleMath::Vector4 rot) = 0;
 
   virtual void EnableCollision() = 0;
   virtual void DisableCollision() = 0;
@@ -43,6 +49,7 @@ public:
   virtual void WakeUp() = 0;
   virtual void Sleep() = 0;
 
+  virtual bool isKinematic() = 0;
 
   virtual physx::PxTransform GetWorldTransform() = 0;
   virtual DirectX::SimpleMath::Vector3 GetWorldPosition() = 0;
