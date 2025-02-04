@@ -11,6 +11,9 @@ public:
 	// Resource handle
   ModelHandle animTestHandle;
 
+  ModelHandle allyDirectionIndicatorModelHandle;
+  ModelHandle enemyDirectionIndicatorModelHandle;
+
   TextureHandle brawlerInactiveIndicatorTextureHandle;
   TextureHandle brawlerActiveIndicatorTextureHandle;
   TextureHandle slasherInactiveIndicatorTextureHandle;
@@ -18,11 +21,11 @@ public:
   TextureHandle gunmanInactiveIndicatorTextureHandle;
   TextureHandle gunmanActiveIndicatorTextureHandle;
 
-	ModelHandle enemyModelHandle;
+	ModelHandle enemyGunmanModelHandle;
+
   ModelHandle playerModelHandle;
   ModelHandle civilianModelHandle;
 
-	ModelHandle enemyGunmanModelHandle;
 
 	ModelHandle allyBrawlerModelHandle;
   ModelHandle allySlasherModelHandle;

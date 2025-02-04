@@ -51,7 +51,35 @@ void GameObject::RemoveFromTypeRegistration() {
 //  return nullptr;
 //}
 
-void GameObject::RegisterMeshComponentToWorld(MeshComponent* meshComp) {
+void GameObject::SetVisible() {
+  auto* meshComp = GetComponent<MeshComponent>();
+  if (meshComp)
+  {
+    meshComp->SetVisible(true);
+  }
+
+  auto* skelMeshComp = GetComponent<SkeletalMeshComponent>();
+  if (skelMeshComp) {
+    skelMeshComp->SetVisible(true);
+  }
+}
+
+void GameObject::SetInvisible() {
+  auto* meshComp = GetComponent<MeshComponent>();
+  if (meshComp)
+  {
+    meshComp->SetVisible(false);
+  }
+
+  auto* skelMeshComp = GetComponent<SkeletalMeshComponent>();
+  if (skelMeshComp)
+  {
+    skelMeshComp->SetVisible(false);
+  }
+}
+
+void GameObject::RegisterMeshComponentToWorld(MeshComponent* meshComp)
+{
   world->RegisterMeshComponent(meshComp);
 }
 

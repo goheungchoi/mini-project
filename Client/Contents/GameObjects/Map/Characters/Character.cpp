@@ -64,17 +64,23 @@ void Character::TriggerAction()
 		animator->SetVariable<bool>("triggered", true, true);
 }
 
+void Character::BindDirectionIndicator(GameObject* directionIndicator) {
+  this->directionIndicator = directionIndicator;
+  directionIndicator->SetTranslation(0.f, 0.f, -.8f);
+  AddChildGameObject(directionIndicator);
+}
+
 void Character::BindInactiveIndicator(GameObject* inactiveIndicator)
 {
   this->inactiveIndicator = inactiveIndicator;
-  inactiveIndicator->SetTranslation(0.f, 2.3f, 0.f);
+  inactiveIndicator->SetTranslation(0.f, 2.5f, 0.f);
   AddChildGameObject(inactiveIndicator);
 }
 
 void Character::BindActiveIndicator(GameObject* activeIndicator)
 {
   this->activeIndicator = activeIndicator;
-  activeIndicator->SetTranslation(0.f, 2.3f, 0.f);
+  activeIndicator->SetTranslation(0.f, 2.5f, 0.f);
   AddChildGameObject(activeIndicator);
 }
 
@@ -317,7 +323,15 @@ void Character::FindTargetInRange() {
         distanceToTarget = i;
         isTargetInRange = true;
         return;
-			}
+      }
+      // If this is an ally.
+      else
+      {
+        // Don't attack.
+        distanceToTarget = -1;
+        isTargetInRange = false;
+        return;
+      }
 		}
 	}
 

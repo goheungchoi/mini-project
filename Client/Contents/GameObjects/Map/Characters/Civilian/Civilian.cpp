@@ -1,7 +1,7 @@
 #include "Civilian.h"
 
 #include "Contents/AnimationStates/IdleState.h"
-#include "Contents/AnimationStates/BrawlerActionState.h"
+#include "Contents/AnimationStates/SurrenderState.h"
 #include "Contents/AnimationStates/DeadState.h"
 
 Civilian::Civilian(World* world) : Character(world) {
@@ -14,13 +14,13 @@ Civilian::Civilian(World* world) : Character(world) {
 
 	// Create animation states
   idle = new Animation(civilianIdleAnimation, true);
-	idleState = new AnimationState(idle);
+  idleState = new IdleState(idle);
 
-	surrender = new Animation(civilianSurrenderAnimation, true);
-  surrenderState = new AnimationState(surrender);
+	surrender = new Animation(civilianSurrenderAnimation, false);
+  surrenderState = new SurrenderState(surrender);
 
 	dead = new Animation(civilianDeadAnimation, false);
-  deadState = new AnimationState(dead);
+  deadState = new DeadState(dead);
 
 	idleState->AddAnimationStateDependency("dead", deadState);
   idleState->AddAnimationStateDependency("next", surrenderState);

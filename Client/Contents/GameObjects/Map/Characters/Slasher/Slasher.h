@@ -23,6 +23,7 @@ protected:
   Animation* action;
   AnimationState* actionState;
 
+  GameObject* animationRoot;
 
 	float slashSpeedPerSec{1.f};
   float slashElapsedTime{0.f};
