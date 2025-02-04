@@ -130,11 +130,7 @@ public:
   virtual void CreateSprite(LPCSTR path, Vector2 pos) = 0;
 
   virtual void DrawTexts(const wchar_t* format, Vector4 rect, Color color,
-                         const TextFormatInfo* textFormatInfo) = 0;
-
-  virtual void CreateText(const wchar_t* format, Vector4 rect,
-                          const std::wstring& fontName = L"Agency FB",
-                          Color color = Color(1.0f, 0.0f, 1.0f, 1.0f)) = 0;
+                         const TextFormatInfo& textFormatInfo) = 0;
 
   virtual void DrawRectangle(Color color, Vector4 rect, float stroke = 1.0f,
                              float opacity = 1.0f) = 0;

@@ -22,7 +22,7 @@
 #endif
 
 #include "GameFramework/UI/Canvas/Canvas.h"
-// #define USED2D
+//#define USED2D
 
 void World::Initialize(HWND hwnd, const std::wstring& title)
 {
@@ -655,15 +655,16 @@ void World::RenderGameObjects()
   }
 #endif
 
-  _renderer->EndFrame();
+
 }
 
 void World::RenderUI()
 {
-  // TODO:
 #ifdef USED2D
   _canvas->Render();
 #endif // USED2D
+
+  _renderer->EndFrame();
 }
 
 void World::CleanupStage()

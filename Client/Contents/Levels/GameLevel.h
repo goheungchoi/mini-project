@@ -23,7 +23,9 @@ protected:
   CameraObject* testCamera;
 
   GameObject* pivot{nullptr};
+
   class Map* map{nullptr};
+  class GameManager* gameManager{nullptr};
 
 public:
   GameLevel(const std::string& name) : Level(name) {}

@@ -30,27 +30,3 @@ private:
   Vector2 _pos{};
 
 };
-
-class SpriteManager
-{
-private:
-  SpriteManager() = default;
-  ~SpriteManager() = default;
-
-  SpriteManager(const SpriteManager&) = delete;
-  SpriteManager& operator=(const SpriteManager&) = delete;
-  SpriteManager(SpriteManager&&) noexcept = delete;
-  SpriteManager& operator=(SpriteManager&&) noexcept = delete;
-
-  static SpriteManager* m_pInstance;
-
-public:
-  static SpriteManager* GetInstance();
-  std::shared_ptr<Sprite> GetSprite(LPCSTR path);
-  void Destory();
-
-public:
-  std::unordered_map<std::string, std::shared_ptr<Sprite>> _spritePool;
-};
-
-#define _SpriteManager (*SpriteManager::GetInstance())
