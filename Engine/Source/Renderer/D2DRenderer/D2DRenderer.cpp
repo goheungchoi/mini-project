@@ -110,8 +110,7 @@ void D2DRenderer::EndDraw()
 {
   // Sprite Render
   BeginSprites();
-  //_d2dRenderQueue.ExecuteSpriteRenderCmd();
-  RenderSprites();
+  _d2dRenderQueue.ExecuteSpriteRenderCmd();
   EndSprites();
 
   // 2D Geometry 및 text Render
@@ -223,17 +222,17 @@ void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
 }
 
 
-void D2DRenderer::RenderSprites()
-{
-  // 모든 Sprite Render
-  if (!(Resource2DManager::GetInstance()->_SpriteMap.empty()))
-  {
-    for (auto sprite : Resource2DManager::GetInstance()->_SpriteMap)
-    {
-      sprite.second->Render();
-    }
-  }
-}
+//void D2DRenderer::RenderSprites()
+//{
+//  // 모든 Sprite Render
+//  if (!(Resource2DManager::GetInstance()->_SpriteMap.empty()))
+//  {
+//    for (auto sprite : Resource2DManager::GetInstance()->_SpriteMap)
+//    {
+//      sprite.second->Render();
+//    }
+//  }
+//}
 
 void D2DRenderer::BeginSprites()
 {

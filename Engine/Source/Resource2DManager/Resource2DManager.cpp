@@ -51,9 +51,5 @@ std::shared_ptr<Sprite> Resource2DManager::GetSprite(LPCSTR path)
   else
   {
     throw std::runtime_error("Sprite is not found");
-
-    auto newSprite = std::make_shared<Sprite>(path);
-    _SpriteMap[path] = newSprite;
-    return newSprite;
   }
 }

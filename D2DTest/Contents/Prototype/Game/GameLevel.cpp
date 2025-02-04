@@ -5,7 +5,7 @@
 #include "Contents/Prototype/UI/TestUI.h"
 #include "Contents/Prototype/UI/MainMenuUI/MainMenuUI.h"
 #include "Resource2DManager/Resource2DManager.h"
-#define USED2D
+//#define USED2D
 
 void GameLevel::PrepareLevel()
 {
@@ -18,11 +18,13 @@ void GameLevel::PrepareLevel()
   mapMeshHandle = LoadModel("Models\\Maps\\Map002_Museum.glb");
 
   // UI Resource Load
+#ifdef USED2D 
   Resource2DManager::GetInstance()->LoadSprite("Textures\\TitleBackGround.png");
   Resource2DManager::GetInstance()->LoadSprite("Textures\\TitleLogo.png");
   Resource2DManager::GetInstance()->LoadSprite("Textures\\StartBtn.png");
   Resource2DManager::GetInstance()->LoadSprite("Textures\\StartBtn_hover.png");
-  //Resource2DManager::GetInstance()->LoadSprite("Textures\\StartBtn_click.png");
+  Resource2DManager::GetInstance()->LoadSprite("Textures\\StartBtn_click.png");
+#endif // USED2D
 }
 
 void GameLevel::BeginLevel()

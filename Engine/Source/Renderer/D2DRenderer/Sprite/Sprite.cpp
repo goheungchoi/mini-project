@@ -1,6 +1,6 @@
 ﻿#include "Sprite.h"
-#include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/D2DRenderer/D2DRenderer.h"
+#include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/Resources/Material.h"
 
 Device* Sprite::_pDevice = nullptr;
@@ -65,8 +65,12 @@ Vector2 Sprite::CalculateTextureSize()
 
 void Sprite::Render()
 {
-  //_pD2DRenderer->_d2dRenderQueue.AddRender2DCmd([=]() {
-    auto textureSRV = _pTexture->GetResource().Get();
-    _pD2DRenderer->_pSpriteBatch->Draw(textureSRV, _pos);
-  //}, PassType2D::SPRITE_BATCH);
+
+  _pD2DRenderer->_d2dRenderQueue.AddRender2DCmd(
+      [=]() {
+        auto textureSRV = _pTexture->GetResource().Get();
+        _pD2DRenderer->_pSpriteBatch->Draw(textureSRV, _pos);
+      },
+      PassType2D::SPRITE_BATCH // SpriteBatch 전용 패스 사용
+  );
 }
