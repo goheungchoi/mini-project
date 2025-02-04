@@ -3,6 +3,8 @@
 static const float3 Fdielectric = 0.04;
 static const float PI = 3.141592654f;
 static const float Epsilon = 0.00001;
+//to ssao
+static const float ssaoradius = 0.001f;
 float3 FresnelFactor(float cosTheta, float3 F0)
 {
     return F0 + (1 - F0) * pow(1 - cosTheta, 5);
