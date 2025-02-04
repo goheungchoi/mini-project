@@ -11,6 +11,7 @@ bool PhyjixEngine::Initialize()
 
 	_transport = physx::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
 	_pvd->connect(*_transport, physx::PxPvdInstrumentationFlag::eALL);
+
 #endif
 #ifdef _DEBUG
   physx::PxTolerancesScale tolscale = physx::PxTolerancesScale(1.f);

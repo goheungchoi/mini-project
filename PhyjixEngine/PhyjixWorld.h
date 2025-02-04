@@ -12,6 +12,8 @@ struct PhyjixRay;
 class PhyjixWorld : public IPhyjixWorld
 {
 public:
+
+
   PhyjixWorld(physx::PxPhysics* physics,
               physx::PxDefaultCpuDispatcher* dispatcher);
   ~PhyjixWorld();
@@ -48,6 +50,13 @@ public:
   void RightClick() { isRClicked = true; }
 
 
+
+  
+  DirectX::SimpleMath::Vector3 overlapQueryPosition;
+  DirectX::SimpleMath::Quaternion overlapQueryRotation;
+  DirectX::SimpleMath::Vector3 overlapQueryScale;
+
+
 private:
   float elapsedTimer = 0.f;
   physx::PxScene* _scene = nullptr;
@@ -67,6 +76,9 @@ private:
   
   BOOL isLClicked = false;
   BOOL isRClicked = false;
+
+
+
 
 };
 struct PhyjixRay

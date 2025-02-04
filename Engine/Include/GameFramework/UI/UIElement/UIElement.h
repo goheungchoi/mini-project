@@ -30,6 +30,7 @@ public:
   Vector2 GetSize() { return _size; }
 
   EStatus GetStatus() { return _status; }
+  void SetStatus(EStatus status) { _status = status; }
 
   // State change
   void Activate()

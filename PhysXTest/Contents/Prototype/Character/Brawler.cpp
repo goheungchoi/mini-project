@@ -41,7 +41,7 @@ Brawler::~Brawler() {
 
 void Brawler::OnAwake() {
   Super::OnAwake();
-
+  
 }
 
 void Brawler::Update(float dt) {

@@ -276,13 +276,18 @@ public:
   // GameObject* Clone();
 
 	// Interaction 
-	virtual void OnBeginOverlap(GameObject* other) {}
-  virtual void OnEndOverlap(GameObject* other) {}
+	virtual void OnBeginOverlap(GameObject* other)
+  {
+    GetComponent<RigidbodyComponent>()->SetIsOverlapping(true);
+  }
+  virtual void OnEndOverlap(GameObject* other)
+  {
+    GetComponent<RigidbodyComponent>()->SetIsOverlapping(false);
+  }
 
-  virtual void OnBeginCursorOver() {};
-  virtual void OnEndCursorOver() {};
-  virtual void OnClicked() {};
-  virtual void OnPressed() {};
+  virtual void OnHover() {};
+  virtual void OnLeftClick() {};
+  virtual void OnRightClick() {};
 
   // Game loop events
   virtual void OnAwake() {}

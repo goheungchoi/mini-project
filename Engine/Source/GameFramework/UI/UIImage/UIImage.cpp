@@ -6,6 +6,14 @@ UIImage::UIImage(World* world) : UIElement(world) {}
 
 UIImage::~UIImage() {}
 
+void UIImage::Render()
+{
+  if (_status == EStatus_Active)
+  {
+    _sprite->Render();
+  }
+}
+
 void UIImage::SetSprite(LPCSTR path, Vector2 pos)
 {
   _sprite = Resource2DManager::GetInstance()->GetSprite(path).get();
@@ -13,7 +21,7 @@ void UIImage::SetSprite(LPCSTR path, Vector2 pos)
   _sprite->SetPos(pos);
 }
 
-void UIImage::SetPosition(Vector2 pos) 
+void UIImage::SetPosition(Vector2 pos)
 {
   _sprite->SetPos(pos);
 }

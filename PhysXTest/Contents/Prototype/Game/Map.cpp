@@ -107,13 +107,13 @@ void Map::ResetGame() {
 
 void Map::CreateEnemyAt(uint32_t w, uint32_t h, Direction dir)
 {
-  Brawler* gunman = world->CreateGameObjectFromModel<Brawler>(animTestHandle);
-  gunman->SetFaction(kEnemy);
-  gunman->SetGridLocation(w, h);
-  gunman->SetDirection(dir);
-  enemies.push_back(gunman);
+  Brawler* brawler = world->CreateGameObjectFromModel<Brawler>(animTestHandle);
+  brawler->SetFaction(kEnemy);
+  brawler->SetGridLocation(w, h);
+  brawler->SetDirection(dir);
+  enemies.push_back(brawler);
 
-	AddChildGameObject(gunman);
+	AddChildGameObject(brawler);
 }
 
 void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir)
