@@ -11,12 +11,12 @@ public:
 	// Resource handle
   ModelHandle animTestHandle;
 
-  ModelHandle brawlerInactiveIndicatorModelHandle;
-  ModelHandle brawlerActiveIndicatorModelHandle;
-  ModelHandle slasherInactiveIndicatorModelHandle;
-  ModelHandle slasherActiveIndicatorModelHandle;
-  ModelHandle gunmanInactiveIndicatorModelHandle;
-  ModelHandle gunmanActiveIndicatorModelHandle;
+  TextureHandle brawlerInactiveIndicatorTextureHandle;
+  TextureHandle brawlerActiveIndicatorTextureHandle;
+  TextureHandle slasherInactiveIndicatorTextureHandle;
+  TextureHandle slasherActiveIndicatorTextureHandle;
+  TextureHandle gunmanInactiveIndicatorTextureHandle;
+  TextureHandle gunmanActiveIndicatorTextureHandle;
 
 	ModelHandle enemyModelHandle;
   ModelHandle playerModelHandle;

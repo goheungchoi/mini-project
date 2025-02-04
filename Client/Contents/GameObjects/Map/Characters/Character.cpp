@@ -208,177 +208,39 @@ void Character::Update(float dt) {
 		// TODO: Indicator on
     if (inactiveIndicator && activeIndicator)
     {
-      inactiveIndicator->Deactivate();
-      activeIndicator->Activate();
+      inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+      activeIndicator->GetComponent<BillboardComponent>()->isVisible = true;
     }
   }
   else
   {
     if (inactiveIndicator && activeIndicator)
     {
-      inactiveIndicator->Activate();
-      activeIndicator->Deactivate();
+      inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = true;
+      activeIndicator->GetComponent<BillboardComponent>()->isVisible = false;
     }
 	}
 }
 
 void Character::PostUpdate(float dt) {
-  //if (inactiveIndicator && activeIndicator)
-  //{
-  //  if (!world->mainCamera)
-  //    return;
 
-  //  if (isTargetInRange)
-  //  {
-  //    const XMMATRIX& globalTransform =
-  //        activeIndicator->transform->globalTransform;
-
-  //    XMVECTOR scaling;
-  //    XMVECTOR position;
-  //    XMVECTOR quatRot;
-
-  //    XMMatrixDecompose(&scaling, &quatRot, &position, globalTransform);
-
-  //    XMVECTOR cameraPos = world->mainCamera->GetPosition();
-  //    
-  //    XMVECTOR toward =
-  //        MathUtil::RotateToward(quatRot, cameraPos, position, XM_PI * dt);
-
-  //    activeIndicator->transform->globalTransform =
-  //        XMMatrixScalingFromVector(scaling) *
-  //        XMMatrixRotationQuaternion(toward) *
-  //        XMMatrixTranslationFromVector(position);
-  //  }
-  //  else
-  //  {
-  //    //XMMATRIX& globalTransform =
-  //    //    inactiveIndicator->transform->globalTransform;
-
-  //    //XMVECTOR scaling;
-  //    //XMVECTOR position;
-  //    //XMVECTOR quatRot;
-
-  //    //XMMatrixDecompose(&scaling, &quatRot, &position, globalTransform);
-
-  //    //XMVECTOR cameraPos = world->mainCamera->GetPosition();
-
-  //    ///*XMVECTOR toward =
-  //    //    MathUtil::RotateToward(quatRot, cameraPos, position, XM_PI);
-
-  //    //inactiveIndicator->transform->globalTransform =
-  //    //    XMMatrixScalingFromVector(scaling) *
-  //    //    XMMatrixRotationQuaternion(toward) *
-  //    //    XMMatrixTranslationFromVector(position);*/
-  //    //XMVECTOR axis =
-  //    //    MathUtil::AxisBillBoardRotate(globalTransform, cameraPos, position);
-  //    //float angle =
-  //    //    MathUtil::AngleBillBoardRotate(globalTransform, cameraPos, position);
-  //    //inactiveIndicator->transform->RotateAroundAxis(axis, angle);
-
-  //    XMMATRIX& globalTransform = inactiveIndicator->transform->globalTransform;
-
-  //    XMVECTOR scaling;
-  //    XMVECTOR position;
-  //    XMVECTOR quatRot;
-
-  //    // Decompose the global transform into scaling, rotation, and position
-  //    // components
-  //    XMMatrixDecompose(&scaling, &quatRot, &position, globalTransform);
-
-  //    XMVECTOR cameraPos = world->mainCamera->GetPosition();
-
-  //    // Calculate the direction to rotate toward (this will rotate toward the
-  //    // camera)
-  //    XMVECTOR toward =
-  //        MathUtil::RotateToward(quatRot, cameraPos, position, XM_PI);
-
-  //    // Use LookAtLH to generate a rotation matrix to face the camera
-  //    XMMATRIX lookAtMatrix = MathUtil::LookAtLH(
-  //        position, cameraPos, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-
-  //    // Apply the rotation by multiplying the global transform with the LookAt
-  //    // matrix
-  //    globalTransform *= lookAtMatrix;
-  //  }
-  //}
   if (inactiveIndicator && activeIndicator)
   {
-    if (!world->mainCamera)
-      return;
-
     if (isTargetInRange)
     {
-      /*const XMMATRIX& globalTransform =
-          activeIndicator->transform->globalTransform;
-
-      XMVECTOR scaling;
-      XMVECTOR position;
-      XMVECTOR quatRot;
-
-      XMMatrixDecompose(&scaling, &quatRot, &position, globalTransform);
-
-      XMVECTOR cameraPos = world->mainCamera->GetPosition();
-
-      XMVECTOR toward =
-          MathUtil::RotateToward(quatRot, cameraPos, position, XM_PI * dt);
-
-      activeIndicator->transform->globalTransform =
-          XMMatrixScalingFromVector(scaling) *
-          XMMatrixRotationQuaternion(toward) *
-          XMMatrixTranslationFromVector(position);*/
+      auto* billboard = activeIndicator->GetComponent<BillboardComponent>();
+      billboard->SetPosition(
+          activeIndicator->transform->GetGlobalTranslation());
     }
     else
     {
-      // XMMATRIX& globalTransform =
-      //     inactiveIndicator->transform->globalTransform;
-
-      // XMVECTOR scaling;
-      // XMVECTOR position;
-      // XMVECTOR quatRot;
-
-      // XMMatrixDecompose(&scaling, &quatRot, &position, globalTransform);
-
-      // XMVECTOR cameraPos = world->mainCamera->GetPosition();
-
-      ///*XMVECTOR toward =
-      //    MathUtil::RotateToward(quatRot, cameraPos, position, XM_PI);
-
-      // inactiveIndicator->transform->globalTransform =
-      //     XMMatrixScalingFromVector(scaling) *
-      //     XMMatrixRotationQuaternion(toward) *
-      //     XMMatrixTranslationFromVector(position);*/
-      // XMVECTOR axis =
-      //     MathUtil::AxisBillBoardRotate(globalTransform, cameraPos,
-      //     position);
-      // float angle =
-      //     MathUtil::AngleBillBoardRotate(globalTransform, cameraPos,
-      //     position);
-      // inactiveIndicator->transform->RotateAroundAxis(axis, angle);
-
-      //XMMATRIX& globalTransform = inactiveIndicator->transform->globalTransform;
-
-      //XMVECTOR scaling;
-      //XMVECTOR position;
-      //XMVECTOR quatRot;
-
-      //// Decompose the global transform into scaling, rotation, and position
-      //// components
-      //XMMatrixDecompose(&scaling, &quatRot, &position, globalTransform);
-
-      //XMVECTOR cameraPos = world->mainCamera->GetPosition();
-
-      //// Calculate the direction to rotate toward (this will rotate toward the
-      //// camera)
-      //XMVECTOR forward = inactiveIndicator->transform->GetGlobalFront();
-      //XMVECTOR axis =
-      //    MathUtil::AxisBillBoardRotate(forward, cameraPos, position);
-      //float angle =
-      //    MathUtil::AngleBillBoardRotate(forward, cameraPos, position);
-      //inactiveIndicator->transform->RotateAroundAxis(axis,angle);
+      auto* billboard = inactiveIndicator->GetComponent<BillboardComponent>();
+      billboard->SetPosition(
+          inactiveIndicator->transform->GetGlobalTranslation());
     }
+  
   }
-
-
+  
 }
 
 void Character::ApplyChangedGridLocation() {

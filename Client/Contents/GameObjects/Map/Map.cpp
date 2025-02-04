@@ -19,18 +19,23 @@ Map::Map(World* world) : GameObject(world)
   civilianModelHandle = LoadModel("Models\\Civilian\\Animation_003.glb");
 
 	// Set character static data.
-  brawlerInactiveIndicatorModelHandle =
-      LoadModel("Models\\Indicator\\BrawlerInactiveIndicator\\Indicator.glb");
-  brawlerActiveIndicatorModelHandle =
-      LoadModel("Models\\Indicator\\BrawlerActiveIndicator\\Indicator.glb");
-  slasherInactiveIndicatorModelHandle =
-      LoadModel("Models\\Indicator\\SlasherInactiveIndicator\\Indicator.glb");
-  slasherActiveIndicatorModelHandle =
-      LoadModel("Models\\Indicator\\SlasherActiveIndicator\\Indicator.glb");
-  gunmanInactiveIndicatorModelHandle =
-      LoadModel("Models\\Indicator\\GunmanInactiveIndicator\\Indicator.glb");
-  gunmanActiveIndicatorModelHandle =
-      LoadModel("Models\\Indicator\\GunmanActiveIndicator\\Indicator.glb");
+  brawlerInactiveIndicatorTextureHandle =
+      LoadTexture("Models\\Indicator\\BrawlerInactiveIndicator\\InactiveIndicator3.png", TextureType::kAlbedo);
+  brawlerActiveIndicatorTextureHandle =
+      LoadTexture("Models\\Indicator\\BrawlerActiveIndicator\\Indicator3_On.png",
+                  TextureType::kAlbedo);
+  slasherInactiveIndicatorTextureHandle =
+      LoadTexture("Models\\Indicator\\SlasherInactiveIndicator\\InactiveIndicator2.png",
+                  TextureType::kAlbedo);
+  slasherActiveIndicatorTextureHandle =
+      LoadTexture("Models\\Indicator\\SlasherActiveIndicator\\Indicator2_On.png",
+                  TextureType::kAlbedo);
+  gunmanInactiveIndicatorTextureHandle =
+      LoadTexture("Models\\Indicator\\GunmanInactiveIndicator\\InactiveIndicator1.png",
+                  TextureType::kAlbedo);
+  gunmanActiveIndicatorTextureHandle =
+      LoadTexture("Models\\Indicator\\GunmanActiveIndicator\\Indicator1_On.png",
+                  TextureType::kAlbedo);
 
 	Character::enemyModelData = &AccessModelData(enemyModelHandle);
   Character::enemySkeletonHandle = Character::enemyModelData->skeleton;
@@ -202,23 +207,24 @@ void Map::CreateEnemyAt(CharactorType type, uint32_t w, uint32_t h,
       world->CreateGameObjectFromModel<Gunman>(enemyModelHandle);
 
   // Bind indicators
-  auto* inactiveIndicator =
-      world->CreateGameObjectFromModel(gunmanInactiveIndicatorModelHandle);
-  if (auto* meshComp = inactiveIndicator->GetComponent<MeshComponent>();
-      meshComp)
+  auto* inactiveIndicator = world->CreateGameObject();
+  if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
+      bbComp)
   {
-    meshComp->SetCastShadow(false);
+    world->_renderer->CreateBillboard(bbComp->billboard);
+    bbComp->SetScale({.2f, .2f, .2f});
+    bbComp->SetTexture(gunmanInactiveIndicatorTextureHandle);
   }
-  inactiveIndicator->SetScaling(10.f);
   gunman->BindInactiveIndicator(inactiveIndicator);
 
-  auto* activeIndicator =
-      world->CreateGameObjectFromModel(gunmanActiveIndicatorModelHandle);
-  if (auto* meshComp = activeIndicator->GetComponent<MeshComponent>(); meshComp)
+  auto* activeIndicator = world->CreateGameObject();
+  if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
+      bbComp)
   {
-    meshComp->SetCastShadow(false);
+    world->_renderer->CreateBillboard(bbComp->billboard);
+    bbComp->SetScale({.2f, .2f, .2f});
+    bbComp->SetTexture(gunmanActiveIndicatorTextureHandle);
   }
-  activeIndicator->SetScaling(10.f);
   gunman->BindActiveIndicator(activeIndicator);
 
   gunman->SetFaction(kEnemy);
@@ -226,10 +232,11 @@ void Map::CreateEnemyAt(CharactorType type, uint32_t w, uint32_t h,
   gunman->SetDirection(dir);
   enemies.push_back(gunman);
 
-	AddChildGameObject(gunman);
+  AddChildGameObject(gunman);
 }
 
-void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir)
+void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h,
+                       Direction dir)
 {
   switch (type)
   {
@@ -238,24 +245,24 @@ void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir
         world->CreateGameObjectFromModel<Brawler>(allyBrawlerModelHandle);
 
     // Bind indicators.
-    auto* inactiveIndicator =
-        world->CreateGameObjectFromModel(brawlerInactiveIndicatorModelHandle);
-    inactiveIndicator->SetScaling(10.f);
-    if (auto* meshComp = inactiveIndicator->GetComponent<MeshComponent>();
-        meshComp)
+    auto* inactiveIndicator = world->CreateGameObject();
+    if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
     {
-      meshComp->SetCastShadow(false);
+      world->_renderer->CreateBillboard(bbComp->billboard);
+      bbComp->SetScale({.2f, .2f, .2f});
+      bbComp->SetTexture(brawlerActiveIndicatorTextureHandle);
     }
     brawler->BindInactiveIndicator(inactiveIndicator);
 
-    auto* activeIndicator =
-        world->CreateGameObjectFromModel(brawlerActiveIndicatorModelHandle);
-    if (auto* meshComp = activeIndicator->GetComponent<MeshComponent>();
-        meshComp)
+    auto* activeIndicator = world->CreateGameObject();
+    if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
     {
-      meshComp->SetCastShadow(false);
+      world->_renderer->CreateBillboard(bbComp->billboard);
+      bbComp->SetScale({.2f, .2f, .2f});
+      bbComp->SetTexture(brawlerActiveIndicatorTextureHandle);
     }
-    activeIndicator->SetScaling(10.f);
     brawler->BindActiveIndicator(activeIndicator);
 
     // Properties
@@ -271,24 +278,24 @@ void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir
     Slasher* slasher =
         world->CreateGameObjectFromModel<Slasher>(allySlasherModelHandle);
 
-    auto* inactiveIndicator =
-        world->CreateGameObjectFromModel(slasherInactiveIndicatorModelHandle);
-    if (auto* meshComp = inactiveIndicator->GetComponent<MeshComponent>();
-        meshComp)
+    auto* inactiveIndicator = world->CreateGameObject();
+    if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
     {
-      meshComp->SetCastShadow(false);
+      world->_renderer->CreateBillboard(bbComp->billboard);
+      bbComp->SetScale({.2f, .2f, .2f});
+      bbComp->SetTexture(slasherActiveIndicatorTextureHandle);
     }
-    inactiveIndicator->SetScaling(10.f);
     slasher->BindInactiveIndicator(inactiveIndicator);
 
-    auto* activeIndicator =
-        world->CreateGameObjectFromModel(slasherActiveIndicatorModelHandle);
-    if (auto* meshComp = activeIndicator->GetComponent<MeshComponent>();
-        meshComp)
+    auto* activeIndicator = world->CreateGameObject();
+    if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
     {
-      meshComp->SetCastShadow(false);
+      world->_renderer->CreateBillboard(bbComp->billboard);
+      bbComp->SetScale({.2f, .2f, .2f});
+      bbComp->SetTexture(slasherActiveIndicatorTextureHandle);
     }
-    activeIndicator->SetScaling(10.f);
     slasher->BindActiveIndicator(activeIndicator);
 
     // Properties
@@ -304,24 +311,24 @@ void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir
     Gunman* gunman =
         world->CreateGameObjectFromModel<Gunman>(allyGunmanModelHandle);
 
-    auto* inactiveIndicator =
-        world->CreateGameObjectFromModel(gunmanInactiveIndicatorModelHandle);
-    if (auto* meshComp = inactiveIndicator->GetComponent<MeshComponent>();
-        meshComp)
+    auto* inactiveIndicator = world->CreateGameObject();
+    if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
     {
-      meshComp->SetCastShadow(false);
+      world->_renderer->CreateBillboard(bbComp->billboard);
+      bbComp->SetScale({.2f, .2f, .2f});
+      bbComp->SetTexture(gunmanActiveIndicatorTextureHandle);
     }
-    inactiveIndicator->SetScaling(10.f);
     gunman->BindInactiveIndicator(inactiveIndicator);
 
-    auto* activeIndicator =
-        world->CreateGameObjectFromModel(gunmanActiveIndicatorModelHandle);
-    if (auto* meshComp = activeIndicator->GetComponent<MeshComponent>();
-        meshComp)
+    auto* activeIndicator = world->CreateGameObject();
+    if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
     {
-      meshComp->SetCastShadow(false);
+      world->_renderer->CreateBillboard(bbComp->billboard);
+      bbComp->SetScale({.2f, .2f, .2f});
+      bbComp->SetTexture(gunmanActiveIndicatorTextureHandle);
     }
-    activeIndicator->SetScaling(10.f);
     gunman->BindActiveIndicator(activeIndicator);
 
     gunman->SetFaction(kAlly);
