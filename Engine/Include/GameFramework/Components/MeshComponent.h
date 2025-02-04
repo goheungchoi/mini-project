@@ -23,5 +23,5 @@ public:
 
   void RegisterMeshToWorld();
   void SetVisible(bool visible) { isVisible = visible; }
-  void SetCastShadow(bool shadow) { bCastShadow = shadow; }
+  void SetCastShadow(bool shadow);
 };
