@@ -21,19 +21,14 @@ public:
   TextureHandle gunmanInactiveIndicatorTextureHandle;
   TextureHandle gunmanActiveIndicatorTextureHandle;
 
-	ModelHandle enemyGunmanModelHandle;
+	ModelHandle enemyBrawlerModelHandle;
+  ModelHandle enemyGunmanModelHandle;
 
-  ModelHandle playerModelHandle;
   ModelHandle civilianModelHandle;
-
 
 	ModelHandle allyBrawlerModelHandle;
   ModelHandle allySlasherModelHandle;
   ModelHandle allyGunmanModelHandle;
-
-	ModelHandle clonedAllyBrawlerModelHandle;
-	ModelHandle clonedAllySlasherModelHandle;
-	ModelHandle clonedAllyGunmanModelHandle;
 
 public:
 

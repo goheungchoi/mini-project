@@ -30,6 +30,7 @@ AnimationHandle Character::idleAnimation;
 
 AnimationHandle Character::brawlerActionAnimation;
 
+// TODO: Slash action 2;
 AnimationHandle Character::slashReadyAnimation;
 AnimationHandle Character::slashActionAnimation;
 
