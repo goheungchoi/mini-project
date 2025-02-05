@@ -95,7 +95,6 @@ public:
 
 
 private:
-  //void RenderSprites();
   void BeginSprites();
   void EndSprites();
 

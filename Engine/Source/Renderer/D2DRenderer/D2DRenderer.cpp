@@ -1,8 +1,8 @@
 ﻿#include "D2DRenderer.h"
 #include "Renderer/DX11/Internal/Device.h"
 #include "Renderer/DX11/Internal/SwapChain.h"
-#include "Sprite/Sprite.h"
 #include "Resource2DManager/Resource2DManager.h"
+#include "Sprite/Sprite.h"
 
 D2DRenderer::~D2DRenderer()
 {
@@ -102,9 +102,7 @@ void D2DRenderer::UnInit()
 
 void D2DRenderer::Draw() {}
 
-void D2DRenderer::BeginDraw()
-{
-}
+void D2DRenderer::BeginDraw() {}
 
 void D2DRenderer::EndDraw()
 {
@@ -122,8 +120,7 @@ void D2DRenderer::EndDraw()
 void D2DRenderer::DrawRectangle(Color color, Vector4 rect, float stroke,
                                 float opacity)
 {
-  _d2dRenderQueue.AddRender2DCmd([=]()
-  {
+  _d2dRenderQueue.AddRender2DCmd([=]() {
     D2D1_COLOR_F clr = D2D1::ColorF(color.x, color.y, color.z, color.w);
     D2D1_RECT_F rt = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
     //  left,    top,  right, bottom
@@ -186,8 +183,7 @@ void D2DRenderer::CreateSprite(LPCSTR path, Vector2 pos)
 }
 
 void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
-                            float opacity,
-                            const TextFormatInfo& textFormatInfo)
+                            float opacity, const TextFormatInfo& textFormatInfo)
 {
   _d2dRenderQueue.AddRender2DCmd([=]() {
     IDWriteTextFormat* textFormat = nullptr;
@@ -200,7 +196,7 @@ void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
         static_cast<DWRITE_FONT_STYLE>(textFormatInfo._fontStyle),
         static_cast<DWRITE_FONT_STRETCH>(textFormatInfo._fontStretch),
         textFormatInfo._fontSize, // 글꼴 크기
-        L"ko-KR",                  // 로케일
+        L"ko-KR",                 // 로케일
         &textFormat));
 
     // 텍스트 정렬
@@ -208,6 +204,12 @@ void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
         static_cast<DWRITE_TEXT_ALIGNMENT>(textFormatInfo._textAlignment));
     textFormat->SetParagraphAlignment(static_cast<DWRITE_PARAGRAPH_ALIGNMENT>(
         textFormatInfo._paragraphAlignment));
+
+    textFormat->SetLineSpacing(
+        DWRITE_LINE_SPACING_METHOD_UNIFORM, // 일정한 간격 적용
+        43.0f, // 줄 높이 (기본 폰트 크기보다 크면 간격 증가)
+        30.0f  // 기준선 오프셋 (보통 0 또는 폰트 크기의 일부)
+    );
 
     // 텍스트 그리기
     D2D1_RECT_F rec = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
@@ -222,19 +224,6 @@ void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
   });
 }
 
-
-//void D2DRenderer::RenderSprites()
-//{
-//  // 모든 Sprite Render
-//  if (!(Resource2DManager::GetInstance()->_SpriteMap.empty()))
-//  {
-//    for (auto sprite : Resource2DManager::GetInstance()->_SpriteMap)
-//    {
-//      sprite.second->Render();
-//    }
-//  }
-//}
-
 void D2DRenderer::BeginSprites()
 {
   _pDevice->GetImmContext()->OMGetDepthStencilState(&_prevDepthState,
@@ -242,9 +231,10 @@ void D2DRenderer::BeginSprites()
 
   float blendFactor[4] = {0, 0, 0, 0};
   UINT* psamplemask = new UINT[1];
-  _pDevice->GetImmContext()->OMGetBlendState(&_blendState, blendFactor,psamplemask);
+  _pDevice->GetImmContext()->OMGetBlendState(&_blendState, blendFactor,
+                                             psamplemask);
 
-  _pSpriteBatch->Begin(DirectX::DX11::SpriteSortMode_Deferred,_blendState);
+  _pSpriteBatch->Begin(DirectX::DX11::SpriteSortMode_Deferred, _blendState);
 }
 
 void D2DRenderer::EndSprites()
@@ -252,5 +242,6 @@ void D2DRenderer::EndSprites()
   _pSpriteBatch->End();
 
   // DepthStencilState 복원
-  _pDevice->GetImmContext()->OMSetDepthStencilState(_prevDepthState, _stencilRef);
+  _pDevice->GetImmContext()->OMSetDepthStencilState(_prevDepthState,
+                                                    _stencilRef);
 }

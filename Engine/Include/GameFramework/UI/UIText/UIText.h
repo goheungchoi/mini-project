@@ -14,6 +14,9 @@ public:
   void SetFont(const std::wstring& fontName);
   void SetColor(Color color);
   void SetOpacity(float opacity);
+  void SetFontWeight(FontWeight fontWeight);
+  void SetTextAlignment(TextAlignment textAlignment);
+  void SetParagraphAlignment(ParagraphAlignment paragraphAlignment);
 
 #ifdef _DEBUG
   void SetDebugDraw(bool debugFlag);

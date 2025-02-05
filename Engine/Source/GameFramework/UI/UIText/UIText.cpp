@@ -52,6 +52,21 @@ void UIText::SetOpacity(float opacity)
   _opacity = opacity;
 }
 
+void UIText::SetFontWeight(FontWeight fontWeight)
+{
+  _textFormatInfo._fontWeight = fontWeight;
+}
+
+void UIText::SetTextAlignment(TextAlignment textAlignment)
+{
+  _textFormatInfo._textAlignment = textAlignment;
+}
+
+void UIText::SetParagraphAlignment(ParagraphAlignment paragraphAlignment)
+{
+  _textFormatInfo._paragraphAlignment = paragraphAlignment;
+}
+
 void UIText::SetDebugDraw(bool debugFlag)
 {
   bDebugDrawFlag = debugFlag;
