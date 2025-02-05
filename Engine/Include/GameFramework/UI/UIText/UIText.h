@@ -8,6 +8,8 @@ public:
   virtual ~UIText();
 
 public:
+  void Render() override;
+
   void SetText(const wchar_t* format);
   void SetFont(const std::wstring& fontName);
   void SetColor(Color color);
