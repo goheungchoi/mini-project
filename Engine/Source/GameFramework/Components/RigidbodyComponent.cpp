@@ -52,6 +52,9 @@ void RigidbodyComponent::SetOffsetTransform(const DirectX::SimpleMath::Vector3& 
 
 RigidbodyComponent::~RigidbodyComponent() {
   UnregisterRigidBodyFromWorld();
+
+  _world->RemoveRigidBody(_rigidbody);
+
   delete _rigidbody;
   _rigidbody = nullptr;
   _world = nullptr;
