@@ -16,9 +16,8 @@ Slasher::Slasher(World* world) : Character(world) {
   handgun = world->CreateGameObjectFromModel(handgunModelHandle);
   UnloadModel(handgunModelHandle);*/
 
-
-	// Animator one more variable to move slasher
-  animator->DeclareVariable<bool>("action");
+  knifeModelHandle = LoadModel("Models\\Knife\\Knife.glb");
+  knife = world->CreateGameObjectFromModel(knifeModelHandle);
 
 	// Create animation states
   dead = new Animation(deadAnimation, false);
@@ -33,7 +32,9 @@ Slasher::Slasher(World* world) : Character(world) {
   action = new Animation(slashActionAnimation, false);
   actionState = new SlashActionState(action);
 
+  animator->DeclareVariable<bool>("arm", false);
 	animator->DeclareVariable<bool>("fire", false);
+  animator->DeclareVariable<XMVECTOR>("currTranslate");
 
 	// Set state dependencies
   idleState->AddAnimationStateDependency("next", readyState);
@@ -63,15 +64,36 @@ void Slasher::OnAwake() {
   Super::OnAwake();
   /*GameObject* hand = FindChildGameObject("hand.r");
   hand->AddChildGameObject(handgun);*/
+
+  animationRoot = FindChildGameObject("c_pos");
+
+  GameObject* hand = FindChildGameObject("hand.r");
+  if (hand)
+  {
+    hand->AddChildGameObject(knife);
+    knife->RotateAroundXAxis(XM_PI);
+    knife->RotateAroundYAxis(-XM_PIDIV2);
+    knife->RotateAroundZAxis(-XM_PIDIV2);
+    knife->RotateAroundYAxis(XM_PIDIV2);
+    knife->Translate(-0.06f, 0.32f, 0.04f);
+
+    knife->SetInvisible();
+  }
 }
 
 void Slasher::Update(float dt) {
   Super::Update(dt);
 
-	if (animator->GetVariable<bool>("fire"))
+  if (animator->GetVariable<bool>("arm"))
+  {
+    knife->SetVisible();
+    animator->SetVariable<bool>("arm", false);
+  }
+
+	if (animator->GetVariable<bool>("done"))
   {
     // TODO: slash!
-    if (!temp)
+    /*if (!temp)
     {
       currPos = transform->GetTranslation();
       targetPos =
@@ -87,7 +109,10 @@ void Slasher::Update(float dt) {
       SetTranslation(t * targetPos + (1 - t) * currPos);
 
       if (normalizedTime >= 1.f)
-        animator->SetVariable<bool>("fire", false);
-		}
+        animator->SetVariable<bool>("done", false);
+		}*/
+
+    SetTranslation(animator->GetVariable<XMVECTOR>("currTranslate"));
+    animator->SetVariable<bool>("done", false);
   }
 }

@@ -9,46 +9,62 @@
 #include "Contents/GameObjects/Map/Characters/Gunman/Gunman.h"
 #include "Contents/GameObjects/Map/Characters/Slasher/Slasher.h"
 
+constexpr float kIndicatorScale{0.7f};
+
 Map::Map(World* world) : GameObject(world)
 {
   animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
 
 	// The base models.
-	enemyModelHandle = LoadModel("Models\\Character\\Enemy\\Enemy.glb");
+	// enemyModelHandle = LoadModel("Models\\Character\\Enemy\\Enemy.glb");
+  enemyGunmanModelHandle =
+      LoadModel("Models\\Character\\Enemy\\EnemyGunman\\EnemyGunman.glb");
 	playerModelHandle = LoadModel("Models\\Character\\Player\\Player.glb");
-  civilianModelHandle = LoadModel("Models\\Civilian\\Animation_003.glb");
+  civilianModelHandle = LoadModel("Models\\Civilian\\Eliza.glb");
+
+  allyDirectionIndicatorModelHandle = LoadModel(
+      "Models\\Indicator\\AllyDirectionIndicator\\AllyDirectionIndicator.glb");
+  enemyDirectionIndicatorModelHandle =
+      LoadModel("Models\\Indicator\\EnemyDirectionIndicator\\EnemyDirectionIndi"
+                "cator.glb");
 
 	// Set character static data.
-  brawlerInactiveIndicatorTextureHandle =
-      LoadTexture("Models\\Indicator\\BrawlerInactiveIndicator\\InactiveIndicator3.png", TextureType::kAlbedo);
-  brawlerActiveIndicatorTextureHandle =
-      LoadTexture("Models\\Indicator\\BrawlerActiveIndicator\\Indicator3_On.png",
-                  TextureType::kAlbedo);
-  slasherInactiveIndicatorTextureHandle =
-      LoadTexture("Models\\Indicator\\SlasherInactiveIndicator\\InactiveIndicator2.png",
-                  TextureType::kAlbedo);
-  slasherActiveIndicatorTextureHandle =
-      LoadTexture("Models\\Indicator\\SlasherActiveIndicator\\Indicator2_On.png",
-                  TextureType::kAlbedo);
-  gunmanInactiveIndicatorTextureHandle =
-      LoadTexture("Models\\Indicator\\GunmanInactiveIndicator\\InactiveIndicator1.png",
-                  TextureType::kAlbedo);
+  brawlerInactiveIndicatorTextureHandle = LoadTexture(
+      "Models\\Indicator\\BrawlerInactiveIndicator\\InactiveIndicator3.png",
+      TextureType::kAlbedo);
+  brawlerActiveIndicatorTextureHandle = LoadTexture(
+      "Models\\Indicator\\BrawlerActiveIndicator\\Indicator3_On.png",
+      TextureType::kAlbedo);
+  slasherInactiveIndicatorTextureHandle = LoadTexture(
+      "Models\\Indicator\\SlasherInactiveIndicator\\InactiveIndicator2.png",
+      TextureType::kAlbedo);
+  slasherActiveIndicatorTextureHandle = LoadTexture(
+      "Models\\Indicator\\SlasherActiveIndicator\\Indicator2_On.png",
+      TextureType::kAlbedo);
+  gunmanInactiveIndicatorTextureHandle = LoadTexture(
+      "Models\\Indicator\\GunmanInactiveIndicator\\InactiveIndicator1.png",
+      TextureType::kAlbedo);
   gunmanActiveIndicatorTextureHandle =
       LoadTexture("Models\\Indicator\\GunmanActiveIndicator\\Indicator1_On.png",
                   TextureType::kAlbedo);
 
-	Character::enemyModelData = &AccessModelData(enemyModelHandle);
+	Character::enemyModelData = &AccessModelData(enemyGunmanModelHandle);
   Character::enemySkeletonHandle = Character::enemyModelData->skeleton;
 
-	Character::playerModelData = &AccessModelData(playerModelHandle);
+  Character::playerModelData = &AccessModelData(playerModelHandle);
   Character::playerSkeletonHandle = Character::playerModelData->skeleton;
 
+  // Civilian resources
   Character::civilianModelData = &AccessModelData(civilianModelHandle);
   Character::civilianSkeletonHandle = Character::civilianModelData->skeleton;
-  Character::civilianDeadAnimation =
-      *Character::civilianModelData->animations.begin();
+  auto civilAnimIt = Character::civilianModelData->animations.begin();
 
-	auto animIt = Character::playerModelData->animations.begin();
+  Character::civilianIdleAnimation = *std::next(civilAnimIt, 0);
+  Character::civilianSurrenderAnimation = *std::next(civilAnimIt, 3);
+  Character::civilianDeadAnimation = *std::next(civilAnimIt, 1);
+
+  // Animations
+  auto animIt = Character::playerModelData->animations.begin();
 
   Character::deadAnimation = *std::next(animIt, 1);
   Character::idleAnimation = *std::next(animIt, 6);
@@ -62,31 +78,30 @@ Map::Map(World* world) : GameObject(world)
   Character::gunReady2Animation = *std::next(animIt, 4);
   Character::gunFireAnimation = *std::next(animIt, 2);
 
+  ModelData& enemyModel = AccessModelData(enemyGunmanModelHandle);
 
-  ModelData& enemyModel = AccessModelData(enemyModelHandle);
+  // Get the player model data.
+  ModelData& playerModel = AccessModelData(playerModelHandle);
 
-	// Get the player model data.
-	ModelData& playerModel = AccessModelData(playerModelHandle);
-
-	// Apply different materials to the models.
-	allyBrawlerModelHandle = CloneModel(playerModelHandle);
+  // Apply different materials to the models.
+  allyBrawlerModelHandle = CloneModel(playerModelHandle);
   allySlasherModelHandle = CloneModel(playerModelHandle);
   allyGunmanModelHandle = CloneModel(playerModelHandle);
 
-	// Clone version of the model, transparent.
-	clonedAllyBrawlerModelHandle = CloneModel(allyBrawlerModelHandle);
+  // Clone version of the model, transparent.
+  clonedAllyBrawlerModelHandle = CloneModel(allyBrawlerModelHandle);
   clonedAllySlasherModelHandle = CloneModel(allySlasherModelHandle);
   clonedAllyGunmanModelHandle = CloneModel(allyGunmanModelHandle);
 
-	ModelData& clonedAllyBrawlerModelData =
+  ModelData& clonedAllyBrawlerModelData =
       AccessModelData(clonedAllyBrawlerModelHandle);
   for (auto matHandle : clonedAllyBrawlerModelData.materials)
   {
     MaterialData& matData = AccessMaterialData(matHandle);
     matData.alphaMode = AlphaMode::kBlend;
-	}
+  }
 
-	ModelData& clonedAllySlasherModelData =
+  ModelData& clonedAllySlasherModelData =
       AccessModelData(clonedAllySlasherModelHandle);
   for (auto matHandle : clonedAllySlasherModelData.materials)
   {
@@ -94,7 +109,7 @@ Map::Map(World* world) : GameObject(world)
     matData.alphaMode = AlphaMode::kBlend;
   }
 
-	ModelData& clonedAllyGunmanModelData =
+  ModelData& clonedAllyGunmanModelData =
       AccessModelData(clonedAllyGunmanModelHandle);
   for (auto matHandle : clonedAllyGunmanModelData.materials)
   {
@@ -102,37 +117,38 @@ Map::Map(World* world) : GameObject(world)
     matData.alphaMode = AlphaMode::kBlend;
   }
 
-	// Create a grid.
-	grid = world->CreateGameObject<GridObject>();
+  // Create a grid.
+  grid = world->CreateGameObject<GridObject>();
   grid->CreateGrid(6, 6, 1.4f);
   grid->Translate(-0.6f, +0.01f, -0.8f);
-	AddChildGameObject(grid);
+  AddChildGameObject(grid);
 }
 
-Map::~Map() {
-
+Map::~Map()
+{
 
   UnloadModel(playerModelHandle);
-  UnloadModel(enemyModelHandle);
+  UnloadModel(enemyGunmanModelHandle);
 }
 
-void Map::TurnOnPlacementMode(CharactorType type) {
+void Map::TurnOnPlacementMode(CharactorType type, Direction dir)
+{
   if (isPlacementModeOn)
   {
     return;
-	}
+  }
 
-	// Turn on the placement mode on grid.
+  // Turn on the placement mode on grid.
   grid->TurnOnSelectionMode();
 
-	// TODO: Placeholder's model should be transparent.
-	switch (type)
+  // TODO: Placeholder's model should be transparent.
+  switch (type)
   {
   case kBrawler: {
     Brawler* brawler =
         world->CreateGameObjectFromModel<Brawler>(allyBrawlerModelHandle);
     brawler->SetFaction(kAlly);
-    brawler->SetDirection(kNorth);
+    brawler->SetDirection(dir);
     placeholder = brawler;
   }
   break;
@@ -140,7 +156,7 @@ void Map::TurnOnPlacementMode(CharactorType type) {
     Slasher* slasher =
         world->CreateGameObjectFromModel<Slasher>(allySlasherModelHandle);
     slasher->SetFaction(kAlly);
-    slasher->SetDirection(kNorth);
+    slasher->SetDirection(dir);
     placeholder = slasher;
   }
   break;
@@ -148,24 +164,25 @@ void Map::TurnOnPlacementMode(CharactorType type) {
     Gunman* gunman =
         world->CreateGameObjectFromModel<Gunman>(allyGunmanModelHandle);
     gunman->SetFaction(kAlly);
-    gunman->SetDirection(kNorth);
+    gunman->SetDirection(dir);
     placeholder = gunman;
   }
   break;
   }
 
-	TranslatePlaceholder();
+  TranslatePlaceholder();
 
   isPlacementModeOn = true;
 }
 
-void Map::TurnOffPlacementMode() {
+void Map::TurnOffPlacementMode()
+{
   if (!isPlacementModeOn)
   {
     return;
-	}
+  }
 
-	// Turn of the selection mode on grid
+  // Turn of the selection mode on grid
   grid->TurnOffSelectionMode();
 
   // Remove the placeholder.
@@ -176,63 +193,127 @@ void Map::TurnOffPlacementMode() {
   isPlacementModeOn = false;
 }
 
-void Map::TurnOnSimulationMode() {
-	// TODO:
+void Map::TurnOnSimulationMode()
+{
+  // TODO:
 }
 
-void Map::TriggerAction() {
+void Map::TriggerAction()
+{
   isActionTriggered = true;
 
   for (Character* enemy : enemies)
   {
     enemy->TriggerAction();
-	}
+  }
 
-	for (Character* ally : allies)
+  for (Character* ally : allies)
   {
     ally->TriggerAction();
-	}
+  }
+
+  for (Character* civilian : civilians)
+  {
+    civilian->TriggerAction();
+  }
 }
 
-void Map::ResetGame() {
-	// TODO:
+void Map::ResetGame()
+{
+  // TODO:
   isActionTriggered = false;
-
 }
 
 void Map::CreateEnemyAt(CharactorType type, uint32_t w, uint32_t h,
                         Direction dir)
 {
-  Gunman* gunman =
-      world->CreateGameObjectFromModel<Gunman>(enemyModelHandle);
-
-  // Bind indicators
-  auto* inactiveIndicator = world->CreateGameObject();
-  if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
-      bbComp)
+  switch (type)
   {
-    world->_renderer->CreateBillboard(bbComp->billboard);
-    bbComp->SetScale({.2f, .2f, .2f});
-    bbComp->SetTexture(gunmanInactiveIndicatorTextureHandle);
+  case kBrawler: {
+    Brawler* brawler =
+        world->CreateGameObjectFromModel<Brawler>(enemyGunmanModelHandle);
+
+    // Bind a direction indicator.
+    auto* directionIndicator =
+        world->CreateGameObjectFromModel(enemyDirectionIndicatorModelHandle);
+    if (directionIndicator)
+    {
+      brawler->BindDirectionIndicator(directionIndicator);
+    }
+
+    // Bind an inactive indicator.
+    auto* inactiveIndicator = world->CreateGameObject();
+    if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
+    {
+      world->_renderer->CreateBillboard(bbComp->billboard);
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
+      bbComp->SetTexture(brawlerInactiveIndicatorTextureHandle);
+    }
+    brawler->BindInactiveIndicator(inactiveIndicator);
+
+    // Bind an active indicator.
+    auto* activeIndicator = world->CreateGameObject();
+    if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
+    {
+      world->_renderer->CreateBillboard(bbComp->billboard);
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
+      bbComp->SetTexture(brawlerActiveIndicatorTextureHandle);
+    }
+    brawler->BindActiveIndicator(activeIndicator);
+
+    // Properties
+    brawler->SetFaction(kEnemy);
+    brawler->SetGridLocation(w, h);
+    brawler->SetDirection(dir);
+    enemies.push_back(brawler);
+
+    AddChildGameObject(brawler);
   }
-  gunman->BindInactiveIndicator(inactiveIndicator);
+  break;
+  case kGunman: {
+    Gunman* gunman =
+        world->CreateGameObjectFromModel<Gunman>(enemyGunmanModelHandle);
 
-  auto* activeIndicator = world->CreateGameObject();
-  if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
-      bbComp)
-  {
-    world->_renderer->CreateBillboard(bbComp->billboard);
-    bbComp->SetScale({.2f, .2f, .2f});
-    bbComp->SetTexture(gunmanActiveIndicatorTextureHandle);
+    // Bind a direction indicator.
+    auto* directionIndicator =
+        world->CreateGameObjectFromModel(enemyDirectionIndicatorModelHandle);
+    if (directionIndicator)
+    {
+      gunman->BindDirectionIndicator(directionIndicator);
+    }
+
+    // Bind an inactive indicator.
+    auto* inactiveIndicator = world->CreateGameObject();
+    if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
+    {
+      world->_renderer->CreateBillboard(bbComp->billboard);
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
+      bbComp->SetTexture(gunmanInactiveIndicatorTextureHandle);
+    }
+    gunman->BindInactiveIndicator(inactiveIndicator);
+
+    // Bind an active indicator.
+    auto* activeIndicator = world->CreateGameObject();
+    if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
+    {
+      world->_renderer->CreateBillboard(bbComp->billboard);
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
+      bbComp->SetTexture(gunmanActiveIndicatorTextureHandle);
+    }
+    gunman->BindActiveIndicator(activeIndicator);
+
+    gunman->SetFaction(kEnemy);
+    gunman->SetGridLocation(w, h);
+    gunman->SetDirection(dir);
+    enemies.push_back(gunman);
+
+    AddChildGameObject(gunman);
+    } break;
   }
-  gunman->BindActiveIndicator(activeIndicator);
-
-  gunman->SetFaction(kEnemy);
-  gunman->SetGridLocation(w, h);
-  gunman->SetDirection(dir);
-  enemies.push_back(gunman);
-
-  AddChildGameObject(gunman);
 }
 
 void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h,
@@ -244,23 +325,32 @@ void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h,
     Brawler* brawler =
         world->CreateGameObjectFromModel<Brawler>(allyBrawlerModelHandle);
 
-    // Bind indicators.
+    // Bind a direction indicator.
+    auto* directionIndicator =
+        world->CreateGameObjectFromModel(allyDirectionIndicatorModelHandle);
+    if (directionIndicator)
+    {
+      brawler->BindDirectionIndicator(directionIndicator);
+    }
+
+    // Bind an inactive indicator.
     auto* inactiveIndicator = world->CreateGameObject();
     if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
       world->_renderer->CreateBillboard(bbComp->billboard);
-      bbComp->SetScale({.2f, .2f, .2f});
-      bbComp->SetTexture(brawlerActiveIndicatorTextureHandle);
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
+      bbComp->SetTexture(brawlerInactiveIndicatorTextureHandle);
     }
     brawler->BindInactiveIndicator(inactiveIndicator);
 
+    // Bind an active indicator.
     auto* activeIndicator = world->CreateGameObject();
     if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
       world->_renderer->CreateBillboard(bbComp->billboard);
-      bbComp->SetScale({.2f, .2f, .2f});
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(brawlerActiveIndicatorTextureHandle);
     }
     brawler->BindActiveIndicator(activeIndicator);
@@ -278,22 +368,32 @@ void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h,
     Slasher* slasher =
         world->CreateGameObjectFromModel<Slasher>(allySlasherModelHandle);
 
+    // Bind a direction indicator.
+    auto* directionIndicator =
+        world->CreateGameObjectFromModel(allyDirectionIndicatorModelHandle);
+    if (directionIndicator)
+    {
+      slasher->BindDirectionIndicator(directionIndicator);
+    }
+
+    // Bind an inactive indicator.
     auto* inactiveIndicator = world->CreateGameObject();
     if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
       world->_renderer->CreateBillboard(bbComp->billboard);
-      bbComp->SetScale({.2f, .2f, .2f});
-      bbComp->SetTexture(slasherActiveIndicatorTextureHandle);
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
+      bbComp->SetTexture(slasherInactiveIndicatorTextureHandle);
     }
     slasher->BindInactiveIndicator(inactiveIndicator);
 
+    // Bind an active indicator.
     auto* activeIndicator = world->CreateGameObject();
     if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
       world->_renderer->CreateBillboard(bbComp->billboard);
-      bbComp->SetScale({.2f, .2f, .2f});
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(slasherActiveIndicatorTextureHandle);
     }
     slasher->BindActiveIndicator(activeIndicator);
@@ -311,22 +411,32 @@ void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h,
     Gunman* gunman =
         world->CreateGameObjectFromModel<Gunman>(allyGunmanModelHandle);
 
+    // Bind a direction indicator.
+    auto* directionIndicator =
+        world->CreateGameObjectFromModel(allyDirectionIndicatorModelHandle);
+    if (directionIndicator)
+    {
+      gunman->BindDirectionIndicator(directionIndicator);
+    }
+
+    // Bind an inactive indicator.
     auto* inactiveIndicator = world->CreateGameObject();
     if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
       world->_renderer->CreateBillboard(bbComp->billboard);
-      bbComp->SetScale({.2f, .2f, .2f});
-      bbComp->SetTexture(gunmanActiveIndicatorTextureHandle);
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
+      bbComp->SetTexture(gunmanInactiveIndicatorTextureHandle);
     }
     gunman->BindInactiveIndicator(inactiveIndicator);
 
+    // Bind an active indicator.
     auto* activeIndicator = world->CreateGameObject();
     if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
       world->_renderer->CreateBillboard(bbComp->billboard);
-      bbComp->SetScale({.2f, .2f, .2f});
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(gunmanActiveIndicatorTextureHandle);
     }
     gunman->BindActiveIndicator(activeIndicator);
@@ -356,10 +466,10 @@ void Map::CreateObstacleAt(uint32_t w, uint32_t h) {}
 
 void Map::OnAwake() {
   // Translate({-4.f, 0.f, -4.f});
-  this->Deactivate();
 }
 
 void Map::Update(float dt) {
+  // Rotate this map.
   /*if (INPUT.IsKeyPress(Key::Q))
   {
     parent->RotateAroundYAxis(dt);
@@ -420,29 +530,62 @@ void Map::Update(float dt) {
 			}
 		}
 	}
+  // Selection mode
   else
   {
-    if (INPUT.IsKeyPress(Key::D1))
+    if (INPUT.IsKeyPress(Key::Escape))
     {
-      TurnOnPlacementMode(kBrawler);
+      // TODO: if any selected, cancel the selection.
+
       return;
     }
 
-    if (INPUT.IsKeyPress(Key::D2))
+    if (INPUT.IsKeyDown(MouseState::RB))
     {
-      TurnOnPlacementMode(kSlasher);
+      // Remove the character
       return;
     }
 
-    if (INPUT.IsKeyPress(Key::D3))
+    if (INPUT.IsKeyDown(MouseState::LB))
     {
-      TurnOnPlacementMode(kGunman);
+      // TODO: Character selection -> Placement mode.
+      // Find if any "ally character" is selected.
+      if (isAnySelected && selectedCharacter)
+      {
+        // Check the type of the character.
+
+        // Check the direction of the character.
+
+        // Remove the selected character from the grid.
+
+        // Destroy the selected character.
+
+        // Turn on the placement mode.
+      }
       return;
     }
 
     if (INPUT.IsKeyPress(Key::Space))
     {
       TriggerAction();
+      return;
+    }
+
+    if (INPUT.IsKeyPress(Key::D1))
+    {
+      TurnOnPlacementMode(kBrawler, kNorth);
+      return;
+    }
+
+    if (INPUT.IsKeyPress(Key::D2))
+    {
+      TurnOnPlacementMode(kSlasher, kNorth);
+      return;
+    }
+
+    if (INPUT.IsKeyPress(Key::D3))
+    {
+      TurnOnPlacementMode(kGunman, kNorth);
       return;
     }
   }

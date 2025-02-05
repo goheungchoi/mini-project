@@ -60,21 +60,28 @@ Character::~Character() {
 
 void Character::TriggerAction()
 {
+  isActionTriggered = true;
   if (isTargetInRange)
 		animator->SetVariable<bool>("triggered", true, true);
+}
+
+void Character::BindDirectionIndicator(GameObject* directionIndicator) {
+  this->directionIndicator = directionIndicator;
+  directionIndicator->SetTranslation(0.f, 0.f, -.8f);
+  AddChildGameObject(directionIndicator);
 }
 
 void Character::BindInactiveIndicator(GameObject* inactiveIndicator)
 {
   this->inactiveIndicator = inactiveIndicator;
-  inactiveIndicator->SetTranslation(0.f, 2.3f, 0.f);
+  inactiveIndicator->SetTranslation(0.f, 2.5f, 0.f);
   AddChildGameObject(inactiveIndicator);
 }
 
 void Character::BindActiveIndicator(GameObject* activeIndicator)
 {
   this->activeIndicator = activeIndicator;
-  activeIndicator->SetTranslation(0.f, 2.3f, 0.f);
+  activeIndicator->SetTranslation(0.f, 2.5f, 0.f);
   AddChildGameObject(activeIndicator);
 }
 
@@ -134,16 +141,21 @@ std::pair<uint32_t, uint32_t> Character::GetGridLocation()
 //}
 
 void Character::OnBeginOverlap(GameObject* other) {
-  if (other->GetGameObjectTag() == "weapon")
-  {
-    health -= 1;
-	}
+  GameObject::OnBeginOverlap(other);
 
-	if (health <= 0)
+  if (!isDead)
   {
-    animator->SetVariable<bool>("dead", true, true);
-    isDead = true;
-	}
+    if (other->GetGameObjectTag() == "weapon")
+    {
+      health -= 1;
+	  }
+
+	  if (health <= 0)
+    {
+      animator->SetVariable<bool>("dead", true, true);
+      isDead = true;
+	  }
+  }
 }
 
 void Character::OnAwake()
@@ -165,23 +177,11 @@ void Character::OnAwake()
   }
 
 	auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
-  bodyRigidBody->Initialize({0, 1.0f, 0}, Quaternion::Identity,
+  bodyRigidBody->Initialize({0, 1.0f, 0},
+                            DirectX::SimpleMath::Quaternion::Identity,
                             {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
-                            false, false, world->_phyjixWorld);
-
-  // bodyRigidBody->EnableGravity();
-  // bodyRigidBody->DisableGravity();
-  // bodyRigidBody->DisableCollision();
-  // bodyRigidBody->EnableDebugDraw();
-  bodyRigidBody->ClearForce();
-  bodyRigidBody->ClearTorque();
-  //  bodyRigidBody->DisableSimulation();
-  // bodyRigidBody->DisableDebugDraw();
-  bodyRigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eLClick,
-                                   [=]() {
-                                     bodyRigidBody->EnableDebugDraw();
-                                     bodyRigidBody->ClearForce();
-                                   });
+                            false, true, world->_phyjixWorld);
+  bodyRigidBody->EnableDebugDraw();
 }
 
 void Character::Update(float dt) {
@@ -190,6 +190,16 @@ void Character::Update(float dt) {
 		// TODO: 
 		return;
 	}
+
+  if (isActionTriggered)
+  {
+    if (inactiveIndicator && activeIndicator)
+    {
+      inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+      activeIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+    }
+    return;
+  }
 	
 	if (bGridLocationChanged)
   {
@@ -224,6 +234,11 @@ void Character::Update(float dt) {
 
 void Character::PostUpdate(float dt) {
 
+  if (isActionTriggered)
+  {
+    return;
+  }
+
   if (inactiveIndicator && activeIndicator)
   {
     if (isTargetInRange)
@@ -238,9 +253,7 @@ void Character::PostUpdate(float dt) {
       billboard->SetPosition(
           inactiveIndicator->transform->GetGlobalTranslation());
     }
-  
   }
-  
 }
 
 void Character::ApplyChangedGridLocation() {
@@ -319,7 +332,15 @@ void Character::FindTargetInRange() {
         distanceToTarget = i;
         isTargetInRange = true;
         return;
-			}
+      }
+      // If this is an ally.
+      else
+      {
+        // Don't attack.
+        distanceToTarget = -1;
+        isTargetInRange = false;
+        return;
+      }
 		}
 	}
 

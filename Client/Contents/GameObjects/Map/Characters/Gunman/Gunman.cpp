@@ -18,14 +18,14 @@ Gunman::Gunman(World* world) : Character(world) {
   handgunModelHandle = LoadModel("Models\\Pistol\\Pistol.glb");
 	handgun = world->CreateGameObjectFromModel(handgunModelHandle);
 
+  // Create a muzzle game object.
 	muzzleModelHandle = LoadModel("Models\\Bullet\\Bullet.glb");
 	muzzle = world->CreateGameObjectFromModel<GameObject>(muzzleModelHandle);
+  muzzle->SetTranslation(0.f, .01f, -.2f);
+  muzzle->SetInvisible();
 
 	handgun->AddChildGameObject(muzzle);
   
-	// Create a muzzle game object.
-
-
 	// Create animation states
   dead = new Animation(deadAnimation, false);
   deadState = new DeadState(dead);
@@ -42,6 +42,7 @@ Gunman::Gunman(World* world) : Character(world) {
   fire = new Animation(gunFireAnimation, false);
   fireState = new GunFireActionState(fire);
 
+  animator->DeclareVariable<bool>("arm", false);
 	animator->DeclareVariable<bool>("fire", false);
 
 	// Set state dependencies
@@ -98,11 +99,19 @@ void Gunman::OnAwake() {
     handgun->RotateAroundYAxis(-XM_PIDIV2);
     handgun->RotateAroundZAxis(-XM_PIDIV2);
     handgun->Translate(-0.06f, 0.18f, 0.04f);
+
+    handgun->SetInvisible();
 	}
 }
 
 void Gunman::Update(float dt) {
   Super::Update(dt);
+
+  if (animator->GetVariable<bool>("arm"))
+  {
+    handgun->SetVisible();
+    animator->SetVariable<bool>("arm", false);
+  }
 
 	if (animator->GetVariable<bool>("fire") && fire->GetCurrentAnimationTime() >= 0.65f)
   {

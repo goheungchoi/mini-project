@@ -58,6 +58,7 @@ public:
   static AnimationHandle gunReady2Animation;
   static AnimationHandle gunFireAnimation;
 
+  GameObject* directionIndicator{nullptr};
   GameObject* inactiveIndicator{nullptr};
   GameObject* activeIndicator{nullptr};
 
@@ -86,7 +87,7 @@ public:
 	bool isDead{false};
 
 	//
-  bool isSimulationMode{false};
+  bool isActionTriggered{false};
 
 public:
 
@@ -95,6 +96,8 @@ public:
 	~Character();
 
 	virtual void TriggerAction();
+
+  void BindDirectionIndicator(GameObject* directionIndicator);
 
   void BindInactiveIndicator(GameObject* inactiveIndicator);
   void BindActiveIndicator(GameObject* activeIndicator);

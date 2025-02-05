@@ -5,27 +5,54 @@
 MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
 {
   _backGroundImage = CreateUI<UIImage>(L"BackGoundIMG");
-  _backGroundImage->SetSprite("Textures\\TitleBackGround.png", {0, 0});
+  _backGroundImage->SetSprite("Textures\\TitleBackGround.png", {960, 540});
 
   _LogoImage = CreateUI<UIImage>(L"TitleIMG");
-  _LogoImage->SetSprite("Textures\\TitleLogo.png", {100, 200});
+  _LogoImage->SetSprite("Textures\\TitleLogo.png", {556, 362});
+
+  _startBtnImage = CreateUI<UIImage>(L"StartBtnImage");
+  _startBtnImage->SetSprite("Textures\\StartBtn.png", {573, 663});
+
+  _startBtnHoverImage = CreateUI<UIImage>(L"StartBtnHoverImage");
+  _startBtnHoverImage->SetSprite("Textures\\StartBtn_hover.png", {573, 663});
+  _startBtnHoverImage->SetStatus(EStatus::EStatus_Inactive);
 
   // Start Button
   _startBtn = CreateUI<UIButton>(L"StartButton");
-  _startBtn->SetPosition({270, 580});
-  _startBtn->AddOnHoveredHandler([this]() {
-    _startImage->SetSprite("Textures\\StartBtn_hover.png", {260, 580});
-  });
-  _startBtn->AddOnUnHoveredHandler(
-      [this]() { _startImage->SetStatus(EStatus::EStatus_Inactive); });
-  _startBtn->AddOnUnHoveredHandler(
-      [this]() { _backGroundImage->SetStatus(EStatus::EStatus_Inactive); });
-  _startBtn->AddOnUnHoveredHandler(
-      [this]() { _LogoImage->SetStatus(EStatus::EStatus_Inactive); });
+  _startBtn->SetSize(_startBtnImage->GetSize());
+  _startBtn->SetPosition({573, 663});
 
-  _startImage = CreateUI<UIImage>(L"StartBtnImage");
-  _startImage->SetSprite("Textures\\StartBtn.png", {270, 580});
-  _startBtn->SetSize(_startImage->GetSize());
+#ifdef _DEBUG
+  _startBtn->SetDebugDraw(true);
+#endif // _DEBUG
+
+  _startBtn->AddOnUnHoveredHandler([this]() {
+    if (_LogoImage->GetStatus() == EStatus::EStatus_Active)
+    {
+      _startBtnHoverImage->SetStatus(EStatus::EStatus_Inactive);
+      _startBtnImage->SetStatus(EStatus::EStatus_Active);
+    }
+  });
+  _startBtn->AddOnHoveredHandler([this]() {
+    if (_LogoImage->GetStatus() == EStatus::EStatus_Active)
+    {
+      _startBtnImage->SetStatus(EStatus::EStatus_Inactive);
+      _startBtnHoverImage->SetStatus(EStatus::EStatus_Active);
+    }
+  });
+
+  _startBtn->AddOnClickHandler([this]() {
+    _backGroundImage->SetStatus(EStatus::EStatus_Inactive);
+    _LogoImage->SetStatus(EStatus::EStatus_Inactive);
+    _startBtnImage->SetStatus(EStatus::EStatus_Inactive);
+    _startBtnHoverImage->SetStatus(EStatus::EStatus_Inactive);
+  });
+
+
+  //_startBtn->AddOnUnHoveredHandler(
+  //    [this]() { _backGroundImage->SetStatus(EStatus::EStatus_Inactive); });
+  //_startBtn->AddOnUnHoveredHandler(
+  //    [this]() { _LogoImage->SetStatus(EStatus::EStatus_Inactive); });
 }
 
 MainMenuUI::~MainMenuUI() {}

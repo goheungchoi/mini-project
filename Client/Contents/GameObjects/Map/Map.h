@@ -11,6 +11,9 @@ public:
 	// Resource handle
   ModelHandle animTestHandle;
 
+  ModelHandle allyDirectionIndicatorModelHandle;
+  ModelHandle enemyDirectionIndicatorModelHandle;
+
   TextureHandle brawlerInactiveIndicatorTextureHandle;
   TextureHandle brawlerActiveIndicatorTextureHandle;
   TextureHandle slasherInactiveIndicatorTextureHandle;
@@ -18,11 +21,11 @@ public:
   TextureHandle gunmanInactiveIndicatorTextureHandle;
   TextureHandle gunmanActiveIndicatorTextureHandle;
 
-	ModelHandle enemyModelHandle;
+	ModelHandle enemyGunmanModelHandle;
+
   ModelHandle playerModelHandle;
   ModelHandle civilianModelHandle;
 
-	ModelHandle enemyGunmanModelHandle;
 
 	ModelHandle allyBrawlerModelHandle;
   ModelHandle allySlasherModelHandle;
@@ -46,21 +49,21 @@ public:
 	bool isActionTriggered{false};
 
 
-	// Placement
+	// Placement mode
 	bool isPlacementModeOn{false};
   Character* placeholder{nullptr};
 
 
-	// Simulation
-  bool isSimulating{false};
-  Character* simulatingCharacter{nullptr};
+	// Selection mode
+  bool isAnySelected{false};
+  Character* selectedCharacter{nullptr};
 
 public:
 
 	Map(World* world);
   ~Map();
 
-	void TurnOnPlacementMode(CharactorType type);
+	void TurnOnPlacementMode(CharactorType type, Direction dir);
   void TurnOffPlacementMode();
 
 	void TurnOnSimulationMode();

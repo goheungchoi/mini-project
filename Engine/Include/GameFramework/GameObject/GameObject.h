@@ -272,6 +272,9 @@ public:
     return nullptr;
 	}
 
+  void SetVisible();
+  void SetInvisible();
+
 	// TODO:
   // GameObject* Clone();
 

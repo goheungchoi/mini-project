@@ -12,6 +12,7 @@ Asset/*
 
 # Resources
 Library/Resource/*
+Library/Sound/*
 
 # User-specific files
 *.rsuser

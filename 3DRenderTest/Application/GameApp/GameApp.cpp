@@ -69,8 +69,8 @@ void GameApp::Update(float dt)
 {
   _world->ProcessInput(dt);
   _world->PreUpdate(dt);
-  _world->AnimationUpdate(dt);
   _world->Update(dt);
+  _world->AnimationUpdate(dt);
   _world->PostUpdate(dt);
 }
 
