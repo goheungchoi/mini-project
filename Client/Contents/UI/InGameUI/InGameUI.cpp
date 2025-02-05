@@ -26,7 +26,7 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
 
   // CombatBtn
   _combatBtnImg = CreateUI<UIImage>(L"CombatBtnImg");
-  _combatBtnImg->SetSprite("Textures\\CombatUI_Test.png", {1600, 960});
+  _combatBtnImg->SetSprite("Textures\\Btn_Slot.png", {1600, 960});
 }
 
 InGameUI::~InGameUI() {}

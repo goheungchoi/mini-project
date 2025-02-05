@@ -26,7 +26,7 @@ void Level1::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite(
       "Textures\\SubMissonUI_Test.png");
   Resource2DManager::GetInstance()->LoadSprite("Textures\\SnipingUI_Test.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\CombatUI_Test.png");
+  Resource2DManager::GetInstance()->LoadSprite("Textures\\Btn_Slot.png");
 }
 
 void Level1::BeginLevel()
