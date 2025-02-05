@@ -129,13 +129,8 @@ void RigidbodyComponent::DisableSimulation()
 
 void RigidbodyComponent::UpdateFromTransform()
 {
-  if (!isKinematic)
-    _rigidbody->SetWorldTransform(GetTransformComponent()->GetTranslation(),
-                                GetTransformComponent()->GetQuaternion());
-  else
-    _rigidbody->SetWorldTransform(GetTransformComponent()->GetTranslation(),
-                                GetTransformComponent()->GetQuaternion());
-
+    _rigidbody->SetWorldTransform(GetTransformComponent()->GetGlobalTranslation(),
+        GetTransformComponent()->GetGlobalQuaternion());
 }
 
 void RigidbodyComponent::UpdateToTransform()

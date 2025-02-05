@@ -51,10 +51,10 @@ void PhyjixEventHandler::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 cou
     physx::PxTriggerPair& pair = pairs[i];
 
     if (pair.flags & (physx::PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER |
-                      physx::PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER))
+                      physx::PxTriggerPairFlag::eREMOVED_SHAPE_OTHER))
       continue;
 
-    RigidBody* actor0 =
+      RigidBody* actor0 =
         static_cast<RigidBody*>(pair.triggerActor->userData);
     RigidBody* actor1 =
         static_cast<RigidBody*>(pair.otherActor->userData);
