@@ -83,7 +83,7 @@ private:
   BOOL isKinematic = false;
   BOOL isStatic = false;
   TransformComponent* GetTransformComponent();
-  IRigidBody* _rigidbody = nullptr;
+  IRigidBody*   _rigidbody = nullptr;
   IPhyjixWorld* _world = nullptr;
   physx::PxTransform _prevTransform;
 
