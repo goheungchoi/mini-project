@@ -219,10 +219,30 @@ void Character::OnAwake()
                             DirectX::SimpleMath::Quaternion::Identity,
                             {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
                             false, true, world->_phyjixWorld);
+  bodyRigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
+    bodyRigidBody->debugColor = Color(0, 1, 1, 1);
+    std::cout << XMVectorGetX(transform->GetGlobalTranslation()) << " "
+         << XMVectorGetX(transform->GetGlobalTranslation()) << " "
+         << XMVectorGetX(transform->GetGlobalTranslation()) << " " << std::endl;
+
+  });
+  bodyRigidBody->EnableSimulation();
   bodyRigidBody->EnableDebugDraw();
 }
 
-void Character::Update(float dt) {
+void Character::Update(float dt)
+{
+  GetComponent<RigidbodyComponent>()->debugColor = Color(1, 0, 1, 1);
+
+
+  if (GetComponent<RigidbodyComponent>()->IsOverlapping())
+  {
+    
+  GetComponent<RigidbodyComponent>()->debugColor = Color(0, 1, 1, 1);
+  }
+
+
+  
 	if (isDead)
   {
 		// TODO: 

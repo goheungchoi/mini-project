@@ -13,4 +13,6 @@ private:
 
   class UIButton* _startBtn{nullptr};
   class UIImage* _startBtnImage{nullptr};
+  class UIImage* _startBtnHoverImage{nullptr};
+  class UIImage* _startBtnPressedImage{nullptr};
 };
