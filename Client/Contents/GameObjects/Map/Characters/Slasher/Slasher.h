@@ -39,10 +39,6 @@ public:
   ~Slasher();
 
 	// Interaction
-  virtual void OnBeginCursorOver() {};
-  virtual void OnEndCursorOver() {};
-  virtual void OnClicked() {};
-  virtual void OnPressed() {};
 
   // Game loop events
   void OnAwake() override;

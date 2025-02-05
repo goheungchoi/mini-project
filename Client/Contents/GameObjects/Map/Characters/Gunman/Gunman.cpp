@@ -75,19 +75,6 @@ Gunman::~Gunman() {
   UnloadModel(handgunModelHandle);
 }
 
-void Gunman::OnBeginCursorOver() {
-	// Spawn a clone.
-}
-void Gunman::OnEndCursorOver() {
-	// Remove a clone.
-	}
-void Gunman::OnClicked() {
-
-	}
-void Gunman::OnPressed() {
-
-	}
-
 void Gunman::OnAwake() {
   Super::OnAwake();
 
@@ -118,6 +105,8 @@ void Gunman::Update(float dt) {
     Bullet* bullet =
         world->CreateGameObjectFromModel<Bullet>(muzzleModelHandle);
     bullet->SetTranslation(muzzle->transform->GetGlobalTranslation());
+    bullet->transform->globalTransform =
+        muzzle->transform->GetGlobalTransform();
     bullet->SetDirection(-this->GetGlobalFront());
     bullet->SetScaling(10.f, 10.f, 10.f);
 

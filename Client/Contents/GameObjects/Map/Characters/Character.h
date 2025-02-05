@@ -11,7 +11,7 @@ enum Faction
 
 extern const std::string kFactionTags[3];
 
-enum CharactorType
+enum CharacterType
 {
   kBrawler = 0,
   kSlasher = 1,
@@ -68,7 +68,7 @@ public:
   bool bGridLocationChanged{false};
   uint32_t grid_w{0}, grid_h{0};
 
-  CharactorType type{};
+  CharacterType type{};
   int range{0};
   int health{1};
 
@@ -82,6 +82,7 @@ public:
   int distanceToTarget{-1};
 
 	class GridObject* grid{nullptr};
+  class Map* map{nullptr};
 
 	//
 	bool isDead{false};
@@ -108,12 +109,15 @@ public:
   Direction GetDirection();
 	void SetGridLocation(uint32_t w, uint32_t h);
   std::pair<uint32_t, uint32_t> GetGridLocation();
+  std::pair<int, int> GetGridFrontDirection();
+
+	// Action
+  void Die();
 
   // Interaction
-  virtual void OnBeginCursorOver() {};
-  virtual void OnEndCursorOver() {};
-  virtual void OnClicked() {};
-  virtual void OnPressed() {};
+  void OnHover();
+  virtual void OnLeftClick() {};
+  virtual void OnRightClick() {};
 
 	void OnBeginOverlap(GameObject* other);
 
