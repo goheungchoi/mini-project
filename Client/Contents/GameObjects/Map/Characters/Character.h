@@ -87,7 +87,7 @@ public:
 	bool isDead{false};
 
 	//
-  bool isSimulationMode{false};
+  bool isActionTriggered{false};
 
 public:
 

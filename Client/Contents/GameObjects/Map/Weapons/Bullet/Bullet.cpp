@@ -9,17 +9,15 @@ Bullet::Bullet(World* world) : GameObject(world)
 
   // Create a hand gun game object.
   auto* rigidBody = CreateComponent<RigidbodyComponent>();
-  rigidBody->Initialize({0, 0, 0}, Quaternion::Identity, {1.f, 1.f, 1.f},
+  rigidBody->Initialize({0, 0, 0}, Quaternion::Identity, {.1f, .1f, .1f},
                             ColliderShape::eCubeCollider, false, false,
                             world->_phyjixWorld);
-  // rigidBody->EnableDebugDraw();
+  rigidBody->EnableDebugDraw();
 }
 
 void Bullet::SetDirection(XMVECTOR direction) {
   this->direction = direction;
 }
-
-// TODO: OnHit event -> destroy.
 
 void Bullet::Update(float dt) {
   lifetime -= dt;

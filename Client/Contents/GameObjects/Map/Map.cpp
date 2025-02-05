@@ -131,7 +131,7 @@ Map::~Map()
   UnloadModel(enemyGunmanModelHandle);
 }
 
-void Map::TurnOnPlacementMode(CharactorType type)
+void Map::TurnOnPlacementMode(CharactorType type, Direction dir)
 {
   if (isPlacementModeOn)
   {
@@ -148,7 +148,7 @@ void Map::TurnOnPlacementMode(CharactorType type)
     Brawler* brawler =
         world->CreateGameObjectFromModel<Brawler>(allyBrawlerModelHandle);
     brawler->SetFaction(kAlly);
-    brawler->SetDirection(kNorth);
+    brawler->SetDirection(dir);
     placeholder = brawler;
   }
   break;
@@ -156,7 +156,7 @@ void Map::TurnOnPlacementMode(CharactorType type)
     Slasher* slasher =
         world->CreateGameObjectFromModel<Slasher>(allySlasherModelHandle);
     slasher->SetFaction(kAlly);
-    slasher->SetDirection(kNorth);
+    slasher->SetDirection(dir);
     placeholder = slasher;
   }
   break;
@@ -164,7 +164,7 @@ void Map::TurnOnPlacementMode(CharactorType type)
     Gunman* gunman =
         world->CreateGameObjectFromModel<Gunman>(allyGunmanModelHandle);
     gunman->SetFaction(kAlly);
-    gunman->SetDirection(kNorth);
+    gunman->SetDirection(dir);
     placeholder = gunman;
   }
   break;
@@ -530,46 +530,62 @@ void Map::Update(float dt) {
 			}
 		}
 	}
+  // Selection mode
   else
   {
+    if (INPUT.IsKeyPress(Key::Escape))
+    {
+      // TODO: if any selected, cancel the selection.
+
+      return;
+    }
+
+    if (INPUT.IsKeyDown(MouseState::RB))
+    {
+      // Remove the character
+      return;
+    }
+
     if (INPUT.IsKeyDown(MouseState::LB))
     {
       // TODO: Character selection -> Placement mode.
-      //if (grid->selectedCell)
-      //{
-      //  // Detect which grid cell is pointed.
-      //  auto [w, h] = grid->selectedCell->GetCellPosition();
+      // Find if any "ally character" is selected.
+      if (isAnySelected && selectedCharacter)
+      {
+        // Check the type of the character.
 
-      //  // Create a character at the cell
-      //  CreateAllyAt(placeholder->type, w, h, placeholder->dir);
+        // Check the direction of the character.
 
-      //  // Turn off the placement mode
-      //  TurnOffPlacementMode();
-      //}
-      return;
-    }
+        // Remove the selected character from the grid.
 
-    if (INPUT.IsKeyPress(Key::D1))
-    {
-      TurnOnPlacementMode(kBrawler);
-      return;
-    }
+        // Destroy the selected character.
 
-    if (INPUT.IsKeyPress(Key::D2))
-    {
-      TurnOnPlacementMode(kSlasher);
-      return;
-    }
-
-    if (INPUT.IsKeyPress(Key::D3))
-    {
-      TurnOnPlacementMode(kGunman);
+        // Turn on the placement mode.
+      }
       return;
     }
 
     if (INPUT.IsKeyPress(Key::Space))
     {
       TriggerAction();
+      return;
+    }
+
+    if (INPUT.IsKeyPress(Key::D1))
+    {
+      TurnOnPlacementMode(kBrawler, kNorth);
+      return;
+    }
+
+    if (INPUT.IsKeyPress(Key::D2))
+    {
+      TurnOnPlacementMode(kSlasher, kNorth);
+      return;
+    }
+
+    if (INPUT.IsKeyPress(Key::D3))
+    {
+      TurnOnPlacementMode(kGunman, kNorth);
       return;
     }
   }

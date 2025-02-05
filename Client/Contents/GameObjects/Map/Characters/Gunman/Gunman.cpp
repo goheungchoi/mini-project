@@ -18,14 +18,14 @@ Gunman::Gunman(World* world) : Character(world) {
   handgunModelHandle = LoadModel("Models\\Pistol\\Pistol.glb");
 	handgun = world->CreateGameObjectFromModel(handgunModelHandle);
 
+  // Create a muzzle game object.
 	muzzleModelHandle = LoadModel("Models\\Bullet\\Bullet.glb");
 	muzzle = world->CreateGameObjectFromModel<GameObject>(muzzleModelHandle);
+  muzzle->SetTranslation(0.f, .01f, -.2f);
+  muzzle->SetInvisible();
 
 	handgun->AddChildGameObject(muzzle);
   
-	// Create a muzzle game object.
-
-
 	// Create animation states
   dead = new Animation(deadAnimation, false);
   deadState = new DeadState(dead);

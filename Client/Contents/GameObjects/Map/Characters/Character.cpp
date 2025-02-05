@@ -60,6 +60,7 @@ Character::~Character() {
 
 void Character::TriggerAction()
 {
+  isActionTriggered = true;
   if (isTargetInRange)
 		animator->SetVariable<bool>("triggered", true, true);
 }
@@ -140,16 +141,21 @@ std::pair<uint32_t, uint32_t> Character::GetGridLocation()
 //}
 
 void Character::OnBeginOverlap(GameObject* other) {
-  if (other->GetGameObjectTag() == "weapon")
-  {
-    health -= 1;
-	}
+  GameObject::OnBeginOverlap(other);
 
-	if (health <= 0)
+  if (!isDead)
   {
-    animator->SetVariable<bool>("dead", true, true);
-    isDead = true;
-	}
+    if (other->GetGameObjectTag() == "weapon")
+    {
+      health -= 1;
+	  }
+
+	  if (health <= 0)
+    {
+      animator->SetVariable<bool>("dead", true, true);
+      isDead = true;
+	  }
+  }
 }
 
 void Character::OnAwake()
@@ -170,24 +176,12 @@ void Character::OnAwake()
     ApplyChangedDirection();
   }
 
-	//auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
- // bodyRigidBody->Initialize({0, 1.0f, 0}, Quaternion::Identity,
- //                           {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
- //                           false, false, world->_phyjixWorld);
-
- // // bodyRigidBody->EnableGravity();
- // // bodyRigidBody->DisableGravity();
- // // bodyRigidBody->DisableCollision();
- // // bodyRigidBody->EnableDebugDraw();
- // bodyRigidBody->ClearForce();
- // bodyRigidBody->ClearTorque();
- // //  bodyRigidBody->DisableSimulation();
- // // bodyRigidBody->DisableDebugDraw();
- // bodyRigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eLClick,
- //                                  [=]() {
- //                                    bodyRigidBody->EnableDebugDraw();
- //                                    bodyRigidBody->ClearForce();
- //                                  });
+	auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
+  bodyRigidBody->Initialize({0, 1.0f, 0},
+                            DirectX::SimpleMath::Quaternion::Identity,
+                            {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
+                            false, true, world->_phyjixWorld);
+  bodyRigidBody->EnableDebugDraw();
 }
 
 void Character::Update(float dt) {
@@ -196,6 +190,16 @@ void Character::Update(float dt) {
 		// TODO: 
 		return;
 	}
+
+  if (isActionTriggered)
+  {
+    if (inactiveIndicator && activeIndicator)
+    {
+      inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+      activeIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+    }
+    return;
+  }
 	
 	if (bGridLocationChanged)
   {
@@ -229,6 +233,11 @@ void Character::Update(float dt) {
 }
 
 void Character::PostUpdate(float dt) {
+
+  if (isActionTriggered)
+  {
+    return;
+  }
 
   if (inactiveIndicator && activeIndicator)
   {
