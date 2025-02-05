@@ -52,6 +52,9 @@ void RigidbodyComponent::SetOffsetTransform(const DirectX::SimpleMath::Vector3& 
 
 RigidbodyComponent::~RigidbodyComponent() {
   UnregisterRigidBodyFromWorld();
+
+  _world->RemoveRigidBody(_rigidbody);
+
   delete _rigidbody;
   _rigidbody = nullptr;
   _world = nullptr;
@@ -129,13 +132,8 @@ void RigidbodyComponent::DisableSimulation()
 
 void RigidbodyComponent::UpdateFromTransform()
 {
-  if (!isKinematic)
-    _rigidbody->SetWorldTransform(GetTransformComponent()->GetTranslation(),
-                                GetTransformComponent()->GetQuaternion());
-  else
-    _rigidbody->SetWorldTransform(GetTransformComponent()->GetTranslation(),
-                                GetTransformComponent()->GetQuaternion());
-
+    _rigidbody->SetWorldTransform(GetTransformComponent()->GetGlobalTranslation(),
+        GetTransformComponent()->GetGlobalQuaternion());
 }
 
 void RigidbodyComponent::UpdateToTransform()

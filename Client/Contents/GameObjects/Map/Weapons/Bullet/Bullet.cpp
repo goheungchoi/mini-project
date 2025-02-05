@@ -8,21 +8,35 @@ Bullet::Bullet(World* world) : GameObject(world)
   SetGameObjectTag("weapon");
 }
 
+void Bullet::OnAwake()
+{
+  GameObject::OnAwake();
+
+	auto* rigidBody = CreateComponent<RigidbodyComponent>();
+  auto v = transform->GetGlobalTranslation();
+
+  rigidBody->Initialize({0, 0, 0}, Quaternion::Identity, {.1f, .1f, .1f},
+                        ColliderShape::eCubeCollider, false, true,
+                       GetWorld()->_phyjixWorld);
+  rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
+    rigidBody->debugColor = Color(0, 1, 1, 1);
+  });
+  rigidBody->EnableDebugDraw();
+  rigidBody->EnableSimulation();
+}
+
 void Bullet::SetDirection(XMVECTOR direction) {
   this->direction = direction;
 }
 
-void Bullet::OnAwake() {
-  // Create a collider
-  auto* rigidBody = CreateComponent<RigidbodyComponent>();
-  rigidBody->Initialize({0, 0, 0}, Quaternion::Identity, {.1f, .1f, .1f},
-                        ColliderShape::eCubeCollider, false, false,
-                        world->_phyjixWorld);
-  rigidBody->EnableDebugDraw();
-}
+void Bullet::Update(float dt) {
+  
+  GetComponent<RigidbodyComponent>()->debugColor = Color(1, 0, 1, 1);
+  if (GetComponent<RigidbodyComponent>()->IsOverlapping())
+  {
+    GetComponent<RigidbodyComponent>()->debugColor = Color(0, 1, 1, 1);
+  }
 
-void Bullet::Update(float dt)
-{
   lifetime -= dt;
   if (lifetime <= 0)
   {

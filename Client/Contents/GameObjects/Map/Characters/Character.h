@@ -90,6 +90,11 @@ public:
 	//
   bool isActionTriggered{false};
 
+
+  // isPlacement mode on
+  bool isPlacementModeOn{false};
+
+
 public:
 
   Character(World* world);
@@ -110,6 +115,8 @@ public:
 	void SetGridLocation(uint32_t w, uint32_t h);
   std::pair<uint32_t, uint32_t> GetGridLocation();
   std::pair<int, int> GetGridFrontDirection();
+
+  void SetPlacementMode(bool placementMode);
 
 	// Action
   void Die();

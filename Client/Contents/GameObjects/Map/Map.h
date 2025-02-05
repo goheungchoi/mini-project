@@ -21,19 +21,14 @@ public:
   TextureHandle gunmanInactiveIndicatorTextureHandle;
   TextureHandle gunmanActiveIndicatorTextureHandle;
 
-	ModelHandle enemyGunmanModelHandle;
+	ModelHandle enemyBrawlerModelHandle;
+  ModelHandle enemyGunmanModelHandle;
 
-  ModelHandle playerModelHandle;
   ModelHandle civilianModelHandle;
-
 
 	ModelHandle allyBrawlerModelHandle;
   ModelHandle allySlasherModelHandle;
   ModelHandle allyGunmanModelHandle;
-
-	ModelHandle clonedAllyBrawlerModelHandle;
-	ModelHandle clonedAllySlasherModelHandle;
-	ModelHandle clonedAllyGunmanModelHandle;
 
 public:
 
@@ -95,6 +90,8 @@ public:
   void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth);
 
   void CreateObstacleAt(uint32_t w, uint32_t h);
+
+  void DeleteCharacterFromMap(Character* character);
 
 	void OnAwake() override;
 

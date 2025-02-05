@@ -19,9 +19,18 @@ Map::Map(World* world) : GameObject(world)
 
 	// The base models.
 	// enemyModelHandle = LoadModel("Models\\Character\\Enemy\\Enemy.glb");
+  enemyBrawlerModelHandle =
+      LoadModel("Models\\Character\\Enemy\\Enemy_Punch\\Enemy_Punch.glb");
   enemyGunmanModelHandle =
       LoadModel("Models\\Character\\Enemy\\EnemyGunman\\EnemyGunman.glb");
-	playerModelHandle = LoadModel("Models\\Character\\Player\\Player.glb");
+
+  allyBrawlerModelHandle =
+      LoadModel("Models\\Character\\Player\\Player_Punch\\Player_Punch.glb");
+  allySlasherModelHandle =
+      LoadModel("Models\\Character\\Player\\Player_Knife\\Player_Knife.glb");
+  allyGunmanModelHandle =
+      LoadModel("Models\\Character\\Player\\Player_Gun\\Player_Gun.glb");
+
   civilianModelHandle = LoadModel("Models\\Civilian\\Eliza.glb");
 
   allyDirectionIndicatorModelHandle = LoadModel(
@@ -53,7 +62,7 @@ Map::Map(World* world) : GameObject(world)
 	Character::enemyModelData = &AccessModelData(enemyGunmanModelHandle);
   Character::enemySkeletonHandle = Character::enemyModelData->skeleton;
 
-  Character::playerModelData = &AccessModelData(playerModelHandle);
+  Character::playerModelData = &AccessModelData(allyBrawlerModelHandle);
   Character::playerSkeletonHandle = Character::playerModelData->skeleton;
 
   // Civilian resources
@@ -68,56 +77,22 @@ Map::Map(World* world) : GameObject(world)
   // Animations
   auto animIt = Character::playerModelData->animations.begin();
 
-  Character::deadAnimation = *std::next(animIt, 1);
+  Character::deadAnimation = *std::next(animIt, 2);
   Character::idleAnimation = *std::next(animIt, 6);
 
-  Character::brawlerActionAnimation = *std::next(animIt, 7);
+  Character::brawlerActionAnimation = *std::next(animIt, 8);
 
-  Character::slashReadyAnimation = *std::next(animIt, 0);
+  Character::slashReadyAnimation = *std::next(animIt, 1);
   Character::slashActionAnimation = *std::next(animIt, 5);
 
   Character::gunReady1Animation = *std::next(animIt, 3);
   Character::gunReady2Animation = *std::next(animIt, 4);
-  Character::gunFireAnimation = *std::next(animIt, 2);
+  Character::gunFireAnimation = *std::next(animIt, 0);
 
   ModelData& enemyModel = AccessModelData(enemyGunmanModelHandle);
 
   // Get the player model data.
-  ModelData& playerModel = AccessModelData(playerModelHandle);
-
-  // Apply different materials to the models.
-  allyBrawlerModelHandle = CloneModel(playerModelHandle);
-  allySlasherModelHandle = CloneModel(playerModelHandle);
-  allyGunmanModelHandle = CloneModel(playerModelHandle);
-
-  // Clone version of the model, transparent.
-  clonedAllyBrawlerModelHandle = CloneModel(allyBrawlerModelHandle);
-  clonedAllySlasherModelHandle = CloneModel(allySlasherModelHandle);
-  clonedAllyGunmanModelHandle = CloneModel(allyGunmanModelHandle);
-
-  ModelData& clonedAllyBrawlerModelData =
-      AccessModelData(clonedAllyBrawlerModelHandle);
-  for (auto matHandle : clonedAllyBrawlerModelData.materials)
-  {
-    MaterialData& matData = AccessMaterialData(matHandle);
-    matData.alphaMode = AlphaMode::kBlend;
-  }
-
-  ModelData& clonedAllySlasherModelData =
-      AccessModelData(clonedAllySlasherModelHandle);
-  for (auto matHandle : clonedAllySlasherModelData.materials)
-  {
-    MaterialData& matData = AccessMaterialData(matHandle);
-    matData.alphaMode = AlphaMode::kBlend;
-  }
-
-  ModelData& clonedAllyGunmanModelData =
-      AccessModelData(clonedAllyGunmanModelHandle);
-  for (auto matHandle : clonedAllyGunmanModelData.materials)
-  {
-    MaterialData& matData = AccessMaterialData(matHandle);
-    matData.alphaMode = AlphaMode::kBlend;
-  }
+  ModelData& playerModel = AccessModelData(allyBrawlerModelHandle);
 
   // Create a grid.
   grid = world->CreateGameObject<GridObject>();
@@ -129,7 +104,7 @@ Map::Map(World* world) : GameObject(world)
 Map::~Map()
 {
 
-  UnloadModel(playerModelHandle);
+  UnloadModel(allyBrawlerModelHandle);
   UnloadModel(enemyGunmanModelHandle);
 }
 
@@ -151,6 +126,7 @@ void Map::TurnOnPlacementMode(CharacterType type, Direction dir)
         world->CreateGameObjectFromModel<Brawler>(allyBrawlerModelHandle);
     brawler->SetFaction(kAlly);
     brawler->SetDirection(dir);
+    brawler->SetPlacementMode(true);
     placeholder = brawler;
   }
   break;
@@ -159,6 +135,7 @@ void Map::TurnOnPlacementMode(CharacterType type, Direction dir)
         world->CreateGameObjectFromModel<Slasher>(allySlasherModelHandle);
     slasher->SetFaction(kAlly);
     slasher->SetDirection(dir);
+    slasher->SetPlacementMode(true);
     placeholder = slasher;
   }
   break;
@@ -167,6 +144,7 @@ void Map::TurnOnPlacementMode(CharacterType type, Direction dir)
         world->CreateGameObjectFromModel<Gunman>(allyGunmanModelHandle);
     gunman->SetFaction(kAlly);
     gunman->SetDirection(dir);
+    gunman->SetPlacementMode(true);
     placeholder = gunman;
   }
   break;
@@ -294,16 +272,19 @@ void Map::ResetGame()
 
 	for (Character* enemy : enemies)
   {
+    DeleteCharacterFromMap(enemy);
     enemy->Destroy();
   }
 
   for (Character* ally : allies)
   {
+    DeleteCharacterFromMap(ally);
     ally->Destroy();
   }
 
   for (Character* civilian : civilians)
   {
+    DeleteCharacterFromMap(civilian);
     civilian->Destroy();
   }
 
@@ -337,6 +318,7 @@ void Map::ResetGame()
     break;
     }
 	}
+  record.clear();
 }
 
 void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
@@ -346,7 +328,7 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
   {
   case kBrawler: {
     Brawler* brawler =
-        world->CreateGameObjectFromModel<Brawler>(enemyGunmanModelHandle);
+        world->CreateGameObjectFromModel<Brawler>(enemyBrawlerModelHandle);
 
     // Bind a direction indicator.
     auto* directionIndicator =
@@ -577,7 +559,32 @@ void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
   civilians.push_back(civilian);
 }
 
-void Map::CreateObstacleAt(uint32_t w, uint32_t h) {}
+void Map::CreateObstacleAt(uint32_t w, uint32_t h) {
+  // TODO:
+}
+
+void Map::DeleteCharacterFromMap(Character* character)
+{
+  grid->RemoveGameObject(character);
+  switch (character->faction)
+  {
+  case Faction::kAlly: {
+    auto it = std::remove(allies.begin(), allies.end(), character);
+    allies.erase(it, allies.end());
+  }
+  break;
+  case Faction::kEnemy: {
+    auto it = std::remove(enemies.begin(), enemies.end(), character);
+    enemies.erase(it, enemies.end());
+  }
+  break;
+  case Faction::kNeutral: {
+    auto it = std::remove(civilians.begin(), civilians.end(), character);
+    civilians.erase(it, civilians.end());
+  }
+  break;
+  }
+}
 
 void Map::OnAwake() {
   // Translate({-4.f, 0.f, -4.f});
@@ -659,6 +666,7 @@ void Map::Update(float dt) {
         // Remove the character
         if (hoveredCharacter->faction == Faction::kAlly)
         {
+          DeleteCharacterFromMap(hoveredCharacter);
           hoveredCharacter->Destroy();
         } 
 				else if (hoveredCharacter->faction == Faction::kEnemy)
@@ -686,7 +694,7 @@ void Map::Update(float dt) {
           Direction dir = hoveredCharacter->dir;
 
           // Remove the selected character from the grid.
-          grid->RemoveGameObject(hoveredCharacter);
+          DeleteCharacterFromMap(hoveredCharacter);
 
           // Destroy the selected character.
           hoveredCharacter->Destroy();

@@ -30,6 +30,7 @@ AnimationHandle Character::idleAnimation;
 
 AnimationHandle Character::brawlerActionAnimation;
 
+// TODO: Slash action 2;
 AnimationHandle Character::slashReadyAnimation;
 AnimationHandle Character::slashActionAnimation;
 
@@ -150,28 +151,23 @@ std::pair<int, int> Character::GetGridFrontDirection()
 	return {w_offset, h_offset};
 }
 
+void Character::SetPlacementMode(bool isPlacementMode) {
+  isPlacementModeOn = isPlacementMode;
+}
+
 void Character::Die() {
   animator->SetVariable<bool>("dead", true, true);
   isDead = true;
 }
 
 void Character::OnHover() {
+  if (auto* rbComp = GetComponent<RigidbodyComponent>(); rbComp)
+  {
+    rbComp->debugColor = Color(0, 1, 1, 1);
+  }
+
   map->hoveredCharacter = this;
 }
-
-// TODO:
-// void Character::OnHit(GameObject* object) {
-//	if (object == "bullet")
-//	{
-//    health -= 1;
-//	}
-//
-//	if (health <= 0)
-//  {
-//    animator->SetVariable<bool>("dead", true, true);
-//		isDead = true;
-//	}
-//}
 
 void Character::OnBeginOverlap(GameObject* other) {
   GameObject::OnBeginOverlap(other);
@@ -214,15 +210,29 @@ void Character::OnAwake()
     ApplyChangedDirection();
   }
 
-	auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
-  bodyRigidBody->Initialize({0, 1.0f, 0},
-                            DirectX::SimpleMath::Quaternion::Identity,
-                            {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
-                            false, true, world->_phyjixWorld);
-  bodyRigidBody->EnableDebugDraw();
+  if (!isPlacementModeOn)
+  {
+	  auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
+    bodyRigidBody->Initialize({0, 1.0f, 0},
+                              DirectX::SimpleMath::Quaternion::Identity,
+                              {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
+                              false, true, world->_phyjixWorld);
+    bodyRigidBody->EnableSimulation();
+    bodyRigidBody->EnableDebugDraw();
+  }
 }
 
-void Character::Update(float dt) {
+void Character::Update(float dt)
+{
+  if (auto* rbComp = GetComponent<RigidbodyComponent>(); rbComp)
+  {
+    rbComp->debugColor = Color(1, 0, 1, 1);
+    if (rbComp->IsOverlapping())
+    {
+      rbComp->debugColor = Color(0, 1, 1, 1);
+    }
+  }
+  
 	if (isDead)
   {
 		// TODO: 

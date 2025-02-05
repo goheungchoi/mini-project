@@ -350,6 +350,8 @@ void World::RegisterRigidBodyComponent(RigidbodyComponent* rigidBody)
 
 void World::UnregisterRigidBodyComponent(RigidbodyComponent* rigidBody)
 {
+  _phyjixWorld->RemoveRigidBody(rigidBody->GetRigidBody());
+
   auto it = std::remove(rigidBodyComponents.begin(), rigidBodyComponents.end(),
                         rigidBody);
   rigidBodyComponents.erase(it, rigidBodyComponents.end());

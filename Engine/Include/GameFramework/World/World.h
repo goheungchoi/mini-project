@@ -27,7 +27,6 @@ public:
 
 	std::vector<class RigidbodyComponent*> rigidBodyComponents;
 
-
   class Camera* _defaultCamera{nullptr};
 
   World() = default;

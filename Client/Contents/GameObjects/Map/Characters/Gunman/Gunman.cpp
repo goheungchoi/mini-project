@@ -102,6 +102,7 @@ void Gunman::Update(float dt) {
 
 	if (animator->GetVariable<bool>("fire") && fire->GetCurrentAnimationTime() >= 0.65f)
   {
+
     Bullet* bullet =
         world->CreateGameObjectFromModel<Bullet>(muzzleModelHandle);
     bullet->SetTranslation(muzzle->transform->GetGlobalTranslation());
@@ -109,6 +110,7 @@ void Gunman::Update(float dt) {
         muzzle->transform->GetGlobalTransform();
     bullet->SetDirection(-this->GetGlobalFront());
     bullet->SetScaling(10.f, 10.f, 10.f);
+
 
 		animator->SetVariable<bool>("fire", false);
 	}
