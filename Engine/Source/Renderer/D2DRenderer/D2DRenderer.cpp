@@ -186,6 +186,7 @@ void D2DRenderer::CreateSprite(LPCSTR path, Vector2 pos)
 }
 
 void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
+                            float opacity,
                             const TextFormatInfo& textFormatInfo)
 {
   _d2dRenderQueue.AddRender2DCmd([=]() {
@@ -214,7 +215,7 @@ void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
     D2D1_COLOR_F clr = D2D1::ColorF(color.x, color.y, color.z, color.w);
 
     _pBrush->SetColor(clr);
-    _pBrush->SetOpacity(1.0f);
+    _pBrush->SetOpacity(opacity);
 
     _pD2D1DeviceContext->DrawText(format, lstrlen(format) + 1, textFormat, rec,
                                   _pBrush);

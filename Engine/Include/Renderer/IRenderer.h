@@ -130,6 +130,7 @@ public:
   virtual void CreateSprite(LPCSTR path, Vector2 pos) = 0;
 
   virtual void DrawTexts(const wchar_t* format, Vector4 rect, Color color,
+                         float opacity,
                          const TextFormatInfo& textFormatInfo) = 0;
 
   virtual void DrawRectangle(Color color, Vector4 rect, float stroke = 1.0f,

@@ -1,27 +1,58 @@
 #include "GameFramework/UI/UIText/UIText.h"
 #include "Renderer/D2DRenderer/Font/Font.h"
 
-UIText::UIText(World* world) : UIElement(world) {}
+UIText::UIText(World* world) : UIElement(world)
+{
+  _textFormatInfo._fontName = L"±Ã¼­";
+  _textFormatInfo._fontSize = 30.0f;
+  _textFormatInfo._fontWeight = FontWeight::BOLD;
+  _textFormatInfo._fontStyle = FontStyle::NORMAL;
+  _textFormatInfo._fontStretch = FontStretch::NORMAL;
+  _textFormatInfo._textAlignment = TextAlignment::CENTERAlIGN;
+  _textFormatInfo._paragraphAlignment = ParagraphAlignment::MIDALIGN;
+
+  _color = Color(0, 0, 0, 1);
+  _opacity = 1.0f;
+  _size = Vector2(400, 200);
+}
 
 UIText::~UIText() {}
 
 void UIText::Render()
 {
-  _world->_renderer->DrawTexts(_text->_format.c_str(), _text->_rect,
-                               _text->_color, _text->_fontName);
+  _rect = {_position.x, _position.y, _position.x + _size.x,
+           _position.y + _size.y};
+
+  _world->_renderer->DrawTexts(_format, _rect, _color, _opacity,
+                               _textFormatInfo);
+
+  if (bDebugDrawFlag)
+  {
+    _world->_renderer->DrawRectangle(Color(1, 0, 0, 1), _rect);
+  }
 }
 
 void UIText::SetText(const wchar_t* format)
 {
-  _text->_format = format;
+  _format = format;
 }
 
 void UIText::SetFont(const std::wstring& fontName)
 {
-  _text->_fontName = fontName;
+  _textFormatInfo._fontName = fontName;
 }
 
 void UIText::SetColor(Color color)
 {
-  _text->_color = color;
+  _color = color;
+}
+
+void UIText::SetOpacity(float opacity)
+{
+  _opacity = opacity;
+}
+
+void UIText::SetDebugDraw(bool debugFlag)
+{
+  bDebugDrawFlag = debugFlag;
 }

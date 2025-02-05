@@ -61,7 +61,7 @@ public:
   // D2D Renderer
   void CreateSprite(LPCSTR path, Vector2 pos) override;
   void DrawTexts(const wchar_t* format, Vector4 rect, Color color,
-                 const TextFormatInfo& textFormatInfo) override;
+                 float opacity, const TextFormatInfo& textFormatInfo) override;
 
   void DrawRectangle(Color color, Vector4 rect, float stroke = 1.0f,
                      float opacity = 1.0f) override;

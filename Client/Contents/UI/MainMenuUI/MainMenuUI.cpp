@@ -24,7 +24,7 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   // Start Button
   _startBtn = CreateUI<UIButton>(L"StartButton");
   _startBtn->SetSize(_startBtnImage->GetSize());
-  _startBtn->SetPosition({573, 663});
+  _startBtn->SetCenterPos({573, 663});
 
 #ifdef _DEBUG
   _startBtn->SetDebugDraw(true);

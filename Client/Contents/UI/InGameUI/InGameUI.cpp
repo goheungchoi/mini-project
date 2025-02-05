@@ -8,6 +8,13 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   // MainMisson
   _mainMissonImg = CreateUI<UIImage>(L"MainMissonImg");
   _mainMissonImg->SetSprite("Textures\\MainMissonUI_Test.png", {338, 100});
+  _mainMissonTxt = CreateUI<UIText>(L"MainMissonTxt");
+  _mainMissonTxt->SetCenterPos({200, 100});
+  _mainMissonTxt->SetText(L"¹Ì¼ÇTxt1234");
+  _mainMissonTxt->SetOpacity(0.5f);
+#ifdef _DEBUG
+  _mainMissonTxt->SetDebugDraw(true);
+#endif // _DEBUG
 
   // SubMisson
   _subMissonImg = CreateUI<UIImage>(L"MainMissonImg");
