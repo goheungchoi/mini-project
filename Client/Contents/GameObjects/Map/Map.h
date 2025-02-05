@@ -96,6 +96,8 @@ public:
 
   void CreateObstacleAt(uint32_t w, uint32_t h);
 
+  void DeleteCharacterFromMap(Character* character);
+
 	void OnAwake() override;
 
 	void Update(float dt) override;

@@ -151,6 +151,7 @@ void Map::TurnOnPlacementMode(CharacterType type, Direction dir)
         world->CreateGameObjectFromModel<Brawler>(allyBrawlerModelHandle);
     brawler->SetFaction(kAlly);
     brawler->SetDirection(dir);
+    brawler->SetPlacementMode(true);
     placeholder = brawler;
   }
   break;
@@ -159,6 +160,7 @@ void Map::TurnOnPlacementMode(CharacterType type, Direction dir)
         world->CreateGameObjectFromModel<Slasher>(allySlasherModelHandle);
     slasher->SetFaction(kAlly);
     slasher->SetDirection(dir);
+    slasher->SetPlacementMode(true);
     placeholder = slasher;
   }
   break;
@@ -167,6 +169,7 @@ void Map::TurnOnPlacementMode(CharacterType type, Direction dir)
         world->CreateGameObjectFromModel<Gunman>(allyGunmanModelHandle);
     gunman->SetFaction(kAlly);
     gunman->SetDirection(dir);
+    gunman->SetPlacementMode(true);
     placeholder = gunman;
   }
   break;
@@ -294,16 +297,19 @@ void Map::ResetGame()
 
 	for (Character* enemy : enemies)
   {
+    DeleteCharacterFromMap(enemy);
     enemy->Destroy();
   }
 
   for (Character* ally : allies)
   {
+    DeleteCharacterFromMap(ally);
     ally->Destroy();
   }
 
   for (Character* civilian : civilians)
   {
+    DeleteCharacterFromMap(civilian);
     civilian->Destroy();
   }
 
@@ -337,6 +343,7 @@ void Map::ResetGame()
     break;
     }
 	}
+  record.clear();
 }
 
 void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
@@ -577,7 +584,32 @@ void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
   civilians.push_back(civilian);
 }
 
-void Map::CreateObstacleAt(uint32_t w, uint32_t h) {}
+void Map::CreateObstacleAt(uint32_t w, uint32_t h) {
+  // TODO:
+}
+
+void Map::DeleteCharacterFromMap(Character* character)
+{
+  grid->RemoveGameObject(character);
+  switch (character->faction)
+  {
+  case Faction::kAlly: {
+    auto it = std::remove(allies.begin(), allies.end(), character);
+    allies.erase(it, allies.end());
+  }
+  break;
+  case Faction::kEnemy: {
+    auto it = std::remove(enemies.begin(), enemies.end(), character);
+    enemies.erase(it, enemies.end());
+  }
+  break;
+  case Faction::kNeutral: {
+    auto it = std::remove(civilians.begin(), civilians.end(), character);
+    civilians.erase(it, civilians.end());
+  }
+  break;
+  }
+}
 
 void Map::OnAwake() {
   // Translate({-4.f, 0.f, -4.f});
@@ -659,6 +691,7 @@ void Map::Update(float dt) {
         // Remove the character
         if (hoveredCharacter->faction == Faction::kAlly)
         {
+          DeleteCharacterFromMap(hoveredCharacter);
           hoveredCharacter->Destroy();
         } 
 				else if (hoveredCharacter->faction == Faction::kEnemy)
@@ -686,7 +719,7 @@ void Map::Update(float dt) {
           Direction dir = hoveredCharacter->dir;
 
           // Remove the selected character from the grid.
-          grid->RemoveGameObject(hoveredCharacter);
+          DeleteCharacterFromMap(hoveredCharacter);
 
           // Destroy the selected character.
           hoveredCharacter->Destroy();
