@@ -1,90 +1,152 @@
-#include "SoundManager.h"
-#include "ResourceManager.h"
-//#include <atlconv.h>
+#include "SoundSystem/SoundManager.h"
 
-FMOD::System*	SoundManager::system{};
-FMOD::Channel*	SoundManager::channel[SoundChnalList] = {};
-float			SoundManager::volume[SoundChnalList] = {};
-int				SoundManager::curIndex = 0;
+#include "Shared/Config/Config.h"
+#include "Core/Utils/IOUtils.h"
 
-SoundManager::~SoundManager()
+#include "fmod/fmod.hpp"
+#include "fmod/fmod_errors.h"  // Include FMOD error strings
+#pragma comment(lib, "fmod_vc.lib")
+using namespace FMOD;
+
+static constexpr int kNumSoundChannels = 32;
+
+static FMOD::System* fmodSystem = []() {
+  FMOD::System* _system{nullptr};
+  FMOD::System_Create(&_system);
+  if (!_system)
+  {
+    throw std::runtime_error("Can't create fmod system!");
+  }
+  FMOD_RESULT res = _system->init(kNumSoundChannels, FMOD_INIT_NORMAL, 0);
+
+  if (res != FMOD_OK)
+  {
+    throw std::runtime_error("fmod system initialization failed: "s + FMOD_ErrorString(res));
+  }
+
+  return _system;
+}();
+static FMOD::Channel* channels[kNumSoundChannels]{};
+static std::vector<float> channelVolumes(kNumSoundChannels, 1.f);
+
+static std::unordered_map<std::wstring, FMOD::Sound*> pathSoundDataMap;
+
+static std::unordered_map<std::wstring, FMOD::Channel**> soundChannelMap;
+
+bool SoundManager::LoadSound(const std::wstring& path, bool loop)
 {
-	system->release();
-	system->close();
+  fs::path absolutePath = ns::kProjectDir;
+  absolutePath /= "Library\\Sound";
+  absolutePath /= path;
+
+  FMOD::Sound* sound;
+  FMOD_RESULT res = fmodSystem->createSound(
+      (const char*)absolutePath.generic_u8string().c_str(),
+      (loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF),
+      NULL, &sound);
+
+  if (res != FMOD_OK)
+  {
+    throw std::runtime_error("fmod sound creation failed: "s +
+                             FMOD_ErrorString(res));
+  }
+
+  pathSoundDataMap[path] = sound;
+
+  return true;
 }
 
-
-void SoundManager::Initialize()
+int SoundManager::PlaySound(const std::wstring& path)
 {
-	FMOD::System_Create(&system);
-	system->init((int)SoundChnalList, FMOD_INIT_NORMAL, 0);
+  // Find a channel that is not playing a sound.
+  int i = 0;
+  for (; i < kNumSoundChannels; ++i)
+  {
+    if (IsPlaying(i))
+    {
+      continue;
+    }
+    else
+    {
+      break;
+    }
+  }
 
-	SetVolume(0.7f);
+  if (i >= kNumSoundChannels)
+  {
+    return -1;
+  }
+
+  if (auto it = pathSoundDataMap.find(path); it == pathSoundDataMap.end())
+  {
+    throw std::runtime_error("Sound is not found!");
+  }
+
+  // Play sound
+  FMOD_RESULT res = fmodSystem->playSound(pathSoundDataMap[path], NULL, 0, &channels[i]);
+  if (res != FMOD_OK)
+  {
+    throw std::runtime_error("fmod playing sound failed: "s +
+                             FMOD_ErrorString(res));
+  }
+  soundChannelMap[path] = &channels[i];
+  channels[i]->setVolume(channelVolumes[i]);
+  return i;
 }
 
-int SoundManager::PlayMusic(std::wstring _key)
+void SoundManager::PlaySound(int channel, const std::wstring& path)
 {
-	int tempIndex = curIndex;
-	if (IsPlay(curIndex))
+  channels[channel]->stop();
+  FMOD_RESULT res = fmodSystem->playSound(pathSoundDataMap[path], NULL, 0,
+                        &channels[channel]);
+  if (res != FMOD_OK)
+  {
+    throw std::runtime_error("fmod playing sound failed: "s +
+                             FMOD_ErrorString(res));
+  }
+  soundChannelMap[path] = &channels[channel];
+  channels[channel]->setVolume(channelVolumes[channel]);
+}
+
+void SoundManager::StopSound(const std::wstring& path) {
+  auto it = soundChannelMap.find(path);
+  if (it != soundChannelMap.end())
+  {
+    if (it->second)
+      (*it->second)->stop();
+
+    soundChannelMap.erase(it);
+  }
+}
+
+void SoundManager::StopSound(int channel)
+{
+  if (channels[channel])
+    channels[channel]->stop();
+}
+
+void SoundManager::SetVolume(float volume)
+{
+  for (unsigned int i = 0; i < kNumSoundChannels; ++i)
 	{
-		curIndex = (curIndex + 1) % (int)SoundChnalList;
-		if (tempIndex == curIndex)
-			return false;
+		channelVolumes[i] = volume;
+    if (channels[i])
+      channels[i]->setVolume(volume);
 	}
-	tempIndex = curIndex;
-	channel[curIndex]->stop();
-	system->playSound(ResourceManager::LoadResource<SoundResource>(_key).get()->GetResource(), NULL, 0, &channel[curIndex]);
-	channel[curIndex]->setVolume(volume[curIndex]);
-	curIndex = (curIndex + 1) % (int)SoundChnalList;
-	return tempIndex;
 }
 
-void SoundManager::PlayMusic(std::wstring _key, SoundChannel _channel)
-{
-	channel[_channel]->stop();
-	system->playSound(ResourceManager::LoadResource<SoundResource>(_key).get()->GetResource(), NULL, 0, &channel[_channel]);
-	channel[_channel]->setVolume(volume[_channel]);
+void SoundManager::SetVolume(int channel, float volume) {
+  channelVolumes[channel] = volume;
+  if (channels[channel])
+    channels[channel]->setVolume(volume);
 }
 
-void SoundManager::StopMusic(SoundChannel _channel)
+bool SoundManager::IsPlaying(int channel)
 {
-	channel[_channel]->stop();
-}
+  if (!channels[channel])
+    return false;
 
-void SoundManager::SetVolume(float _volume)
-{
-	for (unsigned int i = 0; i < SoundChnalList; ++i)
-	{
-		volume[i] = _volume;
-		channel[i]->setVolume(volume[i]);
-	}
-}
-
-void SoundManager::SetVolume(float _volume, SoundChannel _channel)
-{
-	volume[_channel] = _volume;
-	channel[_channel]->setVolume(volume[_channel]);
-}
-
-bool SoundManager::IsPlay(SoundChannel _channel)
-{
-	bool isPlay;
-	channel[_channel]->isPlaying(&isPlay);
-	return isPlay;
-}
-
-void SoundManager::CreateSound(std::wstring _key, bool loopcheck, FMOD::Sound*& _sound)
-{
-	/*std::string tempPath;
-	USES_CONVERSION;
-	tempPath = std::string(W2A(_key.c_str()));
-	if (loopcheck)
-		system->createSound(tempPath.c_str(), FMOD_LOOP_NORMAL, 0, &_sound);
-	else
-		system->createSound(tempPath.c_str(), FMOD_LOOP_OFF, 0, &_sound);
-	if(!_sound)
-	{
-		LOG_WARNING(dbg::text("Sound: \"", tempPath.c_str(), "\" is nullptr.\n"));
-	}*/
-
+  bool res{false};
+  channels[channel]->isPlaying(&res);
+  return res;
 }
