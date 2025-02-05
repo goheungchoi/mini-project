@@ -22,7 +22,7 @@ Map::Map(World* world) : GameObject(world)
 
 Map::~Map() {}
 
-void Map::TurnOnPlacementMode(CharactorType type) {
+void Map::TurnOnPlacementMode(CharacterType type) {
   if (isPlacementModeOn)
   {
     return;
@@ -116,7 +116,7 @@ void Map::CreateEnemyAt(uint32_t w, uint32_t h, Direction dir)
 	AddChildGameObject(gunman);
 }
 
-void Map::CreateAllyAt(CharactorType type, uint32_t w, uint32_t h, Direction dir)
+void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h, Direction dir)
 {
   switch (type)
   {

@@ -34,10 +34,6 @@ public:
   ~Gunman();
 
 	// Interaction
-  virtual void OnBeginCursorOver() override;
-  virtual void OnEndCursorOver() override;
-  virtual void OnClicked() override;
-  virtual void OnPressed() override;
 
   // Game loop events
   void OnAwake() override;
