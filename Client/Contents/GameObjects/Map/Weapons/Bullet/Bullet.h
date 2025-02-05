@@ -17,5 +17,6 @@ public:
   void OnAwake() override;
 	void SetDirection(XMVECTOR dir);
 
+	void OnAwake() override;
 	void Update(float dt) override;
 };

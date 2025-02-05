@@ -218,14 +218,21 @@
 		<ClInclude Include="Contents\GameObjects\TestGameObject.h" />
 		<ClCompile Include="Contents\Levels\GameLevel.cpp" />
 		<ClInclude Include="Contents\Levels\GameLevel.h" />
-		<ClInclude Include="Contents\Levels\Level1.h" />
-		<ClInclude Include="Contents\Levels\Level2.h" />
-		<ClInclude Include="Contents\Levels\Level3.h" />
+		<ClCompile Include="Contents\Levels\Level1\Level1.cpp" />
+		<ClInclude Include="Contents\Levels\Level1\Level1.h" />
+		<ClCompile Include="Contents\Levels\Level2\Level2.cpp" />
+		<ClInclude Include="Contents\Levels\Level2\Level2.h" />
+		<ClCompile Include="Contents\Levels\Level3\Level3.cpp" />
+		<ClInclude Include="Contents\Levels\Level3\Level3.h" />
 		<ClInclude Include="Contents\Levels\Level4.h" />
 		<ClInclude Include="Contents\Levels\Level5.h" />
-		<ClCompile Include="Contents\Levels\MainMenu.cpp" />
-		<ClInclude Include="Contents\Levels\MainMenu.h" />
+		<ClCompile Include="Contents\Levels\MainMenu\MainMenu.cpp" />
+		<ClInclude Include="Contents\Levels\MainMenu\MainMenu.h" />
 		<ClInclude Include="Contents\Levels\TestLevel.h" />
+		<ClCompile Include="Contents\UI\InGameUI\InGameUI.cpp" />
+		<ClInclude Include="Contents\UI\InGameUI\InGameUI.h" />
+		<ClCompile Include="Contents\UI\MainMenuUI\MainMenuUI.cpp" />
+		<ClInclude Include="Contents\UI\MainMenuUI\MainMenuUI.h" />
 		<None Include="fmod_vc.lib" />
 		<None Include="imgui.ini" />
 	</ItemGroup>

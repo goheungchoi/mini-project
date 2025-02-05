@@ -46,7 +46,16 @@ public:
 
   std::vector<Character*> civilians;
 
+	// Action trigger
 	bool isActionTriggered{false};
+  struct CharacterInfo
+  {
+    Faction faction;
+    CharacterType type;
+    Direction dir;
+    uint32_t w, h;
+  };
+  std::vector<CharacterInfo> record;
 
 
 	// Placement mode
@@ -56,26 +65,31 @@ public:
 
 	// Selection mode
   bool isAnySelected{false};
-  Character* selectedCharacter{nullptr};
+  Character* hoveredCharacter{nullptr};
+
+
+	// Assassination target
+  bool isAssassinationMode{false};
+  Character* assassinationTarget{nullptr};
 
 public:
 
 	Map(World* world);
   ~Map();
 
-	void TurnOnPlacementMode(CharactorType type, Direction dir);
+	void TurnOnPlacementMode(CharacterType type, Direction dir);
   void TurnOffPlacementMode();
 
-	void TurnOnSimulationMode();
+	void ShowAllyAttackRange();
 
 	void TriggerAction();
 
 	void ResetGame();
 
-	void CreateEnemyAt(CharactorType type, uint32_t w, uint32_t h,
+	void CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
                      Direction dir = kNorth);
 
-  void CreateAllyAt(CharactorType type, uint32_t w, uint32_t h,
+  void CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
                     Direction dir = kNorth);
 
   void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth);
@@ -85,6 +99,7 @@ public:
 	void OnAwake() override;
 
 	void Update(float dt) override;
+  void PostUpdate(float dt) override;
 
 private:
   XMVECTOR GetCursorPosition() const;

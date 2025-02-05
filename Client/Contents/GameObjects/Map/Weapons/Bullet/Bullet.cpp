@@ -6,6 +6,7 @@ Bullet::Bullet(World* world) : GameObject(world)
 {
 	// Set a tag
   SetGameObjectTag("weapon");
+}
 
   // Create a hand gun game object.
 

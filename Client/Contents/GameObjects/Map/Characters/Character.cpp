@@ -3,6 +3,7 @@
 #include "GameFramework/World/World.h"
 #include "Core/Camera/Camera.h"
 
+#include "Contents/GameObjects/Map/Map.h"
 #include "Contents/GameObjects/Map/Grid/GridObject.h"
 
 const std::string kFactionTags[3] = {"Ally", "Enemy", "Neutral"};
@@ -126,6 +127,38 @@ std::pair<uint32_t, uint32_t> Character::GetGridLocation()
   return {grid_w, grid_h};
 }
 
+std::pair<int, int> Character::GetGridFrontDirection()
+{
+  int w_offset{0}, h_offset{0};
+
+	switch (dir)
+  {
+  case kNorth:
+    h_offset = 1;
+    break;
+  case kEast:
+    w_offset = 1;
+    break;
+  case kSouth:
+    h_offset = -1;
+    break;
+  case kWest:
+    w_offset = -1;
+    break;
+  }
+
+	return {w_offset, h_offset};
+}
+
+void Character::Die() {
+  animator->SetVariable<bool>("dead", true, true);
+  isDead = true;
+}
+
+void Character::OnHover() {
+  map->hoveredCharacter = this;
+}
+
 // TODO:
 // void Character::OnHit(GameObject* object) {
 //	if (object == "bullet")
@@ -152,8 +185,7 @@ void Character::OnBeginOverlap(GameObject* other) {
 
 	  if (health <= 0)
     {
-      animator->SetVariable<bool>("dead", true, true);
-      isDead = true;
+      Die();
 	  }
   }
 }
@@ -163,8 +195,14 @@ void Character::OnAwake()
   grid = world->FindGameObjectByType<GridObject>();
   if (!grid)
   {
-    throw std::runtime_error("Can'f find grid!");
+    throw std::runtime_error("Can't find grid!");
   }
+
+	map = world->FindGameObjectByType<Map>();
+  if (!map)
+  {
+    throw std::runtime_error("Can't find map!");
+	}
 
   if (bGridLocationChanged)
   {
@@ -344,6 +382,10 @@ void Character::FindTargetInRange() {
 
 			// Don't attack civilians.
 			if (searchTarget->GetGameObjectTag() == kFactionTags[kNeutral])
+        continue;
+
+			// Skip the target that will be assassinated at the start of the game.
+			if (searchTarget == map->assassinationTarget)
         continue;
 
 			// If this is an opponent.
