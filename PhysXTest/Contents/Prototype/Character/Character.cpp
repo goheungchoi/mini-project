@@ -96,6 +96,7 @@ std::pair<uint32_t, uint32_t> Character::GetGridLocation()
 }
 
 void Character::OnBeginOverlap(GameObject* other) {
+  GameObject::OnBeginOverlap(other);
   if (other->GetGameObjectTag() == "weapon")
   {
     health -= 1;
@@ -106,7 +107,11 @@ void Character::OnBeginOverlap(GameObject* other) {
     animator->SetVariable<bool>("dead", true, true);
     isDead = true;
   }
+}
 
+void Character::OnEndOverlap(GameObject* other)
+{
+  GameObject::OnEndOverlap(other);
 }
 
 void Character::OnAwake()
@@ -125,27 +130,20 @@ void Character::OnAwake()
     ApplyChangedDirection();
   }
 
-
   auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
-  bodyRigidBody->Initialize({0, 1.0f, 0}, Quaternion::Identity,{0.2f, 1.f, 0.2f},
-                            ColliderShape::eCubeCollider, false, false,
+  bodyRigidBody->Initialize({0, 1.0f, 0}, DirectX::SimpleMath::Quaternion::Identity,{0.2f, 1.f, 0.2f},
+                            ColliderShape::eCubeCollider, false, true,
                             world->_phyjixWorld);
   
-  bodyRigidBody->EnableGravity();
-  //bodyRigidBody->DisableGravity();
-  //bodyRigidBody->DisableCollision();
-  //bodyRigidBody->EnableDebugDraw();
-  bodyRigidBody->ClearForce();
-  bodyRigidBody->ClearTorque();
-//  bodyRigidBody->DisableSimulation();
-  //bodyRigidBody->DisableDebugDraw();
-  bodyRigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eLClick,
+
+  bodyRigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover,
                                    [=]() {
-                                     bodyRigidBody->EnableDebugDraw();
-                                     bodyRigidBody->ClearForce();
+    transform->Rotate({0, 1, 0});
                                    });
 
-
+  //bodyRigidBody->EnableDebugDraw();
+  bodyRigidBody->DisableSimulation();
+  bodyRigidBody->DisableGravity();
   //bodyRigidBody->DisableCollision();
 }
 
@@ -165,7 +163,11 @@ void Character::OnAwake()
 
 void Character::Update(float dt) {
 
-GetComponent<RigidbodyComponent>()->ClearTorque();
+  if (GetComponent<RigidbodyComponent>()->IsOverlapping())
+  {
+    transform->Rotate({0,1,0});
+  }
+
 
 	if (isDead)
   {

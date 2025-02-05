@@ -322,19 +322,28 @@ void World::RegisterRigidBodyComponent(RigidbodyComponent* rigidBody)
   for (auto* other : rigidBodyComponents)
   {
     other->SetCollisionEvent(rigidBody->GetRigidBody(),
-                             eCollisionEventType::eCollisionEnter,
+                             eCollisionEventType::eOverlapBegin,
                              [=]() { other->BeginOverlap(rigidBody); });
     other->SetCollisionEvent(rigidBody->GetRigidBody(),
-                             eCollisionEventType::eCollisionExit,
+                             eCollisionEventType::eOverlapEnd,
                              [=]() { other->EndOverlap(rigidBody); });
 
     rigidBody->SetCollisionEvent(other->GetRigidBody(),
-                                 eCollisionEventType::eCollisionEnter,
+                                 eCollisionEventType::eOverlapBegin,
                                  [=]() { rigidBody->BeginOverlap(other); });
+
     rigidBody->SetCollisionEvent(other->GetRigidBody(),
-                                 eCollisionEventType::eCollisionExit,
+                                 eCollisionEventType::eOverlapEnd,
                                  [=]() { rigidBody->EndOverlap(other); });
   }
+  rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover,
+                               [=]() { rigidBody->Hover(); });
+
+  rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eLClick,
+                               [=]() { rigidBody->LeftClick(); });
+
+  rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eRClick,
+                               [=]() { rigidBody->RightClick(); });
 
   rigidBodyComponents.push_back(rigidBody);
 }
@@ -455,6 +464,8 @@ void World::Update(float dt)
   for (RigidbodyComponent* component : rigidBodyComponents)
   {
     component->UpdateFromTransform();
+    if (component->GetRigidBody()->isKinematic())
+      component->UpdateKinematicTransform();
   }
 
   // phjix simulate
@@ -642,10 +653,11 @@ void World::RenderGameObjects()
         switch (rigidbody->GetRigidBody()->GetColliderShapeType())
         {
         case ColliderShape::eCubeCollider:
-          _renderer->DrawDebugBox(offsetMat, Color(1, 0, 1));
+          _renderer->DrawDebugBox(offsetMat,
+                                  rigidbody->debugColor);
           break;
         case ColliderShape::eSphereCollider:
-          _renderer->DrawDebugSphere(offsetMat, Color(1, 0, 1));
+          _renderer->DrawDebugSphere(offsetMat, rigidbody->debugColor);
           break;
         default:
           break;

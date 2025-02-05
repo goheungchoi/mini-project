@@ -11,7 +11,7 @@ TestUI::TestUI(World* world) : UIPanel(world)
 
   testBtn = CreateUI<UIButton>(L"TestButton");
   testBtn->SetPosition({200, 200});
-
+  testBtn->SetSize({100, 100});
 
   TextFormatInfo txtinfo1(L"궁서");
   TextFormatInfo txtinfo2(L"Agency FB");

@@ -8,6 +8,8 @@ public:
   virtual ~UIImage();
 
 public:
+  void Render() override;
+
   void SetSprite(LPCSTR path, Vector2 pos = {0.0f, 0.0f});
   void SetSprite(class Sprite* sprite) { sprite = _sprite; }
 

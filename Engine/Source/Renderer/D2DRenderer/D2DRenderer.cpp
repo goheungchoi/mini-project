@@ -45,6 +45,7 @@ bool D2DRenderer::Init(Device* device, SwapChain* swapChain,
   _pFont = new Font;
 
   Sprite::SetDevice(device);
+  Sprite::SetD2DRenderer(this);
 
   return true;
 }
@@ -103,22 +104,25 @@ void D2DRenderer::Draw() {}
 
 void D2DRenderer::BeginDraw()
 {
-  _pD2D1DeviceContext->BeginDraw();
 }
 
 void D2DRenderer::EndDraw()
 {
-  RenderSprites();
+  // Sprite Render
+  BeginSprites();
+  _d2dRenderQueue.ExecuteSpriteRenderCmd();
+  EndSprites();
 
-  _render2DQueue.ExecuteRender2DCmd();
-
+  // 2D Geometry 및 text Render
+  _pD2D1DeviceContext->BeginDraw();
+  _d2dRenderQueue.Execute2DRenderCmd();
   _pD2D1DeviceContext->EndDraw();
 }
 
 void D2DRenderer::DrawRectangle(Color color, Vector4 rect, float stroke,
                                 float opacity)
 {
-  _render2DQueue.AddRender2DCmd([=]()
+  _d2dRenderQueue.AddRender2DCmd([=]()
   {
     D2D1_COLOR_F clr = D2D1::ColorF(color.x, color.y, color.z, color.w);
     D2D1_RECT_F rt = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);
@@ -184,7 +188,7 @@ void D2DRenderer::CreateSprite(LPCSTR path, Vector2 pos)
 void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
                             const TextFormatInfo& textFormatInfo)
 {
-  _render2DQueue.AddRender2DCmd([=]() {
+  _d2dRenderQueue.AddRender2DCmd([=]() {
     IDWriteTextFormat* textFormat = nullptr;
 
     // 텍스트 포멧 설정
@@ -218,37 +222,34 @@ void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
 }
 
 
-void D2DRenderer::RenderSprites()
-{
-  // 현재 DepthStencilState 저장
-  ID3D11DepthStencilState* prevDepthState = nullptr;
-  UINT stencilRef;
-
-  _pDevice->GetImmContext()->OMGetDepthStencilState(&prevDepthState,
-                                                    &stencilRef);
-
-  _pSpriteBatch->Begin();
-
-  // 모든 Sprite Render
-  if (!(Resource2DManager::GetInstance()->_SpriteMap.empty()))
-  {
-    for (auto sprite : Resource2DManager::GetInstance()->_SpriteMap)
-    {
-      sprite.second->Render(_pSpriteBatch.get());
-    }
-  }
-
-  _pSpriteBatch->End();
-
-  // DepthStencilState 복원
-  _pDevice->GetImmContext()->OMSetDepthStencilState(prevDepthState, stencilRef);
-}
+//void D2DRenderer::RenderSprites()
+//{
+//  // 모든 Sprite Render
+//  if (!(Resource2DManager::GetInstance()->_SpriteMap.empty()))
+//  {
+//    for (auto sprite : Resource2DManager::GetInstance()->_SpriteMap)
+//    {
+//      sprite.second->Render();
+//    }
+//  }
+//}
 
 void D2DRenderer::BeginSprites()
 {
-  //_pDevice->GetImmContext()->OMGetDepthStencilState(&_prevDepthState,
-  //                                                  &_stencilRef);
-  //_pSpriteBatch->Begin();
+  _pDevice->GetImmContext()->OMGetDepthStencilState(&_prevDepthState,
+                                                    &_stencilRef);
+
+  float blendFactor[4] = {0, 0, 0, 0};
+  UINT* psamplemask = new UINT[1];
+  _pDevice->GetImmContext()->OMGetBlendState(&_blendState, blendFactor,psamplemask);
+
+  _pSpriteBatch->Begin(DirectX::DX11::SpriteSortMode_Deferred,_blendState);
 }
 
-void D2DRenderer::EndSprites() {}
+void D2DRenderer::EndSprites()
+{
+  _pSpriteBatch->End();
+
+  // DepthStencilState 복원
+  _pDevice->GetImmContext()->OMSetDepthStencilState(_prevDepthState, _stencilRef);
+}

@@ -214,6 +214,8 @@
 		<ClInclude Include="Contents\Prototype\Grid\GridLevel.h" />
 		<ClCompile Include="Contents\Prototype\Grid\GridObject.cpp" />
 		<ClInclude Include="Contents\Prototype\Grid\GridObject.h" />
+		<ClCompile Include="Contents\Prototype\UI\MainMenuUI\MainMenuUI.cpp" />
+		<ClInclude Include="Contents\Prototype\UI\MainMenuUI\MainMenuUI.h" />
 		<ClCompile Include="Contents\Prototype\UI\TestUI.cpp" />
 		<ClInclude Include="Contents\Prototype\UI\TestUI.h" />
 		<None Include="imgui.ini" />

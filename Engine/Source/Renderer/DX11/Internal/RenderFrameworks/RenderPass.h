@@ -126,6 +126,7 @@ public:
     SAFE_RELEASE(_frameCB);
     SAFE_RELEASE(_deffered);
     SAFE_RELEASE(_shadow);
+    SAFE_RELEASE(_ssao);
     SAFE_RELEASE(_pso);
     SAFE_RELEASE(_skyBox);
     SAFE_RELEASE(_geometry);
@@ -435,8 +436,8 @@ public:
 #ifdef _DEBUG
   void UpdateVariable()
   {
-    // SWTODO : _shadow ->update 변수 처리하기.
     _shadow->UpdateVarialbe();
+    _ssao->UpdateVarialbe();
   }
 
 private:
@@ -912,6 +913,11 @@ private:
       dc->DrawIndexed(quad->_indexCount, 0, 0);
     });
   }
+  void DrawSSAO(ID3D11DeviceContext* dc) 
+  {
+    _ssao->Prepare();
+     
+   }
   void Clear()
   {
     // Transparent meshes

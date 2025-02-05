@@ -12,11 +12,12 @@
 #include "framework.h"
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <functional>
-#include "directxtk/simplemath.h"
 #include "physx/PxPhysicsAPI.h"
 #include "physx/PxPhysics.h"
 #include "physx/PxSimulationEventCallback.h"
+#include "directxtk/simplemath.h"
 
 #include "PhyjixUtil.h"
 #include "RigidBody.h"

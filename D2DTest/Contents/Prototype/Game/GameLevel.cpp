@@ -3,6 +3,8 @@
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 #include "Contents/Prototype/UI/TestUI.h"
+#include "Contents/Prototype/UI/MainMenuUI/MainMenuUI.h"
+#include "Resource2DManager/Resource2DManager.h"
 //#define USED2D
 
 void GameLevel::PrepareLevel()
@@ -14,6 +16,15 @@ void GameLevel::PrepareLevel()
   handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 
   mapMeshHandle = LoadModel("Models\\Maps\\Map002_Museum.glb");
+
+  // UI Resource Load
+#ifdef USED2D 
+  Resource2DManager::GetInstance()->LoadSprite("Textures\\TitleBackGround.png");
+  Resource2DManager::GetInstance()->LoadSprite("Textures\\TitleLogo.png");
+  Resource2DManager::GetInstance()->LoadSprite("Textures\\StartBtn.png");
+  Resource2DManager::GetInstance()->LoadSprite("Textures\\StartBtn_hover.png");
+  Resource2DManager::GetInstance()->LoadSprite("Textures\\StartBtn_click.png");
+#endif // USED2D
 }
 
 void GameLevel::BeginLevel()
@@ -26,8 +37,9 @@ void GameLevel::BeginLevel()
   CreateMap();
 
 #ifdef USED2D 
-  testObj = world->CreateGameObject<TestGameObject>();
-  world->_canvas->CreatePanel<TestUI>(L"TestUI");
+  //testObj = world->CreateGameObject<TestGameObject>();
+  //world->_canvas->CreatePanel<TestUI>(L"TestUI");
+  world->_canvas->CreatePanel<MainMenuUI>(L"MainMenuUI");
 #endif // USED2D
 }
 

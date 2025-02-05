@@ -26,6 +26,21 @@ void Resource2DManager::Destroy()
   }
 }
 
+bool Resource2DManager::LoadSprite(LPCSTR path)
+{
+  auto it = _SpriteMap.find(path);
+  if (it == _SpriteMap.end())
+  {
+    auto newSprite = std::make_shared<Sprite>(path);
+    _SpriteMap[path] = newSprite;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
 std::shared_ptr<Sprite> Resource2DManager::GetSprite(LPCSTR path)
 {
   auto it = _SpriteMap.find(path);
@@ -35,8 +50,6 @@ std::shared_ptr<Sprite> Resource2DManager::GetSprite(LPCSTR path)
   }
   else
   {
-    auto newSprite = std::make_shared<Sprite>(path);
-    _SpriteMap[path] = newSprite;
-    return newSprite;
+    throw std::runtime_error("Sprite is not found");
   }
 }

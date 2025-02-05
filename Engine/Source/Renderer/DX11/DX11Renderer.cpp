@@ -79,11 +79,10 @@ void DX11Renderer::BeginFrame(Vector4 cameraPos, Matrix view, Matrix projection,
   BeginImGuiDraw();
   _passMgr->UpdateVariable();
 #endif
-#ifdef USED2D
 
-  _d2dRenderer->BeginDraw();
-
-#endif //  USED2D
+//#ifdef USED2D
+//  _d2dRenderer->BeginDraw();
+//#endif //  USED2D
 }
 
 void DX11Renderer::BeginDraw(MeshHandle handle, Matrix world)
@@ -342,12 +341,11 @@ void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
 }
 
+#endif
 void DX11Renderer::DrawBillBoard(Billboard* billboard)
 {
   _passMgr->AddBillBoard(billboard->_quad);
 }
-
-#endif
 void DX11Renderer::BeginImGuiDraw()
 {
   ImGui_ImplDX11_NewFrame();

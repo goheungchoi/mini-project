@@ -89,13 +89,25 @@ void Gunman::Update(float dt) {
 		animator->SetVariable<bool>("fire", false);
 	}
   auto rb = GetComponent<RigidbodyComponent>();
-  rb->ClearForce();
   //rb->ClearTorque();
-  if (INPUT.IsKeyPress(Key::O)) rb->Rotate({-10, 0, 0});
-  if (INPUT.IsKeyPress(Key::P)) rb->Rotate({0, 0, 10});
-  if (INPUT.IsKeyPress(Key::Left)) rb->Translate({-10, 0, 0});
-  if (INPUT.IsKeyPress(Key::Right)) rb->Translate({10, 0, 0});
-  if (INPUT.IsKeyPress(Key::Up)) rb->Translate({0, 0, 10});
-  if (INPUT.IsKeyPress(Key::Down)) rb->Translate({0, 0, -10});
-  
+  //if (INPUT.IsKeyPress(Key::O)) rb->Rotate({-10, 0, 0});
+  //if (INPUT.IsKeyPress(Key::P)) rb->Rotate({0, 0, 10});
+  //if (INPUT.IsKeyPress(Key::Left)) rb->Translate({-10, 0, 0});
+  //if (INPUT.IsKeyPress(Key::Right)) rb->Translate({10, 0, 0});
+  //if (INPUT.IsKeyPress(Key::Up)) rb->Translate({0, 0, 10});
+  //if (INPUT.IsKeyPress(Key::Down)) rb->Translate({0, 0, -10});
+  Vector3 pos ={0,0,0};
+  //Quaternion rot = GetComponent<TransformComponent>()->GetGlobalQuaternion();
+  float movespeed = 5.0f;
+  if (INPUT.IsKeyPress(Key::Left))
+    pos += Vector3(-dt * movespeed, 0, 0);
+  if (INPUT.IsKeyPress(Key::Right))
+    pos += Vector3(dt * movespeed, 0, 0);
+  if (INPUT.IsKeyPress(Key::Up))
+    pos += Vector3(0, 0, dt * movespeed);
+  if (INPUT.IsKeyPress(Key::Down))
+    pos += Vector3(0, 0, -dt * movespeed);
+
+  //rb->SetKinematicTransform(pos, rot);
+  transform->Translate(pos);
 }

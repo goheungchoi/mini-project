@@ -21,6 +21,7 @@ void PhyjixEventHandler::onContact(const physx::PxContactPairHeader& pairHeader,
         static_cast<RigidBody*>(pairHeader.actors[0]->userData);
     ICollisionEvent* actor1 =
         static_cast<RigidBody*>(pairHeader.actors[1]->userData);
+
     IRigidBody* rigidbody0 =
         static_cast<RigidBody*>(pairHeader.actors[0]->userData);
     IRigidBody* rigidbody1 =
@@ -44,7 +45,32 @@ void PhyjixEventHandler::onContact(const physx::PxContactPairHeader& pairHeader,
 
 void PhyjixEventHandler::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
 {
-  
+  for (physx::PxU32 i = 0; i < count; i++)
+  {
+    
+    physx::PxTriggerPair& pair = pairs[i];
+
+    if (pair.flags & (physx::PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER |
+                      physx::PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER))
+      continue;
+
+    RigidBody* actor0 =
+        static_cast<RigidBody*>(pair.triggerActor->userData);
+    RigidBody* actor1 =
+        static_cast<RigidBody*>(pair.otherActor->userData);
+
+
+    if (pair.status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
+    {
+      actor0->OnOverlapBegin(actor1);
+      actor1->OnOverlapBegin(actor0);
+    }
+    else if (pair.status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
+    {
+      actor0->OnOverlapEnd(actor1);
+      actor1->OnOverlapEnd(actor0);
+    }
+  }
 }
 
 void PhyjixEventHandler::onWake(physx::PxActor** pActor, physx::PxU32) {}

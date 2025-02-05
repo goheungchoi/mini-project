@@ -13,4 +13,7 @@ public:
   virtual void OnHover() = 0;
   virtual void OnLeftClick() = 0;
   virtual void OnRightClick() = 0;
+
+  virtual void OnOverlapBegin(IRigidBody* other) = 0;
+  virtual void OnOverlapEnd(IRigidBody* other) = 0;
 };

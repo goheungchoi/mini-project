@@ -37,6 +37,9 @@
 		<Filter Include="Contents\Prototype\UI">
 			<UniqueIdentifier>{41154C0D-C562-4CC1-B1DE-BB37F9FB0558}</UniqueIdentifier>
 		</Filter>
+		<Filter Include="Contents\Prototype\UI\MainMenuUI">
+			<UniqueIdentifier>{02BDBD0B-2339-4AD3-A756-2200AB39F94E}</UniqueIdentifier>
+		</Filter>
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="Application\GameApp\GameApp.h">
@@ -196,6 +199,12 @@
 		<ClCompile Include="Contents\Prototype\UI\TestUI.cpp">
 			<Filter>Contents\Prototype\UI</Filter>
 		</ClCompile>
+		<ClInclude Include="Contents\Prototype\UI\MainMenuUI\MainMenuUI.h">
+			<Filter>Contents\Prototype\UI\MainMenuUI</Filter>
+		</ClInclude>
+		<ClCompile Include="Contents\Prototype\UI\MainMenuUI\MainMenuUI.cpp">
+			<Filter>Contents\Prototype\UI\MainMenuUI</Filter>
+		</ClCompile>
 	</ItemGroup>
 	<ItemGroup>
 		<ClCompile Include="Contents\GameObjects\TestGameObject.cpp" />
@@ -213,5 +222,6 @@
 		<ClCompile Include="Contents\Prototype\Grid\GridLevel.cpp" />
 		<ClCompile Include="Contents\Prototype\Grid\GridObject.cpp" />
 		<ClCompile Include="Contents\Prototype\UI\TestUI.cpp" />
+		<ClCompile Include="Contents\Prototype\UI\MainMenuUI\MainMenuUI.cpp" />
 	</ItemGroup>
 </Project>

@@ -4,7 +4,11 @@
 #include "GameFramework/World/World.h"
 
 #include "PhyjixWorld.h"
+
+#include <DirectXMath.h>
+#ifdef _DEBUG
 float RigidbodyComponent::scalingFactor = 2.0f;
+#endif
 void RigidbodyComponent::Initialize(
     const DirectX::SimpleMath::Vector3& _offsetTranslation,
     const DirectX::SimpleMath::Quaternion& offsetQuaternion,
@@ -22,8 +26,10 @@ void RigidbodyComponent::Initialize(
   offsetTranslation = _offsetTranslation;
   offsetMatrix = XMMatrixScalingFromVector(offsetScale) *
                  XMMatrixRotationQuaternion(offsetRotation) *
-                 XMMatrixTranslationFromVector(offsetTranslation);
+                 DirectX::XMMatrixTranslationFromVector(offsetTranslation);
 
+  isStatic = isStatic;
+  isKinematic = isKinematic;
   RegisterRigidBodyToWorld();
 }
 
@@ -33,7 +39,8 @@ void RigidbodyComponent::SetCollisionEvent(IRigidBody* other,
   _rigidbody->SetCollisionEvent(eventType, other, event);
 }
 
-void RigidbodyComponent::SetOffsetTransform(const Vector3& offsetTranslation,
+
+void RigidbodyComponent::SetOffsetTransform(const DirectX::SimpleMath::Vector3& offsetTranslation,
                                             const Quaternion& offsetQuaternion,
                                             const Vector3& offsetSize)
 {
@@ -57,6 +64,24 @@ void RigidbodyComponent::Rotate(Vector3 Torque)
 {
   _rigidbody->SetAngVelocity(Torque);
 }
+
+void RigidbodyComponent::SetKinematicTransform(Vector3 pos, Quaternion rot)
+{
+  _rigidbody->KinematicMoveTo(pos, rot);
+}
+
+void RigidbodyComponent::UpdateKinematicTransform()
+{
+  SetKinematicTransform(GetTransformComponent()->GetGlobalTranslation(),
+                        GetTransformComponent()->GetGlobalQuaternion());
+}
+
+void RigidbodyComponent::SetWorldTransform(Vector3 pos, Quaternion rot)
+{
+  _rigidbody->SetWorldTransform(pos, rot);
+}
+
+
 
 void RigidbodyComponent::ClearForce()
 {
@@ -91,20 +116,23 @@ void RigidbodyComponent::DisableGravity()
 void RigidbodyComponent::EnableSimulation()
 {
   _rigidbody->EnableSimulation();
+  isKinematic = true;
 }
 
 void RigidbodyComponent::DisableSimulation()
 {
   _rigidbody->DisableSimulation();
+  isKinematic = false;
 }
-#ifdef _DEBUG
 
 void RigidbodyComponent::UpdateFromTransform()
 {
-  _rigidbody->SetWorldTransform(GetTransformComponent()->GetTranslation(),
+  if (!isKinematic)
+    _rigidbody->SetWorldTransform(GetTransformComponent()->GetTranslation(),
                                 GetTransformComponent()->GetQuaternion());
-  _prevTransform = _rigidbody->GetWorldTransform();
-
+  else
+    _rigidbody->SetWorldTransform(GetTransformComponent()->GetTranslation(),
+                                GetTransformComponent()->GetQuaternion());
 
 }
 
@@ -118,9 +146,10 @@ void RigidbodyComponent::UpdateToTransform()
   XMMATRIX transform = XMMatrixScalingFromVector(_S)*
                        XMMatrixRotationQuaternion(_R) *
                        XMMatrixTranslationFromVector(_T);
-  GetTransformComponent()->SetLocalTransform(transform);
+  //GetTransformComponent()->globalTransform = transform;
 }
 
+#ifdef _DEBUG
 void RigidbodyComponent::EnableDebugDraw()
 {
   _bDebugDrawFlag = true;
@@ -141,6 +170,7 @@ void RigidbodyComponent::UpdateDebugDrawMatrix()
                     XMMatrixTranslationFromVector(
                         GetTransformComponent()->GetGlobalTranslation());
 }
+#endif
 
 void RigidbodyComponent::RegisterRigidBodyToWorld() {
   GetWorld()->RegisterRigidBodyComponent(this);
@@ -160,7 +190,24 @@ void RigidbodyComponent::EndOverlap(RigidbodyComponent* other)
   GetOwner()->OnEndOverlap(other->GetOwner());
 }
 
-#endif
+void RigidbodyComponent::Hover()
+{
+  GetOwner()->OnHover();
+}
+
+void RigidbodyComponent::LeftClick()
+{
+  GetOwner()->OnLeftClick();
+}
+
+void RigidbodyComponent::RightClick()
+{
+  GetOwner()->OnRightClick();
+}
+
+
+
+
 TransformComponent* RigidbodyComponent::GetTransformComponent()
 {
   return GetOwner()->transform;

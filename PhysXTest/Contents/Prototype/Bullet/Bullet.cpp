@@ -12,7 +12,6 @@ Bullet::Bullet(World* world) : GameObject(world)
   rigidBody->Initialize({0, 0, 0}, Quaternion::Identity, {1.f, 1.f, 1.f},
                             ColliderShape::eCubeCollider, false, false,
                             world->_phyjixWorld);
-  rigidBody->EnableDebugDraw();
 }
 
 void Bullet::SetDirection(XMVECTOR direction) {

@@ -24,6 +24,11 @@ public:
   void AddOnUnHoveredHandler(std::function<void()> handler);
   void AddOnPressedHandler(std::function<void()> handler);
 
+  void Render() override;
+#ifdef _DEBUG
+  void SetDebugDraw(bool debugFlag);
+#endif
+
 private:
   void OnClicked();
   void OnHovered();
@@ -31,6 +36,11 @@ private:
   void OnPressed();
 
 private:
+#ifdef _DEBUG
+  bool bDebugDrawFlag = false;
+#endif
+
+
   ButtonState _state = BS_None;
 
   std::vector<std::function<void()>> onClickHandlers;

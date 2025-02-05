@@ -20,13 +20,13 @@ public:
   static Resource2DManager* GetInstance();
   void Destroy();
 
-  //bool LoadSprite(LPCSTR path);
+  bool LoadSprite(LPCSTR path);
   std::shared_ptr<Sprite> GetSprite(LPCSTR path);
 
   //bool LoadAnim2DAsset(LPCSTR spritePath, LPCSTR animCSV);
   //std::shared_ptr<Anim2DAsset> GetAnim2DAsset(std::wstring animAssetName);
 
 //private:
-  std::map<std::string, std::shared_ptr<Sprite>> _SpriteMap;
-  std::map<std::string, std::shared_ptr<Anim2DAsset>> _Anim2DAssetMap;
+  std::unordered_map<std::string, std::shared_ptr<Sprite>> _SpriteMap;
+  std::unordered_map<std::string, std::shared_ptr<Anim2DAsset>> _Anim2DAssetMap;
 };
