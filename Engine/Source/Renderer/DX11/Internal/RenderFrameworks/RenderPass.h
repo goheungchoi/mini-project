@@ -69,10 +69,10 @@ private:
   Renderer::Camera _camera;
   DirectionalLight _mainLight;
   int max = std::numeric_limits<int>::max();
-  float ambientIntencity = 0.2f;
-  float emissiveIntencity = 0.2f;
-  float testradius = 0.1f;
-  bool testIsSSAO = false;
+  float ambientIntencity = 0.516f;
+  float emissiveIntencity = 0.523f;
+  float testradius = 0.005f;
+  bool testIsSSAO = true;
 
 public:
   RenderPassManager(Device* device, SwapChain* swapchain, int width, int height)

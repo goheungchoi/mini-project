@@ -588,45 +588,7 @@ float4 ssao_normal_depth_write_ps_main(PS_INPUT input) : SV_Target0
     float depth = input.position.z;
     return float4(N, depth);
 }
-//float4 ssao_ao_write_ps_main(QUAD_PS_INPUT input) : SV_TARGET
-//{
-//     // Fetch Normal and Depth from GBuffer
-//    float4 normalData = ssaoNormalDepth.Sample(samLinear, input.uv);
-//    float3 normal = normalize(normalData.xyz); // Already in correct range
-//    float depth = normalData.w; // Depth stored in W component
-//    depth = (nearPlane * farPlane)  /(farPlane - depth * (farPlane - nearPlane));
-//    float occlusion = 0.0f;
-//    int sampleCount = 16; // Number of SSAO samples
 
-//    // SSAO Sampling Loop
-//    [unroll]
-//    for (int i = 0; i < sampleCount; i++)
-//    {
-//        // Create random sampling offset
-//        float3 sampleDir = normalize(SSAOKernel[i]);
-//        float3 samplePos = float3(input.uv, depth) + sampleDir * radius;
-
-//        // Sample nearby depth values
-//        float4 sampleNormalData = ssaoNormalDepth.Sample(samLinear, samplePos.xy);
-//        float sampleDepth = sampleNormalData.w;
-
-//        //// Compare depth values (occlusion test)
-//        //if (sampleDepth < samplePos.z)
-//        //    occlusion += 1.0f;
-//        float depthDifference = samplePos.z - sampleDepth;
-//        if (depthDifference > 0.0f && depthDifference < radius) // Within sampling range
-//        {
-//        // Add weighted occlusion based on depth difference
-//            occlusion += saturate(1.0f - depthDifference / radius);
-//        }
-
-//    }
-
-//    // Normalize Occlusion Value
-//    occlusion = 1.0f - (occlusion / sampleCount);
-
-//    return float4(occlusion, occlusion, occlusion, 1.0f); // Grayscale SSAO
-//}
 float4 ssao_ao_write_ps_main(QUAD_PS_INPUT input) : SV_TARGET
 {
     // Fetch Normal and Depth from GBuffer
