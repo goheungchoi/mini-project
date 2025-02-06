@@ -7,31 +7,31 @@ CellObject::CellObject(World* world) : GameObject(world)
   redCellModelHandle = LoadModel("Models\\Grid\\CharOver\\Grid_CharOver.glb");
   greenCellModelHandle = LoadModel("Models\\Grid\\Normal\\Grid_Normal.glb");
 
-  emptyCellModelHandle = LoadModel("Models\\Grid\\Empty\\Grid_Empty.glb");
-  selectedCellModelHandle = LoadModel("Models\\Grid\\Active\\Grid_Active.glb");
+  rangeCellModelHandle = LoadModel("Models\\Grid\\Empty\\Grid_Empty.glb");
+  damageCellModelHandle = LoadModel("Models\\Grid\\Active\\Grid_Active.glb");
 
   // Create cell models.
 
 	redCell = world->CreateGameObjectFromModel(redCellModelHandle);
   greenCell = world->CreateGameObjectFromModel(greenCellModelHandle);
 
-  emptyCell = world->CreateGameObjectFromModel(emptyCellModelHandle);
-  emptyCell->SetInvisible();
-  selectedCell = world->CreateGameObjectFromModel(selectedCellModelHandle);
-  selectedCell->SetInvisible();
+  rangeCell = world->CreateGameObjectFromModel(rangeCellModelHandle);
+  damageCell = world->CreateGameObjectFromModel(damageCellModelHandle);
+  rangeCell->SetInvisible();
+  damageCell->SetInvisible();
 
   AddChildGameObject(redCell);
   AddChildGameObject(greenCell);
 
-  AddChildGameObject(emptyCell);
-  AddChildGameObject(selectedCell);
+  AddChildGameObject(rangeCell);
+  AddChildGameObject(damageCell);
 }
 
 CellObject::~CellObject() {
   UnloadModel(redCellModelHandle);
   UnloadModel(greenCellModelHandle);
-  UnloadModel(emptyCellModelHandle);
-  UnloadModel(selectedCellModelHandle);
+  UnloadModel(rangeCellModelHandle);
+  UnloadModel(damageCellModelHandle);
 }
 
 void CellObject::SetInvisible() {
@@ -65,6 +65,21 @@ void CellObject::SetVisible() {
   }*/
 
   isVisible = true;
+}
+
+void CellObject::ClearZone() {
+  rangeCell->SetInvisible();
+  damageCell->SetInvisible();
+}
+
+void CellObject::SetRangeZone() {
+  rangeCell->SetVisible();
+  damageCell->SetInvisible();
+}
+
+void CellObject::SetDamageZone() {
+  rangeCell->SetInvisible();
+  damageCell->SetVisible();
 }
 
 void CellObject::SetCellType(CellType type) {
