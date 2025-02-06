@@ -6,8 +6,8 @@
 
 InGameUI::InGameUI(World* world) : UIPanel(world)
 {
-  // MainMisson
 
+  // MainMisson
   _mainMissonImg = CreateUI<UIImage>(L"MainMissonImg");
   _mainMissonImg->SetSprite("2D\\UI\\UI_Stage_L.png", {338, 100});
 
@@ -16,7 +16,8 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _mainMissonTxt->SetSize(
       {_mainMissonImg->GetSize().x, _mainMissonImg->GetSize().y});
   _mainMissonTxt->SetTextAlignment(TextAlignment::LEFTAlIGN);
-  _mainMissonTxt->SetFont(L"HY견고딕");
+  //_mainMissonTxt->SetFont(L"강원교육모두 Bold");
+  _mainMissonTxt->SetFont(L"강원교육모두 굵게");
   _mainMissonTxt->SetText(
       L"사라진 아이들에 대한 단서 찾기\n모든 적 처치 (0/8)");
   _mainMissonTxt->SetOpacity(1.0f);
@@ -37,23 +38,44 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _combatBtnImg->SetSprite("2D\\UI\\UI_Storage_Act_Fist.png", {1600, 960});
 
   // PlayBtn
-  _playBtnImg = CreateUI<UIImage>(L"PlayBtnImg");
-  _playBtnImg->SetSprite("2D\\UI\\UI_Play_Act.png", {1800, 100});
+  {
+    _playBtnImgList[0] = CreateUI<UIImage>(L"PlayBtnImg_Act");
+    _playBtnImgList[1] = CreateUI<UIImage>(L"PlayBtnImg_Hover");
+    _playBtnImgList[2] = CreateUI<UIImage>(L"PlayBtnImg_Deact");
 
-  _playBtn = CreateUI<UIButton>(L"PlayBtn");
-  _playBtn->SetSize(_playBtnImg->GetSize());
-  _playBtn->SetCenterPos({1800, 100});
+    _playBtnImgList[0]->SetSprite("2D\\UI\\UI_Play_Act.png", {1800, 100});
+    _playBtnImgList[1]->SetSprite("2D\\UI\\UI_Play_Hover.png", {1800, 100});
+    _playBtnImgList[1]->SetStatus(EStatus::EStatus_Inactive);
+    _playBtnImgList[2]->SetSprite("2D\\UI\\UI_Play_Deact.png", {1800, 100});
+    _playBtnImgList[2]->SetStatus(EStatus::EStatus_Inactive);
+
+    _playBtn = CreateUI<UIButton>(L"PlayBtn");
+    _playBtn->SetSize(_playBtnImgList[0]->GetSize());
+    _playBtn->SetCenterPos({1800, 100});
 #ifdef _DEBUG
-  _playBtn->SetDebugDraw(true);
+    _playBtn->SetDebugDraw(true);
 #endif // _DEBUG
-  _playBtn->AddOnClickHandler([this]() {
-    auto* map = _world->FindGameObjectByType<Map>();
 
-    if (map)
-    {
-      map->TriggerAction();
-    }
-  });
+    _playBtn->AddOnHoveredHandler([this]() {
+      _playBtnImgList[0]->SetStatus(EStatus::EStatus_Inactive);
+      _playBtnImgList[1]->SetStatus(EStatus::EStatus_Active);
+      _playBtnImgList[2]->SetStatus(EStatus::EStatus_Inactive);
+    });
+
+    _playBtn->AddOnUnHoveredHandler([this]() {
+      _playBtnImgList[0]->SetStatus(EStatus::EStatus_Active);
+      _playBtnImgList[1]->SetStatus(EStatus::EStatus_Inactive);
+      _playBtnImgList[2]->SetStatus(EStatus::EStatus_Inactive);
+    });
+
+    _playBtn->AddOnClickHandler([this]() {
+      auto* map = _world->FindGameObjectByType<Map>();
+      if (map)
+      {
+        map->TriggerAction();
+      }
+    });
+  }
 }
 
 InGameUI::~InGameUI() {}

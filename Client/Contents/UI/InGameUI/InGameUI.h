@@ -15,7 +15,7 @@ private:
   class UIText* _subMissonTxt{nullptr};
 
   class UIButton* _playBtn{nullptr};
-  class UIImage* _playBtnImg{nullptr};
+  class UIImage* _playBtnImgList[3];
 
   class UIButton* _snipingBtn{nullptr};
   class UIImage* _snipingBtnImg{nullptr};

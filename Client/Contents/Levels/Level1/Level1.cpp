@@ -19,9 +19,7 @@ void Level1::PrepareLevel()
 
   mapMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
 
-    // UI Resource Load
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\Chr_Animation_02.png");
-
+  // UI Resource Load
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Stage_L.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Stage_S.png");
 
