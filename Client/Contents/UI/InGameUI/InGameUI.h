@@ -7,6 +7,8 @@ public:
   InGameUI(class World* world);
   virtual ~InGameUI();
 
+  void Update(float dt) override;
+
 private:
   class UIImage* _mainMissonImg{nullptr};
   class UIText* _mainMissonTxt{nullptr};
@@ -24,4 +26,7 @@ private:
   class UIImage* _combatBtnImg{nullptr};
 
   class UICursor* _cursor{nullptr};
+
+  class Map* _map{};
+  bool _bPlayflag = false;
 };

@@ -1,12 +1,13 @@
 #include "InGameUI.h"
 #include "Contents/GameObjects/Map/Map.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
+#include "GameFramework/UI/UICursor/UICursor.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 #include "GameFramework/UI/UIText/UIText.h"
-#include "GameFramework/UI/UICursor/UICursor.h"
 
 InGameUI::InGameUI(World* world) : UIPanel(world)
 {
+  _map = _world->FindGameObjectByType<Map>();
 
   // MainMisson
   _mainMissonImg = CreateUI<UIImage>(L"MainMissonImg");
@@ -98,17 +99,29 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
     });
 
     _playBtn->AddOnClickHandler([this]() {
-      auto* map = _world->FindGameObjectByType<Map>();
-      if (map)
+      if (_map)
       {
-        map->TriggerAction();
+        _map->TriggerAction();
+        _bPlayflag = true;
       }
     });
   }
 
-    _cursor = CreateUI<UICursor>(L"Cursor");
-  _cursor->SetCursorType(CursorType::SKILL);
-
+  _cursor = CreateUI<UICursor>(L"Cursor");
+  _cursor->SetCursorType(CursorType::DEFAULT);
 }
 
 InGameUI::~InGameUI() {}
+
+void InGameUI::Update(float dt)
+{
+  __super::Update(dt);
+
+  if (_bPlayflag == true)
+  {
+    _playBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
+    _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+    _playBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
+  }
+
+}
