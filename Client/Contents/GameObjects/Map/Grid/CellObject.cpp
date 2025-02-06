@@ -4,33 +4,34 @@
 
 CellObject::CellObject(World* world) : GameObject(world)
 {
-  redCellModelHandle = LoadModel("Models\\RedCell\\RedCell.glb");
-  /*const auto& redCellModel = AccessModelData(redCellModelHandle);
-  if (!redCellModel.meshes.empty())
-  {
-    redCell = *redCellModel.meshes.begin();
-  }*/
+  redCellModelHandle = LoadModel("Models\\Grid\\CharOver\\Grid_CharOver.glb");
+  greenCellModelHandle = LoadModel("Models\\Grid\\Empty\\Grid_Empty.glb");
 
-  greenCellModelHandle = LoadModel("Models\\GreenCell\\GreenCell.glb");
-  /*const auto& greenCellModel = AccessModelData(greenCellModelHandle);
-  if (!greenCellModel.meshes.empty())
-  {
-    greenCell = *greenCellModel.meshes.begin();
-  }*/
+  emptyCellModelHandle = LoadModel("Models\\Grid\\Empty\\Grid_Empty.glb");
+  selectedCellModelHandle = LoadModel("Models\\Grid\\Active\\Grid_Active.glb");
 
-  // Create a mesh component
-  // cell = CreateComponent<MeshComponent>();
+  // Create cell models.
 
 	redCell = world->CreateGameObjectFromModel(redCellModelHandle);
   greenCell = world->CreateGameObjectFromModel(greenCellModelHandle);
 
+  emptyCell = world->CreateGameObjectFromModel(emptyCellModelHandle);
+  emptyCell->SetInvisible();
+  selectedCell = world->CreateGameObjectFromModel(selectedCellModelHandle);
+  selectedCell->SetInvisible();
+
   AddChildGameObject(redCell);
   AddChildGameObject(greenCell);
+
+  AddChildGameObject(emptyCell);
+  AddChildGameObject(selectedCell);
 }
 
 CellObject::~CellObject() {
   UnloadModel(redCellModelHandle);
   UnloadModel(greenCellModelHandle);
+  UnloadModel(emptyCellModelHandle);
+  UnloadModel(selectedCellModelHandle);
 }
 
 void CellObject::SetInvisible() {
@@ -97,14 +98,14 @@ void CellObject::Update(float dt) {
   {
     switch (type)
     {
-    case CellType_Red: {
-      redCell->SetVisible();
-      greenCell->SetInvisible();
-    }
-    break;
     case CellType_Green: {
       redCell->SetInvisible();
       greenCell->SetVisible();
+    }
+    break;
+    case CellType_Red: {
+      redCell->SetVisible();
+      greenCell->SetInvisible();
     }
     break;
     }

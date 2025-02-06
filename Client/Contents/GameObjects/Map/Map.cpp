@@ -199,7 +199,7 @@ void Map::ShowAllyAttackRange() {
         h_offset *= hoveredCharacter->distanceToTarget;
 
         CellObject* cell = grid->GetCellObjectAt(w + w_offset, h + h_offset);
-        cell->SetCellType(CellType_Red);
+        cell->SetCellType(CellType_Green);
         cell->SetVisible();
 			}
 		}

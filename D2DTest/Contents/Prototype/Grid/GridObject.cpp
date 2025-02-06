@@ -141,7 +141,7 @@ void GridObject::TurnOffSelectionMode() {
 
 	for (auto* cell : grid)
   {
-    cell->SetCellType(CellType_Green);
+    cell->SetCellType(CellType_Red);
     cell->SetInvisible();
   }
 }
@@ -160,13 +160,13 @@ void GridObject::FindHoveredCell()
     cell->obb.Transform(obb, cell->transform->GetGlobalTransform());
     if (!anyHover && obb.Intersects(cursorRay.position, cursorRay.direction, t))
     {
-      cell->SetCellType(CellType_Red);
+      cell->SetCellType(CellType_Green);
       selectedCell = cell;
       anyHover = true;
     }
     else
     {
-      cell->SetCellType(CellType_Green);
+      cell->SetCellType(CellType_Red);
 		}
   }
 

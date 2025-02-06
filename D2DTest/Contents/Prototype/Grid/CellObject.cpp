@@ -82,12 +82,12 @@ void CellObject::OnAwake()
 {
   switch (type)
   {
-  case CellType_Red: {
+  case CellType_Green: {
     redCell->Activate();
     greenCell->Deactivate();
   }
   break;
-  case CellType_Green: {
+  case CellType_Red: {
     redCell->Deactivate();
     greenCell->Activate();
   }
@@ -98,12 +98,12 @@ void CellObject::OnAwake()
 void CellObject::Update(float dt) {
   switch (type)
   {
-  case CellType_Red: {
+  case CellType_Green: {
     redCell->Activate();
     greenCell->Deactivate();
   }
   break;
-  case CellType_Green: {
+  case CellType_Red: {
     redCell->Deactivate();
     greenCell->Activate();
   }
