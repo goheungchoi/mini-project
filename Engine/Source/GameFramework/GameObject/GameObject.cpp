@@ -62,6 +62,12 @@ void GameObject::SetVisible() {
   if (skelMeshComp) {
     skelMeshComp->SetVisible(true);
   }
+
+  auto* bbComp = GetComponent<BillboardComponent>();
+  if (bbComp)
+  {
+    bbComp->isVisible = true;
+  }
 }
 
 void GameObject::SetInvisible() {
@@ -75,6 +81,12 @@ void GameObject::SetInvisible() {
   if (skelMeshComp)
   {
     skelMeshComp->SetVisible(false);
+  }
+
+  auto* bbComp = GetComponent<BillboardComponent>();
+  if (bbComp)
+  {
+    bbComp->isVisible = false;
   }
 }
 

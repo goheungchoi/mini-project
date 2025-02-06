@@ -23,6 +23,8 @@ struct Frame
   float emissiveIntencity;
   float screenWidth;
   float screenHeight;
+  int isSSAO = false;
+  Vector3 pad;
 };
 
 struct World

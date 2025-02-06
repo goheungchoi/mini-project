@@ -5,6 +5,7 @@
 
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
+#include "GameFramework/UI/UICursor/UICursor.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 
 void Level1::PrepareLevel()
@@ -26,12 +27,17 @@ void Level1::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Order_Hover.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Order_Deact.png");
 
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\UI\\UI_Storage_Act_Fist.png");
-
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Act.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Hover.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Deact.png");
+
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Storage_Act_Fist.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Storage_Deact_Fist.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Storage_Act_Rush.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Storage_Deact_Rush.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Storage_Act_Gun.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Storage_Deact_Gun.png");
+
 #endif // USED2D
 }
 
@@ -45,6 +51,7 @@ void Level1::BeginLevel()
   CreateMap();
 
 #ifdef USED2D
+  world->_canvas->CreatePanel<UICursor>(L"Cursor");
   world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
 #endif // USED2D
 

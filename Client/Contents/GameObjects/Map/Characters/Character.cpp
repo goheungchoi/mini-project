@@ -42,6 +42,18 @@ AnimationHandle Character::gunFireAnimation;
 Character::Character(World* world) : GameObject(world)
 {
   count++;
+
+  deathIndicatorHandle =
+      LoadTexture("Textures\\Indicator_Death.png", TextureType::kAlbedo);
+
+  deathIndicator = world->CreateGameObject();
+  deathIndicator->SetTranslation(0.f, 1.6f, 0.f);
+
+  auto* bbComp = deathIndicator->CreateComponent<BillboardComponent>();
+  bbComp->SetTexture(deathIndicatorHandle);
+  bbComp->SetScale({1.f, 1.f, 1.f});
+  AddChildGameObject(deathIndicator);
+  deathIndicator->SetInvisible();
 	
 	// Create an Animator component
   animator = CreateComponent<AnimatorComponent>();
@@ -59,6 +71,7 @@ Character::~Character() {
   if (activeIndicator)
     delete activeIndicator;
 
+  UnloadTexture(deathIndicatorHandle);
 }
 
 void Character::TriggerAction()
@@ -88,6 +101,14 @@ void Character::BindActiveIndicator(GameObject* activeIndicator)
   AddChildGameObject(activeIndicator);
 }
 
+void Character::ShowDeathIndicator() {
+  deathIndicator->SetVisible();
+}
+
+void Character::HideDeathIndicator() {
+  deathIndicator->SetInvisible();
+}
+
 void Character::SetFaction(Faction faction) {
   this->faction = faction;
 	SetGameObjectTag(kFactionTags[faction]);
@@ -99,7 +120,11 @@ void Character::SetFaction(Faction faction) {
 	else if (faction == Faction::kEnemy)
   {
     animator->BindSkeleton(enemySkeletonHandle);
-	}
+  }
+  else
+  {
+    animator->BindSkeleton(civilianSkeletonHandle);
+  }
 }
 
 Faction Character::GetFaction()
@@ -308,6 +333,15 @@ void Character::PostUpdate(float dt) {
       auto* billboard = inactiveIndicator->GetComponent<BillboardComponent>();
       billboard->SetPosition(
           inactiveIndicator->transform->GetGlobalTranslation());
+    }
+  }
+
+  if (deathIndicator)
+  {
+    auto* billboard = deathIndicator->GetComponent<BillboardComponent>();
+    if (billboard)
+    {
+      billboard->SetPosition(deathIndicator->transform->GetGlobalTranslation());
     }
   }
 }

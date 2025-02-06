@@ -69,9 +69,10 @@ private:
   Renderer::Camera _camera;
   DirectionalLight _mainLight;
   int max = std::numeric_limits<int>::max();
-  float ambientIntencity = 0.2f;
-  float emissiveIntencity = 0.2f;
-  float testradius = 0.1f;
+  float ambientIntencity = 0.516f;
+  float emissiveIntencity = 0.523f;
+  float testradius = 0.005f;
+  bool testIsSSAO = true;
 
 public:
   RenderPassManager(Device* device, SwapChain* swapchain, int width, int height)
@@ -115,8 +116,6 @@ public:
 
     _staticShadowMesh.resize(2);
     _skelShadowMesh.resize(2);
-
-
   }
   ~RenderPassManager()
   {
@@ -288,10 +287,10 @@ public:
     max = std::numeric_limits<int>::max();
   }
 
-  void AddBillBoard(BillboardQuad* quad) 
+  void AddBillBoard(BillboardQuad* quad)
   {
     Vector4 worldPos = quad->position;
-    Vector4 viewPos = Vector4::Transform(worldPos,_camera.view);
+    Vector4 viewPos = Vector4::Transform(worldPos, _camera.view);
     float viewZ = viewPos.z;
     _billboards.insert({{viewZ, max}, quad});
   }
@@ -304,6 +303,7 @@ public:
     ImGui::SliderFloat("ambient intencity", &ambientIntencity, 0.f, 1.f);
     ImGui::SliderFloat("emissive intencity", &emissiveIntencity, 0.f, 1.f);
     ImGui::SliderFloat("testradius", &testradius, 0.f, 0.1f);
+    ImGui::Checkbox("IS SSAO", &testIsSSAO);
 #endif // DEBUG
     // frame
     Constant::Frame frame = {.mainDirectionalLight = _mainLight,
@@ -313,7 +313,8 @@ public:
                              .ambientIntencity = ambientIntencity,
                              .emissiveIntencity = emissiveIntencity,
                              .screenWidth = kScreenWidth,
-                             .screenHeight = kScreenHeight};
+                             .screenHeight = kScreenHeight,
+                             .isSSAO = testIsSSAO};
     Matrix IView = _camera.view;
     Matrix IProj = _camera.projection;
     IView = DirectX::XMMatrixInverse(nullptr, IView);
@@ -331,7 +332,7 @@ public:
         .nearplane = 0.01,
         .farplane = 10000,
     };
-   
+
     _utilityCB->UpdateSSAOParams(ssao);
   }
   void SetSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath, LPCSTR diffuseIrrPath,
@@ -433,7 +434,6 @@ public:
     macros = {{"BLUR", "1"}, {nullptr, nullptr}};
     _pShaders.insert({"BlurVertical", _compiler->CompilePixelShader(
                                           macros, "blur_vertical_ps_main")});
-    
   }
   void CreateSamplers()
   {
@@ -792,6 +792,7 @@ private:
     dc->PSSetShader(_pShaders["Quad"]->shader.Get(), nullptr, 0);
     _pso->SetBackBuffer();
     _shadow->SetDepthSRV();
+    _ssao->SetFinalSSAOTexture();
     _deffered->QuadDraw();
     _deffered->ClearRenderTargets();
   }
@@ -941,7 +942,7 @@ private:
                            DXGI_FORMAT_R32_UINT, 0);
     }
     std::ranges::for_each(_billboards, [this, dc](const auto& iter) {
-      const auto& [z,quad] = iter;
+      const auto& [z, quad] = iter;
       Matrix s = Matrix::CreateScale(quad->scale);
 
       Vector3 forward = _camera.eye - (Vector3)quad->position;
@@ -968,7 +969,7 @@ private:
   void DrawSSAO(ID3D11DeviceContext* dc)
   {
     //----------------------------------------------------------------------------------------------------------------------------
-    //ssao normal depth write
+    // ssao normal depth write
     _pso->SetBlendOnEnable(false);
     _pso->TurnZBufferOn();
     _pso->SetMainViewPort();
@@ -1074,10 +1075,14 @@ private:
     _ssao->ReadPrepare();
     _ssao->QuadDraw();
     //----------------------------------------------------------------------------------------------------------------------------
-    //blur ssao map
-    _pso->ClearPixelShaderResourceView(16);
-    _ssao->BlurHorizontalPrepare();
+    // blur ssao map
     dc->PSSetShader(_pShaders["BlurHorizontal"]->shader.Get(), nullptr, 0);
+    _pso->ClearPixelShaderResourceView(17);
+    _ssao->BlurHorizontalPrepare();
+    _ssao->QuadDraw();
+    dc->PSSetShader(_pShaders["BlurVertical"]->shader.Get(), nullptr, 0);
+    _pso->ClearPixelShaderResourceView(18);
+    _ssao->BlurVerticlePrepare();
     _ssao->QuadDraw();
   }
   void Clear()
