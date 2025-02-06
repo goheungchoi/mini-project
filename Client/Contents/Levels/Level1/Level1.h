@@ -1,6 +1,7 @@
 #pragma once
 
-#include "GameFramework/Level/Level.h"
+//#include "GameFramework/Level/Level.h"
+#include "Contents/Levels/GameLevel.h"
 #include "GameFramework/World/World.h"
 
 #include "GameFramework/Components/Animation/Animation.h"
@@ -8,7 +9,7 @@
 
 #include "Contents/GameObjects/CameraObject.h"
 
-class Level1 : public Level
+class Level1 : public GameLevel
 {
 protected:
   // Resource handles
@@ -28,7 +29,7 @@ protected:
   class GameManager* gameManager{nullptr};
 
 public:
-  Level1(const std::string& name) : Level(name) {}
+  Level1(const std::string& name) : GameLevel(name) {}
 
   virtual void PrepareLevel() override;
 
