@@ -11,15 +11,13 @@ void UIAnim::Update(float dt)
   {
     return;
   }
-  _pCurrFrameInfo = _pCurrAnimInfo->Frames[_curFrameIndex];
+   _pCurrFrameInfo = _pCurrAnimInfo->Frames[_curFrameIndex];
+  _bLoop = _pCurrAnimInfo->bIsLoop;
   const FRAME_INFO& frame = _pCurrFrameInfo;
   _lastFrameIndex = _pCurrAnimInfo->Frames.size() - 1; // 마지막 Index 번호
   int maxFrameCnt = _lastFrameIndex + 1; // 애니메이션의 frame 총 갯수
 
-  ///////////////
-  // m_FrameTime에 fTimeElapsed을 누적시켜  Frame.Duration보다 크면
-  // m_FrameIndexCurr를 증가시키고 m_FrameTime을 0으로 초기화한다.
-  if (frame.duration == 0 && _curFrameIndex == _lastFrameIndex)
+  if (frame.duration == 0 && _curFrameIndex == _lastFrameIndex+1)
   {
     return;
   }
@@ -65,7 +63,7 @@ void UIAnim::SetCurrentAnimSprite(std::string AnimName)
 
 }
 
-void UIAnim::LoadAnimSprite(LPCSTR SpritePath, LPCSTR animCSV)
+void UIAnim::LoadAnimSprite(LPCSTR SpritePath, std::string animCSV)
 {
   AnimSprite* newAnimSprite = new AnimSprite();
   newAnimSprite->_pSprite = LoadSprite(SpritePath);
@@ -76,10 +74,11 @@ void UIAnim::LoadAnimSprite(LPCSTR SpritePath, LPCSTR animCSV)
 
 Sprite* UIAnim::LoadSprite(LPCSTR animSpritePath)
 {
+  _spriteList.push_back(Resource2DManager::GetInstance()->GetSprite(animSpritePath).get());
   return Resource2DManager::GetInstance()->GetSprite(animSpritePath).get();
 }
 
-ANIMATION_INFO* UIAnim::LoadAnim2DAsset(LPCSTR animCSV)
+ANIMATION_INFO* UIAnim::LoadAnim2DAsset(std::string animCSV)
 {
   ANIMATION_INFO* newAnimInfo = new ANIMATION_INFO();
   std::filesystem::path filepath(animCSV);
@@ -126,5 +125,31 @@ ANIMATION_INFO* UIAnim::LoadAnim2DAsset(LPCSTR animCSV)
   return newAnimInfo;
 }
 
+void UIAnim::SetScale(std::string spritename,
+    ::DirectX::SimpleMath::Vector2 scale)
+{
+  _sprites.find(spritename)->second->_pSprite->SetScale(scale);
+}
 
-void UIAnim::SetAnim2D(std::wstring animName, bool bLoop) {}
+void UIAnim::SetScale(::DirectX::SimpleMath::Vector2 scale)
+{
+  for (auto sprite : _spriteList)
+  {
+    sprite->SetScale(scale);
+  }
+}
+
+void UIAnim::SetCenterPos(::DirectX::SimpleMath::Vector2 pos)
+{
+  UIElement::SetCenterPos(pos);
+  _position = {pos.x - (_size.x / 2), pos.y - (_size.y / 2)};
+  for (auto sprite:_spriteList)
+  {
+    sprite->SetPos(_position);
+  }
+}
+
+void UIAnim::SetCenterPos(std::string spritename, Vector2 pos)
+{
+  _sprites.find(spritename)->second->_pSprite->SetPos(pos);
+}

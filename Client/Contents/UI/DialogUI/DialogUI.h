@@ -6,7 +6,13 @@ public:
   DialogUI(class World* world);
   virtual ~DialogUI() = default;
 
-private:
+  class UIImage* _PhotoPanel{nullptr};
+
   class UIAnim* _Eliza{nullptr};
-  class UIText* _charactername{nullptr};
+
+
+  bool bInGame = false;
+
+  void Update(float dt) override;
+private:
 };

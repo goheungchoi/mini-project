@@ -11,14 +11,11 @@
 void Level2::PrepareLevel()
 {
   // UI Resource Load
+
+
   Resource2DManager::GetInstance()->LoadSprite(
-      "Textures\\MainMissonUI_Test.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "Textures\\SubMissonUI_Test.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\SnipingUI_Test.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\Btn_Slot.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\Btn_Slot2.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\Btn_Play.png");
+      "Textures\\Picture\\PhotoPanel.png");
+
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\Animation\\Eliza_Initiative_Gunfire.png");
   Resource2DManager::GetInstance()->LoadSprite(
@@ -36,8 +33,7 @@ void Level2::PrepareLevel()
 void Level2::BeginLevel()
 {
 #ifdef USED2D
-    world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
-  world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+  world->_canvas->CreatePanel<DialogUI>(L"ElizaDialog");
 #endif // USED2D
 }
 

@@ -31,7 +31,7 @@ struct ANIMATION_INFO
 {
   std::string name{"DEFAULT"};
   std::vector<FRAME_INFO> Frames;
-
+  bool bIsLoop = true;
   ANIMATION_INFO() { Frames.reserve(34); }
 };
 
@@ -41,6 +41,7 @@ struct AnimSprite
   Sprite* _pSprite;
   ANIMATION_INFO* _pAnimInfo;
 };
+
 class UIAnim : public UIImage
 {
 public:
@@ -52,14 +53,21 @@ public:
   void Render() override;
 
   void SetCurrentAnimSprite(std::string AnimName);
-  void LoadAnimSprite(LPCSTR SpritePath, LPCSTR animCSV);
+  void LoadAnimSprite(LPCSTR SpritePath, std::string animCSV);
   class Sprite* LoadSprite(LPCSTR SpritePath);
-  ANIMATION_INFO* LoadAnim2DAsset(LPCSTR animCSV);
-  void SetAnim2D(std::wstring animName, bool bLoop);
+  ANIMATION_INFO* LoadAnim2DAsset(std::string animCSV);
+
+
+  void SetScale(Vector2 scale);
+  void SetScale(std::string spritename, Vector2 scale);
+
+  virtual void SetCenterPos(Vector2 pos) override;
+  void SetCenterPos(std::string spritename,Vector2 pos);
 
 private:
 
   std::map<std::string,AnimSprite*> _sprites{};
+  std::vector<class Sprite*> _spriteList;
   class Sprite* _pCurrSprite;
   ANIMATION_INFO* _pCurrAnimInfo; // 현재 애니메이션정보
   FRAME_INFO _pCurrFrameInfo;

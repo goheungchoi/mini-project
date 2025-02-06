@@ -84,7 +84,9 @@ void Sprite::Render(Vector4 rect)
       [=]() {
         auto textureSRV = _pTexture->GetResource().Get();
         const RECT* _srcRect = new RECT(rect.x, rect.y, rect.z, rect.w);
-        _pD2DRenderer->_pSpriteBatch->Draw(textureSRV, _pos, _srcRect);
+        _pD2DRenderer->_pSpriteBatch->Draw(
+            textureSRV, _pos, _srcRect, DirectX::Colors::White, 0.0f,
+            DirectX::SimpleMath::Vector2::Zero, _scale);
       },
       PassType2D::SPRITE_BATCH // SpriteBatch 전용 패스 사용
   );
