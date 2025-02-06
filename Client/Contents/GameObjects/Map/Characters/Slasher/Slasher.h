@@ -9,7 +9,7 @@ class Slasher : public Character
 protected:
   ModelHandle knifeModelHandle;
 
-  GameObject* knife{nullptr};
+  class Knife* knife{nullptr};
 
 	Animation* dead;
   AnimationState* deadState;
@@ -20,10 +20,12 @@ protected:
   Animation* ready;
   AnimationState* readyState;
 
-  Animation* action;
+  Animation* action1;
+  Animation* action2;
   AnimationState* actionState;
 
-  GameObject* animationRoot;
+  Animation* currActionAnimation;
+  std::pair<float, float> interval;
 
 	float slashSpeedPerSec{1.f};
   float slashElapsedTime{0.f};
@@ -38,7 +40,16 @@ public:
   Slasher(World* world);
   ~Slasher();
 
+  void TriggerAction() override;
+
+  void TakeOverTargetCell();
+
+  bool isCollsionOn{true};
+  void TurnOnCollision();
+  void TurnOffCollision();
+
 	// Interaction
+  void OnBeginOverlap(GameObject* other);
 
   // Game loop events
   void OnAwake() override;
