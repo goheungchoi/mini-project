@@ -3,6 +3,7 @@
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 #include "GameFramework/UI/UIText/UIText.h"
+#include "GameFramework/UI/UICursor/UICursor.h"
 
 InGameUI::InGameUI(World* world) : UIPanel(world)
 {
@@ -104,6 +105,10 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
       }
     });
   }
+
+    _cursor = CreateUI<UICursor>(L"Cursor");
+  _cursor->SetCursorType(CursorType::SKILL);
+
 }
 
 InGameUI::~InGameUI() {}

@@ -11,6 +11,7 @@ UICursor::UICursor(World* world) : UIPanel(world)
   _sprites[0] = Resource2DManager::GetInstance()
                     ->GetSprite("2D\\UI\\UI_Cursor_Basic.png")
                     .get();
+  _sprites[0]->SetScale({0.7, 0.7});
 
   _sprites[1] = Resource2DManager::GetInstance()
                     ->GetSprite("2D\\UI\\UI_Cursor_Snipe.png")
@@ -24,7 +25,15 @@ void UICursor::Update(float dt)
   __super::Update(dt);
 
   Vector2 curPos = INPUT.GetCurrMouseStateVec();
-  _sprites[0]->SetPos({curPos.x, curPos.y});
+
+  if (_selectedIndex == 0)
+  {
+    _sprites[0]->SetPos({curPos.x - 20, curPos.y - 15});
+  }
+  else
+  {
+    _sprites[1]->SetPos({curPos.x - _size.x, curPos.y - _size.y});
+  }
 }
 
 void UICursor::Render()
