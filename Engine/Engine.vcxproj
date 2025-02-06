@@ -183,6 +183,19 @@
 		</ProjectReference>
 	</ItemGroup>
 	<ItemGroup>
+		<None Include="External\fmod\fmod.cs" />
+		<ClInclude Include="External\fmod\fmod.h" />
+		<ClInclude Include="External\fmod\fmod.hpp" />
+		<ClInclude Include="External\fmod\fmod_codec.h" />
+		<ClInclude Include="External\fmod\fmod_common.h" />
+		<None Include="External\fmod\fmod_dsp.cs" />
+		<ClInclude Include="External\fmod\fmod_dsp.h" />
+		<ClInclude Include="External\fmod\fmod_dsp_effects.h" />
+		<None Include="External\fmod\fmod_errors.cs" />
+		<ClInclude Include="External\fmod\fmod_errors.h" />
+		<ClInclude Include="External\fmod\fmod_output.h" />
+		<None Include="External\lib\fmodL_vc.lib" />
+		<None Include="External\lib\fmod_vc.lib" />
 		<ClCompile Include="External\nvpro\nv_dds.cpp" />
 		<ClInclude Include="External\nvpro\nv_dds.h" />
 		<ClCompile Include="External\nvpro\texture_formats.cpp" />
@@ -239,6 +252,7 @@
 		<ClInclude Include="Include\Renderer\IRenderer.h" />
 		<ClInclude Include="Include\Resource2DManager\Resource2DManager.h" />
 		<ClInclude Include="Include\ResourceManager\ResourceManager.h" />
+		<ClInclude Include="Include\SoundSystem\SoundManager.h" />
 		<ClInclude Include="Include\WinApp\WinApp.h" />
 		<ClInclude Include="Include\WindowManager\WindowManager.h" />
 		<ClCompile Include="Source\Core\Async\Async.cpp" />
@@ -324,6 +338,7 @@
 		<ClCompile Include="Source\ResourceManager\ResourcePool\SkeletonResourcePool.cpp" />
 		<ClCompile Include="Source\ResourceManager\ResourcePool\TextureResourcePool.cpp" />
 		<ClInclude Include="Source\ResourceManager\ResourcePool\Utils.h" />
+		<ClCompile Include="Source\SoundSystem\SoundManager.cpp" />
 		<ClCompile Include="Source\WinApp\WinApp.cpp" />
 		<ClCompile Include="Source\WindowManager\WindowManager.cpp" />
 	</ItemGroup>

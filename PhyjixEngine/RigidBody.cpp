@@ -40,6 +40,7 @@ RigidBody::RigidBody(physx::PxPhysics* physics,
     _triggerShape = physx::PxRigidActorExt::createExclusiveShape(
         *_actor, physx::PxBoxGeometry(offsetsize.x, offsetsize.y, offsetsize.z),
         *material);
+
     break;
 
   case ColliderShape::eSphereCollider:
@@ -73,10 +74,23 @@ RigidBody::RigidBody(physx::PxPhysics* physics,
 
 RigidBody::~RigidBody()
 {
+  _world->RemoveRigidBody(this);
   if (_defaultShape)
-    _defaultShape->release();
-  if (_actor)
+  {
+    _actor->detachShape(*_defaultShape);
+    _defaultShape = nullptr; 
+  }
+  if (_triggerShape)
+  {
+    _actor->detachShape(*_triggerShape);
+    _triggerShape = nullptr; 
+  }
+  if (!_actor->getScene())
+  {
     _actor->release();
+    _actor = nullptr;
+  }
+  _world = nullptr;
 }
 
 void RigidBody::OnCollisionEnter(IRigidBody* other) 
@@ -266,17 +280,17 @@ void RigidBody::EnableSimulation()
 {
     if (isStatic)
       return;
-  GetDynamicActor()->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, false);
-  GetDynamicActor()->wakeUp();
-  bIsKinematic = false;
+    _triggerShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+    _defaultShape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, true);
+
 }
 
 void RigidBody::DisableSimulation()
 {
   if (isStatic)
     return;
-  GetDynamicActor()->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
-  bIsKinematic = true;
+    _defaultShape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
+  _triggerShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
   
 }
 

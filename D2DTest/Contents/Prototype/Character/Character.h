@@ -11,7 +11,7 @@ enum Faction
 
 extern const std::string kFactionTags[3];
 
-enum CharactorType
+enum CharacterType
 {
   kBrawler = 0,
   kSlasher = 1,
@@ -47,7 +47,7 @@ public:
   bool bGridLocationChanged{false};
   uint32_t grid_w{0}, grid_h{0};
 
-  CharactorType type{};
+  CharacterType type{};
   int range{0};
   int health{1};
 

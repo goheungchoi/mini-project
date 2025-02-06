@@ -11,7 +11,7 @@ enum Faction
 
 extern const std::string kFactionTags[3];
 
-enum CharactorType
+enum CharacterType
 {
   kBrawler = 0,
   kSlasher = 1,
@@ -58,6 +58,7 @@ public:
   static AnimationHandle gunReady2Animation;
   static AnimationHandle gunFireAnimation;
 
+  GameObject* directionIndicator{nullptr};
   GameObject* inactiveIndicator{nullptr};
   GameObject* activeIndicator{nullptr};
 
@@ -67,7 +68,7 @@ public:
   bool bGridLocationChanged{false};
   uint32_t grid_w{0}, grid_h{0};
 
-  CharactorType type{};
+  CharacterType type{};
   int range{0};
   int health{1};
 
@@ -81,12 +82,18 @@ public:
   int distanceToTarget{-1};
 
 	class GridObject* grid{nullptr};
+  class Map* map{nullptr};
 
 	//
 	bool isDead{false};
 
 	//
-  bool isSimulationMode{false};
+  bool isActionTriggered{false};
+
+
+  // isPlacement mode on
+  bool isPlacementModeOn{false};
+
 
 public:
 
@@ -95,6 +102,8 @@ public:
 	~Character();
 
 	virtual void TriggerAction();
+
+  void BindDirectionIndicator(GameObject* directionIndicator);
 
   void BindInactiveIndicator(GameObject* inactiveIndicator);
   void BindActiveIndicator(GameObject* activeIndicator);
@@ -105,12 +114,17 @@ public:
   Direction GetDirection();
 	void SetGridLocation(uint32_t w, uint32_t h);
   std::pair<uint32_t, uint32_t> GetGridLocation();
+  std::pair<int, int> GetGridFrontDirection();
+
+  void SetPlacementMode(bool placementMode);
+
+	// Action
+  void Die();
 
   // Interaction
-  virtual void OnBeginCursorOver() {};
-  virtual void OnEndCursorOver() {};
-  virtual void OnClicked() {};
-  virtual void OnPressed() {};
+  void OnHover();
+  virtual void OnLeftClick() {};
+  virtual void OnRightClick() {};
 
 	void OnBeginOverlap(GameObject* other);
 

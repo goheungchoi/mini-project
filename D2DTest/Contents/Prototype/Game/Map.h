@@ -33,7 +33,7 @@ public:
 	Map(World* world);
   ~Map();
 
-	void TurnOnPlacementMode(CharactorType type);
+	void TurnOnPlacementMode(CharacterType type);
   void TurnOffPlacementMode();
 
 	void TurnOnSimulationMode();
@@ -44,7 +44,7 @@ public:
 
 	void CreateEnemyAt(uint32_t w, uint32_t h, Direction dir = kNorth);
 
-  void CreateAllyAt(CharactorType type, uint32_t w, uint32_t h,
+  void CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
                     Direction dir = kNorth);
 
   void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth);

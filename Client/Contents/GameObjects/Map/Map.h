@@ -11,6 +11,9 @@ public:
 	// Resource handle
   ModelHandle animTestHandle;
 
+  ModelHandle allyDirectionIndicatorModelHandle;
+  ModelHandle enemyDirectionIndicatorModelHandle;
+
   TextureHandle brawlerInactiveIndicatorTextureHandle;
   TextureHandle brawlerActiveIndicatorTextureHandle;
   TextureHandle slasherInactiveIndicatorTextureHandle;
@@ -18,19 +21,14 @@ public:
   TextureHandle gunmanInactiveIndicatorTextureHandle;
   TextureHandle gunmanActiveIndicatorTextureHandle;
 
-	ModelHandle enemyModelHandle;
-  ModelHandle playerModelHandle;
-  ModelHandle civilianModelHandle;
+	ModelHandle enemyBrawlerModelHandle;
+  ModelHandle enemyGunmanModelHandle;
 
-	ModelHandle enemyGunmanModelHandle;
+  ModelHandle civilianModelHandle;
 
 	ModelHandle allyBrawlerModelHandle;
   ModelHandle allySlasherModelHandle;
   ModelHandle allyGunmanModelHandle;
-
-	ModelHandle clonedAllyBrawlerModelHandle;
-	ModelHandle clonedAllySlasherModelHandle;
-	ModelHandle clonedAllyGunmanModelHandle;
 
 public:
 
@@ -43,45 +41,62 @@ public:
 
   std::vector<Character*> civilians;
 
+	// Action trigger
 	bool isActionTriggered{false};
+  struct CharacterInfo
+  {
+    Faction faction;
+    CharacterType type;
+    Direction dir;
+    uint32_t w, h;
+  };
+  std::vector<CharacterInfo> record;
 
 
-	// Placement
+	// Placement mode
 	bool isPlacementModeOn{false};
   Character* placeholder{nullptr};
 
 
-	// Simulation
-  bool isSimulating{false};
-  Character* simulatingCharacter{nullptr};
+	// Selection mode
+  bool isAnySelected{false};
+  Character* hoveredCharacter{nullptr};
+
+
+	// Assassination target
+  bool isAssassinationMode{false};
+  Character* assassinationTarget{nullptr};
 
 public:
 
 	Map(World* world);
   ~Map();
 
-	void TurnOnPlacementMode(CharactorType type);
+	void TurnOnPlacementMode(CharacterType type, Direction dir);
   void TurnOffPlacementMode();
 
-	void TurnOnSimulationMode();
+	void ShowAllyAttackRange();
 
 	void TriggerAction();
 
 	void ResetGame();
 
-	void CreateEnemyAt(CharactorType type, uint32_t w, uint32_t h,
+	void CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
                      Direction dir = kNorth);
 
-  void CreateAllyAt(CharactorType type, uint32_t w, uint32_t h,
+  void CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
                     Direction dir = kNorth);
 
   void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth);
 
   void CreateObstacleAt(uint32_t w, uint32_t h);
 
+  void DeleteCharacterFromMap(Character* character);
+
 	void OnAwake() override;
 
 	void Update(float dt) override;
+  void PostUpdate(float dt) override;
 
 private:
   XMVECTOR GetCursorPosition() const;

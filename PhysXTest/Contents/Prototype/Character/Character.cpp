@@ -138,11 +138,17 @@ void Character::OnAwake()
 
   bodyRigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover,
                                    [=]() {
-    transform->Rotate({0, 1, 0});
                                    });
+  bodyRigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eLClick,
+                                   [=]() {
+                                     bodyRigidBody->DisableSimulation();
+                                   });
+  bodyRigidBody->SetCollisionEvent(
+      nullptr, eCollisionEventType::eRClick,
+      [=]() { bodyRigidBody->EnableSimulation(); });
 
   //bodyRigidBody->EnableDebugDraw();
-  bodyRigidBody->DisableSimulation();
+  //bodyRigidBody->DisableSimulation();
   bodyRigidBody->DisableGravity();
   //bodyRigidBody->DisableCollision();
 }

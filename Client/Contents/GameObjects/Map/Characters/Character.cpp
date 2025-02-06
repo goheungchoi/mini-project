@@ -3,6 +3,7 @@
 #include "GameFramework/World/World.h"
 #include "Core/Camera/Camera.h"
 
+#include "Contents/GameObjects/Map/Map.h"
 #include "Contents/GameObjects/Map/Grid/GridObject.h"
 
 const std::string kFactionTags[3] = {"Ally", "Enemy", "Neutral"};
@@ -29,6 +30,7 @@ AnimationHandle Character::idleAnimation;
 
 AnimationHandle Character::brawlerActionAnimation;
 
+// TODO: Slash action 2;
 AnimationHandle Character::slashReadyAnimation;
 AnimationHandle Character::slashActionAnimation;
 
@@ -60,21 +62,28 @@ Character::~Character() {
 
 void Character::TriggerAction()
 {
+  isActionTriggered = true;
   if (isTargetInRange)
 		animator->SetVariable<bool>("triggered", true, true);
+}
+
+void Character::BindDirectionIndicator(GameObject* directionIndicator) {
+  this->directionIndicator = directionIndicator;
+  directionIndicator->SetTranslation(0.f, 0.f, -.8f);
+  AddChildGameObject(directionIndicator);
 }
 
 void Character::BindInactiveIndicator(GameObject* inactiveIndicator)
 {
   this->inactiveIndicator = inactiveIndicator;
-  inactiveIndicator->SetTranslation(0.f, 2.3f, 0.f);
+  inactiveIndicator->SetTranslation(0.f, 2.5f, 0.f);
   AddChildGameObject(inactiveIndicator);
 }
 
 void Character::BindActiveIndicator(GameObject* activeIndicator)
 {
   this->activeIndicator = activeIndicator;
-  activeIndicator->SetTranslation(0.f, 2.3f, 0.f);
+  activeIndicator->SetTranslation(0.f, 2.5f, 0.f);
   AddChildGameObject(activeIndicator);
 }
 
@@ -119,31 +128,62 @@ std::pair<uint32_t, uint32_t> Character::GetGridLocation()
   return {grid_w, grid_h};
 }
 
-// TODO:
-// void Character::OnHit(GameObject* object) {
-//	if (object == "bullet")
-//	{
-//    health -= 1;
-//	}
-//
-//	if (health <= 0)
-//  {
-//    animator->SetVariable<bool>("dead", true, true);
-//		isDead = true;
-//	}
-//}
+std::pair<int, int> Character::GetGridFrontDirection()
+{
+  int w_offset{0}, h_offset{0};
+
+	switch (dir)
+  {
+  case kNorth:
+    h_offset = 1;
+    break;
+  case kEast:
+    w_offset = 1;
+    break;
+  case kSouth:
+    h_offset = -1;
+    break;
+  case kWest:
+    w_offset = -1;
+    break;
+  }
+
+	return {w_offset, h_offset};
+}
+
+void Character::SetPlacementMode(bool isPlacementMode) {
+  isPlacementModeOn = isPlacementMode;
+}
+
+void Character::Die() {
+  animator->SetVariable<bool>("dead", true, true);
+  isDead = true;
+}
+
+void Character::OnHover() {
+  if (auto* rbComp = GetComponent<RigidbodyComponent>(); rbComp)
+  {
+    rbComp->debugColor = Color(0, 1, 1, 1);
+  }
+
+  map->hoveredCharacter = this;
+}
 
 void Character::OnBeginOverlap(GameObject* other) {
-  if (other->GetGameObjectTag() == "weapon")
-  {
-    health -= 1;
-	}
+  GameObject::OnBeginOverlap(other);
 
-	if (health <= 0)
+  if (!isDead)
   {
-    animator->SetVariable<bool>("dead", true, true);
-    isDead = true;
-	}
+    if (other->GetGameObjectTag() == "weapon")
+    {
+      health -= 1;
+	  }
+
+	  if (health <= 0)
+    {
+      Die();
+	  }
+  }
 }
 
 void Character::OnAwake()
@@ -151,8 +191,14 @@ void Character::OnAwake()
   grid = world->FindGameObjectByType<GridObject>();
   if (!grid)
   {
-    throw std::runtime_error("Can'f find grid!");
+    throw std::runtime_error("Can't find grid!");
   }
+
+	map = world->FindGameObjectByType<Map>();
+  if (!map)
+  {
+    throw std::runtime_error("Can't find map!");
+	}
 
   if (bGridLocationChanged)
   {
@@ -164,32 +210,44 @@ void Character::OnAwake()
     ApplyChangedDirection();
   }
 
-	auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
-  bodyRigidBody->Initialize({0, 1.0f, 0}, Quaternion::Identity,
-                            {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
-                            false, false, world->_phyjixWorld);
-
-  // bodyRigidBody->EnableGravity();
-  // bodyRigidBody->DisableGravity();
-  // bodyRigidBody->DisableCollision();
-  // bodyRigidBody->EnableDebugDraw();
-  bodyRigidBody->ClearForce();
-  bodyRigidBody->ClearTorque();
-  //  bodyRigidBody->DisableSimulation();
-  // bodyRigidBody->DisableDebugDraw();
-  bodyRigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eLClick,
-                                   [=]() {
-                                     bodyRigidBody->EnableDebugDraw();
-                                     bodyRigidBody->ClearForce();
-                                   });
+  if (!isPlacementModeOn)
+  {
+	  auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
+    bodyRigidBody->Initialize({0, 1.0f, 0},
+                              DirectX::SimpleMath::Quaternion::Identity,
+                              {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
+                              false, true, world->_phyjixWorld);
+    bodyRigidBody->EnableSimulation();
+    bodyRigidBody->EnableDebugDraw();
+  }
 }
 
-void Character::Update(float dt) {
+void Character::Update(float dt)
+{
+  if (auto* rbComp = GetComponent<RigidbodyComponent>(); rbComp)
+  {
+    rbComp->debugColor = Color(1, 0, 1, 1);
+    if (rbComp->IsOverlapping())
+    {
+      rbComp->debugColor = Color(0, 1, 1, 1);
+    }
+  }
+  
 	if (isDead)
   {
 		// TODO: 
 		return;
 	}
+
+  if (isActionTriggered)
+  {
+    if (inactiveIndicator && activeIndicator)
+    {
+      inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+      activeIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+    }
+    return;
+  }
 	
 	if (bGridLocationChanged)
   {
@@ -224,6 +282,11 @@ void Character::Update(float dt) {
 
 void Character::PostUpdate(float dt) {
 
+  if (isActionTriggered)
+  {
+    return;
+  }
+
   if (inactiveIndicator && activeIndicator)
   {
     if (isTargetInRange)
@@ -238,9 +301,7 @@ void Character::PostUpdate(float dt) {
       billboard->SetPosition(
           inactiveIndicator->transform->GetGlobalTranslation());
     }
-  
   }
-  
 }
 
 void Character::ApplyChangedGridLocation() {
@@ -313,13 +374,25 @@ void Character::FindTargetInRange() {
 			if (searchTarget->GetGameObjectTag() == kFactionTags[kNeutral])
         continue;
 
+			// Skip the target that will be assassinated at the start of the game.
+			if (searchTarget == map->assassinationTarget)
+        continue;
+
 			// If this is an opponent.
 			if (kFactionTags[!this->faction] == searchTarget->GetGameObjectTag())
       {
         distanceToTarget = i;
         isTargetInRange = true;
         return;
-			}
+      }
+      // If this is an ally.
+      else
+      {
+        // Don't attack.
+        distanceToTarget = -1;
+        isTargetInRange = false;
+        return;
+      }
 		}
 	}
 

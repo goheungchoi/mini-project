@@ -109,6 +109,14 @@ GameObject* GridObject::GetGameObjectAt(uint32_t w, uint32_t h)
   return placements[idx(w, h)];
 }
 
+bool GridObject::IsGameObjectAt(GameObject* object, uint32_t w, uint32_t h)
+{
+  if (w >= width || h >= height)
+    return false;
+
+  return GetGameObjectAt(w, h) == object;
+}
+
 std::pair<float, float> GridObject::GetActualPositionAt(uint32_t w, uint32_t h)
 {
   if (w >= width || h >= height)
@@ -123,6 +131,15 @@ std::pair<float, float> GridObject::GetActualPositionAt(uint32_t w, uint32_t h)
 	
   // return {XMVectorGetX(pos), XMVectorGetZ(pos)};
   return {pos_x, pos_z};
+}
+
+void GridObject::ClearGrid() {
+  for (auto& p : placements)
+  {
+    p = nullptr;
+	}
+
+	TurnOffSelectionMode();
 }
 
 // TODO: Don't light up on tiles where objects already exist

@@ -23,6 +23,7 @@ CellObject::CellObject(World* world) : GameObject(world)
 
 	redCell = world->CreateGameObjectFromModel(redCellModelHandle);
   greenCell = world->CreateGameObjectFromModel(greenCellModelHandle);
+
   AddChildGameObject(redCell);
   AddChildGameObject(greenCell);
 }
@@ -33,7 +34,7 @@ CellObject::~CellObject() {
 }
 
 void CellObject::SetInvisible() {
-  auto* redMeshComp = redCell->GetComponent<MeshComponent>();
+  /*auto* redMeshComp = redCell->GetComponent<MeshComponent>();
   auto* greenMeshComp = greenCell->GetComponent<MeshComponent>();
   if (redMeshComp)
   {
@@ -42,13 +43,16 @@ void CellObject::SetInvisible() {
   if (greenMeshComp)
   {
     greenMeshComp->SetVisible(false);
-	}
+	}*/
+
+  redCell->SetInvisible();
+  greenCell->SetInvisible();
 
   isVisible = false;
 }
 
 void CellObject::SetVisible() {
-  auto* redMeshComp = redCell->GetComponent<MeshComponent>();
+  /*auto* redMeshComp = redCell->GetComponent<MeshComponent>();
   auto* greenMeshComp = greenCell->GetComponent<MeshComponent>();
   if (redMeshComp)
   {
@@ -57,7 +61,7 @@ void CellObject::SetVisible() {
   if (greenMeshComp)
   {
     greenMeshComp->SetVisible(true);
-  }
+  }*/
 
   isVisible = true;
 }
@@ -84,33 +88,25 @@ std::pair<int, int> CellObject::GetCellPosition()
 
 void CellObject::OnAwake()
 {
-  switch (type)
-  {
-  case CellType_Red: {
-    redCell->Activate();
-    greenCell->Deactivate();
-  }
-  break;
-  case CellType_Green: {
-    redCell->Deactivate();
-    greenCell->Activate();
-  }
-  break;
-  }
+
 }
 
 void CellObject::Update(float dt) {
-  switch (type)
+
+  if (isVisible)
   {
-  case CellType_Red: {
-    redCell->Activate();
-    greenCell->Deactivate();
-  }
-  break;
-  case CellType_Green: {
-    redCell->Deactivate();
-    greenCell->Activate();
-  }
-  break;
+    switch (type)
+    {
+    case CellType_Red: {
+      redCell->SetVisible();
+      greenCell->SetInvisible();
+    }
+    break;
+    case CellType_Green: {
+      redCell->SetInvisible();
+      greenCell->SetVisible();
+    }
+    break;
+    }
   }
 }

@@ -76,13 +76,13 @@ public:
 
 	GameObject* GetGameObjectAt(uint32_t w, uint32_t h);
 
+	bool IsGameObjectAt(GameObject* object, uint32_t w, uint32_t h);
+
 	std::pair<float, float> GetActualPositionAt(uint32_t w, uint32_t h);
 
+	void ClearGrid();
+
 	// Interaction
-  virtual void OnBeginCursorOver() {};
-  virtual void OnEndCursorOver() {};
-  virtual void OnClicked() {};
-  virtual void OnPressed() {};
 
   // Game loop events
   void OnAwake() override;

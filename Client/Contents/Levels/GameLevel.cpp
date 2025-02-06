@@ -1,6 +1,6 @@
 #include "GameLevel.h"
-#include "Contents/GameObjects/Map/Map.h"
 #include "Contents/GameObjects/GameManager/GameManager.h"
+#include "Contents/GameObjects/Map/Map.h"
 
 void GameLevel::PrepareLevel()
 {
@@ -24,7 +24,6 @@ void GameLevel::BeginLevel()
 
   // 여기서 gameManager 만들어줌.
   gameManager = world->CreateGameObject<GameManager>();
-
 }
 
 void GameLevel::CleanupLevel()

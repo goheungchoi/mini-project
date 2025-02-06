@@ -9,8 +9,18 @@
 #include "GameFramework/World/World.h"
 
 #include "Contents/Levels/GameLevel.h"
+#include "Contents/Levels/MainMenu/MainMenu.h"
+#include "Contents/Levels/Level1/Level1.h"
+#include "Contents/Levels/Level2/Level2.h"
+#include "Contents/Levels/Level3/Level3.h"
+
 
 static GameLevel* gameLevel;
+static MainMenu* mainMenuLevel;
+static Level1* level1;
+static Level2* level2;
+static Level3* level3;
+
 
 void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
                          const std::wstring& title)
@@ -28,10 +38,18 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
 
   _world = World::CreateWorld(_hwnd, title);
 
-	gameLevel = new GameLevel("Game Level");
+  gameLevel = new GameLevel("Game Level");
+  mainMenuLevel = new MainMenu("Main Menu");
+  level1 = new Level1("Level1");
+  level2 = new Level2("Level2");
+  level3 = new Level3("Level3");
 
   _world->AddLevel(gameLevel);
-  _world->PrepareChangeLevel(gameLevel->name);
+  _world->AddLevel(mainMenuLevel);
+  _world->AddLevel(level1);
+  _world->AddLevel(level2);
+  _world->AddLevel(level3);
+  _world->PrepareChangeLevel(mainMenuLevel->name);
   _world->CommitLevelChange();
 }
 

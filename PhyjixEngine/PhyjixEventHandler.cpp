@@ -51,10 +51,10 @@ void PhyjixEventHandler::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 cou
     physx::PxTriggerPair& pair = pairs[i];
 
     if (pair.flags & (physx::PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER |
-                      physx::PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER))
+                      physx::PxTriggerPairFlag::eREMOVED_SHAPE_OTHER))
       continue;
 
-    RigidBody* actor0 =
+      RigidBody* actor0 =
         static_cast<RigidBody*>(pair.triggerActor->userData);
     RigidBody* actor1 =
         static_cast<RigidBody*>(pair.otherActor->userData);
@@ -62,13 +62,13 @@ void PhyjixEventHandler::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 cou
 
     if (pair.status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
     {
-      actor0->OnOverlapBegin(actor1);
       actor1->OnOverlapBegin(actor0);
+      //actor1->OnOverlapBegin(actor0);
     }
     else if (pair.status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
     {
-      actor0->OnOverlapEnd(actor1);
       actor1->OnOverlapEnd(actor0);
+      //actor1->OnOverlapEnd(actor0);
     }
   }
 }

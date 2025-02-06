@@ -100,6 +100,11 @@ public:
     bShouldActivate = false;
     bShouldDeactivate = false;
     bShouldDestroy = false;
+
+    if (auto* rbComp = GetComponent<RigidbodyComponent>(); rbComp)
+    {
+      rbComp->UnregisterRigidBodyFromWorld();
+    }
   }
 
   void FinishDestroy() { 
@@ -271,6 +276,9 @@ public:
 		}
     return nullptr;
 	}
+
+  void SetVisible();
+  void SetInvisible();
 
 	// TODO:
   // GameObject* Clone();

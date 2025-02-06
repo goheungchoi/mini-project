@@ -14,8 +14,9 @@ public:
 
 	Bullet(World* world);
   ~Bullet() {}
-
+	
 	void SetDirection(XMVECTOR dir);
 
+	void OnAwake() override;
 	void Update(float dt) override;
 };

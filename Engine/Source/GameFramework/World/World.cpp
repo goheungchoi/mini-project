@@ -4,7 +4,7 @@
 
 #include "Core/Camera/Camera.h"
 #include "Core/Input/InputSystem.h"
-
+#include "Core/Common.h"
 #include "GameFramework/Components/Animation/AnimatorComponent.h"
 #include "GameFramework/Components/LightComponent.h"
 #include "GameFramework/Components/MeshComponent.h"
@@ -22,7 +22,7 @@
 #endif
 
 #include "GameFramework/UI/Canvas/Canvas.h"
-//#define USED2D
+#define USED2D
 
 void World::Initialize(HWND hwnd, const std::wstring& title)
 {
@@ -350,6 +350,8 @@ void World::RegisterRigidBodyComponent(RigidbodyComponent* rigidBody)
 
 void World::UnregisterRigidBodyComponent(RigidbodyComponent* rigidBody)
 {
+  _phyjixWorld->RemoveRigidBody(rigidBody->GetRigidBody());
+
   auto it = std::remove(rigidBodyComponents.begin(), rigidBodyComponents.end(),
                         rigidBody);
   rigidBodyComponents.erase(it, rigidBodyComponents.end());
@@ -606,8 +608,8 @@ void World::RenderGameObjects()
   // Rendering stage
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    /*if (!(gameObject->status == EStatus_Active))
-      continue;*/
+    if (!(gameObject->status == EStatus_Active) && !(gameObject->status == EStatus_Inactive))
+      continue;
 
     gameObject->OnRender();
 

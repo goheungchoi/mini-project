@@ -8,6 +8,8 @@
 
 void AnimatorComponent::UpdateAnimation(float dt)
 {
+  this;
+
   if (!_currState)
     return;
 
