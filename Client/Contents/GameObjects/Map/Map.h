@@ -81,6 +81,9 @@ public:
 
 	void ResetGame();
 
+  void PauseGame();
+  void ResumeGame();
+
 	void CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
                      Direction dir = kNorth);
 

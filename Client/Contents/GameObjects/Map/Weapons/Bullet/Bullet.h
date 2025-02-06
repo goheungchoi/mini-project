@@ -6,7 +6,7 @@ class Bullet : public GameObject
 {
   float lifetime{5.f};
 
-  float speed{1.4f};
+  float speed{1.4f * 12.f};
 
 	XMVECTOR direction{};
 

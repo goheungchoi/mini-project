@@ -32,7 +32,8 @@ AnimationHandle Character::brawlerActionAnimation;
 
 // TODO: Slash action 2;
 AnimationHandle Character::slashReadyAnimation;
-AnimationHandle Character::slashActionAnimation;
+AnimationHandle Character::slashAction1Animation;
+AnimationHandle Character::slashAction2Animation;
 
 AnimationHandle Character::gunReady1Animation;
 AnimationHandle Character::gunReady2Animation;
@@ -158,6 +159,12 @@ void Character::SetPlacementMode(bool isPlacementMode) {
 void Character::Die() {
   animator->SetVariable<bool>("dead", true, true);
   isDead = true;
+
+  auto* rbComp = GetComponent<RigidbodyComponent>();
+  if (rbComp)
+  {
+    rbComp->DisableSimulation();
+  }
 }
 
 void Character::OnHover() {
@@ -213,8 +220,7 @@ void Character::OnAwake()
   if (!isPlacementModeOn)
   {
 	  auto* bodyRigidBody = CreateComponent<RigidbodyComponent>();
-    bodyRigidBody->Initialize({0, 1.0f, 0},
-                              DirectX::SimpleMath::Quaternion::Identity,
+    bodyRigidBody->Initialize({0, 1.0f, 0}, Quaternion::Identity,
                               {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
                               false, true, world->_phyjixWorld);
     bodyRigidBody->EnableSimulation();
@@ -246,7 +252,6 @@ void Character::Update(float dt)
       inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = false;
       activeIndicator->GetComponent<BillboardComponent>()->isVisible = false;
     }
-    return;
   }
 	
 	if (bGridLocationChanged)
@@ -259,25 +264,28 @@ void Character::Update(float dt)
     ApplyChangedDirection();
 	}
 
-	// Search the direction in range.
-	FindTargetInRange();
-  if (isTargetInRange)
+  if (!isActionTriggered)
   {
-		// TODO: Indicator on
-    if (inactiveIndicator && activeIndicator)
+    // Search the direction in range.
+    FindTargetInRange();
+    if (isTargetInRange)
     {
-      inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = false;
-      activeIndicator->GetComponent<BillboardComponent>()->isVisible = true;
+      // TODO: Indicator on
+      if (inactiveIndicator && activeIndicator)
+      {
+        inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+        activeIndicator->GetComponent<BillboardComponent>()->isVisible = true;
+      }
+    }
+    else
+    {
+      if (inactiveIndicator && activeIndicator)
+      {
+        inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = true;
+        activeIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+      }
     }
   }
-  else
-  {
-    if (inactiveIndicator && activeIndicator)
-    {
-      inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = true;
-      activeIndicator->GetComponent<BillboardComponent>()->isVisible = false;
-    }
-	}
 }
 
 void Character::PostUpdate(float dt) {
@@ -377,6 +385,24 @@ void Character::FindTargetInRange() {
 			// Skip the target that will be assassinated at the start of the game.
 			if (searchTarget == map->assassinationTarget)
         continue;
+
+      // Gunman -> Skip the obstacle
+      // Brawler -> Don't attack and return.
+      // Slasher -> Don't attack and return.
+      if (searchTarget->GetGameObjectTag() == "Obstacle")
+      {
+        if (type == kGunman)
+        {
+          continue;
+        }
+        else
+        {
+          // Don't attack.
+          distanceToTarget = -1;
+          isTargetInRange = false;
+          return;
+        }
+      }
 
 			// If this is an opponent.
 			if (kFactionTags[!this->faction] == searchTarget->GetGameObjectTag())

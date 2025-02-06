@@ -83,7 +83,8 @@ Map::Map(World* world) : GameObject(world)
   Character::brawlerActionAnimation = *std::next(animIt, 8);
 
   Character::slashReadyAnimation = *std::next(animIt, 1);
-  Character::slashActionAnimation = *std::next(animIt, 5);
+  Character::slashAction1Animation = *std::next(animIt, 5);
+  Character::slashAction2Animation = *std::next(animIt, 7);
 
   Character::gunReady1Animation = *std::next(animIt, 3);
   Character::gunReady2Animation = *std::next(animIt, 4);
@@ -272,19 +273,19 @@ void Map::ResetGame()
 
 	for (Character* enemy : enemies)
   {
-    DeleteCharacterFromMap(enemy);
+    grid->RemoveGameObject(enemy);
     enemy->Destroy();
   }
 
   for (Character* ally : allies)
   {
-    DeleteCharacterFromMap(ally);
+    grid->RemoveGameObject(ally);
     ally->Destroy();
   }
 
   for (Character* civilian : civilians)
   {
-    DeleteCharacterFromMap(civilian);
+    grid->RemoveGameObject(civilian);
     civilian->Destroy();
   }
 
@@ -319,6 +320,14 @@ void Map::ResetGame()
     }
 	}
   record.clear();
+}
+
+void Map::PauseGame() {
+  this->Deactivate();
+}
+
+void Map::ResumeGame() {
+  this->Activate();
 }
 
 void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,

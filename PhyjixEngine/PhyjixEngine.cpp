@@ -7,16 +7,21 @@ bool PhyjixEngine::Initialize()
 	if (!_pFoundation) return false;
 
 #ifdef _DEBUG
+#ifdef USEPVD
 	_pvd = PxCreatePvd(*_pFoundation);
 
 	_transport = physx::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
 	_pvd->connect(*_transport, physx::PxPvdInstrumentationFlag::eALL);
-
+#endif
 #endif
 #ifdef _DEBUG
+#ifdef USEPVD
   physx::PxTolerancesScale tolscale = physx::PxTolerancesScale(1.f);
   _pPhysics =
       PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, tolscale, true, _pvd);
+#else
+	_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, physx::PxTolerancesScale());
+#endif
 
 #else
 	_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *_pFoundation, physx::PxTolerancesScale());
