@@ -242,4 +242,9 @@ public:
     _device->GetImmContext()->OMSetDepthStencilState(
         _om->depthstencilReadState.Get(), 1);
   }
+  void ClearPixelShaderResourceView(int i)
+  {
+    ID3D11ShaderResourceView* null = nullptr;
+    _device->GetImmContext()->PSSetShaderResources(i, 1, &null);
+  }
 };

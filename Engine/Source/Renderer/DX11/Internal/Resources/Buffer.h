@@ -19,6 +19,10 @@ struct Frame
   Matrix inverseProjection;
   Matrix shadwoView;
   Matrix shadowProjection;
+  float ambientIntencity;
+  float emissiveIntencity;
+  float screenWidth;
+  float screenHeight;
 };
 
 struct World
@@ -38,6 +42,15 @@ struct PixelData
 struct BoneMatrix
 {
   XMMATRIX matrix[512] = {};
+};
+
+struct SSAOParames
+{
+  Vector2 noiseScale;
+  float radius;        // »ùÇÃ¸µ ¹Ý°æ
+  float nearplane;
+  float farplane;
+  Vector3 padding3;
 };
 } // namespace Constant
 

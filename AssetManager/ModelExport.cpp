@@ -392,12 +392,11 @@ void ModelExporter::ProcessMaterial(GeometryModel& geoModel,
     geoMat.emissiveFactor = emissiveFactor;
   }
   // Get emissive texture
-  int emissiveTextureCount =
-      material->GetTextureCount(aiTextureType_EMISSION_COLOR);
+  int emissiveTextureCount = material->GetTextureCount(aiTextureType_EMISSIVE);
   if (emissiveTextureCount > 0)
   {
-    ProcessMaterialTexture(geoModel, geoMat, material,
-                           aiTextureType_EMISSION_COLOR, scene);
+    ProcessMaterialTexture(geoModel, geoMat, material, aiTextureType_EMISSIVE,
+                           scene);
   }
 
   // Bind the material to the mesh
@@ -447,7 +446,7 @@ void ModelExporter::ProcessMaterialTexture(GeometryModel& geoModel,
   {
     geoMat.occlusionTexture = texture.path;
   }
-  else if (type == aiTextureType_EMISSION_COLOR)
+  else if (type == aiTextureType_EMISSIVE)
   {
     geoMat.emissiveTexture = texture.path;
   }

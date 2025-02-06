@@ -591,7 +591,15 @@ void World::RenderGameObjects()
     _mainLight.direction.x = _mainLightDir[0];
     _mainLight.direction.y = _mainLightDir[1];
     _mainLight.direction.z = _mainLightDir[2];
-    _mainLight.radiance = {1.f, 1.f, 1.f, 1.f};
+    float _mainLightColor[4] = {_mainLight.radiance.x, _mainLight.radiance.y,
+                                _mainLight.radiance.z,1.f};
+    ImGui::ColorEdit3("Color", _mainLightColor);
+    float _mainLightIntencity = _mainLight.radiance.w;
+    ImGui::SliderFloat("intencity", &_mainLightIntencity, 0.f, 1.f);
+    _mainLight.radiance.x = _mainLightColor[0];
+    _mainLight.radiance.y = _mainLightColor[1];
+    _mainLight.radiance.z = _mainLightColor[2];
+    _mainLight.radiance.w = _mainLightIntencity;
   }
   ImGui::End();
 #endif

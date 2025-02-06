@@ -38,6 +38,29 @@ public:
   }
 };
 
+class UtilityConstantBuffer
+{
+private:
+  Device* _device;
+
+public:
+  ComPtr<ID3D11Buffer> _ssaoParams;
+
+public:
+  UtilityConstantBuffer(Device* device) : _device{ device }
+  {
+    _ssaoParams = _device->CreateConstantBuffer<Constant::SSAOParames>();
+  }
+
+public:
+  void UpdateSSAOParams(Constant::SSAOParames cb)
+  {
+    _device->GetImmContext()->UpdateSubresource(_ssaoParams.Get(), 0, nullptr,
+                                                &cb, 0, 0);
+  }
+
+};
+
 class MeshConstantBuffer
 {
 private:

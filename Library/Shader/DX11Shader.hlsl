@@ -88,7 +88,7 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     }
     
     
-    ambientLighting += (IBLdiffuse + specularIBL)*0.2*ambientFactor;
+    ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor.xyz;
     //ambientLighting += 0;
     float4 positionShadow = deferredShadowPosition.Sample(samLinear, input.uv);
     float currShadowDepth = positionShadow.z; // / positionShadow.w;
@@ -124,7 +124,7 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
             
     }
     float4 finalColor;
-    float4 temp = float4(float3(directLighting*shadowFactor + ambientLighting), 1.f) + emissive;
+    float4 temp = float4(float3(directLighting*shadowFactor + ambientLighting), 1.f) + emissive*emissiveFactor;
     temp = pow(temp, 1.0 / 2.2);
     finalColor = float4(temp.rgb, 1.f);
     return finalColor;
@@ -230,7 +230,7 @@ PS_INPUT vs_main(VS_INPUT input)
     wvp = mul(wvp, projection);
     output.position = mul(totlaPos, wvp);
     output.worldPosition = mul(totlaPos, world);
-    #else
+#else
     matWolrd = world;
     output.position = mul(input.position, matWolrd);
     output.worldPosition = output.position;
@@ -326,7 +326,7 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
         ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
     }
     
-    ambientLighting += (IBLdiffuse + specularIBL)*0.2*ambientFactor;
+    ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor;
 
     float currShadowDepth = input.positionShadow.z / input.positionShadow.w;
     float2 uv = input.positionShadow.xy / input.positionShadow.w;
@@ -360,13 +360,20 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     }
     float alpha = 1.0;
     float4 alphaColor = texAlbedo.Sample(samLinear, input.uv);
-    alpha = alphaColor.a;
+    if (length(alphaColor)==0)
+    {
+        alpha = albedoFactor.a;
+    }
+    else
+    {
+        alpha = alphaColor.a;
+    }
     
     
     
     float4 finalColor;
     float4 emissive = texEmissive.Sample(samLinear, input.uv);
-    float4 temp = float4(float3((directLighting * shadowFactor) + ambientLighting), 1.f) + emissive;
+    float4 temp = float4(float3((directLighting * shadowFactor) + ambientLighting), 1.f) + emissive*emissiveFactor;
     temp = pow(temp, 1.0 / 2.2);
     finalColor = float4(temp.rgb, alpha);
     if (alpha < 0.1)
@@ -557,5 +564,144 @@ float4 billboard_ps_main(QUAD_PS_INPUT input) : SV_Target0
 {
     return texAlbedo.Sample(samLinear, input.uv);
     //return float4(1.f, 1.f, 1.f, 1.f);
+}
+#endif
+
+
+//---------------------------define SSAO--------------------------------------------
+#ifdef SSAO
+
+float4 ssao_normal_depth_write_ps_main(PS_INPUT input) : SV_Target0
+{
+    float3 N = normalize(input.worldNormal);
+    float4 normalTexture = texNormal.Sample(samLinear, input.uv);
+    if (length(normalTexture) > 0.f)
+    {
+        float3 T = normalize(input.worldTangent);
+        float3 B = normalize(input.worldBitangent);
+        float3 normalTexColor;
+        normalTexColor = (normalTexture.rgb * 2.0) - 1.0;
+        normalTexColor = normalize(normalTexColor);
+        float3x3 TBN = float3x3(T, B, N);
+        N = normalize(mul(normalTexColor, TBN));
+    }
+    float depth = input.position.z;
+    return float4(N, depth);
+}
+//float4 ssao_ao_write_ps_main(QUAD_PS_INPUT input) : SV_TARGET
+//{
+//     // Fetch Normal and Depth from GBuffer
+//    float4 normalData = ssaoNormalDepth.Sample(samLinear, input.uv);
+//    float3 normal = normalize(normalData.xyz); // Already in correct range
+//    float depth = normalData.w; // Depth stored in W component
+//    depth = (nearPlane * farPlane)  /(farPlane - depth * (farPlane - nearPlane));
+//    float occlusion = 0.0f;
+//    int sampleCount = 16; // Number of SSAO samples
+
+//    // SSAO Sampling Loop
+//    [unroll]
+//    for (int i = 0; i < sampleCount; i++)
+//    {
+//        // Create random sampling offset
+//        float3 sampleDir = normalize(SSAOKernel[i]);
+//        float3 samplePos = float3(input.uv, depth) + sampleDir * radius;
+
+//        // Sample nearby depth values
+//        float4 sampleNormalData = ssaoNormalDepth.Sample(samLinear, samplePos.xy);
+//        float sampleDepth = sampleNormalData.w;
+
+//        //// Compare depth values (occlusion test)
+//        //if (sampleDepth < samplePos.z)
+//        //    occlusion += 1.0f;
+//        float depthDifference = samplePos.z - sampleDepth;
+//        if (depthDifference > 0.0f && depthDifference < radius) // Within sampling range
+//        {
+//        // Add weighted occlusion based on depth difference
+//            occlusion += saturate(1.0f - depthDifference / radius);
+//        }
+
+//    }
+
+//    // Normalize Occlusion Value
+//    occlusion = 1.0f - (occlusion / sampleCount);
+
+//    return float4(occlusion, occlusion, occlusion, 1.0f); // Grayscale SSAO
+//}
+float4 ssao_ao_write_ps_main(QUAD_PS_INPUT input) : SV_TARGET
+{
+    // Fetch Normal and Depth from GBuffer
+    float4 normalData = ssaoNormalDepth.Sample(samLinear, input.uv);
+    float3 normal = normalize(normalData.xyz); // Already in correct range
+    float depth = normalData.w; // Depth stored in W component
+    //depth = (nearPlane * farPlane) / (farPlane - depth * (farPlane - nearPlane));
+    float occlusion = 0.0f;
+    
+    // SSAO Sampling Loop
+    [unroll]
+    for (int i = 0; i < 16; i++)
+    {
+        // Create random sampling offset
+        float3 sampleDir = normalize(SSAOKernel[i]);
+        float3 samplePos = float3(input.uv, depth) + sampleDir * radius;
+
+        // Sample nearby depth values and normals
+        float4 sampleNormalData = ssaoNormalDepth.Sample(samLinear, samplePos.xy);
+        float3 sampleNormal = normalize(sampleNormalData.xyz);
+        float sampleDepth = sampleNormalData.w;
+
+        // Compute the angle between the current normal and the sample normal
+        float3 toSampleDir = normalize(samplePos.xyz - float3(input.uv, depth)); // Vector to the sample position
+        float angle = max(dot(normal, sampleNormal), 0.0f); // Dot product to compute the angle between the two normals
+
+        // Compare depth values (occlusion test)
+        float depthDifference = samplePos.z - sampleDepth;
+        if (depthDifference > 0.0f && depthDifference < radius) // Within sampling range
+        {
+            // Add weighted occlusion based on depth difference and normal angle
+            occlusion += saturate((1.0f - depthDifference / radius) * angle);
+        }
+    }
+
+    // Normalize Occlusion Value
+    occlusion = (occlusion / 16);
+
+    return float4(occlusion, occlusion, occlusion, 1.0f); // Grayscale SSAO
+}
+
+
+#endif
+
+#ifdef BLUR
+float4 blur_horizontal_ps_main(QUAD_PS_INPUT input) : SV_Target0
+{
+    float weights[5] = { 0.2270f, 0.1946f, 0.1210f, 0.0545f, 0.0162f };
+    float2 texelSize = float2(1.f / screenWidth, 1.f / screenHeight);
+    float3 occlusion = ssaoMap.Sample(samLinear, input.uv).rgb * weights[0];
+    [unroll]
+    for (int i = 1; i < 5;i++)
+    {
+        float2 offset = float2(texelSize.x * i, 0.f);
+        occlusion += ssaoMap.Sample(samLinear, input.uv + offset).rgb * weights[i];
+        occlusion += ssaoMap.Sample(samLinear, input.uv - offset).rgb * weights[i];
+    }
+    return float4(occlusion, 1.f);
+    
+}
+
+float4 blur_vertical_ps_main(QUAD_PS_INPUT input):SV_Target
+{
+    float weights[5] = { 0.2270f, 0.1946f, 0.1210f, 0.0545f, 0.0162f };
+    float2 texelSize = float2(1.f / screenWidth, 1.f / screenHeight);
+    float3 occlusion = ssaoMap.Sample(samLinear, input.uv).rgb * weights[0];
+
+    [unroll]
+    for (int i = 1; i < 5; i++)
+    {
+        float2 offset = float2(0.0f, texelSize.y * i); // 세로 방향 오프셋
+        occlusion += ssaoMap.Sample(samLinear, input.uv + offset).rgb * weights[i];
+        occlusion += ssaoMap.Sample(samLinear, input.uv - offset).rgb * weights[i];
+    }
+
+    return float4(occlusion, 1.0f);
 }
 #endif
