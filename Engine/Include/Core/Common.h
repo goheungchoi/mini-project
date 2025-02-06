@@ -4,6 +4,8 @@
 #define NOMINMAX
 #include <Windows.h>
 
+//#define USED2D
+
 //use comptr
 #include <wrl.h>
 

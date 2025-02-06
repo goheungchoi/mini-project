@@ -5,7 +5,7 @@
 #include "Contents/Prototype/UI/TestUI.h"
 #include "Contents/Prototype/UI/MainMenuUI/MainMenuUI.h"
 #include "Resource2DManager/Resource2DManager.h"
-//#define USED2D
+
 
 void GameLevel::PrepareLevel()
 {

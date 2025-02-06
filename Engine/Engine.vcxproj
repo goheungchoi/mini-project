@@ -244,6 +244,7 @@
 		<ClInclude Include="Include\GameFramework\UI\Canvas\Canvas.h" />
 		<ClInclude Include="Include\GameFramework\UI\UIAnim\UIAnim.h" />
 		<ClInclude Include="Include\GameFramework\UI\UIButton\UIButton.h" />
+		<ClInclude Include="Include\GameFramework\UI\UICursor\UICursor.h" />
 		<ClInclude Include="Include\GameFramework\UI\UIElement\UIElement.h" />
 		<ClInclude Include="Include\GameFramework\UI\UIImage\UIImage.h" />
 		<ClInclude Include="Include\GameFramework\UI\UIPanel\UIPanel.h" />
@@ -280,6 +281,7 @@
 		<ClCompile Include="Source\GameFramework\UI\Canvas\Canvas.cpp" />
 		<ClCompile Include="Source\GameFramework\UI\UIAnim\UIAnim.cpp" />
 		<ClCompile Include="Source\GameFramework\UI\UIButton\UIButton.cpp" />
+		<ClCompile Include="Source\GameFramework\UI\UICursor\UICursor.cpp" />
 		<ClCompile Include="Source\GameFramework\UI\UIElement\UIElement.cpp" />
 		<ClCompile Include="Source\GameFramework\UI\UIImage\UIImage.cpp" />
 		<ClCompile Include="Source\GameFramework\UI\UIPanel\UIPanel.cpp" />

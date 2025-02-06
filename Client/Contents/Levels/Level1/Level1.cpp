@@ -7,8 +7,6 @@
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 
-#define USED2D
-
 void Level1::PrepareLevel()
 {
   redCellModelHandle = LoadModel("Models\\RedCell\\RedCell.glb");
@@ -20,6 +18,7 @@ void Level1::PrepareLevel()
   mapMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
 
   // UI Resource Load
+#ifdef USED2D
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Stage_L.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Stage_S.png");
 
@@ -33,6 +32,7 @@ void Level1::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Act.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Hover.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Deact.png");
+#endif // USED2D
 }
 
 void Level1::BeginLevel()
