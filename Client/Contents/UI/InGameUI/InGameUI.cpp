@@ -9,7 +9,7 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   // MainMisson
 
   _mainMissonImg = CreateUI<UIImage>(L"MainMissonImg");
-  _mainMissonImg->SetSprite("Textures\\MainMissonUI_Test.png", {338, 100});
+  _mainMissonImg->SetSprite("2D\\UI\\UI_Stage_L.png", {338, 100});
 
   _mainMissonTxt = CreateUI<UIText>(L"MainMissonTxt");
   _mainMissonTxt->SetCenterPos({300, 130});
@@ -26,19 +26,19 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
 
   // SubMisson
   _subMissonImg = CreateUI<UIImage>(L"MainMissonImg");
-  _subMissonImg->SetSprite("Textures\\SubMissonUI_Test.png", {208, 240});
+  _subMissonImg->SetSprite("2D\\UI\\UI_Stage_S.png", {208, 240});
 
   // SnipingBtn
   _snipingBtnImg = CreateUI<UIImage>(L"SnipingBtnImg");
-  _snipingBtnImg->SetSprite("Textures\\SnipingUI_Test.png", {1770, 720});
+  _snipingBtnImg->SetSprite("2D\\UI\\UI_Order_Act.png", {1770, 720});
 
   // CombatBtn
   _combatBtnImg = CreateUI<UIImage>(L"CombatBtnImg");
-  _combatBtnImg->SetSprite("Textures\\Btn_Slot.png", {1600, 960});
+  _combatBtnImg->SetSprite("2D\\UI\\UI_Storage_Act_Fist.png", {1600, 960});
 
   // PlayBtn
   _playBtnImg = CreateUI<UIImage>(L"PlayBtnImg");
-  _playBtnImg->SetSprite("Textures\\Btn_Play.png", {1800, 100});
+  _playBtnImg->SetSprite("2D\\UI\\UI_Play_Act.png", {1800, 100});
 
   _playBtn = CreateUI<UIButton>(L"PlayBtn");
   _playBtn->SetSize(_playBtnImg->GetSize());

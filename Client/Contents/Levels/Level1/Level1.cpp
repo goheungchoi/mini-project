@@ -1,7 +1,6 @@
 #include "Level1.h"
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
-
 #include "Resource2DManager/Resource2DManager.h"
 
 #include "Contents/UI/InGameUI/InGameUI.h"
@@ -20,15 +19,22 @@ void Level1::PrepareLevel()
 
   mapMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
 
-  // UI Resource Load
+    // UI Resource Load
+  Resource2DManager::GetInstance()->LoadSprite("Textures\\Chr_Animation_02.png");
+
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Stage_L.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Stage_S.png");
+
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Order_Act.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Order_Hover.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Order_Deact.png");
+
   Resource2DManager::GetInstance()->LoadSprite(
-      "Textures\\MainMissonUI_Test.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "Textures\\SubMissonUI_Test.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\SnipingUI_Test.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\Btn_Slot.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\Btn_Slot2.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\Btn_Play.png");
+      "2D\\UI\\UI_Storage_Act_Fist.png");
+
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Act.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Hover.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Deact.png");
 }
 
 void Level1::BeginLevel()
