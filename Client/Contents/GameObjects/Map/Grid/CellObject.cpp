@@ -5,7 +5,7 @@
 CellObject::CellObject(World* world) : GameObject(world)
 {
   redCellModelHandle = LoadModel("Models\\Grid\\CharOver\\Grid_CharOver.glb");
-  greenCellModelHandle = LoadModel("Models\\Grid\\Empty\\Grid_Empty.glb");
+  greenCellModelHandle = LoadModel("Models\\Grid\\Normal\\Grid_Normal.glb");
 
   emptyCellModelHandle = LoadModel("Models\\Grid\\Empty\\Grid_Empty.glb");
   selectedCellModelHandle = LoadModel("Models\\Grid\\Active\\Grid_Active.glb");
