@@ -72,8 +72,6 @@ private:
   float ambientIntencity = 0.2f;
   float emissiveIntencity = 0.2f;
   float testradius = 0.1f;
-  float testbias = 0.04f;
-  float testssaointensity = 1.f;
 
 public:
   RenderPassManager(Device* device, SwapChain* swapchain, int width, int height)
@@ -305,9 +303,7 @@ public:
 #ifdef _DEBUG
     ImGui::SliderFloat("ambient intencity", &ambientIntencity, 0.f, 1.f);
     ImGui::SliderFloat("emissive intencity", &emissiveIntencity, 0.f, 1.f);
-    ImGui::SliderFloat("testradius", &testradius, 0.f, 1.f);
-    ImGui::SliderFloat("testbias", &testbias, 0.f, 0.1f);
-    ImGui::SliderFloat("testssaointensity", &testssaointensity, 0.f, 5.f);
+    ImGui::SliderFloat("testradius", &testradius, 0.f, 0.1f);
 #endif // DEBUG
     // frame
     Constant::Frame frame = {.mainDirectionalLight = _mainLight,
@@ -332,8 +328,6 @@ public:
     Constant::SSAOParames ssao = {
         .noiseScale = {1.f, 1.f},
         .radius = testradius,
-        .bias = testbias,
-        .ssaointensity = testssaointensity,
         .nearplane = 0.01,
         .farplane = 10000,
     };
@@ -430,8 +424,16 @@ public:
     macros = {{"SSAO", "1"}, {nullptr, nullptr}};
     _pShaders.insert({"SSAOWrite", _compiler->CompilePixelShader(
                                        macros, "ssao_ao_write_ps_main")});
-   /* macros.clear();
-    macros.com*/
+    macros.clear();
+    macros = {{"BLUR", "1"}, {nullptr, nullptr}};
+    _pShaders.insert(
+        {"BlurHorizontal",
+         _compiler->CompilePixelShader(macros, "blur_horizontal_ps_main")});
+    macros.clear();
+    macros = {{"BLUR", "1"}, {nullptr, nullptr}};
+    _pShaders.insert({"BlurVertical", _compiler->CompilePixelShader(
+                                          macros, "blur_vertical_ps_main")});
+    
   }
   void CreateSamplers()
   {
@@ -1075,9 +1077,7 @@ private:
     //blur ssao map
     _pso->ClearPixelShaderResourceView(16);
     _ssao->BlurHorizontalPrepare();
-    dc->IASetInputLayout(_vShaders["Quad"]->layout.Get());
-    dc->VSSetShader(_vShaders["Quad"]->shader.Get(), nullptr, 0);
-    dc->PSSetShader(_pShaders["SSAOWrite"]->shader.Get(), nullptr, 0);
+    dc->PSSetShader(_pShaders["BlurHorizontal"]->shader.Get(), nullptr, 0);
     _ssao->QuadDraw();
   }
   void Clear()

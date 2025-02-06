@@ -78,11 +78,9 @@ cbuffer SSAOParames : register(b5)
 {
     float2 noiseScale;
     float radius; // 샘플링 반경
-    float bias; // 오클루젼 바이어스
-    float ssaointensity; // SSAO 강도
     float nearPlane;
     float farPlane;
-    float padding3;
+    float3 padding3;
 }
 
 

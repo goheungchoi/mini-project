@@ -360,7 +360,14 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     }
     float alpha = 1.0;
     float4 alphaColor = texAlbedo.Sample(samLinear, input.uv);
-    alpha = alphaColor.a;
+    if (length(alphaColor)==0)
+    {
+        alpha = albedoFactor.a;
+    }
+    else
+    {
+        alpha = alphaColor.a;
+    }
     
     
     
@@ -679,5 +686,22 @@ float4 blur_horizontal_ps_main(QUAD_PS_INPUT input) : SV_Target0
     }
     return float4(occlusion, 1.f);
     
+}
+
+float4 blur_vertical_ps_main(QUAD_PS_INPUT input):SV_Target
+{
+    float weights[5] = { 0.2270f, 0.1946f, 0.1210f, 0.0545f, 0.0162f };
+    float2 texelSize = float2(1.f / screenWidth, 1.f / screenHeight);
+    float3 occlusion = ssaoMap.Sample(samLinear, input.uv).rgb * weights[0];
+
+    [unroll]
+    for (int i = 1; i < 5; i++)
+    {
+        float2 offset = float2(0.0f, texelSize.y * i); // 세로 방향 오프셋
+        occlusion += ssaoMap.Sample(samLinear, input.uv + offset).rgb * weights[i];
+        occlusion += ssaoMap.Sample(samLinear, input.uv - offset).rgb * weights[i];
+    }
+
+    return float4(occlusion, 1.0f);
 }
 #endif
