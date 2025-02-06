@@ -625,7 +625,7 @@ void World::RenderGameObjects()
       }
     }
     // Draw skeletal mesh
-    else if (auto* skeletalMeshComp =
+    if (auto* skeletalMeshComp =
                  gameObject->GetComponent<SkeletalMeshComponent>();
              skeletalMeshComp && skeletalMeshComp->isVisible)
     {
@@ -638,7 +638,7 @@ void World::RenderGameObjects()
           handle, XMMatrixIdentity(), skeletalMeshComp->renderTypeFlags,
           skeletalMeshComp->outlineColor, skeletalMeshComp->boneTransforms);
     }
-    else if (auto* billboardComp =
+    if (auto* billboardComp =
                  gameObject->GetComponent<BillboardComponent>();
              billboardComp && billboardComp->isVisible)
     {
