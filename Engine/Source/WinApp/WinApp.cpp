@@ -68,6 +68,12 @@ LRESULT CALLBACK WinApp::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam,
 
   switch (uMsg)
   {
+#ifdef USED2D
+  case WM_ACTIVATE:
+    ShowCursor(FALSE);
+    break;
+#endif // USED2D
+
   case WM_CREATE:
   // TODO : 扩档快啊 积己瞪 锭 贸府
     break;

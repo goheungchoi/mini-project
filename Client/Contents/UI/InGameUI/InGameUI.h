@@ -22,4 +22,6 @@ private:
 
   class UIButton* _combatBtn{nullptr};
   class UIImage* _combatBtnImg{nullptr};
+
+  class UICursor* _cursor{nullptr};
 };

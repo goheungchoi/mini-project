@@ -69,10 +69,10 @@ void Sprite::Render()
   _pD2DRenderer->_d2dRenderQueue.AddRender2DCmd(
       [=]() {
         auto textureSRV = _pTexture->GetResource().Get();
- /*       RECT* src = new RECT(0, 0, 100, 100);
-        _pD2DRenderer->_pSpriteBatch->Draw(textureSRV, _pos,
-                                           src);*/
-        _pD2DRenderer->_pSpriteBatch->Draw(textureSRV, _pos);
+
+        _pD2DRenderer->_pSpriteBatch->Draw(
+            textureSRV, _pos, nullptr, DirectX::Colors::White,
+                          0.0f, DirectX::SimpleMath::Vector2::Zero, _scale);
       },
       PassType2D::SPRITE_BATCH // SpriteBatch 전용 패스 사용
   );

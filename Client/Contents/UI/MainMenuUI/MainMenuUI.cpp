@@ -67,6 +67,7 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   //    [this]() { _backGroundImage->SetStatus(EStatus::EStatus_Inactive); });
 
   _cursor = CreateUI<UICursor>(L"Cursor");
+  _cursor->SetCursorType(CursorType::DEFAULT);
 }
 
 MainMenuUI::~MainMenuUI() {}
