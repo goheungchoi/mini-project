@@ -22,7 +22,6 @@
 #endif
 
 #include "GameFramework/UI/Canvas/Canvas.h"
-#define USED2D
 
 void World::Initialize(HWND hwnd, const std::wstring& title)
 {

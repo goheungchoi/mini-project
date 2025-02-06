@@ -7,8 +7,6 @@
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 
-#define USED2D
-
 void MainMenu::PrepareLevel()
 {
   // UI Resource Load
