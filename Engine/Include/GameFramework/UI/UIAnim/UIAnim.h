@@ -1,8 +1,47 @@
 #pragma once
-#include "GameFramework/UI/UIElement/UIElement.h"
-#include "Renderer/D2DRenderer/Animation2D/Animation2D.h"
+#include "GameFramework/UI/UIImage/UIImage.h"
 
-class UIAnim : public UIElement
+struct FRAME_INFO
+{
+  Vector4 frameRect{0, 0, 0, 0};
+  Vector2 center{0, 0};
+  float duration{0.05f};
+  FRAME_INFO() {}
+  FRAME_INFO(Vector4 _frameRect, Vector2 _center, float _duration)
+  {
+    frameRect = _frameRect;
+    center = _center;
+    duration = _duration;
+  }
+
+  FRAME_INFO(float _left, float _top, float _right, float _bottom,
+             float _centerX, float _centerY, float _duration)
+  {
+    frameRect.x = _left;
+    frameRect.y = _top;
+    frameRect.z = _right;
+    frameRect.w = _bottom;
+    center.x = _centerX;
+    center.y = _centerY;
+    duration = _duration;
+  }
+};
+
+struct ANIMATION_INFO
+{
+  std::string name{"DEFAULT"};
+  std::vector<FRAME_INFO> Frames;
+
+  ANIMATION_INFO() { Frames.reserve(34); }
+};
+
+
+struct AnimSprite
+{
+  Sprite* _pSprite;
+  ANIMATION_INFO* _pAnimInfo;
+};
+class UIAnim : public UIImage
 {
 public:
   UIAnim(class World* world);
@@ -12,19 +51,24 @@ public:
   void Update(float dt) override;
   void Render() override;
 
-  void LoadAnim2DAsset(LPCSTR spritePath, LPCSTR animCSV);
+  void SetCurrentAnimSprite(std::string AnimName);
+  void LoadAnimSprite(LPCSTR SpritePath, LPCSTR animCSV);
+  class Sprite* LoadSprite(LPCSTR SpritePath);
+  ANIMATION_INFO* LoadAnim2DAsset(LPCSTR animCSV);
   void SetAnim2D(std::wstring animName, bool bLoop);
 
 private:
-  Anim2DAsset* _pAnim2DAsset;
-  ANIMATION_INFO* _pAnimInfo;
-  wstring _animCSV;
+
+  std::map<std::string,AnimSprite*> _sprites{};
+  class Sprite* _pCurrSprite;
+  ANIMATION_INFO* _pCurrAnimInfo; // 현재 애니메이션정보
+  FRAME_INFO _pCurrFrameInfo;
+  string _animCSV;
 
   bool _bLoop;	// 반복 여부
   float _frameTime = 0.0f;  // 프레임 진행시간
   int _lastFrameIndex = -1; // 마지막 프레임 인덱스
-  int _curFrameIndex = -1;  // 현재 프레임 인덱스
+  int _curFrameIndex = 0;  // 현재 프레임 인덱스
   int _prevFrameIndex = -1; // 이전 프레임 인덱스
-  D2D1_RECT_F _srcRect;    // D2D1Bitmap의 Source 영역
-  D2D1_RECT_F _dstRect;    // RenderTarget의 Destination 영역
+  Vector4 _srcRect;    // D2D1Bitmap의 Source 영역
 };

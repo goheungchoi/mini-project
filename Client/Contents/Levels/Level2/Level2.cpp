@@ -1,6 +1,7 @@
 #include "Level2.h"
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
+#include "Contents/UI/DialogUI/DialogUI.h"
 #include "Resource2DManager/Resource2DManager.h"
 
 #include "Contents/UI/InGameUI/InGameUI.h"
@@ -18,11 +19,24 @@ void Level2::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite("Textures\\Btn_Slot.png");
   Resource2DManager::GetInstance()->LoadSprite("Textures\\Btn_Slot2.png");
   Resource2DManager::GetInstance()->LoadSprite("Textures\\Btn_Play.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\Animation\\Eliza_Initiative_Gunfire.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\Animation\\Eliza_Noble.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\Animation\\Eliza_Resistance_Despair30.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\Animation\\Eliza_Resistance_Despair70.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\Animation\\Eliza_Resistance_Joy.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\Animation\\Eliza_Resistance_Sad.png");
 }
 
 void Level2::BeginLevel()
 {
-  world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+  //world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+  world->_canvas->CreatePanel<DialogUI>(L"ElizaUI");
 }
 
 void Level2::CleanupLevel() {}

@@ -1,19 +1,19 @@
 #include "GameFramework/UI/UIAnim/UIAnim.h"
-
-UIAnim::UIAnim(World* world) : UIElement(world) {}
+#include "Renderer/D2DRenderer/Sprite/Sprite.h"
+#include "Resource2DManager/Resource2DManager.h"
+UIAnim::UIAnim(World* world) : UIImage(world) {}
 
 UIAnim::~UIAnim() {}
 
 void UIAnim::Update(float dt)
 {
-  if (_pAnim2DAsset == nullptr || _pAnimInfo == nullptr)
+  if (_pCurrAnimInfo == nullptr)
   {
     return;
   }
-
-  const FRAME_INFO& frame =
-      _pAnimInfo->Frames[_curFrameIndex]; // 현재 애니메이션의 프레임
-  _lastFrameIndex = _pAnimInfo->Frames.size() - 1; // 마지막 Index 번호
+  _pCurrFrameInfo = _pCurrAnimInfo->Frames[_curFrameIndex];
+  const FRAME_INFO& frame = _pCurrFrameInfo;
+  _lastFrameIndex = _pCurrAnimInfo->Frames.size() - 1; // 마지막 Index 번호
   int maxFrameCnt = _lastFrameIndex + 1; // 애니메이션의 frame 총 갯수
 
   ///////////////
@@ -43,20 +43,88 @@ void UIAnim::Update(float dt)
   _srcRect = {frame.frameRect.x, frame.frameRect.y,
               frame.frameRect.z, frame.frameRect.w};
 
-  // 그릴 영역을 0,0,width,height으로 설정하고 실제 위치는 Transform으로 설정
-  _dstRect = {0, 0, _srcRect.right - _srcRect.left,
-              _srcRect.bottom - _srcRect.top};
 }
 
 void UIAnim::Render()
 {
-  if (_pAnimInfo == nullptr) return;
-
-  //_renderer->GetRenderTarget()->SetTransform(Transform);
-  //_renderer->DrawBitmap(m_pBitmap, m_DstRect, m_SrcRect, 1.0f,
-  //                      D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+  if (_pCurrAnimInfo == nullptr) return;
+  if (_status == EStatus_Active)
+  {
+    _pCurrSprite->Render(_srcRect);
+  }
 }
 
-void UIAnim::LoadAnim2DAsset(LPCSTR spritePath, LPCSTR animCSV) {}
+void UIAnim::SetCurrentAnimSprite(std::string AnimName)
+{
+  auto* animsprite = _sprites.find(AnimName)->second;
+  _pCurrSprite = animsprite->_pSprite;
+  _pCurrAnimInfo = animsprite->_pAnimInfo;
+  _curFrameIndex = 0;
+  _pCurrFrameInfo = _pCurrAnimInfo->Frames[_curFrameIndex];
+  _lastFrameIndex = _pCurrAnimInfo->Frames.size() - 1;
+
+}
+
+void UIAnim::LoadAnimSprite(LPCSTR SpritePath, LPCSTR animCSV)
+{
+  AnimSprite* newAnimSprite = new AnimSprite();
+  newAnimSprite->_pSprite = LoadSprite(SpritePath);
+  newAnimSprite->_pAnimInfo = LoadAnim2DAsset(animCSV);
+  _sprites.insert({newAnimSprite->_pAnimInfo->name, newAnimSprite});
+  
+}
+
+Sprite* UIAnim::LoadSprite(LPCSTR animSpritePath)
+{
+  return Resource2DManager::GetInstance()->GetSprite(animSpritePath).get();
+}
+
+ANIMATION_INFO* UIAnim::LoadAnim2DAsset(LPCSTR animCSV)
+{
+  ANIMATION_INFO* newAnimInfo = new ANIMATION_INFO();
+  std::filesystem::path filepath(animCSV);
+  filepath.replace_extension("");
+  newAnimInfo->name = filepath.filename().string();
+
+
+  std::ifstream file(animCSV);
+  if (!file.is_open())
+  {
+    std::cout << "animation csv file not opened : " << animCSV << std::endl;
+    return nullptr;
+  }
+  std::string line;
+  int framecnt = 0;
+  {
+    std::getline(file, line);
+    std::stringstream ss(line);
+    ss >> framecnt;
+  }
+  for (UINT i = 0; i < framecnt; i++)
+  {
+    getline(file, line);
+    std::stringstream ss(line);
+    std::string token;
+    {
+      FRAME_INFO tempFrame;
+      getline(ss, token, ','); // ss의 내용을 ,를 기준으로 문자열을 분리
+      tempFrame.frameRect.x = stof(token);
+      getline(ss, token, ',');
+      tempFrame.frameRect.y = stof(token);
+      getline(ss, token, ',');
+      tempFrame.frameRect.z = stof(token);
+      getline(ss, token, ',');
+      tempFrame.frameRect.w = stof(token);
+      getline(ss, token, ',');
+      tempFrame.center.x = stof(token);
+      getline(ss, token, ',');
+      tempFrame.center.y = stof(token);
+      newAnimInfo->Frames.push_back(tempFrame);
+    }
+
+  }
+  return newAnimInfo;
+}
+
 
 void UIAnim::SetAnim2D(std::wstring animName, bool bLoop) {}
