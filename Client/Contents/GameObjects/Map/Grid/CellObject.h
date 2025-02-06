@@ -4,25 +4,26 @@
 
 enum CellType
 {
-	CellType_Red,
-	CellType_Green
+	CellType_Green,
+	CellType_Red
 };
 
 class CellObject : public GameObject
 {
 protected:
-  CellType type{CellType_Red};
+  CellType type{CellType_Green};
 
 	ModelHandle redCellModelHandle;
   ModelHandle greenCellModelHandle;
-
-  /*MeshHandle redCell;
-  MeshHandle greenCell;*/
-
-	// MeshComponent* cell;
+  
+  ModelHandle emptyCellModelHandle;
+  ModelHandle selectedCellModelHandle;
 
 	GameObject* redCell;
   GameObject* greenCell;
+
+  GameObject* emptyCell;
+  GameObject* selectedCell;
 
 public:
   class GridObject* grid{nullptr};

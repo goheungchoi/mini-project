@@ -26,8 +26,10 @@ private:
 
 	//for debug
 #ifdef _DEBUG
+#ifdef USEPVD
   physx::PxPvdTransport* _transport = nullptr;
   physx::PxPvd* _pvd = nullptr;
+#endif
 #endif
 
 };

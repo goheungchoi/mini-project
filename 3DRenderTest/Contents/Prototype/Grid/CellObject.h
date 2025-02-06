@@ -4,14 +4,14 @@
 
 enum CellType
 {
-	CellType_Red,
-	CellType_Green
+	CellType_Green,
+	CellType_Red
 };
 
 class CellObject : public GameObject
 {
 protected:
-  CellType type{CellType_Red};
+  CellType type{CellType_Green};
 
 	ModelHandle redCellModelHandle;
   ModelHandle greenCellModelHandle;

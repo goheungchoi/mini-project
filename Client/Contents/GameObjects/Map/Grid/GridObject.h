@@ -29,6 +29,7 @@ class GridObject : public GameObject
 {
 protected:
 
+  float actualPadding{0.f};
   float actualCellSize{0.f};
   uint32_t width{0}, height{0};
 

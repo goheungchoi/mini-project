@@ -4,7 +4,10 @@
 
 #include "GameFramework/Components/Animation/AnimatorComponent.h"
 
-void SlashActionState::Enter(AnimatorComponent* animator) {
+#include "Contents/GameObjects/Map/Characters/Slasher/Slasher.h"
+
+void SlashActionState::Enter(AnimatorComponent* animator)
+{
   Super::Enter(animator);
 
   animator->SetVariable<bool>("fire", true);
@@ -12,11 +15,9 @@ void SlashActionState::Enter(AnimatorComponent* animator) {
 
 void SlashActionState::Toggle(AnimatorComponent* animator)
 {
-  animator->SetVariable<bool>("done", true);
+  Slasher* slasher = (Slasher*) animator->GetOwner();
+  slasher->TakeOverTargetCell();
 
-  auto* animationRoot = animator->GetOwner()->FindChildGameObject("root_ref.x");
-  XMVECTOR currTranslate = animationRoot->transform->GetTranslation();
-  animator->SetVariable<XMVECTOR>("currTranslate", currTranslate);
+  animator->SetVariable<bool>("done", true);
   animator->SetState(_stateDependency["idle"]);
 }
-

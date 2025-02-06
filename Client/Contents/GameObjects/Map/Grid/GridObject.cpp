@@ -24,7 +24,7 @@ void GridObject::CreateGrid(uint32_t width, uint32_t height, float actualCellSiz
     float pos_z = actualCellSize * (i / height) + actualCellSize / 2;
 
 		// cell->SetCellType((CellType) ((i + (i / height)) % 2));
-		cell->SetScaling(actualCellSize);
+		// cell->SetScaling(1.0);
 		cell->SetTranslation(pos_x, 0, pos_z);
     cell->grid = this;
     cell->SetCellPosition(i % width, i / height);
@@ -178,7 +178,7 @@ void GridObject::FindHoveredCell()
   for (auto* cell : grid)
   {
     BoundingOrientedBox obb;
-    cell->obb.Transform(obb, cell->transform->GetGlobalTransform());
+    cell->obb.Transform(obb, XMMatrixScaling(1.3f, 0.f, 1.3f) * cell->transform->GetGlobalTransform());
     if (cell->isVisible && !anyHover &&
         obb.Intersects(cursorRay.position, cursorRay.direction, t))
     {
