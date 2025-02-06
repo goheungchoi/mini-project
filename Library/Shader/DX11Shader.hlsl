@@ -87,8 +87,11 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
         ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
     }
     
-    
-    ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor.xyz;
+    float ssaoFactor = ssaoMap.Sample(samLinear, input.uv).r;
+    if(isSSAO)
+        ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor.xyz*ssaoFactor;
+    else
+        ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor.xyz;
     //ambientLighting += 0;
     float4 positionShadow = deferredShadowPosition.Sample(samLinear, input.uv);
     float currShadowDepth = positionShadow.z; // / positionShadow.w;
@@ -258,10 +261,7 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     {
         albedo = albedoFactor;
     }
-    else
-    {
-        albedo = pow(albedo, 2.2);
-    }
+    albedo = pow(albedo, 2.2);
     //gamma correction
     float4 metallRoughColor = texMetallicRoughness.Sample(samAnisotropy, input.uv);
     float metallic = metallRoughColor.r;
@@ -360,7 +360,15 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     }
     float alpha = 1.0;
     float4 alphaColor = texAlbedo.Sample(samLinear, input.uv);
-    alpha = alphaColor.a;
+    if (length(alphaColor)==0)
+    {
+        alpha = albedoFactor.a;
+    }
+    else
+    {
+        alpha = alphaColor.a;
+    }
+    
     
     
     float4 finalColor;
@@ -684,14 +692,14 @@ float4 blur_vertical_ps_main(QUAD_PS_INPUT input):SV_Target
 {
     float weights[5] = { 0.2270f, 0.1946f, 0.1210f, 0.0545f, 0.0162f };
     float2 texelSize = float2(1.f / screenWidth, 1.f / screenHeight);
-    float3 occlusion = ssaoMap.Sample(samLinear, input.uv).rgb * weights[0];
+    float3 occlusion = ssaoNormalDepth.Sample(samLinear, input.uv).rgb * weights[0];
 
     [unroll]
     for (int i = 1; i < 5; i++)
     {
         float2 offset = float2(0.0f, texelSize.y * i); // 세로 방향 오프셋
-        occlusion += ssaoMap.Sample(samLinear, input.uv + offset).rgb * weights[i];
-        occlusion += ssaoMap.Sample(samLinear, input.uv - offset).rgb * weights[i];
+        occlusion += ssaoNormalDepth.Sample(samLinear, input.uv + offset).rgb * weights[i];
+        occlusion += ssaoNormalDepth.Sample(samLinear, input.uv - offset).rgb * weights[i];
     }
 
     return float4(occlusion, 1.0f);

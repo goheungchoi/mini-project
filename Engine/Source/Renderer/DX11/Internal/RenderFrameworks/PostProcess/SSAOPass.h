@@ -127,6 +127,15 @@ public:
   }
   void BlurVerticlePrepare()
   {
-    
+    ID3D11DeviceContext* dc = _device->GetImmContext();
+    dc->OMSetRenderTargets(1, _ssaoRT.GetAddressOf(), nullptr);
+    dc->ClearRenderTargetView(_ssaoRT.Get(), _clearColor);
+    dc->PSSetShaderResources(17, 1, _screenNormalRTSrv.GetAddressOf());
+
+  }
+  void SetFinalSSAOTexture() 
+  {
+    _device->GetImmContext()->PSSetShaderResources(18, 1,
+                                                   _ssaortSrv.GetAddressOf());
   }
 };
