@@ -360,15 +360,7 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     }
     float alpha = 1.0;
     float4 alphaColor = texAlbedo.Sample(samLinear, input.uv);
-    if (length(alphaColor)==0)
-    {
-        alpha = albedoFactor.a;
-    }
-    else
-    {
-        alpha = alphaColor.a;
-    }
-    
+    alpha = alphaColor.a;
     
     
     float4 finalColor;
