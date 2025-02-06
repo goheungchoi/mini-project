@@ -20,10 +20,12 @@ Texture2D deferredNormal : register(t11);
 Texture2D deferredMaterial : register(t12);
 Texture2D deferredEmissive : register(t13);
 Texture2D deferredShadowPosition : register(t14);
-
 //skinning
 StructuredBuffer<uint> boneIDBuffer : register(t15);
 StructuredBuffer<float> boneWeightBuffer : register(t16);
+//ssao normal depth
+Texture2D ssaoNormalDepth : register(t17);
+Texture2D ssaoMap : register(t18);
 struct DirectionalLight
 {
     float4 direction;
@@ -47,6 +49,10 @@ cbuffer Frame : register(b1)
     Matrix InverseProjectionMatrix;
     Matrix shadowView;
     Matrix shadowProjection;
+    float ambientIntencity;
+    float emissiveFactor;
+    float screenWidth;
+    float screenHeight;
 };
 
 cbuffer World : register(b2)
@@ -67,6 +73,18 @@ cbuffer BoneMatrix : register(b4)
 {
     Matrix boneMatrix[512];
 }
+
+cbuffer SSAOParames : register(b5)
+{
+    float2 noiseScale;
+    float radius; // 샘플링 반경
+    float bias; // 오클루젼 바이어스
+    float ssaointensity; // SSAO 강도
+    float nearPlane;
+    float farPlane;
+    float padding3;
+}
+
 
 struct VS_INPUT
 {
@@ -103,3 +121,4 @@ struct QUAD_PS_INPUT
     float2 uv : TEXCOORD0;
     float4 positionShadow : POSITION;
 };
+

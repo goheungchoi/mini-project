@@ -5,7 +5,7 @@
 struct DirectionalLight
 {
   Vector4 direction = Vector4(1.f,-1.f,1.f,0.f);
-  Vector4 radiance;
+  Vector4 radiance = {1.f,1.f,1.f,1.f};
 };
 
 struct PointLight

@@ -122,4 +122,9 @@ public:
     _device->GetImmContext()->PSSetShaderResources(9, 1,
                                                    _shadowSRV.GetAddressOf());
   }
+  void ClearSRV()
+  { 
+    ID3D11ShaderResourceView* srv = nullptr;
+    _device->GetImmContext()->PSSetShaderResources(9, 1, &srv);
+  }
 };
