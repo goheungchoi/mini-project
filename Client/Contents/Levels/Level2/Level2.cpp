@@ -12,7 +12,9 @@ void Level2::PrepareLevel()
 
 void Level2::BeginLevel()
 {
+#ifdef USED2D
   world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+#endif // USED2D
 }
 
 void Level2::CleanupLevel() {}

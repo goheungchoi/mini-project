@@ -1,9 +1,11 @@
 #include "MainMenuUI.h"
+#include "GameFramework/UI/UICursor/UICursor.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 
 MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
 {
+
   _backGroundImage = CreateUI<UIImage>(L"BackGoundIMG");
   _backGroundImage->SetSprite("Textures\\TitleBackGround.png", {960, 540});
 
@@ -63,6 +65,8 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
 
   //_startBtn->AddOnUnHoveredHandler(
   //    [this]() { _backGroundImage->SetStatus(EStatus::EStatus_Inactive); });
+
+  _cursor = CreateUI<UICursor>(L"Cursor");
 }
 
 MainMenuUI::~MainMenuUI() {}
