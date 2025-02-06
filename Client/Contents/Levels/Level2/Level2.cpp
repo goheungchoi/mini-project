@@ -2,9 +2,18 @@
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
 
-void Level2::PrepareLevel() {}
+#include "Contents/UI/InGameUI/InGameUI.h"
+#include "GameFramework/UI/Canvas/Canvas.h"
+#include "GameFramework/UI/UIPanel/UIPanel.h"
 
-void Level2::BeginLevel() {}
+void Level2::PrepareLevel()
+{
+}
+
+void Level2::BeginLevel()
+{
+  world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+}
 
 void Level2::CleanupLevel() {}
 

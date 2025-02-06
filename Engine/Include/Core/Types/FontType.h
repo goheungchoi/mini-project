@@ -35,17 +35,17 @@ enum class FontStretch
 
 enum class TextAlignment
 {
-  LEADING,
-  TRAILING,
-  CENTER,
-  JUSTIFIED
+  LEFTAlIGN,
+  RIGHTAlIGN,
+  CENTERAlIGN,
+  FILLAlIGN
 };
 
 enum class ParagraphAlignment
 {
-  NEAr,
-  FAr,
-  CENTEr
+  TOPALIGN,
+  BOTTOMALIGN,
+  MIDALIGN
 };
 
 struct TextFormatInfo
@@ -55,8 +55,8 @@ struct TextFormatInfo
   FontWeight _fontWeight = FontWeight::NORMAL;
   FontStyle _fontStyle = FontStyle::NORMAL;
   FontStretch _fontStretch = FontStretch::NORMAL;
-  TextAlignment _textAlignment = TextAlignment::CENTER;
-  ParagraphAlignment _paragraphAlignment = ParagraphAlignment::CENTEr;
+  TextAlignment _textAlignment = TextAlignment::CENTERAlIGN;
+  ParagraphAlignment _paragraphAlignment = ParagraphAlignment::MIDALIGN;
 
   TextFormatInfo(){}
   TextFormatInfo(std::wstring fontName) : _fontName(fontName) {}

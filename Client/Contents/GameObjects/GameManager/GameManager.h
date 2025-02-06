@@ -13,6 +13,7 @@ public:
 
   void Pause() { map->Deactivate(); }
   void Resume() { map->Activate(); }
+  void GameTrigger() { map->TriggerAction(); }
 
   // Game loop events
   virtual void OnAwake();

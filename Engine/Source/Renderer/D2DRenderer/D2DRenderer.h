@@ -90,12 +90,11 @@ public:
 
   void CreateSprite(LPCSTR path, Vector2 pos);
   void DrawTexts(const wchar_t* format, Vector4 rect, Color color,
-                 const TextFormatInfo& textFormatInfo);
+                 float opacity, const TextFormatInfo& textFormatInfo);
 
 
 
 private:
-  //void RenderSprites();
   void BeginSprites();
   void EndSprites();
 
