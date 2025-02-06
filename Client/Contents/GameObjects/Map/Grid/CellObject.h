@@ -8,6 +8,12 @@ enum CellType
 	CellType_Red
 };
 
+enum ZoneType
+{
+  ZoneType_Range,
+  ZoneType_Damage
+};
+
 class CellObject : public GameObject
 {
 protected:
@@ -16,14 +22,14 @@ protected:
 	ModelHandle redCellModelHandle;
   ModelHandle greenCellModelHandle;
   
-  ModelHandle emptyCellModelHandle;
-  ModelHandle selectedCellModelHandle;
+  ModelHandle rangeCellModelHandle;
+  ModelHandle damageCellModelHandle;
 
 	GameObject* redCell;
   GameObject* greenCell;
 
-  GameObject* emptyCell;
-  GameObject* selectedCell;
+  GameObject* rangeCell;
+  GameObject* damageCell;
 
 public:
   class GridObject* grid{nullptr};
@@ -37,6 +43,11 @@ public:
 
 	void SetInvisible();
   void SetVisible();
+
+  bool bNoZone{true};
+  void ClearZone();
+  void SetRangeZone();
+  void SetDamageZone();
 
 	void SetCellType(CellType type);
   CellType GetCellType();

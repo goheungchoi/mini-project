@@ -59,6 +59,9 @@ public:
   static AnimationHandle gunReady2Animation;
   static AnimationHandle gunFireAnimation;
 
+  TextureHandle deathIndicatorHandle;
+  GameObject* deathIndicator{nullptr};
+
   GameObject* directionIndicator{nullptr};
   GameObject* inactiveIndicator{nullptr};
   GameObject* activeIndicator{nullptr};
@@ -108,6 +111,9 @@ public:
 
   void BindInactiveIndicator(GameObject* inactiveIndicator);
   void BindActiveIndicator(GameObject* activeIndicator);
+
+  void ShowDeathIndicator();
+  void HideDeathIndicator();
 
 	void SetFaction(Faction faction);
   Faction GetFaction();

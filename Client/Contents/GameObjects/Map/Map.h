@@ -75,7 +75,12 @@ public:
 	void TurnOnPlacementMode(CharacterType type, Direction dir);
   void TurnOffPlacementMode();
 
-	void ShowAllyAttackRange();
+  bool bNeedUpdateAttackRange{true};
+	void ShowHoveredCharacterRange();
+  void HideHoveredCharacterRange();
+
+  void TurnOnAssassinationMode();
+  void TurnOffAssasinationMode();
 
 	void TriggerAction();
 

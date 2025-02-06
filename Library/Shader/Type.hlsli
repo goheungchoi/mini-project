@@ -53,6 +53,7 @@ cbuffer Frame : register(b1)
     float emissiveFactor;
     float screenWidth;
     float screenHeight;
+    int isSSAO;
 };
 
 cbuffer World : register(b2)

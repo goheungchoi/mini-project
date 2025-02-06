@@ -9,6 +9,8 @@
 #include "Contents/GameObjects/Map/Characters/Gunman/Gunman.h"
 #include "Contents/GameObjects/Map/Characters/Slasher/Slasher.h"
 
+// #include "SoundSystem/SoundManager.h"
+
 constexpr float kIndicatorScale{0.7f};
 
 Map::Map(World* world) : GameObject(world)
@@ -100,6 +102,11 @@ Map::Map(World* world) : GameObject(world)
   grid->CreateGrid(6, 6, 1.4f);
   grid->Translate(-0.6f, +0.01f, -0.8f);
   AddChildGameObject(grid);
+
+
+  // NOTE: Sound test.
+  /*SoundManager::LoadSound(L"PubBGM.wav", true);
+  SoundManager::PlaySound(L"PubBGM.wav");*/
 }
 
 Map::~Map()
@@ -174,45 +181,156 @@ void Map::TurnOffPlacementMode()
   isPlacementModeOn = false;
 }
 
-void Map::ShowAllyAttackRange() {
+void Map::ShowHoveredCharacterRange() {
 	// TODO:
   if (!hoveredCharacter)
     return;
 
-	if (hoveredCharacter->faction == Faction::kAlly)
+  int w = (int) hoveredCharacter->grid_w;
+  int h = (int) hoveredCharacter->grid_h;
+	// If the hovered character is not on the grid.
+  if (!grid->IsGameObjectAt(hoveredCharacter, w, h))
+    return;
+
+  if (!bNeedUpdateAttackRange)
+    return;
+
+  switch (hoveredCharacter->type)
   {
-    uint32_t w = hoveredCharacter->grid_w;
-    uint32_t h = hoveredCharacter->grid_h;
-		// If the hovered character is not on the grid.
-    if (!grid->IsGameObjectAt(hoveredCharacter, w, h))
-      return;
-
-    switch (hoveredCharacter->type)
+  case kBrawler: {
+    auto [w_offset, h_offset] = hoveredCharacter->GetGridFrontDirection();
+    if (hoveredCharacter->isTargetInRange)
     {
-    case kBrawler:
-    case kSlasher: {
-      if (hoveredCharacter->isTargetInRange)
+      // Show the damage zone.
+      if (CellObject* cell = grid->GetCellObjectAt(w + w_offset, h + h_offset);
+          cell)
       {
-        auto [w_offset, h_offset] = hoveredCharacter->GetGridFrontDirection();
+        cell->SetDamageZone();
+      }
 
-				w_offset *= hoveredCharacter->distanceToTarget;
-        h_offset *= hoveredCharacter->distanceToTarget;
-
-        CellObject* cell = grid->GetCellObjectAt(w + w_offset, h + h_offset);
-        cell->SetCellType(CellType_Green);
-        cell->SetVisible();
-			}
-		}
-    break;
-    case kGunman: {
-
-
+      // Shows death indicators.
+      if (GameObject* gameObject =
+              grid->GetGameObjectAt(w + w_offset, h + h_offset);
+          gameObject)
+      {
+        // TODO: Mark the death indicator.
+        if (gameObject->GetGameObjectTag() == kFactionTags[kAlly] ||
+            gameObject->GetGameObjectTag() == kFactionTags[kEnemy] ||
+            gameObject->GetGameObjectTag() == kFactionTags[kNeutral])
+        {
+          Character* character = (Character*)gameObject;
+          character->ShowDeathIndicator();
+        }
+      }
     }
-    break;
+    else
+    {
+      // Show the range zone.
+      if (CellObject* cell = grid->GetCellObjectAt(w + w_offset, h + h_offset);
+          cell)
+      {
+        cell->SetRangeZone();
+      }
     }
-	
-	
+  }
+  break;
+  case kSlasher: {
+    
 	}
+  break;
+  case kGunman: {
+    auto [w_offset, h_offset] = hoveredCharacter->GetGridFrontDirection();
+    if (hoveredCharacter->isTargetInRange)
+    {
+      // Show the damage zone.
+      w += w_offset;
+      h += h_offset;
+      CellObject* cell = grid->GetCellObjectAt(w, h);
+
+      while (cell)
+      {
+        // Mark the damage zone.
+        cell->SetDamageZone();
+
+        // Mark the death indicator if any.
+        if (GameObject* gameObject = grid->GetGameObjectAt(w, h); gameObject)
+        {
+          // TODO: Mark the death indicator.
+          if (gameObject->GetGameObjectTag() == kFactionTags[kAlly] ||
+              gameObject->GetGameObjectTag() == kFactionTags[kEnemy] ||
+              gameObject->GetGameObjectTag() == kFactionTags[kNeutral])
+          {
+            Character* character = (Character*)gameObject;
+            character->ShowDeathIndicator();
+          }
+        }
+
+        // Progress
+        w += w_offset;
+        h += h_offset;
+        cell = grid->GetCellObjectAt(w, h);
+      }
+    }
+    else
+    {
+      w += w_offset;
+      h += h_offset;
+      CellObject* cell = grid->GetCellObjectAt(w, h);
+      while (cell)
+      {
+        cell->SetRangeZone();
+
+        w += w_offset;
+        h += h_offset;
+        cell = grid->GetCellObjectAt(w, h);
+      }
+    }
+  }
+  break;
+  }
+
+  bNeedUpdateAttackRange = false;
+}
+
+void Map::HideHoveredCharacterRange()
+{
+  if (bNeedUpdateAttackRange)
+    return;
+
+  for (uint32_t w = 0; grid->GetCellObjectAt(w, 0) != nullptr; ++w)
+  {
+    for (uint32_t h = 0; grid->GetCellObjectAt(w, h) != nullptr; ++h)
+    {
+      if (CellObject* cell = grid->GetCellObjectAt(w, h); cell)
+      {
+        cell->ClearZone();
+      }
+
+      if (GameObject* gameObject = grid->GetGameObjectAt(w, h); gameObject)
+      {
+        if (gameObject->GetGameObjectTag() == kFactionTags[kAlly] ||
+            gameObject->GetGameObjectTag() == kFactionTags[kEnemy] ||
+            gameObject->GetGameObjectTag() == kFactionTags[kNeutral])
+        {
+          Character* character = (Character*)gameObject;
+          character->HideDeathIndicator();
+        }
+      }
+    }
+  }
+
+  bNeedUpdateAttackRange = true;
+}
+
+void Map::TurnOnAssassinationMode() {
+  if (isActionTriggered)
+    isAssassinationMode = false;
+  else 
+    isAssassinationMode = true;
+}
+
+void Map::TurnOffAssasinationMode() {
+  isAssassinationMode = false;
 }
 
 void Map::TriggerAction()
@@ -352,7 +470,6 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
     if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
-      world->_renderer->CreateBillboard(bbComp->billboard);
       bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(brawlerInactiveIndicatorTextureHandle);
     }
@@ -363,7 +480,6 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
     if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
-      world->_renderer->CreateBillboard(bbComp->billboard);
       bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(brawlerActiveIndicatorTextureHandle);
     }
@@ -395,7 +511,6 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
     if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
-      world->_renderer->CreateBillboard(bbComp->billboard);
       bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(gunmanInactiveIndicatorTextureHandle);
     }
@@ -406,7 +521,6 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
     if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
-      world->_renderer->CreateBillboard(bbComp->billboard);
       bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(gunmanActiveIndicatorTextureHandle);
     }
@@ -444,7 +558,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
-      world->_renderer->CreateBillboard(bbComp->billboard);
       bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(brawlerInactiveIndicatorTextureHandle);
     }
@@ -455,7 +568,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
-      world->_renderer->CreateBillboard(bbComp->billboard);
       bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(brawlerActiveIndicatorTextureHandle);
     }
@@ -487,7 +599,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
-      world->_renderer->CreateBillboard(bbComp->billboard);
       bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(slasherInactiveIndicatorTextureHandle);
     }
@@ -498,7 +609,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
-      world->_renderer->CreateBillboard(bbComp->billboard);
       bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(slasherActiveIndicatorTextureHandle);
     }
@@ -530,7 +640,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     if (auto* bbComp = inactiveIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
-      world->_renderer->CreateBillboard(bbComp->billboard);
       bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(gunmanInactiveIndicatorTextureHandle);
     }
@@ -541,7 +650,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     if (auto* bbComp = activeIndicator->CreateComponent<BillboardComponent>();
         bbComp)
     {
-      world->_renderer->CreateBillboard(bbComp->billboard);
       bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
       bbComp->SetTexture(gunmanActiveIndicatorTextureHandle);
     }
@@ -667,7 +775,7 @@ void Map::Update(float dt) {
     if (hoveredCharacter)
     {
 			// TODO: Show the distance and range 
-			ShowAllyAttackRange();
+			ShowHoveredCharacterRange();
 
 			// Right Click
       if (INPUT.IsKeyDown(MouseState::RB))
@@ -721,6 +829,10 @@ void Map::Update(float dt) {
     else
     {
 			// TODO: Turn off the mode.
+      if (!bNeedUpdateAttackRange)
+      {
+        HideHoveredCharacterRange();
+      }
 		}
 
     if (INPUT.IsKeyPress(Key::Space))
