@@ -1,6 +1,6 @@
 #include "GameLevel.h"
-#include "Contents/GameObjects/Map/Map.h"
 #include "Contents/GameObjects/GameManager/GameManager.h"
+#include "Contents/GameObjects/Map/Map.h"
 
 void GameLevel::PrepareLevel()
 {
@@ -24,7 +24,6 @@ void GameLevel::BeginLevel()
 
   // 여기서 gameManager 만들어줌.
   gameManager = world->CreateGameObject<GameManager>();
-
 }
 
 void GameLevel::CleanupLevel()
@@ -46,8 +45,8 @@ void GameLevel::CreateMap()
   map->Translate(-4, 0, -4);
 
   map->CreateEnemyAt(kGunman, 4, 4, kSouth);
-  // map->CreateEnemyAt(kGunman, 3, 3, kEast);
-  // map->CreateEnemyAt(kGunman, 2, 1, kEast);
+  map->CreateEnemyAt(kGunman, 3, 2, kEast);
+  map->CreateEnemyAt(kGunman, 2, 4, kEast);
 
   // map->CreateAllyAt(kBrawler, 4, 5, kWest);
   // map->CreateAllyAt(kSlasher, 3, 5, kWest);

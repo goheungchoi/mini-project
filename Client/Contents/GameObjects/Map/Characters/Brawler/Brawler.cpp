@@ -6,10 +6,14 @@
 #include "Contents/AnimationStates/BrawlerActionState.h"
 #include "Contents/AnimationStates/DeadState.h"
 
+#include "Contents/GameObjects/Map/Weapons/Fist/Fist.h"
+
 Brawler::Brawler(World* world) : Character(world)
 {
   type = kBrawler;
   range = 1;
+
+  fist = world->CreateGameObject<Fist>();
 
 	// NOTE: Test animation and state.
   dead = new Animation(deadAnimation, false);
@@ -28,6 +32,8 @@ Brawler::Brawler(World* world) : Character(world)
 	actionState->AddAnimationStateDependency("dead", deadState);
 
 	animator->SetState(idleState);
+
+  interval = std::make_pair<float, float>(0.542f, 0.625f);
 }
 
 Brawler::~Brawler() {
@@ -42,10 +48,28 @@ Brawler::~Brawler() {
 void Brawler::OnAwake() {
   Super::OnAwake();
 
+  GameObject* hand = FindChildGameObject("hand.r");
+  if (hand)
+  {
+    hand->AddChildGameObject(fist);
+
+    fist->SetInvisible();
+  }
 }
 
 void Brawler::Update(float dt) {
   Super::Update(dt);
 
-
+  // Turn on and off the knife collision.
+  if (interval.first <= action->GetCurrentAnimationTime() &&
+      action->GetCurrentAnimationTime() <= interval.second)
+  {
+    if (!fist->isCollsionOn)
+      fist->TurnOnCollision();
+  }
+  else
+  {
+    if (fist->isCollsionOn)
+      fist->TurnOffCollision();
+  }
 }

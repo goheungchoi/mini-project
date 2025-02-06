@@ -6,11 +6,13 @@ class Fist : public GameObject
 {
 
 public:
+  bool isCollsionOn{false};
+
   Fist(World* world);
   ~Fist() {}
 
   void TurnOnCollision();
   void TurnOffCollision();
 
-  void OnAwake() override;
+  void Update(float dt) override;
 };

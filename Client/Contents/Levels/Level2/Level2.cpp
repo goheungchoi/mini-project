@@ -35,8 +35,10 @@ void Level2::PrepareLevel()
 
 void Level2::BeginLevel()
 {
-  //world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
-  world->_canvas->CreatePanel<DialogUI>(L"ElizaUI");
+#ifdef USED2D
+    world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+  world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+#endif // USED2D
 }
 
 void Level2::CleanupLevel() {}

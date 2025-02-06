@@ -52,7 +52,8 @@ public:
 	static AnimationHandle brawlerActionAnimation;
 	
 	static AnimationHandle slashReadyAnimation;
-  static AnimationHandle slashActionAnimation;
+  static AnimationHandle slashAction1Animation;
+  static AnimationHandle slashAction2Animation;
 	
 	static AnimationHandle gunReady1Animation;
   static AnimationHandle gunReady2Animation;

@@ -18,6 +18,7 @@ public:
   void Render();
   void Render(Vector4 rect);
   void SetPos(Vector2 pos) { _pos = pos; }
+  void SetScale(Vector2 scale) { _scale = scale; }
   Vector2 GetTextureSize() { return _textureSize; }
   Vector2 GetPos() { return _pos; }
 
@@ -35,5 +36,6 @@ private:
   class Texture* _pTexture = nullptr;
   Vector2 _textureSize{};
   Vector2 _pos{};
+  Vector2 _scale{1.0f, 1.0f};
 
 };

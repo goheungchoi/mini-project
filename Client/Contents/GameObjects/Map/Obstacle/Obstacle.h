@@ -4,8 +4,6 @@
 
 class Obstacle : public GameObject
 {
-
-
 public:
 
 	Obstacle(class World* world) : GameObject(world)

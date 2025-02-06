@@ -6,6 +6,8 @@ class Brawler : public Character
 {
 	using Super = Character;
 protected:
+  class Fist* fist{nullptr};
+
   Animation* dead;
   Animation* idle;
   Animation* action;
@@ -13,6 +15,8 @@ protected:
 	AnimationState* deadState;
   AnimationState* idleState;
   AnimationState* actionState;
+
+  std::pair<float, float> interval;
 
 public:
   Brawler(World* world);

@@ -15,11 +15,13 @@ private:
   class UIText* _subMissonTxt{nullptr};
 
   class UIButton* _playBtn{nullptr};
-  class UIImage* _playBtnImg{nullptr};
+  class UIImage* _playBtnImgs[3];
 
-  class UIButton* _snipingBtn{nullptr};
-  class UIImage* _snipingBtnImg{nullptr};
+  class UIButton* _orderBtn{nullptr};
+  class UIImage* _orderBtnImgs[3];
 
   class UIButton* _combatBtn{nullptr};
   class UIImage* _combatBtnImg{nullptr};
+
+  class UICursor* _cursor{nullptr};
 };

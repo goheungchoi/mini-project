@@ -14,8 +14,8 @@
 #include "../Resources/Sampler.h"
 #include "../Resources/SkyBox.h"
 #include "Core/Common.h"
-#include "Core/Types/RenderType.h"
 #include "Core/Math/MathUtils.h"
+#include "Core/Types/RenderType.h"
 using namespace RenderMesh;
 namespace Renderer
 {
@@ -47,13 +47,14 @@ private:
   // Constant Buffer
   MeshConstantBuffer* _CB;
   FrameConstantBuffer* _frameCB;
+  UtilityConstantBuffer* _utilityCB;
   // sampler
   vector<Sampler*> _samplers;
   // shader
   unordered_map<std::string, VertexShader*> _vShaders;
   unordered_map<std::string, PixelShader*> _pShaders;
   // Billboard
-  vector<BillboardQuad*> _billboards;
+  map<pair<float, int>, BillboardQuad*, greater<pair<float, int>>> _billboards;
   // pass
   ShadowPass* _shadow = nullptr;
   DefferedPass* _deffered = nullptr;
@@ -68,6 +69,9 @@ private:
   Renderer::Camera _camera;
   DirectionalLight _mainLight;
   int max = std::numeric_limits<int>::max();
+  float ambientIntencity = 0.2f;
+  float emissiveIntencity = 0.2f;
+  float testradius = 0.1f;
 
 public:
   RenderPassManager(Device* device, SwapChain* swapchain, int width, int height)
@@ -78,6 +82,7 @@ public:
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     _frameCB = new FrameConstantBuffer(_device);
     _CB = new MeshConstantBuffer(_device);
+    _utilityCB = new UtilityConstantBuffer(_device);
     _compiler = new ShaderCompiler(_device);
     _shadow = new ShadowPass(_device, 8192, 8192);
     _deffered = new DefferedPass(width, height, _device);
@@ -100,6 +105,7 @@ public:
             .GetAddressOf());
     dc->VSSetConstantBuffers(1, 1, _frameCB->_constantBuffer.GetAddressOf());
     dc->PSSetConstantBuffers(1, 1, _frameCB->_constantBuffer.GetAddressOf());
+    dc->PSSetConstantBuffers(5, 1, _utilityCB->_ssaoParams.GetAddressOf());
 
     _staticTransMeshes.resize(2);
     _skelTransMeshes.resize(2);
@@ -109,6 +115,8 @@ public:
 
     _staticShadowMesh.resize(2);
     _skelShadowMesh.resize(2);
+
+
   }
   ~RenderPassManager()
   {
@@ -124,6 +132,7 @@ public:
     SAFE_RELEASE(_compiler);
     SAFE_RELEASE(_CB);
     SAFE_RELEASE(_frameCB);
+    SAFE_RELEASE(_utilityCB);
     SAFE_RELEASE(_deffered);
     SAFE_RELEASE(_shadow);
     SAFE_RELEASE(_ssao);
@@ -253,6 +262,9 @@ public:
     // Shadow pass
     this->DrawShadow(dc);
     //--------------------------------------------------------------------------------------//
+    // SSAO pass
+    this->DrawSSAO(dc);
+    //--------------------------------------------------------------------------------------//
     // Deferred pass
     this->DrawDeffered(dc);
 
@@ -276,18 +288,32 @@ public:
     max = std::numeric_limits<int>::max();
   }
 
-  void AddBillBoard(BillboardQuad* quad) { _billboards.push_back(quad); }
+  void AddBillBoard(BillboardQuad* quad) 
+  {
+    Vector4 worldPos = quad->position;
+    Vector4 viewPos = Vector4::Transform(worldPos,_camera.view);
+    float viewZ = viewPos.z;
+    _billboards.insert({{viewZ, max}, quad});
+  }
   /**
    * @brief call per frame, update frame constantBuffer
    */
   void FrameSet()
   {
-    Constant::Frame frame = {
-        .mainDirectionalLight = _mainLight,
-        .cameraPosition = _camera.eye,
-        .view = _camera.view.Transpose(),
-        .projection = _camera.projection.Transpose(),
-    };
+#ifdef _DEBUG
+    ImGui::SliderFloat("ambient intencity", &ambientIntencity, 0.f, 1.f);
+    ImGui::SliderFloat("emissive intencity", &emissiveIntencity, 0.f, 1.f);
+    ImGui::SliderFloat("testradius", &testradius, 0.f, 0.1f);
+#endif // DEBUG
+    // frame
+    Constant::Frame frame = {.mainDirectionalLight = _mainLight,
+                             .cameraPosition = _camera.eye,
+                             .view = _camera.view.Transpose(),
+                             .projection = _camera.projection.Transpose(),
+                             .ambientIntencity = ambientIntencity,
+                             .emissiveIntencity = emissiveIntencity,
+                             .screenWidth = kScreenWidth,
+                             .screenHeight = kScreenHeight};
     Matrix IView = _camera.view;
     Matrix IProj = _camera.projection;
     IView = DirectX::XMMatrixInverse(nullptr, IView);
@@ -298,6 +324,15 @@ public:
     frame.shadwoView = _shadow->View.Transpose();
     frame.shadowProjection = _shadow->Projection.Transpose();
     _frameCB->UpdateContantBuffer(frame);
+    // util
+    Constant::SSAOParames ssao = {
+        .noiseScale = {1.f, 1.f},
+        .radius = testradius,
+        .nearplane = 0.01,
+        .farplane = 10000,
+    };
+   
+    _utilityCB->UpdateSSAOParams(ssao);
   }
   void SetSkyBox(LPCSTR envPath, LPCSTR specularBRDFPath, LPCSTR diffuseIrrPath,
                  LPCSTR specularIBLPath)
@@ -380,6 +415,25 @@ public:
     macros = {{"Billboard", "1"}, {nullptr, nullptr}};
     _pShaders.insert({"Billboard", _compiler->CompilePixelShader(
                                        macros, "billboard_ps_main")});
+    macros.clear();
+    macros = {{"SSAO", "1"}, {nullptr, nullptr}};
+    _pShaders.insert(
+        {"SSAONormalDep", _compiler->CompilePixelShader(
+                              macros, "ssao_normal_depth_write_ps_main")});
+    macros.clear();
+    macros = {{"SSAO", "1"}, {nullptr, nullptr}};
+    _pShaders.insert({"SSAOWrite", _compiler->CompilePixelShader(
+                                       macros, "ssao_ao_write_ps_main")});
+    macros.clear();
+    macros = {{"BLUR", "1"}, {nullptr, nullptr}};
+    _pShaders.insert(
+        {"BlurHorizontal",
+         _compiler->CompilePixelShader(macros, "blur_horizontal_ps_main")});
+    macros.clear();
+    macros = {{"BLUR", "1"}, {nullptr, nullptr}};
+    _pShaders.insert({"BlurVertical", _compiler->CompilePixelShader(
+                                          macros, "blur_vertical_ps_main")});
+    
   }
   void CreateSamplers()
   {
@@ -628,10 +682,10 @@ private:
 
   void DrawDeffered(ID3D11DeviceContext* dc)
   {
-    // skybox
-    _pso->SetBlendOnEnable(false);
+    _pso->TurnZBufferOn();
     _pso->SetMainViewPort();
     _pso->SetMainRS();
+    _pso->ClearBackBufferDSV();
     _deffered->Prepare(_pso->_backBuffer);
     // dc->IASetInputLayout(_vShaders["SkyBox"]->layout.Get());
     // dc->VSSetShader(_vShaders["SkyBox"]->shader.Get(), nullptr, 0);
@@ -880,29 +934,27 @@ private:
     UINT offset = 0;
     if (!_billboards.empty())
     {
-      dc->IASetVertexBuffers(0, 1, _billboards[0]->_vertexBuffer.GetAddressOf(),
+      auto board = *_billboards.begin();
+      dc->IASetVertexBuffers(0, 1, board.second->_vertexBuffer.GetAddressOf(),
                              &stride, &offset);
-      dc->IASetIndexBuffer(_billboards[0]->_indexBuffer.Get(),
+      dc->IASetIndexBuffer(board.second->_indexBuffer.Get(),
                            DXGI_FORMAT_R32_UINT, 0);
     }
-    std::ranges::for_each(_billboards, [this, dc](BillboardQuad* quad) {
+    std::ranges::for_each(_billboards, [this, dc](const auto& iter) {
+      const auto& [z,quad] = iter;
       Matrix s = Matrix::CreateScale(quad->scale);
-      
+
       Vector3 forward = _camera.eye - (Vector3)quad->position;
       forward.Normalize();
-      
+
       Vector3 cameraUp = Vector3::Up;
       Vector3 right = cameraUp.Cross(forward);
       right.Normalize();
       Vector3 up = forward.Cross(right);
       up.Normalize();
       Matrix r =
-          Matrix(
-            right.x, right.y, right.z, 0.0f,
-            up.x, up.y, up.z, 0.0f,
-            forward.x, forward.y, forward.z, 0.0f, 
-            0.0f, 0.0f, 0.0f, 1.0f);
-     
+          Matrix(right.x, right.y, right.z, 0.0f, up.x, up.y, up.z, 0.0f,
+                 forward.x, forward.y, forward.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
       Matrix t = Matrix::CreateTranslation(quad->position.x, quad->position.y,
                                            quad->position.z);
@@ -913,11 +965,121 @@ private:
       dc->DrawIndexed(quad->_indexCount, 0, 0);
     });
   }
-  void DrawSSAO(ID3D11DeviceContext* dc) 
+  void DrawSSAO(ID3D11DeviceContext* dc)
   {
-    _ssao->Prepare();
-     
-   }
+    //----------------------------------------------------------------------------------------------------------------------------
+    //ssao normal depth write
+    _pso->SetBlendOnEnable(false);
+    _pso->TurnZBufferOn();
+    _pso->SetMainViewPort();
+    _pso->SetMainRS();
+    _ssao->WritePrepare(_pso->_backBuffer);
+    dc->PSSetShader(_pShaders["SSAONormalDep"]->shader.Get(), nullptr, 0);
+    dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
+    dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
+    std::ranges::for_each(_staticOpaqueMesh[0], [this, dc](StaticMesh mesh) {
+      dc->IASetVertexBuffers(0, 1, mesh.buffer->vertexBuffer.GetAddressOf(),
+                             &(mesh.buffer->stride), &(mesh.buffer->offset));
+      dc->IASetIndexBuffer(mesh.buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
+                           0);
+      Constant::World world = {mesh.world.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {
+          .alphaCutoff = mesh.buffer->material->alphaCutoff,
+          .metalicFactor = mesh.buffer->material->metallicFactor,
+          .roughnessFactor = mesh.buffer->material->roughnessFactor,
+          .albedoFactor = mesh.buffer->material->albedoFactor};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
+      mesh.buffer->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(mesh.buffer->nIndices, 0, 0);
+    });
+    // skel one side meshes
+    dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
+    dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
+    std::ranges::for_each(_skelOpaqueMesh[0], [this, dc](SkelMesh mesh) {
+      Constant::BoneMatrix boneMat = {};
+      std::copy(mesh.boneMatrix.begin(), mesh.boneMatrix.end(), boneMat.matrix);
+
+      _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
+      dc->VSSetShaderResources(15, 1, mesh.buffer->boneIDSrv.GetAddressOf());
+      dc->VSSetShaderResources(16, 1,
+                               mesh.buffer->boneWeightsSrv.GetAddressOf());
+      dc->IASetVertexBuffers(0, 1, mesh.buffer->vertexBuffer.GetAddressOf(),
+                             &(mesh.buffer->stride), &(mesh.buffer->offset));
+      dc->IASetIndexBuffer(mesh.buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
+                           0);
+      Constant::World world = {mesh.world.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {
+          .alphaCutoff = mesh.buffer->material->alphaCutoff,
+          .metalicFactor = mesh.buffer->material->metallicFactor,
+          .roughnessFactor = mesh.buffer->material->roughnessFactor,
+          .albedoFactor = mesh.buffer->material->albedoFactor};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
+      mesh.buffer->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(mesh.buffer->nIndices, 0, 0);
+    });
+    _pso->SetCullNone();
+    // static one side meshes
+    dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
+    dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
+    std::ranges::for_each(_staticOpaqueMesh[1], [this, dc](StaticMesh mesh) {
+      dc->IASetVertexBuffers(0, 1, mesh.buffer->vertexBuffer.GetAddressOf(),
+                             &(mesh.buffer->stride), &(mesh.buffer->offset));
+      dc->IASetIndexBuffer(mesh.buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
+                           0);
+      Constant::World world = {mesh.world.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {
+          .alphaCutoff = mesh.buffer->material->alphaCutoff,
+          .metalicFactor = mesh.buffer->material->metallicFactor,
+          .roughnessFactor = mesh.buffer->material->roughnessFactor,
+          .albedoFactor = mesh.buffer->material->albedoFactor};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
+      mesh.buffer->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(mesh.buffer->nIndices, 0, 0);
+    });
+    // skel one side meshes
+    dc->IASetInputLayout(_vShaders["Skinning"]->layout.Get());
+    dc->VSSetShader(_vShaders["Skinning"]->shader.Get(), nullptr, 0);
+    std::ranges::for_each(_skelOpaqueMesh[1], [this, dc](SkelMesh mesh) {
+      Constant::BoneMatrix boneMat = {};
+      std::copy(mesh.boneMatrix.begin(), mesh.boneMatrix.end(), boneMat.matrix);
+
+      _CB->UpdateContantBuffer(boneMat, MeshCBType::BoneMatrix);
+      dc->VSSetShaderResources(15, 1, mesh.buffer->boneIDSrv.GetAddressOf());
+      dc->VSSetShaderResources(16, 1,
+                               mesh.buffer->boneWeightsSrv.GetAddressOf());
+      dc->IASetVertexBuffers(0, 1, mesh.buffer->vertexBuffer.GetAddressOf(),
+                             &(mesh.buffer->stride), &(mesh.buffer->offset));
+      dc->IASetIndexBuffer(mesh.buffer->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
+                           0);
+      Constant::World world = {mesh.world.Transpose()};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {
+          .alphaCutoff = mesh.buffer->material->alphaCutoff,
+          .metalicFactor = mesh.buffer->material->metallicFactor,
+          .roughnessFactor = mesh.buffer->material->roughnessFactor,
+          .albedoFactor = mesh.buffer->material->albedoFactor};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
+      mesh.buffer->material->PSSetResourceViews(_device);
+      dc->DrawIndexed(mesh.buffer->nIndices, 0, 0);
+    });
+    //----------------------------------------------------------------------------------------------------------------------------
+    // ssao read
+    _pso->TurnZBufferOff();
+    dc->IASetInputLayout(_vShaders["Quad"]->layout.Get());
+    dc->VSSetShader(_vShaders["Quad"]->shader.Get(), nullptr, 0);
+    dc->PSSetShader(_pShaders["SSAOWrite"]->shader.Get(), nullptr, 0);
+    _ssao->ReadPrepare();
+    _ssao->QuadDraw();
+    //----------------------------------------------------------------------------------------------------------------------------
+    //blur ssao map
+    _pso->ClearPixelShaderResourceView(16);
+    _ssao->BlurHorizontalPrepare();
+    dc->PSSetShader(_pShaders["BlurHorizontal"]->shader.Get(), nullptr, 0);
+    _ssao->QuadDraw();
+  }
   void Clear()
   {
     // Transparent meshes
@@ -959,5 +1121,7 @@ private:
     _boxes.clear();
     _cylinders.clear();
 #endif
+    _ssao->ClearSRV();
+    _shadow->ClearSRV();
   }
 };

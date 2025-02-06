@@ -7,6 +7,8 @@
 #include "Contents/AnimationStates/SlashActionState.h"
 #include "Contents/AnimationStates/DeadState.h"
 
+#include "Contents/GameObjects/Map/Weapons/Knife/Knife.h"
+
 Slasher::Slasher(World* world) : Character(world) {
   type = kSlasher;
   range = 2;
@@ -17,7 +19,7 @@ Slasher::Slasher(World* world) : Character(world) {
   UnloadModel(handgunModelHandle);*/
 
   knifeModelHandle = LoadModel("Models\\Knife\\Knife.glb");
-  knife = world->CreateGameObjectFromModel(knifeModelHandle);
+  knife = world->CreateGameObjectFromModel<Knife>(knifeModelHandle);
 
 	// Create animation states
   dead = new Animation(deadAnimation, false);
@@ -29,12 +31,16 @@ Slasher::Slasher(World* world) : Character(world) {
   ready = new Animation(slashReadyAnimation, false);
   readyState = new SlashReadyState(ready);
 
-  action = new Animation(slashActionAnimation, false);
-  actionState = new SlashActionState(action);
+  action1 = new Animation(slashAction1Animation, false);
+
+  action2 = new Animation(slashAction2Animation, false);
+  actionState = new SlashActionState(action2);
+
+  currActionAnimation = action2;
+  interval = std::make_pair<float, float>(0.4375f, 0.5f);
 
   animator->DeclareVariable<bool>("arm", false);
 	animator->DeclareVariable<bool>("fire", false);
-  animator->DeclareVariable<XMVECTOR>("currTranslate");
 
 	// Set state dependencies
   idleState->AddAnimationStateDependency("next", readyState);
@@ -56,16 +62,75 @@ Slasher::~Slasher() {
   delete idleState;
   delete ready;
   delete readyState;
-  delete action;
+  delete action1;
+  delete action2;
   delete actionState;
+}
+
+void Slasher::TriggerAction() {
+  Super::TriggerAction();
+
+  if (isTargetInRange)
+  {
+    if (distanceToTarget < range)
+    {
+      actionState->SetAnimation(action1);
+      currActionAnimation = action1;
+      interval = std::make_pair<float, float>(.34375f, .4f);
+    }
+  }
+}
+
+void Slasher::TakeOverTargetCell() {
+  if (isTargetInRange)
+  {
+    auto [w_offset, h_offset] = GetGridFrontDirection();
+    auto [target_w, target_h] =
+        std::make_pair<int, int>(grid_w + distanceToTarget * w_offset,
+                                 grid_h + distanceToTarget * h_offset);
+
+    SetGridLocation(target_w, target_h);
+  }
+}
+
+void Slasher::TurnOnCollision() {
+  auto* rigidBody = GetComponent<RigidbodyComponent>();
+  if (rigidBody)
+  {
+    rigidBody->EnableSimulation();
+    isCollsionOn = true;
+  }
+}
+
+void Slasher::TurnOffCollision() {
+  auto* rigidBody = GetComponent<RigidbodyComponent>();
+  if (rigidBody)
+  {
+    rigidBody->DisableSimulation();
+    isCollsionOn = false;
+  }
+}
+
+void Slasher::OnBeginOverlap(GameObject* other) {
+  Super::OnBeginOverlap(other);
+
+  if (!isDead)
+  {
+    // If slashers are colliding with each other,
+    // both are dead.
+    if (other->typeIndex == this->typeIndex)
+    {
+      auto* otherSlasher = (Slasher*)other;
+      otherSlasher->Die();
+      this->Die();
+    }
+  
+  }
+
 }
 
 void Slasher::OnAwake() {
   Super::OnAwake();
-  /*GameObject* hand = FindChildGameObject("hand.r");
-  hand->AddChildGameObject(handgun);*/
-
-  animationRoot = FindChildGameObject("c_pos");
 
   GameObject* hand = FindChildGameObject("hand.r");
   if (hand)
@@ -75,7 +140,8 @@ void Slasher::OnAwake() {
     knife->RotateAroundYAxis(-XM_PIDIV2);
     knife->RotateAroundZAxis(-XM_PIDIV2);
     knife->RotateAroundYAxis(XM_PIDIV2);
-    knife->Translate(-0.06f, 0.32f, 0.04f);
+    knife->RotateAroundZAxis(XM_PIDIV2);
+    knife->Translate(-0.2f, 0.1f, 0.04f);
 
     knife->SetInvisible();
   }
@@ -90,29 +156,28 @@ void Slasher::Update(float dt) {
     animator->SetVariable<bool>("arm", false);
   }
 
+  if (animator->GetVariable<bool>("fire"))
+  {
+    TurnOffCollision();
+    animator->SetVariable<bool>("fire", false);
+  }
+
+  // Turn on and off the knife collision.
+  if (interval.first <= currActionAnimation->GetCurrentAnimationTime() &&
+      currActionAnimation->GetCurrentAnimationTime() <= interval.second)
+  {
+    if (!knife->isCollsionOn)
+      knife->TurnOnCollision();
+  }
+  else
+  {
+    if (knife->isCollsionOn)
+      knife->TurnOffCollision();
+  }
+
 	if (animator->GetVariable<bool>("done"))
   {
-    // TODO: slash!
-    /*if (!temp)
-    {
-      currPos = transform->GetTranslation();
-      targetPos =
-          1.4f * distanceToTarget * -transform->GetLocalFront() + currPos;
-			temp = true;
-    }
-    else
-    {
-      slashElapsedTime += dt;
-      float normalizedTime = slashElapsedTime / (float)distanceToTarget;
-      float t = MathUtil::bezier::ease_in(normalizedTime);
-
-      SetTranslation(t * targetPos + (1 - t) * currPos);
-
-      if (normalizedTime >= 1.f)
-        animator->SetVariable<bool>("done", false);
-		}*/
-
-    SetTranslation(animator->GetVariable<XMVECTOR>("currTranslate"));
+    TurnOnCollision();
     animator->SetVariable<bool>("done", false);
   }
 }
