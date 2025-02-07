@@ -61,6 +61,15 @@ Map::Map(World* world) : GameObject(world)
       LoadTexture("Models\\Indicator\\GunmanActiveIndicator\\Indicator1_On.png",
                   TextureType::kAlbedo);
 
+  obstacleBox01ModelHandle = LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
+  obstacleBox02ModelHandle = LoadModel("Models\\Obstacles\\Box02\\OBs_Box02.glb");
+  obstacleDrumModelHandle = LoadModel("Models\\Obstacles\\Drum\\OBs_Drum.glb");
+  obstacleDrumOldModelHandle = LoadModel("Models\\Obstacles\\DrumOld\\OBs_DrumOld.glb");
+  obstacleLionModelHandle = LoadModel("Models\\Obstacles\\Lion\\OBs_Lion.glb");
+  obstacleSofaModelHandle = LoadModel("Models\\Obstacles\\Sofa\\OBs_Sofa.glb");
+  obstacleStoolModelHandle = LoadModel("Models\\Obstacles\\Stool\\OBs_Stool.glb");
+  obstacleVBoxModelHandle = LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
+
   Character::enemyModelData = &AccessModelData(enemyGunmanModelHandle);
   Character::enemySkeletonHandle = Character::enemyModelData->skeleton;
 
