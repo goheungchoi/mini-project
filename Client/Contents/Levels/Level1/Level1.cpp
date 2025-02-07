@@ -17,7 +17,9 @@ void Level1::BeginLevel()
 {
   __super::BeginLevel();
 
+  #ifdef USED2D
   inGameUI->HideUI(L"GunfireBtn");
+  #endif
 }
 
 
