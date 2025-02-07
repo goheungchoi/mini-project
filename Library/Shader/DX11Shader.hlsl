@@ -172,7 +172,7 @@ DEFFERED_PS_OUT ps_main(PS_INPUT input)
         float3 T = normalize(input.worldTangent);
         float3 B = normalize(input.worldBitangent);
         float3 normalTexColor;
-        normalTexColor = (normalTexture.rgb * 2.0) - 1.0;
+        normalTexColor = (normalize(normalTexture.rgb)* 2.0) - 1.0;
         normalTexColor = normalize(normalTexColor);
         float3x3 TBN = float3x3(T, B, N);
         N = normalize(mul(normalTexColor, TBN));
