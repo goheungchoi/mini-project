@@ -223,7 +223,7 @@ void Map::ShowHoveredCharacterRange()
               grid->GetGameObjectAt(w + w_offset, h + h_offset);
           gameObject)
       {
-        // TODO: Mark the death indicator.
+        // Mark the death indicator.
         if (gameObject->GetGameObjectTag() == kFactionTags[kAlly] ||
             gameObject->GetGameObjectTag() == kFactionTags[kEnemy] ||
             gameObject->GetGameObjectTag() == kFactionTags[kNeutral])
@@ -257,6 +257,21 @@ void Map::ShowHoveredCharacterRange()
         CellObject* cell = grid->GetCellObjectAt(w, h);
         cell->SetCellType(CellType_DashZone);
         cell->SetCellDirection(hoveredCharacter->dir);
+
+        // Shows death indicators.
+        if (GameObject* gameObject =
+                grid->GetGameObjectAt(w, h);
+            gameObject)
+        {
+          // Mark the death indicator.
+          if (gameObject->GetGameObjectTag() == kFactionTags[kAlly] ||
+              gameObject->GetGameObjectTag() == kFactionTags[kEnemy] ||
+              gameObject->GetGameObjectTag() == kFactionTags[kNeutral])
+          {
+            Character* character = (Character*)gameObject;
+            character->ShowDeathIndicator();
+          }
+        }
       }
     }
     else
