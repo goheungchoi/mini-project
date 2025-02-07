@@ -174,18 +174,18 @@ void GridObject::TurnOffSelectionMode() {
   isSelectionMode = false;
 }
 
-void GridObject::TurnOnHover() {
-  if (isHoverTurnedOn)
+void GridObject::TurnOnGridHover() {
+  if (isGridHoverTurnedOn)
     return;
 
-  isHoverTurnedOn = true;
+  isGridHoverTurnedOn = true;
 }
 
-void GridObject::TurnOffHover() {
-  if (!isHoverTurnedOn)
+void GridObject::TurnOffGridHover() {
+  if (!isGridHoverTurnedOn)
     return;
 
-  isHoverTurnedOn = false;
+  isGridHoverTurnedOn = false;
 
   for (auto* cell : grid)
   {
@@ -204,7 +204,7 @@ void GridObject::ResetCellTypes() {
 
 void GridObject::FindHoveredCell()
 {
-  if (!isHoverTurnedOn)
+  if (!isGridHoverTurnedOn)
     return;
 
   bool anyHover{false};
@@ -246,7 +246,7 @@ void GridObject::OnAwake() {
 }
 
 void GridObject::Update(float dt) {
-  if (isHoverTurnedOn)
+  if (isGridHoverTurnedOn)
   {
 		FindHoveredCell();
   }

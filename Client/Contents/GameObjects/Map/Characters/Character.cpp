@@ -115,14 +115,17 @@ void Character::SetFaction(Faction faction) {
 
 	if (faction == Faction::kAlly)
   {
+    SetOutlineColor(Color(0.f, 1.f, 0.f));
     animator->BindSkeleton(playerSkeletonHandle);
 	}
 	else if (faction == Faction::kEnemy)
   {
+    SetOutlineColor(Color(1.f, 0.f, 0.f));
     animator->BindSkeleton(enemySkeletonHandle);
   }
   else
   {
+    SetOutlineColor(Color(0.f, 0.f, 1.f));
     animator->BindSkeleton(civilianSkeletonHandle);
   }
 }

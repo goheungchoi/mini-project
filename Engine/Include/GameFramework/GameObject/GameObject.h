@@ -280,6 +280,10 @@ public:
   void SetVisible();
   void SetInvisible();
 
+  void SetOutlineColor(Color color);
+  void ShowOutline();
+  void HideOutline();
+
 	// TODO:
   // GameObject* Clone();
 

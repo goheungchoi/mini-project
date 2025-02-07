@@ -170,9 +170,10 @@ void Map::TurnOffPlacementMode()
   }
 
   // Turn off the hover mode.
-  grid->TurnOffHover();
+  grid->TurnOffGridHover();
 
   // Remove the placeholder.
+  placeholder->HideOutline();
   placeholder->Destroy();
   placeholder = nullptr;
 
@@ -740,7 +741,7 @@ void Map::Update(float dt)
   if (isActionTriggered)
   {
     grid->TurnOffSelectionMode();
-    grid->TurnOffHover();
+    grid->TurnOffGridHover();
 
 		// TODO: Remove a simulating character.
 
@@ -753,7 +754,7 @@ void Map::Update(float dt)
   else if (isPlacementModeOn)
   {
     grid->TurnOnSelectionMode();
-    grid->TurnOnHover();
+    grid->TurnOnGridHover();
 
 		// If a placeholder is not set
     if (!placeholder)
@@ -762,6 +763,8 @@ void Map::Update(float dt)
     }
 
     TranslatePlaceholder();
+
+    placeholder->ShowOutline();
 
     // Cancel placement mode.
     if (INPUT.IsKeyDown(Key::Escape))
@@ -794,7 +797,17 @@ void Map::Update(float dt)
   else
   {
     grid->TurnOnSelectionMode();
-    grid->TurnOffHover();
+    grid->TurnOffGridHover();
+
+    if (prevHoveredCharacter)
+    {
+      prevHoveredCharacter->HideOutline();
+    }
+
+    if (hoveredCharacter)
+    {
+      hoveredCharacter->ShowOutline();
+    }
 
     if (hoveredCharacter)
     {

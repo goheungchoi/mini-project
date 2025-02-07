@@ -94,9 +94,9 @@ public:
   void TurnOnSelectionMode();
   void TurnOffSelectionMode();
 
-  bool isHoverTurnedOn{false};
-  void TurnOnHover();
-  void TurnOffHover();
+  bool isGridHoverTurnedOn{false};
+  void TurnOnGridHover();
+  void TurnOffGridHover();
 
   void ResetCellTypes();
 
