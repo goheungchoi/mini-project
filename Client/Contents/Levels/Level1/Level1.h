@@ -11,21 +11,7 @@
 class Level1 : public GameLevel
 {
 protected:
-  // Resource handles
-  ModelHandle redCellModelHandle;
-  ModelHandle greenCellModelHandle;
 
-  ModelHandle mapMeshHandle;
-
-  ModelHandle animTestHandle;
-  ModelHandle handGunHandle;
-
-  CameraObject* testCamera;
-
-  GameObject* pivot{nullptr};
-
-  class Map* map{nullptr};
-  class GameManager* gameManager{nullptr};
 
 public:
   Level1(const std::string& name) : GameLevel(name) {}
@@ -35,7 +21,6 @@ public:
   virtual void BeginLevel() override;
 
   // virtual void DestroyLevel() override { Level::DestroyLevel(); }
-  virtual void CleanupLevel() override;
 
 protected:
   virtual void CreateMap();

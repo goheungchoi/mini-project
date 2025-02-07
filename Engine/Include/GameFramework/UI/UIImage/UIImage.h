@@ -14,7 +14,7 @@ public:
   void SetSprite(class Sprite* sprite) { sprite = _sprite; }
 
   void SetOpacity(float opacity) { opacity = _opacity; }
-  void SetCenterPos(Vector2 pos) override;
+  virtual void SetCenterPos(Vector2 pos) override;
 
 private:
   class Sprite* _sprite{};

@@ -19,8 +19,8 @@ Map::Map(World* world) : GameObject(world)
 
   animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
 
-	// The base models.
-	// enemyModelHandle = LoadModel("Models\\Character\\Enemy\\Enemy.glb");
+  // The base models.
+  // enemyModelHandle = LoadModel("Models\\Character\\Enemy\\Enemy.glb");
   enemyBrawlerModelHandle =
       LoadModel("Models\\Character\\Enemy\\Enemy_Punch\\Enemy_Punch.glb");
   enemyGunmanModelHandle =
@@ -41,7 +41,7 @@ Map::Map(World* world) : GameObject(world)
       LoadModel("Models\\Indicator\\EnemyDirectionIndicator\\EnemyDirectionIndi"
                 "cator.glb");
 
-	// Set character static data.
+  // Set character static data.
   brawlerInactiveIndicatorTextureHandle = LoadTexture(
       "Models\\Indicator\\BrawlerInactiveIndicator\\InactiveIndicator3.png",
       TextureType::kAlbedo);
@@ -61,7 +61,7 @@ Map::Map(World* world) : GameObject(world)
       LoadTexture("Models\\Indicator\\GunmanActiveIndicator\\Indicator1_On.png",
                   TextureType::kAlbedo);
 
-	Character::enemyModelData = &AccessModelData(enemyGunmanModelHandle);
+  Character::enemyModelData = &AccessModelData(enemyGunmanModelHandle);
   Character::enemySkeletonHandle = Character::enemyModelData->skeleton;
 
   Character::playerModelData = &AccessModelData(allyBrawlerModelHandle);
@@ -102,7 +102,6 @@ Map::Map(World* world) : GameObject(world)
   grid->CreateGrid(6, 6, 1.4f);
   grid->Translate(-0.6f, +0.01f, -0.8f);
   AddChildGameObject(grid);
-
 
   // NOTE: Sound test.
   /*SoundManager::LoadSound(L"PubBGM.wav", true);
@@ -181,14 +180,15 @@ void Map::TurnOffPlacementMode()
   isPlacementModeOn = false;
 }
 
-void Map::ShowHoveredCharacterRange() {
-	// TODO:
+void Map::ShowHoveredCharacterRange()
+{
+  // TODO:
   if (!hoveredCharacter)
     return;
 
-  int w = (int) hoveredCharacter->grid_w;
-  int h = (int) hoveredCharacter->grid_h;
-	// If the hovered character is not on the grid.
+  int w = (int)hoveredCharacter->grid_w;
+  int h = (int)hoveredCharacter->grid_h;
+  // If the hovered character is not on the grid.
   if (!grid->IsGameObjectAt(hoveredCharacter, w, h))
     return;
 
@@ -235,8 +235,7 @@ void Map::ShowHoveredCharacterRange() {
   }
   break;
   case kSlasher: {
-    
-	}
+  }
   break;
   case kGunman: {
     auto [w_offset, h_offset] = hoveredCharacter->GetGridFrontDirection();
@@ -322,31 +321,28 @@ void Map::HideHoveredCharacterRange()
   bNeedUpdateAttackRange = true;
 }
 
-void Map::TurnOnAssassinationMode() {
+void Map::TurnOnAssassinationMode()
+{
   if (isActionTriggered)
     isAssassinationMode = false;
-  else 
+  else
     isAssassinationMode = true;
 }
 
-void Map::TurnOffAssasinationMode() {
+void Map::TurnOffAssasinationMode()
+{
   isAssassinationMode = false;
 }
 
 void Map::TriggerAction()
 {
   isActionTriggered = true;
-	
-	// Record the roster.
+
+  // Record the roster.
   for (Character* enemy : enemies)
   {
-    CharacterInfo info{
-			enemy->faction,
-			enemy->type,
-			enemy->dir,
-			enemy->grid_w,
-			enemy->grid_h
-    };
+    CharacterInfo info{enemy->faction, enemy->type, enemy->dir, enemy->grid_w,
+                       enemy->grid_h};
     record.push_back(info);
   }
 
@@ -364,9 +360,9 @@ void Map::TriggerAction()
     record.push_back(info);
   }
 
-	// TODO: Execute the assassination target.
+  // TODO: Execute the assassination target.
   if (assassinationTarget)
-		assassinationTarget->Die();
+    assassinationTarget->Die();
 
   for (Character* enemy : enemies)
   {
@@ -389,7 +385,7 @@ void Map::ResetGame()
   if (!isActionTriggered)
     return;
 
-	for (Character* enemy : enemies)
+  for (Character* enemy : enemies)
   {
     grid->RemoveGameObject(enemy);
     enemy->Destroy();
@@ -409,7 +405,7 @@ void Map::ResetGame()
 
   grid->ClearGrid();
 
-	enemies.clear();
+  enemies.clear();
   allies.clear();
   civilians.clear();
 
@@ -421,30 +417,32 @@ void Map::ResetGame()
   isAssassinationMode = false;
   assassinationTarget = nullptr;
 
-	// Restore the record.
-	for (auto& info : record)
+  // Restore the record.
+  for (auto& info : record)
   {
     switch (info.faction)
     {
     case kAlly:
       CreateAllyAt(info.type, info.w, info.h, info.dir);
-    break;
+      break;
     case kEnemy:
       CreateEnemyAt(info.type, info.w, info.h, info.dir);
-		break;
+      break;
     case kNeutral:
       CreateCivillianAt(info.w, info.h, info.dir);
-    break;
+      break;
     }
-	}
+  }
   record.clear();
 }
 
-void Map::PauseGame() {
+void Map::PauseGame()
+{
   this->Deactivate();
 }
 
-void Map::ResumeGame() {
+void Map::ResumeGame()
+{
   this->Activate();
 }
 
@@ -532,7 +530,8 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
     enemies.push_back(gunman);
 
     AddChildGameObject(gunman);
-    } break;
+  }
+  break;
   }
 }
 
@@ -668,7 +667,7 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
 
 void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
 {
-	// TODO: Civilian model
+  // TODO: Civilian model
   Civilian* civilian =
       world->CreateGameObjectFromModel<Civilian>(civilianModelHandle);
   civilian->SetGridLocation(w, h);
@@ -676,7 +675,8 @@ void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
   civilians.push_back(civilian);
 }
 
-void Map::CreateObstacleAt(uint32_t w, uint32_t h) {
+void Map::CreateObstacleAt(uint32_t w, uint32_t h)
+{
   // TODO:
 }
 
@@ -703,11 +703,13 @@ void Map::DeleteCharacterFromMap(Character* character)
   }
 }
 
-void Map::OnAwake() {
+void Map::OnAwake()
+{
   // Translate({-4.f, 0.f, -4.f});
 }
 
-void Map::Update(float dt) {
+void Map::Update(float dt)
+{
   // Rotate this map.
   /*if (INPUT.IsKeyPress(Key::Q))
   {
@@ -718,8 +720,8 @@ void Map::Update(float dt) {
     parent->RotateAroundYAxis(-dt);
   }*/
 
-	// Action mode
-	if (isActionTriggered)
+  // Action mode
+  if (isActionTriggered)
   {
     grid->TurnOffSelectionMode();
     grid->TurnOffHover();
@@ -730,9 +732,9 @@ void Map::Update(float dt) {
     {
       ResetGame();
     }
-	}
-	// Placement mode
-	else if (isPlacementModeOn)
+  }
+  // Placement mode
+  else if (isPlacementModeOn)
   {
     grid->TurnOnSelectionMode();
     grid->TurnOnHover();
@@ -741,26 +743,26 @@ void Map::Update(float dt) {
     if (!placeholder)
     {
       isPlacementModeOn = false;
-		}
+    }
 
-		TranslatePlaceholder();
-    
-		// Cancel placement mode.
-		if (INPUT.IsKeyDown(Key::Escape))
+    TranslatePlaceholder();
+
+    // Cancel placement mode.
+    if (INPUT.IsKeyDown(Key::Escape))
     {
       TurnOffPlacementMode();
       return;
-		}
+    }
 
-		// Change the direction of the placeholder.
+    // Change the direction of the placeholder.
     if (INPUT.IsKeyDown(Key::Tab))
     {
       uint32_t dir = placeholder->GetDirection();
       placeholder->SetDirection((Direction)((dir + 1) % kNumDirections));
-		}
+    }
 
-		// Place the character.
-		if (INPUT.IsKeyDown(MouseState::LB))
+    // Place the character.
+    if (INPUT.IsKeyDown(MouseState::LB))
     {
       if (grid->selectedCell)
       {
@@ -772,9 +774,9 @@ void Map::Update(float dt) {
 
         // Turn off the placement mode
         TurnOffPlacementMode();
-			}
-		}
-	}
+      }
+    }
+  }
   // Selection mode
   else
   {
@@ -843,12 +845,12 @@ void Map::Update(float dt) {
     }
     else
     {
-			// TODO: Turn off the mode.
+      // TODO: Turn off the mode.
       if (!bNeedUpdateAttackRange)
       {
         HideHoveredCharacterRange();
       }
-		}
+    }
 
     if (INPUT.IsKeyPress(Key::Space))
     {
@@ -874,10 +876,10 @@ void Map::Update(float dt) {
       return;
     }
   }
-
 }
 
-void Map::PostUpdate(float dt) {
+void Map::PostUpdate(float dt)
+{
   // hoveredCharacter = nullptr;
 }
 
@@ -899,7 +901,8 @@ XMVECTOR Map::GetCursorPosition() const
   return intersection;
 }
 
-void Map::TranslatePlaceholder() {
+void Map::TranslatePlaceholder()
+{
   if (!placeholder)
     return;
 
@@ -922,4 +925,3 @@ void Map::TranslatePlaceholder() {
     placeholder->SetTranslation(cursorPos);
   }
 }
-
