@@ -77,6 +77,9 @@ Character::~Character() {
 void Character::TriggerAction()
 {
   isActionTriggered = true;
+
+  HideOutline();
+
   if (isTargetInRange)
 		animator->SetVariable<bool>("triggered", true, true);
 }
@@ -211,7 +214,8 @@ void Character::OnHover() {
 
 void Character::OnBeginOverlap(GameObject* other) {
   GameObject::OnBeginOverlap(other);
-
+  if (!other->GetComponent<RigidbodyComponent>())
+    return;
   if (!isDead)
   {
     if (other->GetGameObjectTag() == "weapon")

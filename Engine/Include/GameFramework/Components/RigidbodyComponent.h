@@ -23,6 +23,7 @@ public:
 
   //wrapper of the iRigidbody collision setting
   void SetCollisionEvent(IRigidBody* other, eCollisionEventType eventType, Event event);
+  void RemoveCollisionEvent(IRigidBody* other);
   void SetOffsetTransform(const Vector3& position, const Quaternion& quaternion,
                           const Vector3& scale);
 

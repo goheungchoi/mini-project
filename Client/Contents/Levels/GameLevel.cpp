@@ -13,7 +13,7 @@ void GameLevel::PrepareLevel()
   animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
   handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 
-  mapMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002_2.glb");
+  mapMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
 
   // UI Resource Load
 #ifdef USED2D

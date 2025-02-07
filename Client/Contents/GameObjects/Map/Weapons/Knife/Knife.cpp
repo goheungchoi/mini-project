@@ -10,7 +10,7 @@ Knife::Knife(World* world) : GameObject(world) {
   auto* rigidBody = CreateComponent<RigidbodyComponent>();
   rigidBody->Initialize({0.f, 0.0f, -.18f}, Quaternion::Identity, {.02f, .02f, .1f},
                         ColliderShape::eCubeCollider, false, true,
-                        GetWorld()->_phyjixWorld);
+                        world->_phyjixWorld);
   rigidBody->DisableSimulation();
   rigidBody->EnableDebugDraw();
 }

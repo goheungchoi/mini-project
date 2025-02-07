@@ -39,6 +39,11 @@ void RigidbodyComponent::SetCollisionEvent(IRigidBody* other,
   _rigidbody->SetCollisionEvent(eventType, other, event);
 }
 
+void RigidbodyComponent::RemoveCollisionEvent(IRigidBody* other)
+{
+  _rigidbody->RemoveCollisionEvent(other);
+}
+
 
 void RigidbodyComponent::SetOffsetTransform(const DirectX::SimpleMath::Vector3& offsetTranslation,
                                             const Quaternion& offsetQuaternion,

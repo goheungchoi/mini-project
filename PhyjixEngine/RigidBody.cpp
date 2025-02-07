@@ -165,6 +165,12 @@ physx::PxRigidDynamic* RigidBody::GetDynamicActor()
   return static_cast<physx::PxRigidDynamic*>(_actor);
 }
 
+void RigidBody::RemoveCollisionEvent(IRigidBody* other) 
+{
+  OverlapBeginEventMap.erase(other);
+  OverlapEndEventMap.erase(other);
+}
+
 void RigidBody::SetCollisionEvent(eCollisionEventType collisiontype, IRigidBody* other, std::function<void(void)> event)
 {
     switch (collisiontype)

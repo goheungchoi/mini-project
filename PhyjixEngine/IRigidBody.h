@@ -23,6 +23,7 @@ public:
   virtual void SetCollisionEvent(eCollisionEventType collisiontype,
                                  IRigidBody* other,
                                  std::function<void(void)> event) = 0;
+  virtual void RemoveCollisionEvent(IRigidBody* other) = 0;
 
   virtual void SetLinVelocity(DirectX::SimpleMath::Vector3 vel) = 0;
   virtual void SetMaxLinVelocity(float vel) = 0;
