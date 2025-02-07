@@ -35,6 +35,7 @@ protected:
   class GameManager* gameManager{nullptr};
 
   class InGameUI* inGameUI;
+  class TransitionUI* transitionUI;
 
 public:
   GameLevel(const std::string& name) : Level(name) {}

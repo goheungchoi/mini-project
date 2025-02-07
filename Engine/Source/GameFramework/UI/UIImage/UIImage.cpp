@@ -69,8 +69,8 @@ void UIImage::Transition(float dt)
       _transitionFlag = false;
       _transitionElaspedTimer = 0.f;
     }
-  }
   SetOpacity(_transitionOpacity);
+  }
 }
 
 void UIImage::SetSprite(LPCSTR path, Vector2 pos)
