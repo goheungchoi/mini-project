@@ -24,14 +24,31 @@ public:
   void Update(float dt) override;
   void Render() override;
 
-  template <typename T>
+  //template <typename T>
+  //  requires UIElementType<T>
+  //T* CreateUI(std::wstring name)
+  //{
+  //  T* t = new T(_world);
+  //  UIElement* ui = static_cast<UIElement*>(t);
+
+  //  if (ui == nullptr)
+  //    return nullptr;
+
+  //  uiMap[name] = ui;
+  //  uiList.push_back(ui);
+  //  ui->SetownerPanel(this);
+
+  //  return t;
+  //}
+
+  template <typename T, typename... Args>
     requires UIElementType<T>
-  T* CreateUI(std::wstring name)
+  T* CreateUI(std::wstring name, Args&&... args)
   {
-    T* t = new T(_world);
+    T* t = new T(_world, std::forward<Args>(args)...); // 생성자 인자 전달
     UIElement* ui = static_cast<UIElement*>(t);
 
-    if (ui == nullptr)
+    if (!ui)
       return nullptr;
 
     uiMap[name] = ui;
@@ -40,6 +57,7 @@ public:
 
     return t;
   }
+
 
   template <typename T>
   T* GetUI(std::wstring name)

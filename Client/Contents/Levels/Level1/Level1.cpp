@@ -7,6 +7,9 @@
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
+#include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
+#include "Contents/GameObjects/Map/Characters/Character.h"
+
 
 void Level1::PrepareLevel()
 {
@@ -19,6 +22,9 @@ void Level1::BeginLevel()
 
   #ifdef USED2D
   inGameUI->HideUI(L"GunfireBtn");
+  inGameUI->_agentStorage->SetAgent(kBrawler, {1400, 960});
+  inGameUI->_agentStorage->SetAgent(kSlasher, {1600, 960});
+  inGameUI->_agentStorage->SetAgent(kGunman, {1800, 960});
   #endif
 }
 
