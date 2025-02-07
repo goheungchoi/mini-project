@@ -59,9 +59,9 @@ public:
 
 
 	// Selection mode
-  bool isAnySelected{false};
+  bool isHoveredCharacterChanged{false};
+  Character* prevHoveredCharacter{nullptr};
   Character* hoveredCharacter{nullptr};
-
 
 	// Assassination target
   bool isAssassinationMode{false};
@@ -77,6 +77,7 @@ public:
 
   bool bNeedUpdateAttackRange{true};
 	void ShowHoveredCharacterRange();
+  bool bRangeHided{true};
   void HideHoveredCharacterRange();
 
   void TurnOnAssassinationMode();

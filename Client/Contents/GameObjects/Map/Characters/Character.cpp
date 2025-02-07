@@ -198,7 +198,12 @@ void Character::OnHover() {
     rbComp->debugColor = Color(0, 1, 1, 1);
   }
 
-  map->hoveredCharacter = this;
+  if (map->hoveredCharacter != this)
+  {
+    map->isHoveredCharacterChanged = true;
+    map->bNeedUpdateAttackRange = true;
+    map->hoveredCharacter = this;
+  }
 }
 
 void Character::OnBeginOverlap(GameObject* other) {

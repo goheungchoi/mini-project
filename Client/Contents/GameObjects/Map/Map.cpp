@@ -235,6 +235,7 @@ void Map::ShowHoveredCharacterRange()
   }
   break;
   case kSlasher: {
+    // TODO:
   }
   break;
   case kGunman: {
@@ -289,11 +290,12 @@ void Map::ShowHoveredCharacterRange()
   }
 
   bNeedUpdateAttackRange = false;
+  bRangeHided = false;
 }
 
 void Map::HideHoveredCharacterRange()
 {
-  if (bNeedUpdateAttackRange)
+  if (bRangeHided)
     return;
 
   for (uint32_t w = 0; grid->GetCellObjectAt(w, 0) != nullptr; ++w)
@@ -318,7 +320,7 @@ void Map::HideHoveredCharacterRange()
     }
   }
 
-  bNeedUpdateAttackRange = true;
+  bRangeHided = true;
 }
 
 void Map::TurnOnAssassinationMode()
@@ -412,8 +414,9 @@ void Map::ResetGame()
   isActionTriggered = false;
   isPlacementModeOn = false;
   placeholder = nullptr;
-  isAnySelected = false;
+  isHoveredCharacterChanged = false;
   hoveredCharacter = nullptr;
+  bRangeHided = true;
   isAssassinationMode = false;
   assassinationTarget = nullptr;
 
@@ -710,6 +713,19 @@ void Map::OnAwake()
 
 void Map::Update(float dt)
 {
+  // Detect hovered character changes.
+  if (hoveredCharacter)
+  {
+    if (prevHoveredCharacter != hoveredCharacter)
+      isHoveredCharacterChanged = true;
+    else
+      isHoveredCharacterChanged = false;
+  }
+  else
+  {
+    isHoveredCharacterChanged = false;
+  }
+
   // Rotate this map.
   /*if (INPUT.IsKeyPress(Key::Q))
   {
@@ -751,18 +767,15 @@ void Map::Update(float dt)
     if (INPUT.IsKeyDown(Key::Escape))
     {
       TurnOffPlacementMode();
-      return;
     }
-
     // Change the direction of the placeholder.
-    if (INPUT.IsKeyDown(Key::Tab))
+    else if (INPUT.IsKeyDown(Key::Tab))
     {
       uint32_t dir = placeholder->GetDirection();
       placeholder->SetDirection((Direction)((dir + 1) % kNumDirections));
     }
-
     // Place the character.
-    if (INPUT.IsKeyDown(MouseState::LB))
+    else if (INPUT.IsKeyDown(MouseState::LB))
     {
       if (grid->selectedCell)
       {
@@ -800,6 +813,11 @@ void Map::Update(float dt)
       else
       {
         // TODO: Show the distance and range
+        if (isHoveredCharacterChanged)
+        {
+          HideHoveredCharacterRange();
+        }
+
         ShowHoveredCharacterRange();
 
         // Right Click
@@ -839,14 +857,11 @@ void Map::Update(float dt)
           }
         }
       } 
-			
-      // Reset the hovered character.
-			hoveredCharacter = nullptr;
     }
     else
     {
       // TODO: Turn off the mode.
-      if (!bNeedUpdateAttackRange)
+      if (!bRangeHided)
       {
         HideHoveredCharacterRange();
       }
@@ -876,6 +891,10 @@ void Map::Update(float dt)
       return;
     }
   }
+
+  // Reset the hovered character.
+  prevHoveredCharacter = hoveredCharacter;
+  hoveredCharacter = nullptr;
 }
 
 void Map::PostUpdate(float dt)

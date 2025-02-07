@@ -217,7 +217,7 @@ void GridObject::FindHoveredCell()
   {
     BoundingOrientedBox obb;
     cell->obb.Transform(obb, XMMatrixScaling(1.3f, 0.f, 1.3f) * cell->transform->GetGlobalTransform());
-    if (cell->isVisible && !anyHover &&
+    if (!cell->isOccupied && !anyHover &&
         obb.Intersects(cursorRay.position, cursorRay.direction, t))
     {
       cell->SetCellType(CellType_Placement);
