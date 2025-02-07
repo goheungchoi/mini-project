@@ -153,3 +153,9 @@ void UIAnim::SetCenterPos(std::string spritename, Vector2 pos)
 {
   _sprites.find(spritename)->second->_pSprite->SetPos(pos);
 }
+
+void UIAnim::SetOpacity(std::string spritename, float opacity)
+{
+  _sprites.find(spritename)->second->_pSprite->SetOpacity(opacity);
+  
+}

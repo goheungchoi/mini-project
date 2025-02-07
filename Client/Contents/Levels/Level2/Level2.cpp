@@ -33,6 +33,8 @@ void Level2::PrepareLevel()
       "2D\\Animation\\Eliza_Resistance_Sad.png");
 
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\FadeBlack.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Textbox_01.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Textbox_Button.png");
 }
 
 void Level2::BeginLevel()
