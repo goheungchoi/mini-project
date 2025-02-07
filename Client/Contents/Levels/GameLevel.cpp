@@ -1,4 +1,4 @@
-#include "GameLevel.h"
+ï»¿#include "GameLevel.h"
 
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
@@ -73,7 +73,7 @@ void GameLevel::BeginLevel()
   // map->Translate(0.6f, -0.01f, 0.8f);
   CreateMap();
 
-  // ¿©±â¼­ gameManager ¸¸µé¾îÁÜ.
+  // ì—¬ê¸°ì„œ gameManager ë§Œë“¤ì–´ì¤Œ.
   gameManager = world->CreateGameObject<GameManager>();
 
 #ifdef USED2D

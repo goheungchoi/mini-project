@@ -31,14 +31,14 @@ public:
   {
     Texture* pInstance = new Texture;
 
-    // DirectXTex ¶óÀÌºê·¯¸®·Î DDS ÅØ½ºÃ³ »ı¼º
+    // DirectXTex ë¼ì´ë¸ŒëŸ¬ë¦¬ë¡œ DDS í…ìŠ¤ì²˜ ìƒì„±
     ComPtr<ID3D11Resource> textureResource;
     HR_T(DirectX::CreateDDSTextureFromMemory(
         device->GetDevice(),
-        data.ddsData.data(),                   // DDS µ¥ÀÌÅÍ Æ÷ÀÎÅÍ
-        data.ddsData.size(),                   // DDS µ¥ÀÌÅÍ Å©±â
-        textureResource.GetAddressOf(),        // »ı¼ºµÈ ¸®¼Ò½º ¹İÈ¯
-        pInstance->_resource.GetAddressOf())); // »ı¼ºµÈ SRV ¹İÈ¯
+        data.ddsData.data(),                   // DDS ë°ì´í„° í¬ì¸í„°
+        data.ddsData.size(),                   // DDS ë°ì´í„° í¬ê¸°
+        textureResource.GetAddressOf(),        // ìƒì„±ëœ ë¦¬ì†ŒìŠ¤ ë°˜í™˜
+        pInstance->_resource.GetAddressOf())); // ìƒì„±ëœ SRV ë°˜í™˜
     return pInstance;
   }
   static Texture* NullSRV(Device* device)

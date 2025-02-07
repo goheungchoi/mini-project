@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Renderer/IRenderer.h"
 struct ResourceStorage;
 #ifdef _DEBUG

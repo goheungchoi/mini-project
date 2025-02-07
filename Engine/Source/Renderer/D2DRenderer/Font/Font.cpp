@@ -1,4 +1,4 @@
-﻿#include "Font.h"
+#include "Font.h"
 #include "Renderer/D2DRenderer/D2DRenderer.h"
 #include "Renderer/DX11/Internal/Device.h"
 

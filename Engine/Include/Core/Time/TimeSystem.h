@@ -12,14 +12,14 @@ public:
   static void Reset();
   static void Update();
 
-  // ÀÏ½ÃÁ¤Áö
-  static void Start(); // ÀÏ½Ã Á¤Áö ÇØÁ¦ ½Ã È£Ãâ
-  static void Stop();  // ÀÏ½Ã Á¤Áö ½Ã È£Ãâ
+  // ì¼ì‹œì •ì§€
+  static void Start(); // ì¼ì‹œ ì •ì§€ í•´ì œ ì‹œ í˜¸ì¶œ
+  static void Stop();  // ì¼ì‹œ ì •ì§€ ì‹œ í˜¸ì¶œ
 
   static void SetTimeScale(float timeScale) { _timeScale = timeScale; }
   static float GetTimeScale() { return _timeScale; }
 
-  // ÇÁ·¹ÀÓ °£ °æ°£ ½Ã°£(ÃÊ ´ÜÀ§)
+  // í”„ë ˆì„ ê°„ ê²½ê°„ ì‹œê°„(ì´ˆ ë‹¨ìœ„)
   static float GetDeltaTime() { return (float)_deltaTime; }
   static float GetScaledDeltaTime()
   {
@@ -27,21 +27,21 @@ public:
   }
 
   /*
-  Reset()ÀÌ È£ÃâµÈ ÀÌÈÄÀÇ °æ°£ ½Ã°£À» ¹İÈ¯ÇÕ´Ï´Ù.
-  ´Ü, ½Ã°è°¡ ¸ôÁöµÈ µ¿¾ÈÀÇ ½Ã°£Àº Æ÷ÇÔµÇÁö ¾Ê½À´Ï´Ù.
+  Reset()ì´ í˜¸ì¶œëœ ì´í›„ì˜ ê²½ê°„ ì‹œê°„ì„ ë°˜í™˜í•©ë‹ˆë‹¤.
+  ë‹¨, ì‹œê³„ê°€ ëª°ì§€ëœ ë™ì•ˆì˜ ì‹œê°„ì€ í¬í•¨ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤.
   */
   static float TotalTime();
 
 private:
-  static double _secondsPerCount; // Ä«¿ìÅÍ´ç ÃÊ ´ÜÀ§ º¯È­ ºñÀ²
-  static double _deltaTime; // ÀÌÀü ÇÁ·¹ÀÓ¿¡¼­ ÇöÀç ÇÁ·¹ÀÓ±îÁöÀÇ ½Ã°£ Â÷ÀÌ
+  static double _secondsPerCount; // ì¹´ìš°í„°ë‹¹ ì´ˆ ë‹¨ìœ„ ë³€í™” ë¹„ìœ¨
+  static double _deltaTime; // ì´ì „ í”„ë ˆì„ì—ì„œ í˜„ì¬ í”„ë ˆì„ê¹Œì§€ì˜ ì‹œê°„ ì°¨ì´
 
-  static int64_t _baseTime;   // Å¸ÀÌ¸Ó ½ÃÀÛ ½Ã°£
-  static int64_t _pausedTime; // ¸ôÁöµÈ µ¿¾È ´©ÀûµÈ ½Ã°£
-  static int64_t _stopTime;   // ¸ôÁöµÈ ½Ã°£
-  static int64_t _prevTime;   // ÀÌÀü ÇÁ·¹ÀÓ ½Ã°£
-  static int64_t _currTime;   // ÇöÀç ÇÁ·¹ÀÓ ½Ã°£
+  static int64_t _baseTime;   // íƒ€ì´ë¨¸ ì‹œì‘ ì‹œê°„
+  static int64_t _pausedTime; // ëª°ì§€ëœ ë™ì•ˆ ëˆ„ì ëœ ì‹œê°„
+  static int64_t _stopTime;   // ëª°ì§€ëœ ì‹œê°„
+  static int64_t _prevTime;   // ì´ì „ í”„ë ˆì„ ì‹œê°„
+  static int64_t _currTime;   // í˜„ì¬ í”„ë ˆì„ ì‹œê°„
 
-  static float _timeScale; // Å¸ÀÌ¸ÓÀÇ ¼Óµµ
-  static bool _isStopped;  // Å¸ÀÌ¸Ó ¸ôÁö »óÈ² ÇÃ·¡±×
+  static float _timeScale; // íƒ€ì´ë¨¸ì˜ ì†ë„
+  static bool _isStopped;  // íƒ€ì´ë¨¸ ëª°ì§€ ìƒí™© í”Œë˜ê·¸
 };

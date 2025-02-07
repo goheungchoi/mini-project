@@ -1,4 +1,4 @@
-﻿#include "GameFramework/UI/UIButton/UIButton.h"
+#include "GameFramework/UI/UIButton/UIButton.h"
 #include "Core/Input/InputSystem.h"
 
 UIButton::UIButton(class World* world) : UIElement(world) {}

@@ -1,4 +1,4 @@
-#include "Level1.h"
+﻿#include "Level1.h"
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
 #include "Resource2DManager/Resource2DManager.h"
@@ -8,12 +8,14 @@
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 #include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
+#include "Contents/UI/InGameUI/MainMission/MainMission.h"
 #include "Contents/GameObjects/Map/Characters/Character.h"
 
 
 void Level1::PrepareLevel()
 {
   __super::PrepareLevel();
+
 }
 
 void Level1::BeginLevel()
@@ -25,6 +27,7 @@ void Level1::BeginLevel()
   inGameUI->_agentStorage->SetAgent(kBrawler, {1400, 960});
   inGameUI->_agentStorage->SetAgent(kSlasher, {1600, 960});
   inGameUI->_agentStorage->SetAgent(kGunman, {1800, 960});
+  inGameUI->_mainMission->SetText(L"(선택) 최대한 희생 없이 모든 적 처치");
   #endif
 }
 

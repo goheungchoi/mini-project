@@ -88,45 +88,45 @@ public:
     _device->GetImmContext()->OMSetRenderTargets(
         1, _backBuffer->mainRTV.GetAddressOf(), _backBuffer->mainDSV.Get());
 
-    // ½ºÅÙ½Ç ¾²±â¸¦ À§ÇÑ »óÅÂ ¼³Á¤
+    // ìŠ¤í…ì‹¤ ì“°ê¸°ë¥¼ ìœ„í•œ ìƒíƒœ ì„¤ì •
     D3D11_DEPTH_STENCIL_DESC stencilDescWrite = {};
-    stencilDescWrite.DepthEnable = FALSE; // ±íÀÌ ¹öÆÛ »ç¿ë
+    stencilDescWrite.DepthEnable = FALSE; // ê¹Šì´ ë²„í¼ ì‚¬ìš©
     stencilDescWrite.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
     stencilDescWrite.DepthFunc = D3D11_COMPARISON_ALWAYS;
 
-    stencilDescWrite.StencilEnable = TRUE; // ½ºÅÙ½Ç »ç¿ë
-    stencilDescWrite.StencilWriteMask = 0xFF; // ½ºÅÙ½ÇÀÇ ¸ðµç ºñÆ® ¾²±â °¡´É
-    stencilDescWrite.StencilReadMask = 0xFF; // ½ºÅÙ½ÇÀÇ ¸ðµç ºñÆ® ÀÐ±â °¡´É
+    stencilDescWrite.StencilEnable = TRUE; // ìŠ¤í…ì‹¤ ì‚¬ìš©
+    stencilDescWrite.StencilWriteMask = 0xFF; // ìŠ¤í…ì‹¤ì˜ ëª¨ë“  ë¹„íŠ¸ ì“°ê¸° ê°€ëŠ¥
+    stencilDescWrite.StencilReadMask = 0xFF; // ìŠ¤í…ì‹¤ì˜ ëª¨ë“  ë¹„íŠ¸ ì½ê¸° ê°€ëŠ¥
 
-    // Àü¸é ÆäÀÌ½º¿¡¼­ÀÇ ½ºÅÙ½Ç ¿¬»ê
+    // ì „ë©´ íŽ˜ì´ìŠ¤ì—ì„œì˜ ìŠ¤í…ì‹¤ ì—°ì‚°
     stencilDescWrite.FrontFace.StencilFailOp =
-        D3D11_STENCIL_OP_KEEP; // ½ºÅÙ½Ç Å×½ºÆ® ½ÇÆÐ ½Ã À¯Áö
+        D3D11_STENCIL_OP_KEEP; // ìŠ¤í…ì‹¤ í…ŒìŠ¤íŠ¸ ì‹¤íŒ¨ ì‹œ ìœ ì§€
     stencilDescWrite.FrontFace.StencilDepthFailOp =
-        D3D11_STENCIL_OP_KEEP; // ±íÀÌ Å×½ºÆ® ½ÇÆÐ ½Ã À¯Áö
+        D3D11_STENCIL_OP_KEEP; // ê¹Šì´ í…ŒìŠ¤íŠ¸ ì‹¤íŒ¨ ì‹œ ìœ ì§€
     stencilDescWrite.FrontFace.StencilPassOp =
-        D3D11_STENCIL_OP_REPLACE; // Å×½ºÆ® Åë°ú ½Ã ±³Ã¼
+        D3D11_STENCIL_OP_REPLACE; // í…ŒìŠ¤íŠ¸ í†µê³¼ ì‹œ êµì²´
     stencilDescWrite.FrontFace.StencilFunc =
-        D3D11_COMPARISON_ALWAYS; // Ç×»ó Åë°ú
+        D3D11_COMPARISON_ALWAYS; // í•­ìƒ í†µê³¼
     stencilDescWrite.BackFace = stencilDescWrite.FrontFace;
     HR_T(_device->GetDevice()->CreateDepthStencilState(
         &stencilDescWrite, _om->depthstencilWriteState.GetAddressOf()));
-    // ½ºÅÙ½Ç ÀÐ±â(Å×½ºÆ®)¸¦ À§ÇÑ »óÅÂ ¼³Á¤
+    // ìŠ¤í…ì‹¤ ì½ê¸°(í…ŒìŠ¤íŠ¸)ë¥¼ ìœ„í•œ ìƒíƒœ ì„¤ì •
     D3D11_DEPTH_STENCIL_DESC stencilDescRead = {};
     stencilDescRead.DepthEnable = FALSE;
     stencilDescRead.DepthWriteMask =
-        D3D11_DEPTH_WRITE_MASK_ZERO; // ±íÀÌ ¾²±â ºñÈ°¼ºÈ­
+        D3D11_DEPTH_WRITE_MASK_ZERO; // ê¹Šì´ ì“°ê¸° ë¹„í™œì„±í™”
     stencilDescRead.DepthFunc = D3D11_COMPARISON_LESS;
 
     stencilDescRead.StencilEnable = TRUE;
-    stencilDescRead.StencilReadMask = 0xFF;  // ÀÐ±â ¸¶½ºÅ©
-    stencilDescRead.StencilWriteMask = 0x00; // ¾²±â ºñÈ°¼ºÈ­
-    // Àü¸é ÆäÀÌ½º¿¡¼­ÀÇ ½ºÅÙ½Ç ¿¬»ê
+    stencilDescRead.StencilReadMask = 0xFF;  // ì½ê¸° ë§ˆìŠ¤í¬
+    stencilDescRead.StencilWriteMask = 0x00; // ì“°ê¸° ë¹„í™œì„±í™”
+    // ì „ë©´ íŽ˜ì´ìŠ¤ì—ì„œì˜ ìŠ¤í…ì‹¤ ì—°ì‚°
     stencilDescRead.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
-    stencilDescRead.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP; // À¯Áö
+    stencilDescRead.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP; // ìœ ì§€
     stencilDescRead.FrontFace.StencilFailOp =
-        D3D11_STENCIL_OP_KEEP; // ½ÇÆÐ ½Ã À¯Áö
+        D3D11_STENCIL_OP_KEEP; // ì‹¤íŒ¨ ì‹œ ìœ ì§€
     stencilDescRead.FrontFace.StencilDepthFailOp =
-        D3D11_STENCIL_OP_KEEP; // ±íÀÌ ½ÇÆÐ ½Ã À¯Áö
+        D3D11_STENCIL_OP_KEEP; // ê¹Šì´ ì‹¤íŒ¨ ì‹œ ìœ ì§€
     stencilDescRead.BackFace = stencilDescRead.FrontFace;
     HR_T(_device->GetDevice()->CreateDepthStencilState(
         &stencilDescRead, _om->depthstencilReadState.GetAddressOf()));
@@ -188,14 +188,14 @@ public:
   {
     // blend state
     D3D11_BLEND_DESC blendDesc = {};
-    blendDesc.AlphaToCoverageEnable = false; // ¾ËÆÄ Åõ Ä¿¹ö¸®Áö ºñÈ°¼ºÈ­
-    blendDesc.IndependentBlendEnable = false; // µ¶¸³Àû ºí·»µå ºñÈ°¼ºÈ­
+    blendDesc.AlphaToCoverageEnable = false; // ì•ŒíŒŒ íˆ¬ ì»¤ë²„ë¦¬ì§€ ë¹„í™œì„±í™”
+    blendDesc.IndependentBlendEnable = false; // ë…ë¦½ì  ë¸”ë Œë“œ ë¹„í™œì„±í™”
     D3D11_RENDER_TARGET_BLEND_DESC rtBlenddesc = CreateRTBlendDesc(blendEnable);
-    blendDesc.RenderTarget[0] = rtBlenddesc; // Ã¹¹øÂ° rt¿¡ state ¼³Á¤
+    blendDesc.RenderTarget[0] = rtBlenddesc; // ì²«ë²ˆì§¸ rtì— state ì„¤ì •
     HR_T(_device->GetDevice()->CreateBlendState(
         &blendDesc, _om->blentState.GetAddressOf()));
     float blendFactor[4] = {0.f, 0.f, 0.f, 0.f};
-    // ÃÊ±â blend»óÅÂ true.
+    // ì´ˆê¸° blendìƒíƒœ true.
     _device->GetImmContext()->OMSetBlendState(_om->blentState.Get(),
                                               blendFactor, 0xFFFFFFFF);
   }

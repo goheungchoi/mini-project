@@ -17,7 +17,7 @@ public:
             BOOL isStatic, BOOL isKinematic, PhyjixWorld* world);
   ~RigidBody();
 
-// IRigidBodyÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+// IRigidBodyì„(ë¥¼) í†µí•´ ìƒì†ë¨
   void SetCollisionEvent(eCollisionEventType collisiontype, IRigidBody* other, std::function<void(void)> event) override;
   void SetLinVelocity(DirectX::SimpleMath::Vector3 vel) override;
   void SetMaxLinVelocity(float vel) override;
@@ -55,7 +55,7 @@ public:
 
   ColliderShape GetColliderShapeType() override;
 
-  // ICollisionEventÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+  // ICollisionEventì„(ë¥¼) í†µí•´ ìƒì†ë¨
   void OnCollisionEnter(IRigidBody* other) override;
   void OnCollisionExit(IRigidBody* other) override;
   void OnTrigger(IRigidBody* other) override;

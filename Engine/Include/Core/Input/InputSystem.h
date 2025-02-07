@@ -8,7 +8,7 @@
 
 using Key = DirectX::Keyboard::Keys;
 
-// ¸¶¿ì½º »óÅÂ¸¦ ³ªÅ¸³»´Â ¿­°ÅÇü
+// ë§ˆìš°ìŠ¤ ìƒíƒœë¥¼ ë‚˜íƒ€ë‚´ëŠ” ì—´ê±°í˜•
 enum MouseState
 {
 	LB,
@@ -24,7 +24,7 @@ class InputSystem
 {
 
 private:
-  // »ı¼ºÀÚ ¹× ¼Ò¸êÀÚ
+  // ìƒì„±ì ë° ì†Œë©¸ì
   InputSystem() = default;
   ~InputSystem() = default;
 
@@ -38,12 +38,12 @@ private:
 public:
   static InputSystem* GetInstance();
 
-  // ¾÷µ¥ÀÌÆ® ÇÔ¼ö (¸Å ÇÁ·¹ÀÓ ÀÔ·Â »óÅÂ °»½Å)
+  // ì—…ë°ì´íŠ¸ í•¨ìˆ˜ (ë§¤ í”„ë ˆì„ ì…ë ¥ ìƒíƒœ ê°±ì‹ )
   bool Initialize(HWND hWnd);
   void Finalize();
   void Update(const float& dt);
 
-  // Å°, ¸¶¿ì½º, ÆĞµå »óÅÂ È®ÀÎ ÇÔ¼ö
+  // í‚¤, ë§ˆìš°ìŠ¤, íŒ¨ë“œ ìƒíƒœ í™•ì¸ í•¨ìˆ˜
   bool IsKeyPress(DirectX::Keyboard::Keys key) const;
   bool IsKeyPress(MouseState mouseState) const;
 
@@ -53,10 +53,10 @@ public:
   bool IsKeyUp(DirectX::Keyboard::Keys key) const;
   bool IsKeyUp(MouseState mouseState) const;
 
-  // ¸¶¿ì½º ÈÙ È®ÀÎ ÇÔ¼ö
+  // ë§ˆìš°ìŠ¤ íœ  í™•ì¸ í•¨ìˆ˜
   bool IsMouseWheel(MouseState mouseState) const;
 
-  // ¸¶¿ì½º ÀÌµ¿ °ª °¡Á®¿À±â
+  // ë§ˆìš°ìŠ¤ ì´ë™ ê°’ ê°€ì ¸ì˜¤ê¸°
   Vector2 GetMouseDelta() const;
   Vector2 GetCurrMouseStateVec();
 
@@ -64,12 +64,12 @@ public:
   DirectX::Mouse::State GetPrevMouseState() { return _prevMouseState; }
 
 private:
-  // DirectXTK Å°º¸µå °ü·Ã ¸â¹ö º¯¼ö
+  // DirectXTK í‚¤ë³´ë“œ ê´€ë ¨ ë©¤ë²„ ë³€ìˆ˜
   std::unique_ptr<DirectX::Keyboard> _keyboard{};
-  DirectX::Keyboard::KeyboardStateTracker _keyboardTracker{}; // º¯È­ °¨Áö
-  DirectX::Keyboard::State _keyboardState{}; // ÇöÀç »óÅÂ È®ÀÎ
+  DirectX::Keyboard::KeyboardStateTracker _keyboardTracker{}; // ë³€í™” ê°ì§€
+  DirectX::Keyboard::State _keyboardState{}; // í˜„ì¬ ìƒíƒœ í™•ì¸
 
-  // DirectXTK ¸¶¿ì½º °ü·Ã ¸â¹ö º¯¼ö
+  // DirectXTK ë§ˆìš°ìŠ¤ ê´€ë ¨ ë©¤ë²„ ë³€ìˆ˜
   std::unique_ptr<DirectX::Mouse> _mouse{};
   DirectX::Mouse::ButtonStateTracker _mouseTracker{};
   DirectX::Mouse::State _prevMouseState{};

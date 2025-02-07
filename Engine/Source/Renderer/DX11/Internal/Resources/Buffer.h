@@ -49,7 +49,7 @@ struct BoneMatrix
 struct SSAOParames
 {
   Vector2 noiseScale;
-  float radius;        // ���ø� �ݰ�
+  float radius;        // »ùÇÃ¸µ ¹Ý°æ
   float nearplane;
   float farplane;
   Vector3 padding3;

@@ -16,7 +16,7 @@ bool InputSystem::Initialize(HWND hWnd)
 {
   _hWnd = hWnd;
 
-  // DirectXTKÀÇ Keyboard¿Í Mouse °´Ã¼ »ı¼º
+  // DirectXTKì˜ Keyboardì™€ Mouse ê°ì²´ ìƒì„±
   _keyboard = std::make_unique<DirectX::Keyboard>();
   _mouse = std::make_unique<DirectX::Mouse>();
   _mouse->SetWindow(hWnd);
@@ -26,18 +26,18 @@ bool InputSystem::Initialize(HWND hWnd)
 
 void InputSystem::Finalize()
 {
-  // Å°º¸µå ¹× ¸¶¿ì½º Æ÷ÀÎÅÍ ÇØÁ¦
+  // í‚¤ë³´ë“œ ë° ë§ˆìš°ìŠ¤ í¬ì¸í„° í•´ì œ
   _keyboard.reset();
   _mouse.reset();
 
-  // »óÅÂ ÃßÀû±â ÃÊ±âÈ­
+  // ìƒíƒœ ì¶”ì ê¸° ì´ˆê¸°í™”
   _keyboardTracker.Reset();
   _mouseTracker.Reset();
 
-  // À©µµ¿ì ÇÚµé ÃÊ±âÈ­
+  // ìœˆë„ìš° í•¸ë“¤ ì´ˆê¸°í™”
   _hWnd = nullptr;
 
-  // ±âÅ¸ ÇÃ·¡±× ÃÊ±âÈ­
+  // ê¸°íƒ€ í”Œë˜ê·¸ ì´ˆê¸°í™”
   _handleOut = false;
 
   if (m_pInstance)
@@ -51,38 +51,38 @@ void InputSystem::Update(const float& dt)
 {
   _prevMouseState = _mouseState;
 
-  // ÇöÀç À©µµ¿ì°¡ Æ÷Ä¿½º¸¦ ÀÒ¾ú´ÂÁö È®ÀÎ
+  // í˜„ì¬ ìœˆë„ìš°ê°€ í¬ì»¤ìŠ¤ë¥¼ ìƒì—ˆëŠ”ì§€ í™•ì¸
   if (GetForegroundWindow() != _hWnd)
   {
     _handleOut = true;
     return;
   }
 
-  // Æ÷Ä¿½º¸¦ ´Ù½Ã ¾ò¾úÀ» ¶§ ¸¶¿ì½º ÈÙ °ª ÃÊ±âÈ­
+  // í¬ì»¤ìŠ¤ë¥¼ ë‹¤ì‹œ ì–»ì—ˆì„ ë•Œ ë§ˆìš°ìŠ¤ íœ  ê°’ ì´ˆê¸°í™”
   if (_handleOut)
   {
     _mouse->ResetScrollWheelValue();
     _handleOut = false;
   }
 
-  // Å°º¸µå »óÅÂ ¾÷µ¥ÀÌÆ®
+  // í‚¤ë³´ë“œ ìƒíƒœ ì—…ë°ì´íŠ¸
   _keyboardState = _keyboard->GetState();
   _keyboardTracker.Update(_keyboardState);
 
-  // ¸¶¿ì½º »óÅÂ ¾÷µ¥ÀÌÆ®
+  // ë§ˆìš°ìŠ¤ ìƒíƒœ ì—…ë°ì´íŠ¸
   _mouseState = _mouse->GetState();
   _mouseTracker.Update(_mouseState);
 }
 
 bool InputSystem::IsKeyPress(DirectX::Keyboard::Keys key) const
 {
-  // Å°º¸µå Å°°¡ ´­·È´ÂÁö È®ÀÎ
+  // í‚¤ë³´ë“œ í‚¤ê°€ ëˆŒë ¸ëŠ”ì§€ í™•ì¸
   return _keyboardState.IsKeyDown(key);
 }
 
 bool InputSystem::IsKeyPress(MouseState mouseState) const
 {
-  // ¸¶¿ì½º ¹öÆ°ÀÌ ´­·È´ÂÁö È®ÀÎ
+  // ë§ˆìš°ìŠ¤ ë²„íŠ¼ì´ ëˆŒë ¸ëŠ”ì§€ í™•ì¸
   switch (mouseState)
   {
   case LB:
@@ -101,13 +101,13 @@ bool InputSystem::IsKeyPress(MouseState mouseState) const
 
 bool InputSystem::IsKeyDown(DirectX::Keyboard::Keys key) const
 {
-  // Å°º¸µå Å°°¡ ÀÌ¹ø ÇÁ·¹ÀÓ¿¡¼­ ´­·È´ÂÁö È®ÀÎ
+  // í‚¤ë³´ë“œ í‚¤ê°€ ì´ë²ˆ í”„ë ˆì„ì—ì„œ ëˆŒë ¸ëŠ”ì§€ í™•ì¸
   return _keyboardTracker.IsKeyPressed(key);
 }
 
 bool InputSystem::IsKeyDown(MouseState mouseState) const
 {
-  // ¸¶¿ì½º ¹öÆ°ÀÌ ÀÌ¹ø ÇÁ·¹ÀÓ¿¡¼­ ´­·È´ÂÁö È®ÀÎ
+  // ë§ˆìš°ìŠ¤ ë²„íŠ¼ì´ ì´ë²ˆ í”„ë ˆì„ì—ì„œ ëˆŒë ¸ëŠ”ì§€ í™•ì¸
   switch (mouseState)
   {
   case LB:
@@ -153,12 +153,12 @@ bool InputSystem::IsMouseWheel(MouseState mouseState) const
   {
   case WHDN:
     if (_prevMouseState.scrollWheelValue > _mouseState.scrollWheelValue)
-      return true; // ÈÙ ´Ù¿î
+      return true; // íœ  ë‹¤ìš´
     break;
 
   case WHUP:
     if (_prevMouseState.scrollWheelValue < _mouseState.scrollWheelValue)
-      return true; // ÈÙ ¾÷
+      return true; // íœ  ì—…
     break;
   }
 

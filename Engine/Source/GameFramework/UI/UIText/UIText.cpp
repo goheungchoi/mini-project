@@ -23,7 +23,7 @@ void UIText::Render()
   _rect = {_position.x, _position.y, _position.x + _size.x,
            _position.y + _size.y};
 
-  _world->_renderer->DrawTexts(_format, _rect, _color, _opacity,
+  _world->_renderer->DrawTexts(_format.c_str(), _rect, _color, _opacity,
                                _textFormatInfo);
   #ifndef NDEBUG
   if (bDebugDrawFlag)
@@ -33,7 +33,7 @@ void UIText::Render()
   #endif
 }
 
-void UIText::SetText(const wchar_t* format)
+void UIText::SetText(const wstring format)
 {
   _format = format;
 }

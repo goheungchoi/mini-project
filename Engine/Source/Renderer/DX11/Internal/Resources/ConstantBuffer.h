@@ -78,7 +78,7 @@ public:
 public:
   MeshConstantBuffer(Device* device) : _device{device}
   {
-    // ÀÏ´Ü 5°³ Àâ¾ÆµÎ±äÇß´Âµ¥ ´Ã¾î³ª¸é Á¶Á¤.
+    // ì¼ë‹¨ 5ê°œ ì¡ì•„ë‘ê¸´í–ˆëŠ”ë° ëŠ˜ì–´ë‚˜ë©´ ì¡°ì •.
     _constantBuffers.resize(5);
     _constantBuffers[static_cast <UINT>(MeshCBType::World)] =
         _device->CreateConstantBuffer<Constant::World>();

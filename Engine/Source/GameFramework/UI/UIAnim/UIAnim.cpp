@@ -14,8 +14,8 @@ void UIAnim::Update(float dt)
    _pCurrFrameInfo = _pCurrAnimInfo->Frames[_curFrameIndex];
   _bLoop = _pCurrAnimInfo->bIsLoop;
   const FRAME_INFO& frame = _pCurrFrameInfo;
-  _lastFrameIndex = _pCurrAnimInfo->Frames.size() - 1; // ¸¶Áö¸· Index ¹øÈ£
-  int maxFrameCnt = _lastFrameIndex + 1; // ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ frame ÃÑ °¹¼ö
+  _lastFrameIndex = _pCurrAnimInfo->Frames.size() - 1; // ë§ˆì§€ë§‰ Index ë²ˆí˜¸
+  int maxFrameCnt = _lastFrameIndex + 1; // ì• ë‹ˆë©”ì´ì…˜ì˜ frame ì´ ê°¯ìˆ˜
 
   if (frame.duration == 0 && _curFrameIndex == _lastFrameIndex+1)
   {
@@ -37,7 +37,7 @@ void UIAnim::Update(float dt)
     _frameTime -= frame.duration;
   }
 
-  // ÀÌ¹ÌÁö¿¡¼­ÀÇ ÇÁ·¹ÀÓ ¿µ¿ª
+  // ì´ë¯¸ì§€ì—ì„œì˜ í”„ë ˆì„ ì˜ì—­
   _srcRect = {frame.frameRect.x, frame.frameRect.y,
               frame.frameRect.z, frame.frameRect.w};
 
@@ -106,7 +106,7 @@ ANIMATION_INFO* UIAnim::LoadAnim2DAsset(std::string animCSV)
     std::string token;
     {
       FRAME_INFO tempFrame;
-      getline(ss, token, ','); // ssÀÇ ³»¿ëÀ» ,¸¦ ±âÁØÀ¸·Î ¹®ÀÚ¿­À» ºĞ¸®
+      getline(ss, token, ','); // ssì˜ ë‚´ìš©ì„ ,ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ë¬¸ìì—´ì„ ë¶„ë¦¬
       tempFrame.frameRect.x = stof(token);
       getline(ss, token, ',');
       tempFrame.frameRect.y = stof(token);
