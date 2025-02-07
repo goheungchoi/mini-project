@@ -6,8 +6,12 @@ class TrailComponent : public ComponentBase
 public:
   TrailComponent(class GameObject* owner);
   ~TrailComponent();
-  void Update(float dt);
+  void Update(float dt, DirectX::XMVECTOR currPos, XMVECTOR eye);
+  void SetDuration(float duration);
+  void SetWidth(float width);
+  void SetDirection(DirectX::XMVECTOR direction);
 
-private:
+public:
+  bool isVisible{true};
   Trail* trail = nullptr;
 };

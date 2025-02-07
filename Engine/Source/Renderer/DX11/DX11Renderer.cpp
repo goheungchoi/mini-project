@@ -352,7 +352,11 @@ void DX11Renderer::DrawBillBoard(Billboard* billboard)
 }
 void DX11Renderer::CreateTrail(Trail*& trail)
 {
-
+  trail = new Trail(_device);
+}
+void DX11Renderer::DrawTrail(Trail* trail) 
+{
+  _passMgr->AddTrail(trail);
 }
 void DX11Renderer::BeginImGuiDraw()
 {
