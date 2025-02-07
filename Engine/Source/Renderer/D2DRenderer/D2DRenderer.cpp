@@ -46,8 +46,8 @@ bool D2DRenderer::Init(Device* device, SwapChain* swapChain,
   fs::path fontDir = Utility::convertToUTF16(ns::kFontDir);
 
   _pFont = new Font;
-  _pFont->LoadFontFile((fontDir / "GangwonEduAll.ttf").wstring(),
-                       L"GangwonEduAll");
+  _pFont->LoadFontFile((fontDir / "PT Noeul.ttf").wstring(),
+                       L"PT Noeul");
 
   Sprite::SetDevice(device);
   Sprite::SetD2DRenderer(this);

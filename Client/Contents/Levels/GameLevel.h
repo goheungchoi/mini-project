@@ -15,10 +15,15 @@ protected:
   ModelHandle redCellModelHandle;
   ModelHandle greenCellModelHandle;
 
-  ModelHandle mapMeshHandle;
+  ModelHandle mapBarMeshHandle;
+  ModelHandle mapMuseumMeshHandle;
+  ModelHandle mapWarehouseMeshHandle;
 
   ModelHandle animTestHandle;
   ModelHandle handGunHandle;
+  
+  ModelHandle OBsStoolHandle;
+  ModelHandle OBsBox02Handle;
 
   CameraObject* testCamera;
 
