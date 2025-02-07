@@ -59,9 +59,10 @@ void TransitionUI::Transition(float dt)
 void TransitionUI::Update(float dt)
 {
   UIPanel::Update(dt);
-  //if (INPUT.IsKeyPress(Key::Space))
-  //else if (INPUT.IsKeyPress(Key::N))
-  //  FadeOut(5.f);
+  if (INPUT.IsKeyPress(Key::M))
+    FadeIn(1.f);
+  else if (INPUT.IsKeyPress(Key::N))
+    FadeOut(1.f);
 
 
   Transition(dt);
