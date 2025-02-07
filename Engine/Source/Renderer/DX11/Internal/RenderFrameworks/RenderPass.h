@@ -62,7 +62,7 @@ private:
   SSAOPass* _ssao = nullptr;
 
 private:
-  // renderer¿¡¼­ »ý¼ºÇÑ deive ÂüÁ¶.
+  // rendererì—ì„œ ìƒì„±í•œ deive ì°¸ì¡°.
   Device* _device;
   PipeLine* _pso = nullptr;
   ShaderCompiler* _compiler = nullptr;
@@ -167,13 +167,13 @@ public:
       }
       if (buff->flags & RenderPassType::kTransparentPass)
       {
-        // ºä °ø°£ÀÇ Z°ª °è»ê
-        Vector3 worldPos3 = world.Translation(); // ¿ùµå °ø°£¿¡¼­ÀÇ À§Ä¡
+        // ë·° ê³µê°„ì˜ Zê°’ ê³„ì‚°
+        Vector3 worldPos3 = world.Translation(); // ì›”ë“œ ê³µê°„ì—ì„œì˜ ìœ„ì¹˜
         Vector4 worldPos = {worldPos3.x, worldPos3.y, worldPos3.z,
-                            1.f}; // ¿ùµå °ø°£¿¡¼­ÀÇ À§Ä¡
+                            1.f}; // ì›”ë“œ ê³µê°„ì—ì„œì˜ ìœ„ì¹˜
         Vector4 viewPos =
-            Vector4::Transform(worldPos, _camera.view); // ºä °ø°£À¸·Î º¯È¯
-        float viewZ = viewPos.z; // ºä °ø°£ Z°ª ÃßÃâ
+            Vector4::Transform(worldPos, _camera.view); // ë·° ê³µê°„ìœ¼ë¡œ ë³€í™˜
+        float viewZ = viewPos.z; // ë·° ê³µê°„ Zê°’ ì¶”ì¶œ
         if (!buff->material->doubleSided)
           _staticTransMeshes[0].insert({{viewZ, max}, mesh});
         else
@@ -205,13 +205,13 @@ public:
       }
       if (buff->flags & RenderPassType::kTransparentPass)
       {
-        // ºä °ø°£ÀÇ Z°ª °è»ê
-        Vector3 worldPos3 = world.Translation(); // ¿ùµå °ø°£¿¡¼­ÀÇ À§Ä¡
+        // ë·° ê³µê°„ì˜ Zê°’ ê³„ì‚°
+        Vector3 worldPos3 = world.Translation(); // ì›”ë“œ ê³µê°„ì—ì„œì˜ ìœ„ì¹˜
         Vector4 worldPos = {worldPos3.x, worldPos3.y, worldPos3.z,
-                            1.f}; // ¿ùµå °ø°£¿¡¼­ÀÇ À§Ä¡
+                            1.f}; // ì›”ë“œ ê³µê°„ì—ì„œì˜ ìœ„ì¹˜
         Vector4 viewPos =
-            Vector4::Transform(worldPos, _camera.view); // ºä °ø°£À¸·Î º¯È¯
-        float viewZ = viewPos.z; // ºä °ø°£ Z°ª ÃßÃâ
+            Vector4::Transform(worldPos, _camera.view); // ë·° ê³µê°„ìœ¼ë¡œ ë³€í™˜
+        float viewZ = viewPos.z; // ë·° ê³µê°„ Zê°’ ì¶”ì¶œ
         if (!buff->material->doubleSided)
           _skelTransMeshes[0].insert({{viewZ, max}, mesh});
         else
@@ -280,10 +280,10 @@ public:
     this->DrawGeometryPrimitveWireFrame(dc);
 #endif
 
-    // Ã³¸®ÈÄ Å¬¸®¾î
+    // ì²˜ë¦¬í›„ í´ë¦¬ì–´
     this->Clear();
 
-    // max°ª ÃÊ±âÈ­
+    // maxê°’ ì´ˆê¸°í™”
     max = std::numeric_limits<int>::max();
     //dc->Draw()
   }

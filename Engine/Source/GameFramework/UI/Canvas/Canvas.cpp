@@ -1,4 +1,4 @@
-﻿#include "GameFramework/UI/Canvas/Canvas.h"
+#include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/World/World.h"
 
 Canvas::Canvas(class World* world) : _world(world) {}

@@ -12,7 +12,7 @@ PhyjixWorld::PhyjixWorld(physx::PxPhysics* physics, physx::PxDefaultCpuDispatche
   physx::PxSceneDesc sceneDesc(physics->getTolerancesScale());
   sceneDesc.cpuDispatcher = dispatcher;
   sceneDesc.gravity = physx::PxVec3(0, -98.f, 0);
-  //sceneDesc.flags |= physx::PxSceneFlag::eENABLE_CCD; // °í¼Ó ÀÌµ¿ ´ëºñ
+  //sceneDesc.flags |= physx::PxSceneFlag::eENABLE_CCD; // ê³ ì† ì´ë™ ëŒ€ë¹„
 
   sceneDesc.kineKineFilteringMode = physx::PxPairFilteringMode::eKEEP;
 
@@ -150,7 +150,7 @@ IRigidBody* PhyjixWorld::GetGroundActor()
 }
 
 
-// mousepos = ¸¶¿ì½º ÁÂÇ¥ / view, projection = camera view, projection ¸ÅÆ®¸¯½º /  pos =  camera position
+// mousepos = ë§ˆìš°ìŠ¤ ì¢Œí‘œ / view, projection = camera view, projection ë§¤íŠ¸ë¦­ìŠ¤ /  pos =  camera position
 void PhyjixWorld::CreateRay(DirectX::SimpleMath::Vector3 camerapos,
     DirectX::SimpleMath::Vector2 mousepos, DirectX::SimpleMath::Matrix view,
     DirectX::SimpleMath::Matrix projection,

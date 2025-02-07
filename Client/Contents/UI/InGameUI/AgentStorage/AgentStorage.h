@@ -1,5 +1,20 @@
 #pragma once
 #include "GameFramework/UI/UIPanel/UIPanel.h"
+#include "Contents/GameObjects/Map/Characters/Character.h"
+
+class Agent : public UIPanel
+{
+public:
+  Agent(class World* world, CharacterType charType, Vector2 pos);
+  ~Agent();
+
+  void Update(float dt) override;
+
+private:
+  class UIButton* _AgentBtn{nullptr};
+  class UIImage* _AgentImgs[2]{nullptr};
+  bool bUseFlag = false;
+};
 
 class AgentStorage : public UIPanel
 {
@@ -7,19 +22,8 @@ public:
   AgentStorage(class World* world);
   virtual ~AgentStorage();
 
-  void Update(float dt) override;
+  void SetAgent(CharacterType charType, Vector2 pos);
 
 private:
-  class UIButton* _fistAgentBtn{nullptr};
-  class UIImage* _fistAgentImgs[2]{nullptr};
-  bool bFistUseFlag = false;
-
-  class UIButton* _gunAgentBtn{nullptr};
-  class UIImage* _gunAgentImgs[2]{nullptr};
-  bool bGunUseFlag = false;
-
-  class UIButton* _rushAgentBtn{nullptr};
-  class UIImage* _rushAgentImgs[2]{nullptr};
-  bool bRushUseFlag = false;
-
+  vector<Agent*> AgentList;
 };

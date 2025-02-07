@@ -3,15 +3,15 @@
 class PhyjixEventHandler : public physx::PxSimulationEventCallback
 {
 public:
-  // Ãæµ¹ ÀÌº¥Æ® Ã³¸®
+  // ì¶©ëŒ ì´ë²¤íŠ¸ ì²˜ë¦¬
   void onContact(const physx::PxContactPairHeader& pairHeader,
                  const physx::PxContactPair* pairs, physx::PxU32 nbPairs) override;
-  // Trigger ÀÌº¥Æ® Ã³¸®
+  // Trigger ì´ë²¤íŠ¸ ì²˜ë¦¬
   void onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count) override;
   void onWake(physx::PxActor**, physx::PxU32) override;
   void onSleep(physx::PxActor**, physx::PxU32) override;
 
-  // ±âÅ¸ ÀÌº¥Æ® (»ç¿ëÇÏÁö ¾ÊÀ» °æ¿ì ºó ±¸Çö)
+  // ê¸°íƒ€ ì´ë²¤íŠ¸ (ì‚¬ìš©í•˜ì§€ ì•Šì„ ê²½ìš° ë¹ˆ êµ¬í˜„)
   void onConstraintBreak(physx::PxConstraintInfo*, physx::PxU32) override {}
   void onAdvance(const physx::PxRigidBody* const* bodyBuffer, const physx::PxTransform* poseBuffer, const physx::PxU32 count) override {}
 };

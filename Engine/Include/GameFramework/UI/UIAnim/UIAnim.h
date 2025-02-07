@@ -71,14 +71,14 @@ private:
   std::map<std::string,AnimSprite*> _sprites{};
   std::vector<class Sprite*> _spriteList;
   class Sprite* _pCurrSprite;
-  ANIMATION_INFO* _pCurrAnimInfo; // ÇöÀç ¾Ö´Ï¸ŞÀÌ¼ÇÁ¤º¸
+  ANIMATION_INFO* _pCurrAnimInfo; // í˜„ì¬ ì• ë‹ˆë©”ì´ì…˜ì •ë³´
   FRAME_INFO _pCurrFrameInfo;
   string _animCSV;
 
-  bool _bLoop;	// ¹İº¹ ¿©ºÎ
-  float _frameTime = 0.0f;  // ÇÁ·¹ÀÓ ÁøÇà½Ã°£
-  int _lastFrameIndex = -1; // ¸¶Áö¸· ÇÁ·¹ÀÓ ÀÎµ¦½º
-  int _curFrameIndex = 0;  // ÇöÀç ÇÁ·¹ÀÓ ÀÎµ¦½º
-  int _prevFrameIndex = -1; // ÀÌÀü ÇÁ·¹ÀÓ ÀÎµ¦½º
-  Vector4 _srcRect;    // D2D1BitmapÀÇ Source ¿µ¿ª
+  bool _bLoop;	// ë°˜ë³µ ì—¬ë¶€
+  float _frameTime = 0.0f;  // í”„ë ˆì„ ì§„í–‰ì‹œê°„
+  int _lastFrameIndex = -1; // ë§ˆì§€ë§‰ í”„ë ˆì„ ì¸ë±ìŠ¤
+  int _curFrameIndex = 0;  // í˜„ì¬ í”„ë ˆì„ ì¸ë±ìŠ¤
+  int _prevFrameIndex = -1; // ì´ì „ í”„ë ˆì„ ì¸ë±ìŠ¤
+  Vector4 _srcRect;    // D2D1Bitmapì˜ Source ì˜ì—­
 };

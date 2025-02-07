@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "GameFramework/Common.h"
 #include "Core/Math/MathUtils.h"
 #include "GameFramework/World/World.h"

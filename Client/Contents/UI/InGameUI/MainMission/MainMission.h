@@ -7,6 +7,9 @@ public:
   MainMission(class World* world);
   virtual ~MainMission();
 
+public:
+  void SetText(std::wstring text);
+
 private:
   class UIImage* _mainMissionImg{nullptr};
   class UIText* _mainMissionTxt{nullptr};

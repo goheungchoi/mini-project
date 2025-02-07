@@ -79,10 +79,10 @@ void CharacterController::Update(float deltaTime)
         m_MoveDirection.y -= 9.8f * deltaTime;
     }
 
-    // ¼öÁ÷ ÀÌµ¿ Àû¿ë
+    // ìˆ˜ì§ ì´ë™ ì ìš©
     DirectX::XMFLOAT3 verticalMove(0.0f, m_MoveDirection.y * deltaTime, 0.0f);
     Move(  toVec3(m_MoveDirection), 0.0f, deltaTime);
-    // Áö¸é¿¡ ´ê¾Ò´ÂÁö È®ÀÎ
+    // ì§€ë©´ì— ë‹¿ì•˜ëŠ”ì§€ í™•ì¸
     if (IsGrounded())
     {
         m_MoveDirection.y = 0.0f;

@@ -1,4 +1,4 @@
-﻿#include "GameFramework/World/World.h"
+#include "GameFramework/World/World.h"
 
 #include "Renderer/DX11/DX11Renderer.h"
 

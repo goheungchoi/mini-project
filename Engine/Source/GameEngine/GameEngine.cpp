@@ -9,11 +9,11 @@
 
 void GameEngine::Initialize(UINT screenWidth, UINT screenHeight, const std::wstring& title)
 {
-  // À©µµ¿ì »ı¼º
+  // ìœˆë„ìš° ìƒì„±
   _hwnd = WindowManager::GetInstance()->CreateWinApp(screenWidth, screenHeight,
                                                      title.c_str());
 
-    // À©µµ¿ì Å©±â Á¶Á¤ ÀÌº¥Æ® °ü·Ã ÇÔ¼öµé ¼³Á¤
+    // ìœˆë„ìš° í¬ê¸° ì¡°ì • ì´ë²¤íŠ¸ ê´€ë ¨ í•¨ìˆ˜ë“¤ ì„¤ì •
   WindowManager::GetInstance()->SetWindowEventCallbacks(_hwnd,
       [this]() -> bool { return this->OnActivated(); },
       [this]() -> bool { return this->OnDeactivated(); },
@@ -21,19 +21,19 @@ void GameEngine::Initialize(UINT screenWidth, UINT screenHeight, const std::wstr
       [this]() -> bool { return this->OnResuming(); },
       [this]() -> bool { return this->OnWindowResized(); });
 
-  // Com ¶óÀÌºê·¯¸® ÃÊ±âÈ­
+  // Com ë¼ì´ë¸ŒëŸ¬ë¦¬ ì´ˆê¸°í™”
   HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
 
-  // TimeSystem ÃÊ±âÈ­
+  // TimeSystem ì´ˆê¸°í™”
   TimeSystem::Initialize();
 
-  // InputSystem ÃÊ±âÈ­
+  // InputSystem ì´ˆê¸°í™”
   InputSystem::GetInstance()->Initialize(_hwnd);
   
-  // Renderer ÃÊ±âÈ­
+  // Renderer ì´ˆê¸°í™”
 
-  // NOTE: ¿£Áø ÃÊ±âÈ­ ÀÛ¾÷
-  // e.g., ¸®¼Ò½º ¸Å´ÏÀú, ÆÑÅä¸® ½Ì±ÛÅæ µî...
+  // NOTE: ì—”ì§„ ì´ˆê¸°í™” ì‘ì—…
+  // e.g., ë¦¬ì†ŒìŠ¤ ë§¤ë‹ˆì €, íŒ©í† ë¦¬ ì‹±ê¸€í†¤ ë“±...
 
 }
 
@@ -44,20 +44,20 @@ void GameEngine::Execute()
 
 void GameEngine::Shutdown()
 {
-  // NOTE: ¿£Áø Á¾·á ÀÛ¾÷
-  // e.g., ¸Ş¸ğ¸® »èÁ¦, ½Ì±ÛÅæ ¼Ë´Ù¿î µî...
+  // NOTE: ì—”ì§„ ì¢…ë£Œ ì‘ì—…
+  // e.g., ë©”ëª¨ë¦¬ ì‚­ì œ, ì‹±ê¸€í†¤ ì…§ë‹¤ìš´ ë“±...
 
-  // InputSystem ÆÄ±«
+  // InputSystem íŒŒê´´
   InputSystem::GetInstance()->Finalize();
 
-  // À©µµ¿ì ÆÄ±«
+  // ìœˆë„ìš° íŒŒê´´
   WindowManager::GetInstance()->DeleteWinApp();
   WindowManager::GetInstance()->DestroyWindowManager();
 }
 
 bool GameEngine::OnActivated()
 {
-  // TODO: °ÔÀÓÀÌ È°¼ºÈ­µÈ À©µµ¿ì°¡ µË´Ï´Ù.
+  // TODO: ê²Œì„ì´ í™œì„±í™”ëœ ìœˆë„ìš°ê°€ ë©ë‹ˆë‹¤.
   std::cout << "GameEngine::OnActivated()" << std::endl;
 
   return true;
@@ -65,7 +65,7 @@ bool GameEngine::OnActivated()
 
 bool GameEngine::OnDeactivated()
 {
-  // TODO: °ÔÀÓÀÌ ¹é±×¶ó¿îµå À©µµ¿ì·Î ÀüÈ¯µË´Ï´Ù.
+  // TODO: ê²Œì„ì´ ë°±ê·¸ë¼ìš´ë“œ ìœˆë„ìš°ë¡œ ì „í™˜ë©ë‹ˆë‹¤.
   std::cout << "GameEngine::OnDeactivated()" << std::endl;
   
   return true;
@@ -73,7 +73,7 @@ bool GameEngine::OnDeactivated()
 
 bool GameEngine::OnSuspending()
 {
-  // TODO: °ÔÀÓÀÌ ÀıÀü ¸ğµå·Î ÀüÈ¯µË´Ï´Ù(¶Ç´Â ÃÖ¼ÒÈ­µË´Ï´Ù).
+  // TODO: ê²Œì„ì´ ì ˆì „ ëª¨ë“œë¡œ ì „í™˜ë©ë‹ˆë‹¤(ë˜ëŠ” ìµœì†Œí™”ë©ë‹ˆë‹¤).
   std::cout << "GameEngine::OnSuspending()" << std::endl;
 
   return true;
@@ -81,7 +81,7 @@ bool GameEngine::OnSuspending()
 
 bool GameEngine::OnResuming()
 {
-  // TODO: °ÔÀÓÀÌ ÀıÀü ¸ğµå¿¡¼­ º¹±Í(¶Ç´Â ÃÖ¼ÒÈ­ º¹±Í)ÇÕ´Ï´Ù.
+  // TODO: ê²Œì„ì´ ì ˆì „ ëª¨ë“œì—ì„œ ë³µê·€(ë˜ëŠ” ìµœì†Œí™” ë³µê·€)í•©ë‹ˆë‹¤.
   std::cout << "GameEngine::OnResuming()" << std::endl;
 
   return true;
@@ -89,7 +89,7 @@ bool GameEngine::OnResuming()
 
 bool GameEngine::OnWindowResized()
 {
-  // TODO: °ÔÀÓ À©µµ¿ì Å©±â°¡ Á¶Á¤µË´Ï´Ù.
+  // TODO: ê²Œì„ ìœˆë„ìš° í¬ê¸°ê°€ ì¡°ì •ë©ë‹ˆë‹¤.
   std::cout << "GameEngine::OnWindowResized()" << std::endl;
 
   return true;

@@ -15,7 +15,7 @@ WindowManager* WindowManager::GetInstance()
 
 WindowManager::WindowManager()
 {
-  _winApps.reserve(3); // º¤ÅÍ ÃÊ±âÈ­
+  _winApps.reserve(3); // ë²¡í„° ì´ˆê¸°í™”
 }
 
 WindowManager::~WindowManager()
@@ -87,16 +87,16 @@ bool WindowManager::SetWindowEventCallbacks(HWND hwnd,
 //LRESULT WindowManager::WndProc(HWND hWnd, UINT message, WPARAM wParam,
 //                               LPARAM lParam)
 //{
-//  // Ã¢¿¡ ´ëÇÑ Window °´Ã¼¸¦ °¡Á®¿É´Ï´Ù.
+//  // ì°½ì— ëŒ€í•œ Window ê°ì²´ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
 //  WinApp* pWinApp =
 //      reinterpret_cast<WinApp*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 //
 //  if (pWinApp)
 //  {
-//    // ÇØ´ç Ã¢¿¡ ¸Â´Â ¸Ş½ÃÁö Ã³¸®
+//    // í•´ë‹¹ ì°½ì— ë§ëŠ” ë©”ì‹œì§€ ì²˜ë¦¬
 //    return pWinApp->HandleMessage(hWnd, message, wParam, lParam);
 //  }
 //
-//  // ±âº» Ã³¸®
+//  // ê¸°ë³¸ ì²˜ë¦¬
 //  return DefWindowProc(hWnd, message, wParam, lParam);
 //}

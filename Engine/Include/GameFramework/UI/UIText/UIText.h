@@ -10,7 +10,7 @@ public:
 public:
   void Render() override;
 
-  void SetText(const wchar_t* format);
+  void SetText(const wstring format);
   void SetFont(const std::wstring& fontName);
   void SetColor(Color color);
   void SetOpacity(float opacity);
@@ -24,7 +24,7 @@ public:
 
 private:
   TextFormatInfo _textFormatInfo;
-  const wchar_t* _format;
+  std::wstring _format;
   Vector4 _rect;
   Color _color;
   float _opacity;
