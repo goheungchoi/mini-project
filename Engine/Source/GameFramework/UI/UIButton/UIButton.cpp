@@ -68,6 +68,7 @@ void UIButton::AddOnPressedHandler(std::function<void()> handler)
 
 void UIButton::Render()
 {
+  #ifdef _DEBUG
   if (bDebugDrawFlag)
   {
     _world->_renderer->DrawRectangle(Color(1, 0, 0, 1),
@@ -75,12 +76,14 @@ void UIButton::Render()
                                              _position.x + _size.x,
                                              _position.y + _size.y));
   }
+  #endif
 }
-
+#ifdef _DEBUG
 void UIButton::SetDebugDraw(bool debugFlag)
 {
   bDebugDrawFlag = debugFlag;
 }
+#endif
 
 void UIButton::OnClicked()
 {

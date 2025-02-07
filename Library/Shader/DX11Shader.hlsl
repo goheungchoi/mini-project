@@ -276,7 +276,7 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     if (length(normalTexture) > 0.f)
     {
         float3 normalTexColor;
-        normalTexColor.xyz = normalTexture.rgb * 2.0 - 1.0;
+        normalTexColor.xyz = normalize(normalTexture.rgb) * 2.0 - 1.0;
         normalTexColor = normalize(normalTexColor);
         float3 tangent = normalize(input.worldTangent);
         float3 bitangent = normalize(input.worldBitangent);

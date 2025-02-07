@@ -76,7 +76,6 @@ public:
 //   1. you can delete meshes render pass type.
 // * Param1 : own meshHandle
 // */
-#ifdef _DEBUG
   /**
    * @brief draw Sphere wireFrame, it's only work on debug
    * @param world world Matirx
@@ -95,7 +94,6 @@ public:
    * @param color color
    */
   virtual void DrawDebugCylinder(Matrix world, Color color) = 0;
-#endif
   virtual void DrawBillBoard(Billboard* billboard) = 0;
   /**
    * @brief About Particle

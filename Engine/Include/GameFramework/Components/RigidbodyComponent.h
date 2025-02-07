@@ -49,7 +49,6 @@ public:
   void UpdateFromTransform();
   void UpdateToTransform();
 
-#ifdef _DEBUG
   void EnableDebugDraw();
   void DisableDebugDraw();
   BOOL GetDebugDrawFlag() { return _bDebugDrawFlag; };
@@ -57,7 +56,7 @@ public:
   static float scalingFactor;
   Color debugColor = {1, 0, 1, 1};
   XMMATRIX debugDrawMatrix = Matrix::Identity;
-#endif
+
 
 	void RegisterRigidBodyToWorld();
   void UnregisterRigidBodyFromWorld();
@@ -87,9 +86,7 @@ private:
   IPhyjixWorld* _world = nullptr;
   physx::PxTransform _prevTransform;
 
-
-#ifdef _DEBUG
   BOOL _bDebugDrawFlag = false;
-#endif
+
 };
 
