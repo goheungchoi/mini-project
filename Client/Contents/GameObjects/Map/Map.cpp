@@ -170,8 +170,8 @@ void Map::TurnOffPlacementMode()
     return;
   }
 
-  // Turn of the selection mode on grid
-  grid->TurnOffSelectionMode();
+  // Turn off the hover mode.
+  grid->TurnOffHover();
 
   // Remove the placeholder.
   placeholder->Destroy();
@@ -205,7 +205,7 @@ void Map::ShowHoveredCharacterRange() {
       if (CellObject* cell = grid->GetCellObjectAt(w + w_offset, h + h_offset);
           cell)
       {
-        cell->SetDamageZone();
+        cell->SetCellType(CellType_DamageZone);
       }
 
       // Shows death indicators.
@@ -229,7 +229,7 @@ void Map::ShowHoveredCharacterRange() {
       if (CellObject* cell = grid->GetCellObjectAt(w + w_offset, h + h_offset);
           cell)
       {
-        cell->SetRangeZone();
+        cell->SetCellType(CellType_RangeZone);
       }
     }
   }
@@ -250,7 +250,7 @@ void Map::ShowHoveredCharacterRange() {
       while (cell)
       {
         // Mark the damage zone.
-        cell->SetDamageZone();
+        cell->SetCellType(CellType_DamageZone);
 
         // Mark the death indicator if any.
         if (GameObject* gameObject = grid->GetGameObjectAt(w, h); gameObject)
@@ -278,7 +278,7 @@ void Map::ShowHoveredCharacterRange() {
       CellObject* cell = grid->GetCellObjectAt(w, h);
       while (cell)
       {
-        cell->SetRangeZone();
+        cell->SetCellType(CellType_RangeZone);
 
         w += w_offset;
         h += h_offset;
@@ -303,7 +303,7 @@ void Map::HideHoveredCharacterRange()
     {
       if (CellObject* cell = grid->GetCellObjectAt(w, h); cell)
       {
-        cell->ClearZone();
+        cell->SetCellType(CellType_Default);
       }
 
       if (GameObject* gameObject = grid->GetGameObjectAt(w, h); gameObject)
@@ -721,6 +721,9 @@ void Map::Update(float dt) {
 	// Action mode
 	if (isActionTriggered)
   {
+    grid->TurnOffSelectionMode();
+    grid->TurnOffHover();
+
 		// TODO: Remove a simulating character.
 
     if (INPUT.IsKeyPress(Key::R))
@@ -731,6 +734,9 @@ void Map::Update(float dt) {
 	// Placement mode
 	else if (isPlacementModeOn)
   {
+    grid->TurnOnSelectionMode();
+    grid->TurnOnHover();
+
 		// If a placeholder is not set
     if (!placeholder)
     {
@@ -772,58 +778,67 @@ void Map::Update(float dt) {
   // Selection mode
   else
   {
+    grid->TurnOnSelectionMode();
+    grid->TurnOffHover();
+
     if (hoveredCharacter)
     {
-			// TODO: Show the distance and range 
-			ShowHoveredCharacterRange();
-
-			// Right Click
-      if (INPUT.IsKeyDown(MouseState::RB))
+      // Assasination mode.
+      if (isAssassinationMode)
       {
-        // Remove the character
-        if (hoveredCharacter->faction == Faction::kAlly)
+        if (hoveredCharacter->faction == Faction::kEnemy)
         {
-          DeleteCharacterFromMap(hoveredCharacter);
-          hoveredCharacter->Destroy();
-        } 
-				else if (hoveredCharacter->faction == Faction::kEnemy)
-        {
-					// Register the target to be assassinated,
-					// only if in assassination mode.
-          if (isAssassinationMode)
-          {
-            assassinationTarget = hoveredCharacter;
-            isAssassinationMode = false;
-					}
-				}
-      } 
-			// Left click
-			else if (INPUT.IsKeyDown(MouseState::LB))
-      {
-        // Character selection -> Placement mode.
-        // Find if any "ally character" is selected.
-        if (hoveredCharacter->faction == Faction::kAlly)
-        {
-          // Check the type of the character.
-          CharacterType type = hoveredCharacter->type;
-
-          // Check the direction of the character.
-          Direction dir = hoveredCharacter->dir;
-
-          // Remove the selected character from the grid.
-          DeleteCharacterFromMap(hoveredCharacter);
-
-          // Destroy the selected character.
-          hoveredCharacter->Destroy();
-					
-					// Nullify the pointer.
-					hoveredCharacter = nullptr;
-
-          // Turn on the placement mode.
-          TurnOnPlacementMode(type, dir);
+          // Register the target to be assassinated,
+          // only if in assassination mode.
+          assassinationTarget = hoveredCharacter;
+          isAssassinationMode = false;
         }
       }
+      // Default Selection mode.
+      else
+      {
+        // TODO: Show the distance and range
+        ShowHoveredCharacterRange();
 
+        // Right Click
+        if (INPUT.IsKeyDown(MouseState::RB))
+        {
+          // Remove the character
+          if (hoveredCharacter->faction == Faction::kAlly)
+          {
+            DeleteCharacterFromMap(hoveredCharacter);
+            hoveredCharacter->Destroy();
+          }
+        }
+        // Left click
+        else if (INPUT.IsKeyDown(MouseState::LB))
+        {
+          // Character selection -> Placement mode.
+          // Find if any "ally character" is selected.
+          if (hoveredCharacter->faction == Faction::kAlly)
+          {
+            // Check the type of the character.
+            CharacterType type = hoveredCharacter->type;
+
+            // Check the direction of the character.
+            Direction dir = hoveredCharacter->dir;
+
+            // Remove the selected character from the grid.
+            DeleteCharacterFromMap(hoveredCharacter);
+
+            // Destroy the selected character.
+            hoveredCharacter->Destroy();
+
+            // Nullify the pointer.
+            hoveredCharacter = nullptr;
+
+            // Turn on the placement mode.
+            TurnOnPlacementMode(type, dir);
+          }
+        }
+      } 
+			
+      // Reset the hovered character.
 			hoveredCharacter = nullptr;
     }
     else

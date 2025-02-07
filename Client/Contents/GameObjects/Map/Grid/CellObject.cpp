@@ -4,85 +4,55 @@
 
 CellObject::CellObject(World* world) : GameObject(world)
 {
-  redCellModelHandle = LoadModel("Models\\Grid\\CharOver\\Grid_CharOver.glb");
-  greenCellModelHandle = LoadModel("Models\\Grid\\Normal\\Grid_Normal.glb");
-
+  defaultCellModelHandle = LoadModel("Models\\Grid\\Normal\\Grid_Normal.glb");
+  placementCellModelHandle =
+      LoadModel("Models\\Grid\\CharOver\\Grid_CharOver.glb");
   rangeCellModelHandle = LoadModel("Models\\Grid\\Empty\\Grid_Empty.glb");
   damageCellModelHandle = LoadModel("Models\\Grid\\Active\\Grid_Active.glb");
 
   // Create cell models.
 
-	redCell = world->CreateGameObjectFromModel(redCellModelHandle);
-  greenCell = world->CreateGameObjectFromModel(greenCellModelHandle);
+  defaultCell = world->CreateGameObjectFromModel(defaultCellModelHandle);
+  placementCell = world->CreateGameObjectFromModel(placementCellModelHandle);
 
   rangeCell = world->CreateGameObjectFromModel(rangeCellModelHandle);
   damageCell = world->CreateGameObjectFromModel(damageCellModelHandle);
-  rangeCell->SetInvisible();
-  damageCell->SetInvisible();
 
-  AddChildGameObject(redCell);
-  AddChildGameObject(greenCell);
-
+  AddChildGameObject(defaultCell);
+  AddChildGameObject(placementCell);
   AddChildGameObject(rangeCell);
   AddChildGameObject(damageCell);
 }
 
-CellObject::~CellObject() {
-  UnloadModel(redCellModelHandle);
-  UnloadModel(greenCellModelHandle);
+CellObject::~CellObject()
+{
+  UnloadModel(defaultCellModelHandle);
+  UnloadModel(placementCellModelHandle);
   UnloadModel(rangeCellModelHandle);
   UnloadModel(damageCellModelHandle);
 }
 
-void CellObject::SetInvisible() {
-  /*auto* redMeshComp = redCell->GetComponent<MeshComponent>();
-  auto* greenMeshComp = greenCell->GetComponent<MeshComponent>();
-  if (redMeshComp)
-  {
-    redMeshComp->SetVisible(false);
-	}
-  if (greenMeshComp)
-  {
-    greenMeshComp->SetVisible(false);
-	}*/
-
-  redCell->SetInvisible();
-  greenCell->SetInvisible();
-
+void CellObject::SetInvisible()
+{
+  ClearCell();
   isVisible = false;
 }
 
-void CellObject::SetVisible() {
-  /*auto* redMeshComp = redCell->GetComponent<MeshComponent>();
-  auto* greenMeshComp = greenCell->GetComponent<MeshComponent>();
-  if (redMeshComp)
-  {
-    redMeshComp->SetVisible(true);
-  }
-  if (greenMeshComp)
-  {
-    greenMeshComp->SetVisible(true);
-  }*/
-
+void CellObject::SetVisible()
+{
   isVisible = true;
 }
 
-void CellObject::ClearZone() {
+void CellObject::ClearCell()
+{
+  defaultCell->SetInvisible();
+  placementCell->SetInvisible();
   rangeCell->SetInvisible();
   damageCell->SetInvisible();
 }
 
-void CellObject::SetRangeZone() {
-  rangeCell->SetVisible();
-  damageCell->SetInvisible();
-}
-
-void CellObject::SetDamageZone() {
-  rangeCell->SetInvisible();
-  damageCell->SetVisible();
-}
-
-void CellObject::SetCellType(CellType type) {
+void CellObject::SetCellType(CellType type)
+{
   this->type = type;
 }
 
@@ -102,27 +72,33 @@ std::pair<int, int> CellObject::GetCellPosition()
   return {w, h};
 }
 
-void CellObject::OnAwake()
+void CellObject::OnAwake() {}
+
+void CellObject::Update(float dt)
 {
-
-}
-
-void CellObject::Update(float dt) {
-
   if (isVisible)
   {
+    ClearCell();
     switch (type)
     {
-    case CellType_Green: {
-      redCell->SetInvisible();
-      greenCell->SetVisible();
-    }
-    break;
-    case CellType_Red: {
-      redCell->SetVisible();
-      greenCell->SetInvisible();
-    }
-    break;
+    case CellType_Default:
+      if (isOccupied)
+        defaultCell->SetInvisible();
+      else
+        defaultCell->SetVisible();
+      break;
+    case CellType_Placement:
+      if (isOccupied)
+        placementCell->SetInvisible();
+      else
+        placementCell->SetVisible();
+      break;
+    case CellType_RangeZone:
+      rangeCell->SetVisible();
+      break;
+    case CellType_DamageZone:
+      damageCell->SetVisible();
+      break;
     }
   }
 }
