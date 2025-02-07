@@ -4,6 +4,7 @@
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "Resource2DManager/Resource2DManager.h"
+#include "Contents/UI/InGameUI/InGameUI.h"
 
 void GameLevel::PrepareLevel()
 {
@@ -63,6 +64,7 @@ void GameLevel::BeginLevel()
 
 #ifdef USED2D
   world->_canvas->CreatePanel<UICursor>(L"Cursor");
+  inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
 #endif // USED2D
 }
 
@@ -90,7 +92,7 @@ void GameLevel::CreateMap()
   map->CreateEnemyAt(kGunman, 3, 2, kEast);
   map->CreateEnemyAt(kGunman, 2, 4, kEast);
 
-  map->CreateCivillianAt(1, 1);
+  map->CreateCivillianAt(4, 1);
 
   map->CreateAllyAt(kGunman, 2, 5, kWest);
 }

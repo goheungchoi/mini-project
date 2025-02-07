@@ -349,11 +349,20 @@ void World::RegisterRigidBodyComponent(RigidbodyComponent* rigidBody)
 
 void World::UnregisterRigidBodyComponent(RigidbodyComponent* rigidBody)
 {
-  _phyjixWorld->RemoveRigidBody(rigidBody->GetRigidBody());
+  rigidBody->DisableSimulation();
+
+
 
   auto it = std::remove(rigidBodyComponents.begin(), rigidBodyComponents.end(),
                         rigidBody);
   rigidBodyComponents.erase(it, rigidBodyComponents.end());
+  for (auto rigidbody : rigidBodyComponents)
+  {
+    rigidbody->RemoveCollisionEvent(rigidBody->GetRigidBody());
+  }
+
+  _phyjixWorld->RemoveRigidBody(rigidBody->GetRigidBody());
+
 }
 
 void World::InitialStage()
@@ -720,6 +729,11 @@ void World::CleanupStage()
     if (gameObject->bShouldDestroy)
     {
       UpdateGameObjectHierarchy(gameObject, [](GameObject* object) {
+        if (object->tag == "weapon")
+        {
+          int n = 0;
+        }
+
         object->BeginDestroy();
         object->isActive = false;
         object->bShouldDestroy = false;

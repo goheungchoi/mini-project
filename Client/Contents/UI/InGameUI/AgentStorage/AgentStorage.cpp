@@ -13,14 +13,14 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
     _fistAgentImgs[1] = CreateUI<UIImage>(L"FistAgent_Deact");
 
     _fistAgentImgs[0]->SetSprite("2D\\UI\\UI_Storage_Act_Fist.png",
-                                 {1600, 960});
+                                 {1400, 960});
     _fistAgentImgs[1]->SetSprite("2D\\UI\\UI_Storage_Deact_Fist.png",
-                                 {1600, 960});
+                                 {1400, 960});
     _fistAgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
 
     _fistAgentBtn = CreateUI<UIButton>(L"FistAgentBtn");
     _fistAgentBtn->SetSize(_fistAgentImgs[0]->GetSize());
-    _fistAgentBtn->SetCenterPos({1600, 960});
+    _fistAgentBtn->SetCenterPos({1400, 960});
 
 #ifdef _DEBUG
     _fistAgentBtn->SetDebugDraw(true);
@@ -39,6 +39,36 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
     //  _fistAgentImgs[1]->SetStatus(EStatus::EStatus_Active);
     //});
   }
+
+
+  // RushAgent
+  {
+    _rushAgentImgs[0] = CreateUI<UIImage>(L"RushAgent_Act");
+    _rushAgentImgs[1] = CreateUI<UIImage>(L"RushAgent_Deact");
+
+    _rushAgentImgs[0]->SetSprite("2D\\UI\\UI_Storage_Act_Rush.png",
+                                 {1600, 960});
+    _rushAgentImgs[1]->SetSprite("2D\\UI\\UI_Storage_Deact_Rush.png",
+                                 {1600, 960});
+    _rushAgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+
+    _rushAgentBtn = CreateUI<UIButton>(L"RushAgentBtn");
+    _rushAgentBtn->SetSize(_rushAgentImgs[0]->GetSize());
+    _rushAgentBtn->SetCenterPos({1600, 960});
+
+#ifdef _DEBUG
+    _rushAgentBtn->SetDebugDraw(true);
+#endif // _DEBUG
+
+    _rushAgentBtn->AddOnClickHandler([this]() {
+      if (_map && bGunUseFlag == false)
+      {
+        _map->TurnOnPlacementMode(kSlasher, kNorth);
+        bRushUseFlag = true;
+      }
+    });
+  }
+
 
   // GunAgent
   {
@@ -66,6 +96,8 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       }
     });
   }
+
+
 }
 
 AgentStorage::~AgentStorage() {}

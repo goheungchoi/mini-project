@@ -679,9 +679,41 @@ void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
   civilians.push_back(civilian);
 }
 
-void Map::CreateObstacleAt(uint32_t w, uint32_t h)
+void Map::CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h,
+                           Direction dir)
 {
-  // TODO:
+  Obstacle* obstacle{nullptr};
+  switch (type)
+  {
+  case ObstacleType_Stool:
+    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleStoolModelHandle);
+    break;
+  case ObstacleType_Box01:
+    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleBox01ModelHandle);
+    break;
+  case ObstacleType_Box02:
+    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleBox02ModelHandle);
+    break;
+  case ObstacleType_Drum:
+    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleDrumModelHandle);
+    break;
+  case ObstacleType_DrumOld:
+    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleDrumOldModelHandle);
+    break;
+  case ObstacleType_VBox:
+    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleVBoxModelHandle);
+    break;
+  case ObstacleType_Lion:
+    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleLionModelHandle);
+    break;
+  case ObstacleType_Sofa:
+    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleSofaModelHandle);
+    break;
+  }
+
+  obstacle->SetObstacleType(type);
+  obstacle->SetGridLocation(w, h);
+  obstacle->SetDirection(dir);
 }
 
 void Map::DeleteCharacterFromMap(Character* character)
@@ -767,8 +799,14 @@ void Map::Update(float dt)
     placeholder->ShowOutline();
 
     // Cancel placement mode.
-    if (INPUT.IsKeyDown(Key::Escape))
+    if (INPUT.IsKeyDown(Key::Escape) || INPUT.IsKeyDown(MouseState::RB))
     {
+      if (tmp)
+      {
+        CreateAllyAt(tmp->type, tmp->w, tmp->h, tmp->dir);
+        tmp.reset();
+      }
+
       TurnOffPlacementMode();
     }
     // Change the direction of the placeholder.
@@ -862,6 +900,13 @@ void Map::Update(float dt)
 
             // Check the direction of the character.
             Direction dir = hoveredCharacter->dir;
+
+            // Generate temp info
+            tmp = CharacterInfo{.faction = kAlly,
+                                .type = type,
+                                .dir = dir,
+                                .w = hoveredCharacter->grid_w,
+                                .h = hoveredCharacter->grid_h};
 
             // Remove the selected character from the grid.
             DeleteCharacterFromMap(hoveredCharacter);

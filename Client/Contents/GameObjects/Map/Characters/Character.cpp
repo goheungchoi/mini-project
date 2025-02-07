@@ -77,6 +77,10 @@ Character::~Character() {
 void Character::TriggerAction()
 {
   isActionTriggered = true;
+
+  HideOutline();
+  HideDeathIndicator();
+
   if (isTargetInRange)
 		animator->SetVariable<bool>("triggered", true, true);
 }
@@ -355,7 +359,6 @@ void Character::PostUpdate(float dt) {
 }
 
 void Character::ApplyChangedGridLocation() {
-  count;
 	// Place the game object on the grid.
   grid->MoveGameObjectTo(this, grid_w, grid_h);
 	// Translate the game object.
@@ -421,8 +424,13 @@ void Character::FindTargetInRange() {
         continue;
 
 			// Don't attack civilians.
-			if (searchTarget->GetGameObjectTag() == kFactionTags[kNeutral])
-        continue;
+      if (searchTarget->GetGameObjectTag() == kFactionTags[kNeutral])
+      {
+        // Don't attack.
+        distanceToTarget = -1;
+        isTargetInRange = false;
+        return;
+      }
 
 			// Skip the target that will be assassinated at the start of the game.
 			if (searchTarget == map->assassinationTarget)

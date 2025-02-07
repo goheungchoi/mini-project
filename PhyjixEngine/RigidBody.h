@@ -92,5 +92,8 @@ private:
   std::unordered_map<IRigidBody*, std::function<void(void)>> OverlapEndEventMap;
 
   physx::PxRigidDynamic* GetDynamicActor();
+
+  // Inherited via IRigidBody
+  void RemoveCollisionEvent(IRigidBody* other) override;
 };
 
