@@ -91,3 +91,26 @@ void Sprite::Render(Vector4 rect)
       PassType2D::SPRITE_BATCH // SpriteBatch 전용 패스 사용
   );
 }
+
+void Sprite::RenderCursor()
+{
+  _pD2DRenderer->_d2dRenderQueue.SetCursorRenderCmd(
+      [=]() {
+        auto textureSRV = _pTexture->GetResource().Get();
+
+        _pD2DRenderer->_pSpriteBatch->Draw(
+            textureSRV, _pos, nullptr, DirectX::Colors::White * _opacity, 0.0f,
+            DirectX::SimpleMath::Vector2::Zero, _scale);
+      });
+}
+
+void Sprite::RenderTransition()
+{
+  _pD2DRenderer->_d2dRenderQueue.SetTransitionRenderCmd([=]() {
+    auto textureSRV = _pTexture->GetResource().Get();
+
+    _pD2DRenderer->_pSpriteBatch->Draw(
+        textureSRV, _pos, nullptr, DirectX::Colors::White * _opacity, 0.0f,
+        DirectX::SimpleMath::Vector2::Zero, _scale);
+  });
+}

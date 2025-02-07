@@ -20,6 +20,11 @@ void UIImage::Render()
   }
 }
 
+void UIImage::RenderTransition()
+{
+  _sprite->RenderTransition();
+}
+
 void UIImage::SetOpacity(float opacity)
 {
     _opacity = opacity;

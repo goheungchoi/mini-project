@@ -55,9 +55,28 @@ public:
     _SpriteRenderCmds.clear();
   }
 
+  void SetCursorRenderCmd(std::function<void()> event)
+  {
+    _cursorRenderCmd = event;
+  }
+  void SetTransitionRenderCmd(std::function<void()> event)
+  {
+    _transitionRenderCmd = event;
+  }
+  void ExcuteCursorRenderCmd() { _cursorRenderCmd(); }
+  void ExcuteTransitionRenderCmd()
+  {
+    _transitionRenderCmd();
+  }
+
+
+
 private:
   std::vector<std::function<void()>> _2DRenderCmds;
   std::vector<std::function<void()>> _SpriteRenderCmds;
+  std::function<void()> _transitionRenderCmd = [] () {}; 
+  std::function<void()> _cursorRenderCmd = []() {}; 
+
 };
 
 class D2DRenderer // D2D.ver

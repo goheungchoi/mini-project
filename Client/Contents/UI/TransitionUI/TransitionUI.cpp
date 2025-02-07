@@ -74,5 +74,7 @@ void TransitionUI::Update(float dt)
 void TransitionUI::Render()
 {
   _blackImage->SetOpacity(_transitionOpacity);
-  UIPanel::Render();
+  //UIPanel::Render();
+
+  _blackImage->RenderTransition();
 }

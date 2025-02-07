@@ -19,8 +19,8 @@ void GameLevel::PrepareLevel()
   mapWarehouseMeshHandle =
       LoadModel("Models\\Maps\\Map_003_Warehouse\\Map_003.glb");
 
-  OBsStoolHandle = LoadModel("Models\\Obstacles\\OBs_Stool.glb");
-  OBsBox02Handle = LoadModel("Models\\Obstacles\\OBs_Box02.glb");
+  //OBsStoolHandle = LoadModel("Models\\Obstacles\\OBs_Stool.glb");
+  //OBsBox02Handle = LoadModel("Models\\Obstacles\\OBs_Box02.glb");
 
   // UI Resource Load
 #ifdef USED2D

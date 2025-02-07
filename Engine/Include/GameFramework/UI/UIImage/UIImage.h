@@ -10,6 +10,7 @@ public:
 public:
   void Update(float dt) override;
   void Render() override;
+  void RenderTransition();
 
   void SetSprite(LPCSTR path, Vector2 pos = {0.0f, 0.0f});
   void SetSprite(class Sprite* sprite) { _sprite = sprite; }

@@ -14,6 +14,7 @@ public:
   class UIImage* _dialogTextBox{nullptr};
   class UIImage* _dialogBtnImage{nullptr};
   class UIButton* _dialogButton{nullptr};
+  class UIText* _dialogText { nullptr};
 
   bool bInGame = false;
 
@@ -23,6 +24,11 @@ public:
   void PrevStep();
 
 private:
+  std::vector<std::wstring> _dialogList;
+
+
+
+
   bool isCurrentActionFinished = true;
   std::vector<Action> _actionList;
   UINT _currentActionIndex = 0;

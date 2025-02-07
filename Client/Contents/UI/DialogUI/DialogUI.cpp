@@ -54,6 +54,11 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _dialogTextBox->SetSprite("2D\\UI\\UI_Textbox_01.png");
     _dialogTextBox->SetCenterPos({960, 900});
     _dialogTextBox->SetOpacity(0.f);
+
+  }
+
+  {
+      
     _actionList.push_back([=]() { _dialogTextBox->FadeIn(1.0f); });
     _actionList.push_back([=]() { _dialogTextBox->FadeOut(1.0f); });
     _actionList.push_back([=]() { _dialogTextBox->FadeIn(1.0f); });
