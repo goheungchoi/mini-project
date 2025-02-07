@@ -14,6 +14,11 @@ void UIImage::Render()
   }
 }
 
+void UIImage::SetScale(::DirectX::SimpleMath::Vector2 scale)
+{
+  _sprite->SetScale(scale);
+}
+
 void UIImage::SetSprite(LPCSTR path, Vector2 pos)
 {
   _sprite = Resource2DManager::GetInstance()->GetSprite(path).get();

@@ -16,6 +16,8 @@ public:
   void SetOpacity(float opacity) { opacity = _opacity; }
   virtual void SetCenterPos(Vector2 pos) override;
 
+  void SetScale(Vector2 scale);
+
 private:
   class Sprite* _sprite{};
 };

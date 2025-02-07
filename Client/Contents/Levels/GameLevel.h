@@ -20,6 +20,8 @@ protected:
   ModelHandle animTestHandle;
   ModelHandle handGunHandle;
 
+  
+
   CameraObject* testCamera;
 
   GameObject* pivot{nullptr};
