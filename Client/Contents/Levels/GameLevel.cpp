@@ -92,7 +92,7 @@ void GameLevel::CreateMap()
   map->CreateEnemyAt(kGunman, 3, 2, kEast);
   map->CreateEnemyAt(kGunman, 2, 4, kEast);
 
-  map->CreateCivillianAt(1, 1);
+  map->CreateCivillianAt(4, 1);
 
   map->CreateAllyAt(kGunman, 2, 5, kWest);
 }

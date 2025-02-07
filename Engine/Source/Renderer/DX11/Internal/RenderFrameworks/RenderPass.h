@@ -285,6 +285,7 @@ public:
 
     // max값 초기화
     max = std::numeric_limits<int>::max();
+    //dc->Draw()
   }
 
   void AddBillBoard(BillboardQuad* quad)

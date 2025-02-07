@@ -17,9 +17,9 @@ public:
   void Init()
   {
     UINT deviceFlags = 0;
+    deviceFlags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #ifdef _DEBUG
     deviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-    deviceFlags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #endif // _DEBUG
     const D3D_FEATURE_LEVEL featurelevel[] = {
         D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
