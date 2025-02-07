@@ -17,9 +17,7 @@ void Level1::BeginLevel()
 {
   __super::BeginLevel();
 
-#ifdef USED2D
-  world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
-#endif // USED2D
+  inGameUI->HideUI(L"GunfireBtn");
 }
 
 

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "GameFramework/Common.h"
 #include "Core/Math/MathUtils.h"
-#include  "GameFramework/World/World.h"
+#include "GameFramework/World/World.h"
 
 class UIElement
 {
@@ -22,7 +22,7 @@ public:
   virtual void Render();
 
   void SetownerPanel(class UIPanel* ownerPanel) { _ownerPanel = ownerPanel; }
-  
+
   virtual void SetDefaultPos(Vector2 pos);
   virtual void SetCenterPos(Vector2 pos);
   Vector2 GetPosition() { return _position; }
@@ -37,16 +37,30 @@ public:
   void Activate()
   {
     if (_status == EStatus_Active)
+    {
       return;
+    }
+    else
+    {
+      _status = EStatus_Active;
+    }
 
     bShouldActivate = true;
+    bShouldDeactivate = false;
   }
   void Deactivate()
   {
     if (_status == EStatus_Inactive)
+    {
       return;
+    }
+    else
+    {
+      _status = EStatus_Inactive;
+    }
 
     bShouldDeactivate = true;
+    bShouldActivate = false;
   }
   void Destroy()
   {
@@ -71,7 +85,7 @@ public:
 protected:
   class World* _world = nullptr;
   Vector2 _position{};
-  Vector2 _size{100, 100};  // width, height
+  Vector2 _size{100, 100}; // width, height
   float _opacity = 1.0f;
 
   bool bShouldActivate;

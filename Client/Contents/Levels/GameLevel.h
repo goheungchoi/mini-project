@@ -32,6 +32,8 @@ protected:
   class Map* map{nullptr};
   class GameManager* gameManager{nullptr};
 
+  class InGameUI* inGameUI;
+
 public:
   GameLevel(const std::string& name) : Level(name) {}
 

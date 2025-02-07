@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GameFramework/GameObject/GameObject.h"
-
 class Bullet : public GameObject
 {
   float lifetime{5.f};
@@ -10,6 +9,7 @@ class Bullet : public GameObject
 
 	XMVECTOR direction{};
 
+public:
 public:
 
 	Bullet(World* world);

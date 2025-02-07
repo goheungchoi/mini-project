@@ -12,8 +12,11 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
 {
   _mainMission = CreateUI<MainMission>(L"MainMission");
   _subMission = CreateUI<SubMission>(L"SubMission");
+  
   _playBtn = CreateUI<PlayButton>(L"PlayBtn");
+
   _gunfireBtn = CreateUI<GunfireButton>(L"GunfireBtn");
+
   _agentStorage = CreateUI<AgentStorage>(L"AgentStorage");
   
   _cursor = _world->_canvas->GetPanel<UICursor>(L"Cursor");
