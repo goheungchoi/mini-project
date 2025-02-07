@@ -241,46 +241,23 @@ void Map::ShowHoveredCharacterRange()
     if (hoveredCharacter->isTargetInRange)
     {
       // Show the damage zone.
-      w += w_offset;
-      h += h_offset;
-      CellObject* cell = grid->GetCellObjectAt(w, h);
-
-      while (cell)
+      for (int i = 0; i < hoveredCharacter->distanceToTarget; ++i)
       {
-        // Mark the damage zone.
-        cell->SetCellType(CellType_DamageZone);
-
-        // Mark the death indicator if any.
-        if (GameObject* gameObject = grid->GetGameObjectAt(w, h); gameObject)
-        {
-          // TODO: Mark the death indicator.
-          if (gameObject->GetGameObjectTag() == kFactionTags[kAlly] ||
-              gameObject->GetGameObjectTag() == kFactionTags[kEnemy] ||
-              gameObject->GetGameObjectTag() == kFactionTags[kNeutral])
-          {
-            Character* character = (Character*)gameObject;
-            character->ShowDeathIndicator();
-          }
-        }
-
-        // Progress
         w += w_offset;
         h += h_offset;
-        cell = grid->GetCellObjectAt(w, h);
+        CellObject* cell = grid->GetCellObjectAt(w, h);
+        cell->SetCellType(CellType_DashZone);
+        cell->SetCellDirection(hoveredCharacter->dir);
       }
     }
     else
     {
-      w += w_offset;
-      h += h_offset;
-      CellObject* cell = grid->GetCellObjectAt(w, h);
-      while (cell)
+      for (int i = 0; i < hoveredCharacter->range; ++i)
       {
-        cell->SetCellType(CellType_RangeZone);
-
         w += w_offset;
         h += h_offset;
-        cell = grid->GetCellObjectAt(w, h);
+        CellObject* cell = grid->GetCellObjectAt(w, h);
+        cell->SetCellType(CellType_RangeZone);
       }
     }
 

@@ -37,7 +37,7 @@ Slasher::Slasher(World* world) : Character(world) {
   actionState = new SlashActionState(action2);
 
   currActionAnimation = action2;
-  interval = std::make_pair<float, float>(0.4375f, 0.5f);
+  interval = std::make_pair<float, float>(0.3125f, 0.375f);
 
   animator->DeclareVariable<bool>("arm", false);
 	animator->DeclareVariable<bool>("fire", false);
@@ -76,7 +76,7 @@ void Slasher::TriggerAction() {
     {
       actionState->SetAnimation(action1);
       currActionAnimation = action1;
-      interval = std::make_pair<float, float>(.34375f, .4f);
+      interval = std::make_pair<float, float>(.208f, .271f);
     }
   }
 }
@@ -124,9 +124,7 @@ void Slasher::OnBeginOverlap(GameObject* other) {
       otherSlasher->Die();
       this->Die();
     }
-  
   }
-
 }
 
 void Slasher::OnAwake() {
@@ -175,9 +173,15 @@ void Slasher::Update(float dt) {
       knife->TurnOffCollision();
   }
 
-	if (animator->GetVariable<bool>("done"))
+  if (!isMoved && currActionAnimation->GetCurrentAnimationTime() >= 0.75)
   {
     TurnOnCollision();
+    TakeOverTargetCell();
+    isMoved = true;
+  }
+
+	if (animator->GetVariable<bool>("done"))
+  {
     animator->SetVariable<bool>("done", false);
   }
 }

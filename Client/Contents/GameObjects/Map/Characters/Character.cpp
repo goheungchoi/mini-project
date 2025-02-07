@@ -293,6 +293,18 @@ void Character::Update(float dt)
 	
 	if (bGridLocationChanged)
   {
+    if (isActionTriggered)
+    {
+      GameObject* other = grid->GetGameObjectAt(grid_w, grid_h);
+      if (other && (other->GetGameObjectTag() == kFactionTags[kAlly] ||
+          other->GetGameObjectTag() == kFactionTags[kEnemy] ||
+          other->GetGameObjectTag() == kFactionTags[kNeutral]))
+      {
+        Character* otherCharacter = (Character*)other;
+        this->Die();
+        otherCharacter->Die();
+      }
+    }
     ApplyChangedGridLocation();
 	}
 
