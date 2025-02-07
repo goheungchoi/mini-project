@@ -38,7 +38,7 @@ void UICursor::Update(float dt)
 
 void UICursor::Render()
 {
-  _sprites[_selectedIndex]->Render();
+  _sprites[_selectedIndex]->RenderCursor();
 }
 
 void UICursor::SetCursorType(CursorType cursorType)

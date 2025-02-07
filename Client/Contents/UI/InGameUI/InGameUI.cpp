@@ -18,7 +18,10 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _gunfireBtn = CreateUI<GunfireButton>(L"GunfireBtn");
 
   _agentStorage = CreateUI<AgentStorage>(L"AgentStorage");
-  
+
+
+
+
   _cursor = _world->_canvas->GetPanel<UICursor>(L"Cursor");
   _cursor->SetCursorType(CursorType::DEFAULT);
 

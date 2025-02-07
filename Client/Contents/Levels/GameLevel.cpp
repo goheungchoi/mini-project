@@ -1,10 +1,12 @@
 #include "GameLevel.h"
+
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "Resource2DManager/Resource2DManager.h"
 #include "Contents/UI/InGameUI/InGameUI.h"
+#include "Contents/UI/TransitionUI/TransitionUI.h"
 
 void GameLevel::PrepareLevel()
 {
@@ -19,8 +21,8 @@ void GameLevel::PrepareLevel()
   mapWarehouseMeshHandle =
       LoadModel("Models\\Maps\\Map_003_Warehouse\\Map_003.glb");
 
-  OBsStoolHandle = LoadModel("Models\\Obstacles\\OBs_Stool.glb");
-  OBsBox02Handle = LoadModel("Models\\Obstacles\\OBs_Box02.glb");
+  //OBsStoolHandle = LoadModel("Models\\Obstacles\\OBs_Stool.glb");
+  //OBsBox02Handle = LoadModel("Models\\Obstacles\\OBs_Box02.glb");
 
   // UI Resource Load
 #ifdef USED2D
@@ -47,6 +49,8 @@ void GameLevel::PrepareLevel()
       "2D\\UI\\UI_Storage_Act_Gun.png");
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Deact_Gun.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\FadeBlack.png");
+
 #endif // USED2D
 }
 
@@ -65,6 +69,8 @@ void GameLevel::BeginLevel()
 #ifdef USED2D
   world->_canvas->CreatePanel<UICursor>(L"Cursor");
   inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+  transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
+
 #endif // USED2D
 }
 

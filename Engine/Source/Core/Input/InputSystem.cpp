@@ -86,13 +86,14 @@ bool InputSystem::IsKeyPress(MouseState mouseState) const
   switch (mouseState)
   {
   case LB:
-    return _mouseTracker.leftButton == DirectX::Mouse::ButtonStateTracker::HELD;
+    return _mouseTracker.leftButton ==
+           DirectX::Mouse::ButtonStateTracker::PRESSED;
   case RB:
     return _mouseTracker.rightButton ==
-           DirectX::Mouse::ButtonStateTracker::HELD;
+           DirectX::Mouse::ButtonStateTracker::PRESSED;
   case WM:
     return _mouseTracker.middleButton ==
-           DirectX::Mouse::ButtonStateTracker::HELD;
+           DirectX::Mouse::ButtonStateTracker::PRESSED;
   default:
     return false;
   }
@@ -111,13 +112,13 @@ bool InputSystem::IsKeyDown(MouseState mouseState) const
   {
   case LB:
     return _mouseTracker.leftButton ==
-           DirectX::Mouse::ButtonStateTracker::PRESSED;
+           DirectX::Mouse::ButtonStateTracker::HELD;
   case RB:
     return _mouseTracker.rightButton ==
-           DirectX::Mouse::ButtonStateTracker::PRESSED;
+           DirectX::Mouse::ButtonStateTracker::HELD;
   case WM:
     return _mouseTracker.middleButton ==
-           DirectX::Mouse::ButtonStateTracker::PRESSED;
+           DirectX::Mouse::ButtonStateTracker::HELD;
   default:
     return false;
   }

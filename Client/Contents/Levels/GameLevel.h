@@ -25,6 +25,8 @@ protected:
   ModelHandle OBsStoolHandle;
   ModelHandle OBsBox02Handle;
 
+  
+
   CameraObject* testCamera;
 
   GameObject* pivot{nullptr};
@@ -33,6 +35,7 @@ protected:
   class GameManager* gameManager{nullptr};
 
   class InGameUI* inGameUI;
+  class TransitionUI* transitionUI;
 
 public:
   GameLevel(const std::string& name) : Level(name) {}
