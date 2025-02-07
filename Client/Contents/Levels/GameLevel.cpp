@@ -24,6 +24,16 @@ void GameLevel::PrepareLevel()
   //OBsStoolHandle = LoadModel("Models\\Obstacles\\OBs_Stool.glb");
   //OBsBox02Handle = LoadModel("Models\\Obstacles\\OBs_Box02.glb");
 
+  // Obstacle model load.
+  LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
+  LoadModel("Models\\Obstacles\\Box02\\OBs_Box02.glb");
+  LoadModel("Models\\Obstacles\\Drum\\OBs_Drum.glb");
+  LoadModel("Models\\Obstacles\\DrumOld\\OBs_DrumOld.glb");
+  LoadModel("Models\\Obstacles\\Lion\\OBs_Lion.glb");
+  LoadModel("Models\\Obstacles\\Sofa\\OBs_Sofa.glb");
+  LoadModel("Models\\Obstacles\\Stool\\OBs_Stool.glb");
+  LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
+
   // UI Resource Load
 #ifdef USED2D
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Stage_L.png");

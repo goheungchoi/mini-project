@@ -8,6 +8,7 @@ CellObject::CellObject(World* world) : GameObject(world)
   placementCellModelHandle =
       LoadModel("Models\\Grid\\CharOver\\Grid_CharOver.glb");
   rangeCellModelHandle = LoadModel("Models\\Grid\\Empty\\Grid_Empty.glb");
+  dashCellModelHandle = LoadModel("Models\\Grid\\Dash\\Grid_Dir.glb");
   damageCellModelHandle = LoadModel("Models\\Grid\\Active\\Grid_Active.glb");
 
   // Create cell models.
@@ -16,11 +17,13 @@ CellObject::CellObject(World* world) : GameObject(world)
   placementCell = world->CreateGameObjectFromModel(placementCellModelHandle);
 
   rangeCell = world->CreateGameObjectFromModel(rangeCellModelHandle);
+  dashCell = world->CreateGameObjectFromModel(dashCellModelHandle);
   damageCell = world->CreateGameObjectFromModel(damageCellModelHandle);
 
   AddChildGameObject(defaultCell);
   AddChildGameObject(placementCell);
   AddChildGameObject(rangeCell);
+  AddChildGameObject(dashCell);
   AddChildGameObject(damageCell);
 }
 
@@ -29,6 +32,7 @@ CellObject::~CellObject()
   UnloadModel(defaultCellModelHandle);
   UnloadModel(placementCellModelHandle);
   UnloadModel(rangeCellModelHandle);
+  UnloadModel(dashCellModelHandle);
   UnloadModel(damageCellModelHandle);
 }
 
@@ -48,6 +52,7 @@ void CellObject::ClearCell()
   defaultCell->SetInvisible();
   placementCell->SetInvisible();
   rangeCell->SetInvisible();
+  dashCell->SetInvisible();
   damageCell->SetInvisible();
 }
 
@@ -72,10 +77,30 @@ std::pair<int, int> CellObject::GetCellPosition()
   return {w, h};
 }
 
-void CellObject::OnAwake() {}
+void CellObject::SetCellDirection(Direction dir) {
+  this->dir = dir;
+  bDirectionChanged = true;
+}
+
+Direction CellObject::GetCellDirection()
+{
+  return dir;
+}
+
+void CellObject::OnAwake() {
+  if (bDirectionChanged)
+  {
+    ApplyChangedDirection();
+  }
+}
 
 void CellObject::Update(float dt)
 {
+  if (bDirectionChanged)
+  {
+    ApplyChangedDirection();
+  }
+
   if (isVisible)
   {
     ClearCell();
@@ -96,9 +121,32 @@ void CellObject::Update(float dt)
     case CellType_RangeZone:
       rangeCell->SetVisible();
       break;
+    case CellType_DashZone:
+      dashCell->SetVisible();
+      break;
     case CellType_DamageZone:
       damageCell->SetVisible();
       break;
     }
   }
+}
+
+void CellObject::ApplyChangedDirection() {
+  switch (dir)
+  {
+  case kNorth:
+    SetRotationAroundYAxis(XM_PI + XM_PI);
+    break;
+  case kEast:
+    SetRotationAroundYAxis(XM_PI + XM_PIDIV2 + XM_PI);
+    break;
+  case kSouth:
+    SetRotationAroundYAxis(XM_PI);
+    break;
+  case kWest:
+    SetRotationAroundYAxis(XM_PIDIV2 + XM_PI);
+    break;
+  }
+
+  bDirectionChanged = false;
 }
