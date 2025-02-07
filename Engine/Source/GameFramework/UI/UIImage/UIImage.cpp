@@ -23,5 +23,7 @@ void UIImage::SetSprite(LPCSTR path, Vector2 pos)
 
 void UIImage::SetCenterPos(Vector2 pos)
 {
-  _sprite->SetPos({pos.x - (_size.x / 2), pos.y - (_size.y / 2)});
+  UIElement::SetCenterPos(pos);
+  _position = {pos.x - (_size.x / 2), pos.y - (_size.y / 2)};
+  _sprite->SetPos(_position);
 }

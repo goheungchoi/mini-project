@@ -16,6 +16,7 @@ private:
 
 public:
   void Render();
+  void Render(Vector4 rect);
   void SetPos(Vector2 pos) { _pos = pos; }
   void SetScale(Vector2 scale) { _scale = scale; }
   Vector2 GetTextureSize() { return _textureSize; }
