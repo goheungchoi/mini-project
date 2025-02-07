@@ -78,12 +78,20 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
         //look up table pbrÀºÁ¤ÀûÀÌ¹Ç·Î ¹Ì¸® °è»êµÈ ÅØ½ºÃÄ·Î uvÁÂÇ¥ÀÇ ±Ù»ç°ªÀ» »ç¿ë
     float2 IBLSpecularBRDF = evnSpecularBRDF.Sample(samClamp, float2(NdotV, roughness)).rg;
     float3 specularIBL = (F0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
-
+        //´õÇÏ±â
+    
+    float4 ambientFactor = texOcclusion.Sample(samLinear, input.uv);
+    
+    if (length(ambientFactor) == 0.f)
+    {
+        ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
+    }
+    
     float ssaoFactor = ssaoMap.Sample(samLinear, input.uv).r;
     if(isSSAO)
-        ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ssaoFactor;
+        ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor.xyz*ssaoFactor;
     else
-        ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity;
+        ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor.xyz;
     //ambientLighting += 0;
     float4 positionShadow = deferredShadowPosition.Sample(samLinear, input.uv);
     float currShadowDepth = positionShadow.z; // / positionShadow.w;
@@ -164,7 +172,7 @@ DEFFERED_PS_OUT ps_main(PS_INPUT input)
         float3 T = normalize(input.worldTangent);
         float3 B = normalize(input.worldBitangent);
         float3 normalTexColor;
-        normalTexColor = (normalize(normalTexture.rgb)* 2.0) - 1.0;
+        normalTexColor = (normalTexture.rgb * 2.0) - 1.0;
         normalTexColor = normalize(normalTexColor);
         float3x3 TBN = float3x3(T, B, N);
         N = normalize(mul(normalTexColor, TBN));
@@ -268,7 +276,7 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     if (length(normalTexture) > 0.f)
     {
         float3 normalTexColor;
-        normalTexColor.xyz = normalize(normalTexture.rgb) * 2.0 - 1.0;
+        normalTexColor.xyz = normalTexture.rgb * 2.0 - 1.0;
         normalTexColor = normalize(normalTexColor);
         float3 tangent = normalize(input.worldTangent);
         float3 bitangent = normalize(input.worldBitangent);
@@ -310,8 +318,15 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
         //look up table pbrÀºÁ¤ÀûÀÌ¹Ç·Î ¹Ì¸® °è»êµÈ ÅØ½ºÃÄ·Î uvÁÂÇ¥ÀÇ ±Ù»ç°ªÀ» »ç¿ë
     float2 IBLSpecularBRDF = evnSpecularBRDF.Sample(samClamp, float2(NdotV, roughness)).rg;
     float3 specularIBL = (f0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
-
-    ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity;
+        //´õÇÏ±â
+    float4 ambientFactor = texOcclusion.Sample(samLinear, input.uv);
+    
+    if (length(ambientFactor) == 0.f)
+    {
+        ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
+    }
+    
+    ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor;
 
     float currShadowDepth = input.positionShadow.z / input.positionShadow.w;
     float2 uv = input.positionShadow.xy / input.positionShadow.w;
@@ -573,7 +588,45 @@ float4 ssao_normal_depth_write_ps_main(PS_INPUT input) : SV_Target0
     float depth = input.position.z;
     return float4(N, depth);
 }
+//float4 ssao_ao_write_ps_main(QUAD_PS_INPUT input) : SV_TARGET
+//{
+//     // Fetch Normal and Depth from GBuffer
+//    float4 normalData = ssaoNormalDepth.Sample(samLinear, input.uv);
+//    float3 normal = normalize(normalData.xyz); // Already in correct range
+//    float depth = normalData.w; // Depth stored in W component
+//    depth = (nearPlane * farPlane)  /(farPlane - depth * (farPlane - nearPlane));
+//    float occlusion = 0.0f;
+//    int sampleCount = 16; // Number of SSAO samples
 
+//    // SSAO Sampling Loop
+//    [unroll]
+//    for (int i = 0; i < sampleCount; i++)
+//    {
+//        // Create random sampling offset
+//        float3 sampleDir = normalize(SSAOKernel[i]);
+//        float3 samplePos = float3(input.uv, depth) + sampleDir * radius;
+
+//        // Sample nearby depth values
+//        float4 sampleNormalData = ssaoNormalDepth.Sample(samLinear, samplePos.xy);
+//        float sampleDepth = sampleNormalData.w;
+
+//        //// Compare depth values (occlusion test)
+//        //if (sampleDepth < samplePos.z)
+//        //    occlusion += 1.0f;
+//        float depthDifference = samplePos.z - sampleDepth;
+//        if (depthDifference > 0.0f && depthDifference < radius) // Within sampling range
+//        {
+//        // Add weighted occlusion based on depth difference
+//            occlusion += saturate(1.0f - depthDifference / radius);
+//        }
+
+//    }
+
+//    // Normalize Occlusion Value
+//    occlusion = 1.0f - (occlusion / sampleCount);
+
+//    return float4(occlusion, occlusion, occlusion, 1.0f); // Grayscale SSAO
+//}
 float4 ssao_ao_write_ps_main(QUAD_PS_INPUT input) : SV_TARGET
 {
     // Fetch Normal and Depth from GBuffer
