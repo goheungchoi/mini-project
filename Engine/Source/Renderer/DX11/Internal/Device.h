@@ -86,7 +86,7 @@ public:
   {
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
     srvDesc.Format =
-        DXGI_FORMAT_UNKNOWN; // Structured Buffer¿« ∞ÊøÏ UNKNOWN¿∏∑Œ º≥¡§
+        DXGI_FORMAT_UNKNOWN; // Structured BufferÏùò Í≤ΩÏö∞ UNKNOWNÏúºÎ°ú ÏÑ§Ï†ï
     srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
     srvDesc.Buffer.FirstElement = 0;
     srvDesc.Buffer.NumElements = elementCount;

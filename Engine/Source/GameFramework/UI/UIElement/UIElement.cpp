@@ -1,4 +1,4 @@
-﻿#include "GameFramework/UI/UIElement/UIElement.h"
+#include "GameFramework/UI/UIElement/UIElement.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 
 void UIElement::BeginLevel()

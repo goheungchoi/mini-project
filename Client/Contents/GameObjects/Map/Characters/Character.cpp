@@ -296,16 +296,38 @@ void Character::Update(float dt)
     if (isActionTriggered)
     {
       GameObject* other = grid->GetGameObjectAt(grid_w, grid_h);
-      if (other && (other->GetGameObjectTag() == kFactionTags[kAlly] ||
-          other->GetGameObjectTag() == kFactionTags[kEnemy] ||
-          other->GetGameObjectTag() == kFactionTags[kNeutral]))
+      if (other)
       {
-        Character* otherCharacter = (Character*)other;
-        this->Die();
-        otherCharacter->Die();
+        if ((other->GetGameObjectTag() == kFactionTags[kAlly] ||
+             other->GetGameObjectTag() == kFactionTags[kEnemy] ||
+             other->GetGameObjectTag() == kFactionTags[kNeutral]))
+        {
+          Character* otherCharacter = (Character*)other;
+          this->Die();
+          otherCharacter->Die();
+
+          this->animator;
+        }
+        else
+        {
+          this->Die();
+        }
+        
+        // Translate the game object.
+        auto [x, z] = grid->GetActualPositionAt(grid_w, grid_h);
+        SetTranslation(x, 0, z);
+        // Turn off the flag.
+        bGridLocationChanged = false;
+      }
+      else
+      {
+        ApplyChangedGridLocation();
       }
     }
-    ApplyChangedGridLocation();
+    else
+    {
+      ApplyChangedGridLocation();
+    }
 	}
 
 	if (bDirectionChanged)

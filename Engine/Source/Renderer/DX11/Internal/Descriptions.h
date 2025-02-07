@@ -55,7 +55,7 @@ inline void CreateInputLayoutDesc(
     D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
     pReflector->GetInputParameterDesc(static_cast<UINT>(i), &paramDesc);
 
-    // ¿ì¸®°¡ inputlayout ¸¸µé¶§ ÇØÁØ semanticÀÌ¶û Á¤ÇØÁÖ´ø°Å
+    // ìš°ë¦¬ê°€ inputlayout ë§Œë“¤ë•Œ í•´ì¤€ semanticì´ë‘ ì •í•´ì£¼ë˜ê±°
     D3D11_INPUT_ELEMENT_DESC elemDesc{
         .SemanticName =
             paramDesc.SemanticName ? _strdup(paramDesc.SemanticName) : nullptr,
@@ -118,7 +118,7 @@ inline void CreateInputLayoutDesc(
 //     D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
 //     pReflector->GetInputParameterDesc(static_cast<UINT>(i), &paramDesc);
 //
-//     // ¿ì¸®°¡ inputlayout ¸¸µé¶§ ÇØÁØ semanticÀÌ¶û Á¤ÇØÁÖ´ø°Å
+//     // ìš°ë¦¬ê°€ inputlayout ë§Œë“¤ë•Œ í•´ì¤€ semanticì´ë‘ ì •í•´ì£¼ë˜ê±°
 //     D3D11_INPUT_ELEMENT_DESC elemDesc{
 //         .SemanticName = paramDesc.SemanticName,
 //         .SemanticIndex = paramDesc.SemanticIndex,
@@ -188,8 +188,8 @@ inline D3D11_TEXTURE2D_DESC CreateTexture2DDesc(UINT width, UINT height,
   return desc;
 }
 inline D3D11_RASTERIZER_DESC CreateRaterizerDesc(
-    D3D11_FILL_MODE fillMode, // Ã¤¿ì±â ¸ğµå
-    D3D11_CULL_MODE cullMode, // ÄÃ¸µ ¸ğµå
+    D3D11_FILL_MODE fillMode, // ì±„ìš°ê¸° ëª¨ë“œ
+    D3D11_CULL_MODE cullMode, // ì»¬ë§ ëª¨ë“œ
     BOOL isCounterclockwise, INT DepthBias, FLOAT DepthBiasClamp,
     FLOAT SlopeScaledDepthBias, BOOL depthClipEnable, BOOL scissorEnable,
     BOOL multisampleEnable, BOOL antialiasedLineEnable)
@@ -220,7 +220,7 @@ inline D3D11_DEPTH_STENCIL_DESC CreateDepthStencilDesc(
   ZeroMemory(&desc, sizeof(D3D11_DEPTH_STENCIL_DESC));
   desc.DepthEnable = depthEnable;
   desc.DepthWriteMask = mask;
-  desc.DepthFunc = func; // °¡±î¿î¹°Ã¼¸¸ ·»´õ
+  desc.DepthFunc = func; // ê°€ê¹Œìš´ë¬¼ì²´ë§Œ ë Œë”
   desc.StencilEnable = stencilEnable;
   return desc;
 }
@@ -228,16 +228,16 @@ inline D3D11_DEPTH_STENCIL_DESC CreateDepthStencilDesc(
 inline D3D11_RENDER_TARGET_BLEND_DESC CreateRTBlendDesc(BOOL blendEnable)
 {
   D3D11_RENDER_TARGET_BLEND_DESC rtBlendDesc = {};
-  rtBlendDesc.BlendEnable = blendEnable;    // ºí·»µù È°¼ºÈ­
-  rtBlendDesc.BlendOp = D3D11_BLEND_OP_ADD; // ºí·»µå ¿¬»ê: ´õÇÏ±â
-  rtBlendDesc.SrcBlend = D3D11_BLEND_SRC_ALPHA; // ¼Ò½º ºí·»µå: ¼Ò½ºÀÇ ¾ËÆÄ
+  rtBlendDesc.BlendEnable = blendEnable;    // ë¸”ë Œë”© í™œì„±í™”
+  rtBlendDesc.BlendOp = D3D11_BLEND_OP_ADD; // ë¸”ë Œë“œ ì—°ì‚°: ë”í•˜ê¸°
+  rtBlendDesc.SrcBlend = D3D11_BLEND_SRC_ALPHA; // ì†ŒìŠ¤ ë¸”ë Œë“œ: ì†ŒìŠ¤ì˜ ì•ŒíŒŒ
   rtBlendDesc.DestBlend =
-      D3D11_BLEND_INV_SRC_ALPHA; // ´ë»ó ºí·»µå: ¼Ò½º ¾ËÆÄÀÇ ¹İÀü
-  rtBlendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD; // ¾ËÆÄ ºí·»µå ¿¬»ê: ´õÇÏ±â
-  rtBlendDesc.SrcBlendAlpha = D3D11_BLEND_ONE;   // ¼Ò½º ¾ËÆÄ ºí·»µå: 1
-  rtBlendDesc.DestBlendAlpha = D3D11_BLEND_ZERO; // ´ë»ó ¾ËÆÄ ºí·»µå: 0
+      D3D11_BLEND_INV_SRC_ALPHA; // ëŒ€ìƒ ë¸”ë Œë“œ: ì†ŒìŠ¤ ì•ŒíŒŒì˜ ë°˜ì „
+  rtBlendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD; // ì•ŒíŒŒ ë¸”ë Œë“œ ì—°ì‚°: ë”í•˜ê¸°
+  rtBlendDesc.SrcBlendAlpha = D3D11_BLEND_ONE;   // ì†ŒìŠ¤ ì•ŒíŒŒ ë¸”ë Œë“œ: 1
+  rtBlendDesc.DestBlendAlpha = D3D11_BLEND_ZERO; // ëŒ€ìƒ ì•ŒíŒŒ ë¸”ë Œë“œ: 0
   rtBlendDesc.RenderTargetWriteMask =
-      D3D11_COLOR_WRITE_ENABLE_ALL; // ¸ğµç »ö»ó Ã¤³Î¿¡ ¾²±â °¡´É
+      D3D11_COLOR_WRITE_ENABLE_ALL; // ëª¨ë“  ìƒ‰ìƒ ì±„ë„ì— ì“°ê¸° ê°€ëŠ¥
   return rtBlendDesc;
 }
 

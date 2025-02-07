@@ -1,4 +1,4 @@
-﻿#include "Animation2D.h"
+#include "Animation2D.h"
 //
 //Anim2DAsset::~Anim2DAsset()
 //{

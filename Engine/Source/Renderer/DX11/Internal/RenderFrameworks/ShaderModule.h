@@ -3,8 +3,8 @@
 #include "../Descriptions.h"
 using namespace Microsoft::WRL;
 
-// ÇÊ¼ö ·»´õ ÆÄÀÌÇÁ¶óÀÎ¿¡ ÇÊ¿äÇÑ ¼ÎÀÌ´õµéÀ» ¹­Àº ±¸Á¶Ã¼
-// SWTODO : ÇÊ¿äÇÑ°¡?
+// í•„ìˆ˜ ë Œë” íŒŒì´í”„ë¼ì¸ì— í•„ìš”í•œ ì…°ì´ë”ë“¤ì„ ë¬¶ì€ êµ¬ì¡°ì²´
+// SWTODO : í•„ìš”í•œê°€?
 struct ShaderModule
 {
   ComPtr<ID3D11VertexShader> _vertexShader = nullptr;

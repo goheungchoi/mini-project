@@ -1,4 +1,4 @@
-﻿#include "GameApp.h"
+#include "GameApp.h"
 
 #include "Core/Input/InputSystem.h"
 #include "Core/Time/TimeSystem.h"

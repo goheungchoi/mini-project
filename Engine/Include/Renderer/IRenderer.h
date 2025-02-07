@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Core/Common.h"
 #include "Core/Handle/ResourceHandle.h"
 #include "Core/Types/LightTypes.h"

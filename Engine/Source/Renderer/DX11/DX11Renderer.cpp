@@ -1,4 +1,4 @@
-﻿#include "DX11Renderer.h"
+#include "DX11Renderer.h"
 #include "Internal/DebugLayer.h"
 #include "Internal/Device.h"
 #include "Internal/RenderFrameworks/RenderPass.h"

@@ -15,6 +15,9 @@ void SlashActionState::Enter(AnimatorComponent* animator)
 
 void SlashActionState::Toggle(AnimatorComponent* animator)
 {
+  Slasher* slasher = (Slasher*)animator->GetOwner();
+  slasher->TakeOverTargetCell();
+  
   animator->SetVariable<bool>("done", true);
 
   if (animator->GetVariable<bool>("dead"))

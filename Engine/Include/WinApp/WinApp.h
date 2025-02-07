@@ -2,13 +2,13 @@
 #include "Core/Common.h"
 #include "WindowManager/WindowManager.h"
 
-// MyRegisterClass() ¿¡ µé¾î°¨
+// MyRegisterClass() ì— ë“¤ì–´ê°
 class WindowClass
 {
   WNDCLASS _wndClass;
 };
 
-// CreateWindow() ¿¡ µé¾î°¨
+// CreateWindow() ì— ë“¤ì–´ê°
 class WindowStyle
 {
 

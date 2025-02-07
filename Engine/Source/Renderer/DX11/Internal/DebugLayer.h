@@ -29,11 +29,11 @@ public:
   /*
   CHOOSE ONE
   typedef enum D3D11_MESSAGE_SEVERITY {
-  D3D11_MESSAGE_SEVERITY_CORRUPTION = 0,->¹ß»ıÇÑ ÀÏºÎ À¯ÇüÀÇ ¼Õ»óÀ» Á¤ÀÇÇÕ´Ï´Ù.
-  D3D11_MESSAGE_SEVERITY_ERROR,->¿À·ù ¸Ş½ÃÁö¸¦ Á¤ÀÇÇÕ´Ï´Ù.
-  D3D11_MESSAGE_SEVERITY_WARNING,->°æ°í ¸Ş½ÃÁö¸¦ Á¤ÀÇÇÕ´Ï´Ù.
-  D3D11_MESSAGE_SEVERITY_INFO,->Á¤º¸ ¸Ş½ÃÁö¸¦ Á¤ÀÇÇÕ´Ï´Ù.
-  D3D11_MESSAGE_SEVERITY_MESSAGE->¼Õ»ó, ¿À·ù, °æ°í ¶Ç´Â Á¤º¸ ÀÌ¿ÜÀÇ ¸Ş½ÃÁö¸¦ Á¤ÀÇÇÕ´Ï´Ù.
+  D3D11_MESSAGE_SEVERITY_CORRUPTION = 0,->ë°œìƒí•œ ì¼ë¶€ ìœ í˜•ì˜ ì†ìƒì„ ì •ì˜í•©ë‹ˆë‹¤.
+  D3D11_MESSAGE_SEVERITY_ERROR,->ì˜¤ë¥˜ ë©”ì‹œì§€ë¥¼ ì •ì˜í•©ë‹ˆë‹¤.
+  D3D11_MESSAGE_SEVERITY_WARNING,->ê²½ê³  ë©”ì‹œì§€ë¥¼ ì •ì˜í•©ë‹ˆë‹¤.
+  D3D11_MESSAGE_SEVERITY_INFO,->ì •ë³´ ë©”ì‹œì§€ë¥¼ ì •ì˜í•©ë‹ˆë‹¤.
+  D3D11_MESSAGE_SEVERITY_MESSAGE->ì†ìƒ, ì˜¤ë¥˜, ê²½ê³  ë˜ëŠ” ì •ë³´ ì´ì™¸ì˜ ë©”ì‹œì§€ë¥¼ ì •ì˜í•©ë‹ˆë‹¤.
   } ;
   */
   void SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY severity, bool enable)
