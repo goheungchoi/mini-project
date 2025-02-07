@@ -5,6 +5,7 @@
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
+#include "GameFramework/UI/UICursor/UICursor.h"
 
 void Level2::PrepareLevel()
 {
@@ -13,6 +14,7 @@ void Level2::PrepareLevel()
 void Level2::BeginLevel()
 {
 #ifdef USED2D
+  world->_canvas->CreatePanel<UICursor>(L"Cursor");
   world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
 #endif // USED2D
 }
