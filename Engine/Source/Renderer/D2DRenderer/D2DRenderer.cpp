@@ -120,6 +120,14 @@ void D2DRenderer::EndDraw()
   _pD2D1DeviceContext->BeginDraw();
   _d2dRenderQueue.Execute2DRenderCmd();
   _pD2D1DeviceContext->EndDraw();
+
+  BeginSprites();
+  _d2dRenderQueue.ExcuteTransitionRenderCmd();
+  _d2dRenderQueue.ExcuteCursorRenderCmd();
+  EndSprites();
+
+
+
 }
 
 void D2DRenderer::DrawRectangle(Color color, Vector4 rect, float stroke,

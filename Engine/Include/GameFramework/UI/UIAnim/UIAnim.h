@@ -64,8 +64,10 @@ public:
   virtual void SetCenterPos(Vector2 pos) override;
   void SetCenterPos(std::string spritename,Vector2 pos);
 
-private:
 
+  void SetOpacity(std::string spritename, float opacity);
+
+private:
   std::map<std::string,AnimSprite*> _sprites{};
   std::vector<class Sprite*> _spriteList;
   class Sprite* _pCurrSprite;

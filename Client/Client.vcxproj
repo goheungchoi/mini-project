@@ -249,6 +249,8 @@
 		<ClInclude Include="Contents\UI\InGameUI\SubMission\SubMission.h" />
 		<ClCompile Include="Contents\UI\MainMenuUI\MainMenuUI.cpp" />
 		<ClInclude Include="Contents\UI\MainMenuUI\MainMenuUI.h" />
+		<ClCompile Include="Contents\UI\TransitionUI\TransitionUI.cpp" />
+		<ClInclude Include="Contents\UI\TransitionUI\TransitionUI.h" />
 		<None Include="fmod_vc.lib" />
 		<None Include="imgui.ini" />
 	</ItemGroup>

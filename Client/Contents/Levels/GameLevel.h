@@ -25,6 +25,8 @@ protected:
   ModelHandle OBsStoolHandle;
   ModelHandle OBsBox02Handle;
 
+  
+
   CameraObject* testCamera;
 
   GameObject* pivot{nullptr};
