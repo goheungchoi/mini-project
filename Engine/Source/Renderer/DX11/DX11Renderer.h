@@ -10,6 +10,7 @@ class PipeLine;
 class RenderPassManager;
 class SkyBox;
 class D2DRenderer;
+class Trail;
 class DX11Renderer : public IRenderer
 {
 public:
@@ -50,6 +51,7 @@ public:
   void DrawDebugBox(Matrix world, Color color) override;
   void DrawDebugCylinder(Matrix world, Color color) override;
   void DrawBillBoard(Billboard* billboard) override;
+  void CreateTrail(Trail*& trail) override;
 
 public:
   // Render ImGui graphical interface.

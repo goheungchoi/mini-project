@@ -350,6 +350,10 @@ void DX11Renderer::DrawBillBoard(Billboard* billboard)
 {
   _passMgr->AddBillBoard(billboard->_quad);
 }
+void DX11Renderer::CreateTrail(Trail*& trail)
+{
+
+}
 void DX11Renderer::BeginImGuiDraw()
 {
   ImGui_ImplDX11_NewFrame();
