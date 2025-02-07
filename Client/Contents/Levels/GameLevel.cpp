@@ -84,7 +84,7 @@ void GameLevel::CreateMap()
 {
   pivot = world->CreateGameObject();
 
-  map = world->CreateGameObjectFromModel<Map>(mapBarMeshHandle);
+  map = world->CreateGameObjectFromModel<Map>(mapMuseumMeshHandle);
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
 

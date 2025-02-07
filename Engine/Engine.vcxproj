@@ -222,6 +222,8 @@
 		<ClInclude Include="Include\Core\Types\ShaderData.h" />
 		<ClInclude Include="Include\Core\Types\SkeletonData.h" />
 		<ClInclude Include="Include\Core\Types\TextureData.h" />
+		<ClCompile Include="Include\Core\Types\Trail.cpp" />
+		<ClInclude Include="Include\Core\Types\Trail.h" />
 		<ClInclude Include="Include\Core\UUID\UUID.h" />
 		<ClInclude Include="Include\Core\Utils\IOUtils.h" />
 		<ClInclude Include="Include\Core\Utils\ShaderCompiler.h" />
@@ -237,6 +239,7 @@
 		<ClInclude Include="Include\GameFramework\Components\RigidbodyComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\SkeletalMeshComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\TerrainComponent.h" />
+		<ClInclude Include="Include\GameFramework\Components\TrailComponent.h" />
 		<ClInclude Include="Include\GameFramework\Components\TransformComponent.h" />
 		<ClInclude Include="Include\GameFramework\GameObject\GameObject.h" />
 		<ClInclude Include="Include\GameFramework\Level\Level.h" />
@@ -275,6 +278,7 @@
 		<ClCompile Include="Source\GameFramework\Components\RigidbodyComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\SkeletalMeshComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\TerrainComponent.cpp" />
+		<ClCompile Include="Source\GameFramework\Components\TrailComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\Components\TransformComponent.cpp" />
 		<ClCompile Include="Source\GameFramework\GameObject\GameObject.cpp" />
 		<ClCompile Include="Source\GameFramework\Level\Level.cpp" />
@@ -326,6 +330,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\QuadFrame.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Sampler.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\SkyBox.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\TrailResrouce.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\SwapChain.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Types.h" />
 		<None Include="Source\Renderer\DX11\Shader\DX11Shader.hlsl" />
