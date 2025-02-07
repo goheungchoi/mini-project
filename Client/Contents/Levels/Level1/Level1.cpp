@@ -28,15 +28,17 @@ void Level1::CreateMap()
 {
   pivot = world->CreateGameObject();
 
-  map = world->CreateGameObjectFromModel<Map>(mapMeshHandle);
+  map = world->CreateGameObjectFromModel<Map>(mapBarMeshHandle);
+ 
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
 
-  map->CreateEnemyAt(kGunman, 4, 4, kSouth);
+  map->CreateEnemyAt(kBrawler, 2, 3, kSouth);
+  map->CreateEnemyAt(kGunman, 3, 1, kWest);
+  map->CreateEnemyAt(kGunman, 5, 3, kEast);
+  map->CreateEnemyAt(kGunman, 5, 4, kEast);
 
-  map->CreateCivillianAt(1, 1);
 
-  map->CreateAllyAt(kGunman, 2, 5, kWest);
 }
 
 void Level1::TriggerAction() {}
