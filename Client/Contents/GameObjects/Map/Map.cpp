@@ -19,8 +19,8 @@ Map::Map(World* world) : GameObject(world)
 
   animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
 
-	// The base models.
-	// enemyModelHandle = LoadModel("Models\\Character\\Enemy\\Enemy.glb");
+  // The base models.
+  // enemyModelHandle = LoadModel("Models\\Character\\Enemy\\Enemy.glb");
   enemyBrawlerModelHandle =
       LoadModel("Models\\Character\\Enemy\\Enemy_Punch\\Enemy_Punch.glb");
   enemyGunmanModelHandle =
@@ -41,7 +41,7 @@ Map::Map(World* world) : GameObject(world)
       LoadModel("Models\\Indicator\\EnemyDirectionIndicator\\EnemyDirectionIndi"
                 "cator.glb");
 
-	// Set character static data.
+  // Set character static data.
   brawlerInactiveIndicatorTextureHandle = LoadTexture(
       "Models\\Indicator\\BrawlerInactiveIndicator\\InactiveIndicator3.png",
       TextureType::kAlbedo);
@@ -61,7 +61,7 @@ Map::Map(World* world) : GameObject(world)
       LoadTexture("Models\\Indicator\\GunmanActiveIndicator\\Indicator1_On.png",
                   TextureType::kAlbedo);
 
-	Character::enemyModelData = &AccessModelData(enemyGunmanModelHandle);
+  Character::enemyModelData = &AccessModelData(enemyGunmanModelHandle);
   Character::enemySkeletonHandle = Character::enemyModelData->skeleton;
 
   Character::playerModelData = &AccessModelData(allyBrawlerModelHandle);
@@ -102,7 +102,6 @@ Map::Map(World* world) : GameObject(world)
   grid->CreateGrid(6, 6, 1.4f);
   grid->Translate(-0.6f, +0.01f, -0.8f);
   AddChildGameObject(grid);
-
 
   // NOTE: Sound test.
   /*SoundManager::LoadSound(L"PubBGM.wav", true);
@@ -170,10 +169,11 @@ void Map::TurnOffPlacementMode()
     return;
   }
 
-  // Turn of the selection mode on grid
-  grid->TurnOffSelectionMode();
+  // Turn off the hover mode.
+  grid->TurnOffGridHover();
 
   // Remove the placeholder.
+  placeholder->HideOutline();
   placeholder->Destroy();
   placeholder = nullptr;
 
@@ -181,14 +181,15 @@ void Map::TurnOffPlacementMode()
   isPlacementModeOn = false;
 }
 
-void Map::ShowHoveredCharacterRange() {
-	// TODO:
+void Map::ShowHoveredCharacterRange()
+{
+  // TODO:
   if (!hoveredCharacter)
     return;
 
-  int w = (int) hoveredCharacter->grid_w;
-  int h = (int) hoveredCharacter->grid_h;
-	// If the hovered character is not on the grid.
+  int w = (int)hoveredCharacter->grid_w;
+  int h = (int)hoveredCharacter->grid_h;
+  // If the hovered character is not on the grid.
   if (!grid->IsGameObjectAt(hoveredCharacter, w, h))
     return;
 
@@ -205,7 +206,7 @@ void Map::ShowHoveredCharacterRange() {
       if (CellObject* cell = grid->GetCellObjectAt(w + w_offset, h + h_offset);
           cell)
       {
-        cell->SetDamageZone();
+        cell->SetCellType(CellType_DamageZone);
       }
 
       // Shows death indicators.
@@ -229,14 +230,14 @@ void Map::ShowHoveredCharacterRange() {
       if (CellObject* cell = grid->GetCellObjectAt(w + w_offset, h + h_offset);
           cell)
       {
-        cell->SetRangeZone();
+        cell->SetCellType(CellType_RangeZone);
       }
     }
   }
   break;
   case kSlasher: {
-    
-	}
+    // TODO:
+  }
   break;
   case kGunman: {
     auto [w_offset, h_offset] = hoveredCharacter->GetGridFrontDirection();
@@ -250,7 +251,7 @@ void Map::ShowHoveredCharacterRange() {
       while (cell)
       {
         // Mark the damage zone.
-        cell->SetDamageZone();
+        cell->SetCellType(CellType_DamageZone);
 
         // Mark the death indicator if any.
         if (GameObject* gameObject = grid->GetGameObjectAt(w, h); gameObject)
@@ -278,7 +279,7 @@ void Map::ShowHoveredCharacterRange() {
       CellObject* cell = grid->GetCellObjectAt(w, h);
       while (cell)
       {
-        cell->SetRangeZone();
+        cell->SetCellType(CellType_RangeZone);
 
         w += w_offset;
         h += h_offset;
@@ -290,11 +291,12 @@ void Map::ShowHoveredCharacterRange() {
   }
 
   bNeedUpdateAttackRange = false;
+  bRangeHided = false;
 }
 
 void Map::HideHoveredCharacterRange()
 {
-  if (bNeedUpdateAttackRange)
+  if (bRangeHided)
     return;
 
   for (uint32_t w = 0; grid->GetCellObjectAt(w, 0) != nullptr; ++w)
@@ -303,7 +305,7 @@ void Map::HideHoveredCharacterRange()
     {
       if (CellObject* cell = grid->GetCellObjectAt(w, h); cell)
       {
-        cell->ClearZone();
+        cell->SetCellType(CellType_Default);
       }
 
       if (GameObject* gameObject = grid->GetGameObjectAt(w, h); gameObject)
@@ -319,34 +321,31 @@ void Map::HideHoveredCharacterRange()
     }
   }
 
-  bNeedUpdateAttackRange = true;
+  bRangeHided = true;
 }
 
-void Map::TurnOnAssassinationMode() {
+void Map::TurnOnAssassinationMode()
+{
   if (isActionTriggered)
     isAssassinationMode = false;
-  else 
+  else
     isAssassinationMode = true;
 }
 
-void Map::TurnOffAssasinationMode() {
+void Map::TurnOffAssasinationMode()
+{
   isAssassinationMode = false;
 }
 
 void Map::TriggerAction()
 {
   isActionTriggered = true;
-	
-	// Record the roster.
+
+  // Record the roster.
   for (Character* enemy : enemies)
   {
-    CharacterInfo info{
-			enemy->faction,
-			enemy->type,
-			enemy->dir,
-			enemy->grid_w,
-			enemy->grid_h
-    };
+    CharacterInfo info{enemy->faction, enemy->type, enemy->dir, enemy->grid_w,
+                       enemy->grid_h};
     record.push_back(info);
   }
 
@@ -364,9 +363,9 @@ void Map::TriggerAction()
     record.push_back(info);
   }
 
-	// TODO: Execute the assassination target.
+  // TODO: Execute the assassination target.
   if (assassinationTarget)
-		assassinationTarget->Die();
+    assassinationTarget->Die();
 
   for (Character* enemy : enemies)
   {
@@ -389,7 +388,7 @@ void Map::ResetGame()
   if (!isActionTriggered)
     return;
 
-	for (Character* enemy : enemies)
+  for (Character* enemy : enemies)
   {
     grid->RemoveGameObject(enemy);
     enemy->Destroy();
@@ -409,42 +408,45 @@ void Map::ResetGame()
 
   grid->ClearGrid();
 
-	enemies.clear();
+  enemies.clear();
   allies.clear();
   civilians.clear();
 
   isActionTriggered = false;
   isPlacementModeOn = false;
   placeholder = nullptr;
-  isAnySelected = false;
+  isHoveredCharacterChanged = false;
   hoveredCharacter = nullptr;
+  bRangeHided = true;
   isAssassinationMode = false;
   assassinationTarget = nullptr;
 
-	// Restore the record.
-	for (auto& info : record)
+  // Restore the record.
+  for (auto& info : record)
   {
     switch (info.faction)
     {
     case kAlly:
       CreateAllyAt(info.type, info.w, info.h, info.dir);
-    break;
+      break;
     case kEnemy:
       CreateEnemyAt(info.type, info.w, info.h, info.dir);
-		break;
+      break;
     case kNeutral:
       CreateCivillianAt(info.w, info.h, info.dir);
-    break;
+      break;
     }
-	}
+  }
   record.clear();
 }
 
-void Map::PauseGame() {
+void Map::PauseGame()
+{
   this->Deactivate();
 }
 
-void Map::ResumeGame() {
+void Map::ResumeGame()
+{
   this->Activate();
 }
 
@@ -532,7 +534,8 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
     enemies.push_back(gunman);
 
     AddChildGameObject(gunman);
-    } break;
+  }
+  break;
   }
 }
 
@@ -668,7 +671,7 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
 
 void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
 {
-	// TODO: Civilian model
+  // TODO: Civilian model
   Civilian* civilian =
       world->CreateGameObjectFromModel<Civilian>(civilianModelHandle);
   civilian->SetGridLocation(w, h);
@@ -676,7 +679,8 @@ void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
   civilians.push_back(civilian);
 }
 
-void Map::CreateObstacleAt(uint32_t w, uint32_t h) {
+void Map::CreateObstacleAt(uint32_t w, uint32_t h)
+{
   // TODO:
 }
 
@@ -703,11 +707,26 @@ void Map::DeleteCharacterFromMap(Character* character)
   }
 }
 
-void Map::OnAwake() {
+void Map::OnAwake()
+{
   // Translate({-4.f, 0.f, -4.f});
 }
 
-void Map::Update(float dt) {
+void Map::Update(float dt)
+{
+  // Detect hovered character changes.
+  if (hoveredCharacter)
+  {
+    if (prevHoveredCharacter != hoveredCharacter)
+      isHoveredCharacterChanged = true;
+    else
+      isHoveredCharacterChanged = false;
+  }
+  else
+  {
+    isHoveredCharacterChanged = false;
+  }
+
   // Rotate this map.
   /*if (INPUT.IsKeyPress(Key::Q))
   {
@@ -718,43 +737,48 @@ void Map::Update(float dt) {
     parent->RotateAroundYAxis(-dt);
   }*/
 
-	// Action mode
-	if (isActionTriggered)
+  // Action mode
+  if (isActionTriggered)
   {
+    grid->TurnOffSelectionMode();
+    grid->TurnOffGridHover();
+
 		// TODO: Remove a simulating character.
 
     if (INPUT.IsKeyPress(Key::R))
     {
       ResetGame();
     }
-	}
-	// Placement mode
-	else if (isPlacementModeOn)
+  }
+  // Placement mode
+  else if (isPlacementModeOn)
   {
+    grid->TurnOnSelectionMode();
+    grid->TurnOnGridHover();
+
 		// If a placeholder is not set
     if (!placeholder)
     {
       isPlacementModeOn = false;
-		}
+    }
 
-		TranslatePlaceholder();
-    
-		// Cancel placement mode.
-		if (INPUT.IsKeyDown(Key::Escape))
+    TranslatePlaceholder();
+
+    placeholder->ShowOutline();
+
+    // Cancel placement mode.
+    if (INPUT.IsKeyDown(Key::Escape))
     {
       TurnOffPlacementMode();
-      return;
-		}
-
-		// Change the direction of the placeholder.
-    if (INPUT.IsKeyDown(Key::Tab))
+    }
+    // Change the direction of the placeholder.
+    else if (INPUT.IsKeyDown(Key::Tab))
     {
       uint32_t dir = placeholder->GetDirection();
       placeholder->SetDirection((Direction)((dir + 1) % kNumDirections));
-		}
-
-		// Place the character.
-		if (INPUT.IsKeyDown(MouseState::LB))
+    }
+    // Place the character.
+    else if (INPUT.IsKeyDown(MouseState::LB))
     {
       if (grid->selectedCell)
       {
@@ -766,74 +790,102 @@ void Map::Update(float dt) {
 
         // Turn off the placement mode
         TurnOffPlacementMode();
-			}
-		}
-	}
+      }
+    }
+  }
   // Selection mode
   else
   {
+    grid->TurnOnSelectionMode();
+    grid->TurnOffGridHover();
+
+    if (prevHoveredCharacter)
+    {
+      prevHoveredCharacter->HideOutline();
+    }
+
     if (hoveredCharacter)
     {
-			// TODO: Show the distance and range 
-			ShowHoveredCharacterRange();
+      hoveredCharacter->ShowOutline();
+    }
 
-			// Right Click
-      if (INPUT.IsKeyDown(MouseState::RB))
+    if (hoveredCharacter)
+    {
+      // Assasination mode.
+      if (isAssassinationMode)
       {
-        // Remove the character
-        if (hoveredCharacter->faction == Faction::kAlly)
+        if (INPUT.IsKeyDown(MouseState::LB))
         {
-          DeleteCharacterFromMap(hoveredCharacter);
-          hoveredCharacter->Destroy();
-        } 
-				else if (hoveredCharacter->faction == Faction::kEnemy)
-        {
-					// Register the target to be assassinated,
-					// only if in assassination mode.
-          if (isAssassinationMode)
+          if (hoveredCharacter->faction == Faction::kEnemy)
           {
+            // Register the target to be assassinated,
+            // only if in assassination mode.
             assassinationTarget = hoveredCharacter;
             isAssassinationMode = false;
-					}
-				}
-      } 
-			// Left click
-			else if (INPUT.IsKeyDown(MouseState::LB))
-      {
-        // Character selection -> Placement mode.
-        // Find if any "ally character" is selected.
-        if (hoveredCharacter->faction == Faction::kAlly)
+          }
+        }
+        else if (INPUT.IsKeyDown(MouseState::RB))
         {
-          // Check the type of the character.
-          CharacterType type = hoveredCharacter->type;
-
-          // Check the direction of the character.
-          Direction dir = hoveredCharacter->dir;
-
-          // Remove the selected character from the grid.
-          DeleteCharacterFromMap(hoveredCharacter);
-
-          // Destroy the selected character.
-          hoveredCharacter->Destroy();
-					
-					// Nullify the pointer.
-					hoveredCharacter = nullptr;
-
-          // Turn on the placement mode.
-          TurnOnPlacementMode(type, dir);
+          isAssassinationMode = false;
         }
       }
+      // Default Selection mode.
+      else
+      {
+        // TODO: Show the distance and range
+        if (isHoveredCharacterChanged)
+        {
+          HideHoveredCharacterRange();
+        }
 
-			hoveredCharacter = nullptr;
+        ShowHoveredCharacterRange();
+
+        // Right Click
+        if (INPUT.IsKeyDown(MouseState::RB))
+        {
+          // Remove the character
+          if (hoveredCharacter->faction == Faction::kAlly)
+          {
+            DeleteCharacterFromMap(hoveredCharacter);
+            hoveredCharacter->Destroy();
+          }
+        }
+        // Left click
+        else if (INPUT.IsKeyDown(MouseState::LB))
+        {
+          // Character selection -> Placement mode.
+          // Find if any "ally character" is selected.
+          if (hoveredCharacter->faction == Faction::kAlly)
+          {
+            // Check the type of the character.
+            CharacterType type = hoveredCharacter->type;
+
+            // Check the direction of the character.
+            Direction dir = hoveredCharacter->dir;
+
+            // Remove the selected character from the grid.
+            DeleteCharacterFromMap(hoveredCharacter);
+
+            // Destroy the selected character.
+            hoveredCharacter->Destroy();
+
+            // Nullify the pointer.
+            hoveredCharacter = nullptr;
+
+            // Turn on the placement mode.
+            TurnOnPlacementMode(type, dir);
+          }
+        }
+      } 
     }
     else
     {
-			// TODO: Turn off the mode.
-      if (!bNeedUpdateAttackRange)
+      // TODO: Turn off the mode.
+      if (!bRangeHided)
       {
         HideHoveredCharacterRange();
       }
-		}
+    }
 
     if (INPUT.IsKeyPress(Key::Space))
     {
@@ -860,9 +912,13 @@ void Map::Update(float dt) {
     }
   }
 
+  // Reset the hovered character.
+  prevHoveredCharacter = hoveredCharacter;
+  hoveredCharacter = nullptr;
 }
 
-void Map::PostUpdate(float dt) {
+void Map::PostUpdate(float dt)
+{
   // hoveredCharacter = nullptr;
 }
 
@@ -884,7 +940,8 @@ XMVECTOR Map::GetCursorPosition() const
   return intersection;
 }
 
-void Map::TranslatePlaceholder() {
+void Map::TranslatePlaceholder()
+{
   if (!placeholder)
     return;
 
@@ -907,4 +964,3 @@ void Map::TranslatePlaceholder() {
     placeholder->SetTranslation(cursorPos);
   }
 }
-

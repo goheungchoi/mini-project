@@ -4,14 +4,14 @@
 
 CellObject::CellObject(World* world) : GameObject(world)
 {
-  redCellModelHandle = LoadModel("Models\\RedCell\\RedCell.glb");
+  placementCellModelHandle = LoadModel("Models\\RedCell\\RedCell.glb");
   /*const auto& redCellModel = AccessModelData(redCellModelHandle);
   if (!redCellModel.meshes.empty())
   {
     redCell = *redCellModel.meshes.begin();
   }*/
 
-  greenCellModelHandle = LoadModel("Models\\GreenCell\\GreenCell.glb");
+  defaultCellModelHandle = LoadModel("Models\\GreenCell\\GreenCell.glb");
   /*const auto& greenCellModel = AccessModelData(greenCellModelHandle);
   if (!greenCellModel.meshes.empty())
   {
@@ -21,20 +21,20 @@ CellObject::CellObject(World* world) : GameObject(world)
   // Create a mesh component
   // cell = CreateComponent<MeshComponent>();
 
-	redCell = world->CreateGameObjectFromModel(redCellModelHandle);
-  greenCell = world->CreateGameObjectFromModel(greenCellModelHandle);
-  AddChildGameObject(redCell);
-  AddChildGameObject(greenCell);
+	placementCell = world->CreateGameObjectFromModel(placementCellModelHandle);
+  defaultCell = world->CreateGameObjectFromModel(defaultCellModelHandle);
+  AddChildGameObject(placementCell);
+  AddChildGameObject(defaultCell);
 }
 
 CellObject::~CellObject() {
-  UnloadModel(redCellModelHandle);
-  UnloadModel(greenCellModelHandle);
+  UnloadModel(placementCellModelHandle);
+  UnloadModel(defaultCellModelHandle);
 }
 
 void CellObject::SetInvisible() {
-  auto* redMeshComp = redCell->GetComponent<MeshComponent>();
-  auto* greenMeshComp = greenCell->GetComponent<MeshComponent>();
+  auto* redMeshComp = placementCell->GetComponent<MeshComponent>();
+  auto* greenMeshComp = defaultCell->GetComponent<MeshComponent>();
   if (redMeshComp)
   {
     redMeshComp->SetVisible(false);
@@ -48,8 +48,8 @@ void CellObject::SetInvisible() {
 }
 
 void CellObject::SetVisible() {
-  auto* redMeshComp = redCell->GetComponent<MeshComponent>();
-  auto* greenMeshComp = greenCell->GetComponent<MeshComponent>();
+  auto* redMeshComp = placementCell->GetComponent<MeshComponent>();
+  auto* greenMeshComp = defaultCell->GetComponent<MeshComponent>();
   if (redMeshComp)
   {
     redMeshComp->SetVisible(true);
@@ -86,14 +86,14 @@ void CellObject::OnAwake()
 {
   switch (type)
   {
-  case CellType_Green: {
-    redCell->Activate();
-    greenCell->Deactivate();
+  case CellType_Default: {
+    placementCell->Activate();
+    defaultCell->Deactivate();
   }
   break;
-  case CellType_Red: {
-    redCell->Deactivate();
-    greenCell->Activate();
+  case CellType_Placement: {
+    placementCell->Deactivate();
+    defaultCell->Activate();
   }
   break;
   }
@@ -102,14 +102,14 @@ void CellObject::OnAwake()
 void CellObject::Update(float dt) {
   switch (type)
   {
-  case CellType_Green: {
-    redCell->Activate();
-    greenCell->Deactivate();
+  case CellType_Default: {
+    placementCell->Activate();
+    defaultCell->Deactivate();
   }
   break;
-  case CellType_Red: {
-    redCell->Deactivate();
-    greenCell->Activate();
+  case CellType_Placement: {
+    placementCell->Deactivate();
+    defaultCell->Activate();
   }
   break;
   }

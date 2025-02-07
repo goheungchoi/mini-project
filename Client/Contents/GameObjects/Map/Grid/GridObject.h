@@ -91,9 +91,14 @@ public:
   void Update(float dt) override;
 
 	bool isSelectionMode{false};
-
   void TurnOnSelectionMode();
   void TurnOffSelectionMode();
+
+  bool isGridHoverTurnedOn{false};
+  void TurnOnGridHover();
+  void TurnOffGridHover();
+
+  void ResetCellTypes();
 
 private:
 

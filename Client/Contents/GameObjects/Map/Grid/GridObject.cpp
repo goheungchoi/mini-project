@@ -53,6 +53,7 @@ bool GridObject::PlaceGameObjectAt(GameObject* object, uint32_t w, uint32_t h)
 
 	AddChildGameObject(object);
   placements[idx(w, h)] = object;
+  grid[idx(w, h)]->isOccupied = true;
   return true;
 }
 
@@ -69,18 +70,22 @@ void GridObject::ReplaceGameObjectAt(GameObject* object, uint32_t w, uint32_t h)
 
 	AddChildGameObject(object);
   placements[idx(w, h)] = object;
+  grid[idx(w, h)]->isOccupied = true;
 }
 
 void GridObject::RemoveGameObject(GameObject* object)
 {
+  uint32_t i{0};
   for (auto& p : placements)
   {
     if (p == object)
     {
       RemoveChildGameObject(object);
       p = nullptr;
+      grid[i]->isOccupied = false;
       return;
     }
+    ++i;
   }
 }
 
@@ -142,33 +147,66 @@ void GridObject::ClearGrid() {
 	TurnOffSelectionMode();
 }
 
-// TODO: Don't light up on tiles where objects already exist
 void GridObject::TurnOnSelectionMode() {
-  isSelectionMode = true;
+  if (isSelectionMode)
+    return;
 
   for (uint32_t i = 0; i < grid.size(); ++i)
   {
-    if (!placements[i])
-    {
-      grid[i]->SetVisible();
-    }
+    grid[i]->SetCellType(CellType_Default);
+    grid[i]->SetVisible();
   }
+
+  isSelectionMode = true;
 }
 
 void GridObject::TurnOffSelectionMode() {
-  isSelectionMode = false;
-
-	selectedCell = nullptr;
+  if (!isSelectionMode)
+    return;
 
 	for (auto* cell : grid)
   {
-    cell->SetCellType(CellType_Green);
+    cell->SetCellType(CellType_Default);
     cell->SetInvisible();
+  }
+
+	selectedCell = nullptr;
+  isSelectionMode = false;
+}
+
+void GridObject::TurnOnGridHover() {
+  if (isGridHoverTurnedOn)
+    return;
+
+  isGridHoverTurnedOn = true;
+}
+
+void GridObject::TurnOffGridHover() {
+  if (!isGridHoverTurnedOn)
+    return;
+
+  isGridHoverTurnedOn = false;
+
+  for (auto* cell : grid)
+  {
+    cell->SetCellType(CellType_Default);
+  }
+
+  selectedCell = nullptr;
+}
+
+void GridObject::ResetCellTypes() {
+  for (uint32_t i = 0; i < grid.size(); ++i)
+  {
+    grid[i]->SetCellType(CellType_Default);
   }
 }
 
 void GridObject::FindHoveredCell()
 {
+  if (!isGridHoverTurnedOn)
+    return;
+
   bool anyHover{false};
 
   Vector2 mousePos{(float)INPUT.GetCurrMouseState().x,
@@ -179,16 +217,16 @@ void GridObject::FindHoveredCell()
   {
     BoundingOrientedBox obb;
     cell->obb.Transform(obb, XMMatrixScaling(1.3f, 0.f, 1.3f) * cell->transform->GetGlobalTransform());
-    if (cell->isVisible && !anyHover &&
+    if (!cell->isOccupied && !anyHover &&
         obb.Intersects(cursorRay.position, cursorRay.direction, t))
     {
-      cell->SetCellType(CellType_Red);
+      cell->SetCellType(CellType_Placement);
       selectedCell = cell;
       anyHover = true;
     }
     else
     {
-      cell->SetCellType(CellType_Green);
+      cell->SetCellType(CellType_Default);
     }
   }
 
@@ -208,7 +246,7 @@ void GridObject::OnAwake() {
 }
 
 void GridObject::Update(float dt) {
-  if (isSelectionMode)
+  if (isGridHoverTurnedOn)
   {
 		FindHoveredCell();
   }

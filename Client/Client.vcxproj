@@ -157,6 +157,9 @@
 		<ProjectReference Include="..\Engine\Engine.vcxproj">
 			<Project>{90243d6a-5389-4b95-ad97-4a024514af62}</Project>
 		</ProjectReference>
+		<ProjectReference Include="..\SharedLib\SharedLib.vcxproj">
+			<Project>{d67b80c2-6ba8-46ef-b896-0b6004a06416}</Project>
+		</ProjectReference>
 	</ItemGroup>
 	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 	<ImportGroup Label="ExtensionTargets">
@@ -229,6 +232,8 @@
 		<ClCompile Include="Contents\Levels\MainMenu\MainMenu.cpp" />
 		<ClInclude Include="Contents\Levels\MainMenu\MainMenu.h" />
 		<ClInclude Include="Contents\Levels\TestLevel.h" />
+		<ClCompile Include="Contents\UI\DialogUI\DialogUI.cpp" />
+		<ClInclude Include="Contents\UI\DialogUI\DialogUI.h" />
 		<ClCompile Include="Contents\UI\InGameUI\AgentStorage\AgentStorage.cpp" />
 		<ClInclude Include="Contents\UI\InGameUI\AgentStorage\AgentStorage.h" />
 		<ClCompile Include="Contents\UI\InGameUI\GunfireButton\GunfireButton.cpp" />

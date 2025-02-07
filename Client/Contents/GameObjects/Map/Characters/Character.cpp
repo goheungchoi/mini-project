@@ -115,14 +115,17 @@ void Character::SetFaction(Faction faction) {
 
 	if (faction == Faction::kAlly)
   {
+    SetOutlineColor(Color(0.f, 1.f, 0.f));
     animator->BindSkeleton(playerSkeletonHandle);
 	}
 	else if (faction == Faction::kEnemy)
   {
+    SetOutlineColor(Color(1.f, 0.f, 0.f));
     animator->BindSkeleton(enemySkeletonHandle);
   }
   else
   {
+    SetOutlineColor(Color(0.f, 0.f, 1.f));
     animator->BindSkeleton(civilianSkeletonHandle);
   }
 }
@@ -198,7 +201,12 @@ void Character::OnHover() {
     rbComp->debugColor = Color(0, 1, 1, 1);
   }
 
-  map->hoveredCharacter = this;
+  if (map->hoveredCharacter != this)
+  {
+    map->isHoveredCharacterChanged = true;
+    map->bNeedUpdateAttackRange = true;
+    map->hoveredCharacter = this;
+  }
 }
 
 void Character::OnBeginOverlap(GameObject* other) {

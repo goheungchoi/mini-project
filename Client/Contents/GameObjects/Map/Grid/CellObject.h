@@ -4,30 +4,24 @@
 
 enum CellType
 {
-	CellType_Green,
-	CellType_Red
-};
-
-enum ZoneType
-{
-  ZoneType_Range,
-  ZoneType_Damage
+	CellType_Default,
+	CellType_Placement,
+  CellType_RangeZone,
+  CellType_DamageZone,
 };
 
 class CellObject : public GameObject
 {
 protected:
-  CellType type{CellType_Green};
+  CellType type{CellType_Default};
 
-	ModelHandle redCellModelHandle;
-  ModelHandle greenCellModelHandle;
-  
+  ModelHandle defaultCellModelHandle;
+	ModelHandle placementCellModelHandle;
   ModelHandle rangeCellModelHandle;
   ModelHandle damageCellModelHandle;
 
-	GameObject* redCell;
-  GameObject* greenCell;
-
+  GameObject* defaultCell;
+	GameObject* placementCell;
   GameObject* rangeCell;
   GameObject* damageCell;
 
@@ -38,35 +32,22 @@ public:
 
   bool isVisible {false};
 
+  bool isOccupied{false};
+
   CellObject(World* world);
   ~CellObject();
 
 	void SetInvisible();
   void SetVisible();
 
-  bool bNoZone{true};
-  void ClearZone();
-  void SetRangeZone();
-  void SetDamageZone();
-
+  void ClearCell();
 	void SetCellType(CellType type);
   CellType GetCellType();
   void SetCellPosition(int w, int h);
   std::pair<int, int> GetCellPosition();
 
-  // Interaction
-  virtual void OnBeginCursorOver() {};
-  virtual void OnEndCursorOver() {};
-  virtual void OnClicked() {};
-  virtual void OnPressed() {};
-
   // Game loop events
   void OnAwake();
-  virtual void OnActivated() {}
 
-  virtual void FixedUpdate(float fixedRate) {}
-  virtual void PreUpdate(float dt) {}
   void Update(float dt) override;
-  virtual void PostUpdate(float dt) {}
-  virtual void OnRender() {}
 };

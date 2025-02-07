@@ -13,6 +13,5 @@ private:
   class UIButton* _playBtn{nullptr};
   class UIImage* _playBtnImgs[3];
 
-  class Map* _map{};
   bool _bPlayflag = false;
 };

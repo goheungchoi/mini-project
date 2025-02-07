@@ -1,6 +1,9 @@
 #include "GameLevel.h"
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
+#include "GameFramework/UI/Canvas/Canvas.h"
+#include "GameFramework/UI/UICursor/UICursor.h"
+#include "Resource2DManager/Resource2DManager.h"
 
 void GameLevel::PrepareLevel()
 {
@@ -11,6 +14,33 @@ void GameLevel::PrepareLevel()
   handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 
   mapMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
+
+  // UI Resource Load
+#ifdef USED2D
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Stage_L.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Stage_S.png");
+
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Order_Act.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Order_Hover.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Order_Deact.png");
+
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Act.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Hover.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Deact.png");
+
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\UI_Storage_Act_Fist.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\UI_Storage_Deact_Fist.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\UI_Storage_Act_Rush.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\UI_Storage_Deact_Rush.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\UI_Storage_Act_Gun.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\UI_Storage_Deact_Gun.png");
+#endif // USED2D
 }
 
 void GameLevel::BeginLevel()
@@ -24,6 +54,10 @@ void GameLevel::BeginLevel()
 
   // 여기서 gameManager 만들어줌.
   gameManager = world->CreateGameObject<GameManager>();
+
+#ifdef USED2D
+  world->_canvas->CreatePanel<UICursor>(L"Cursor");
+#endif // USED2D
 }
 
 void GameLevel::CleanupLevel()
@@ -47,10 +81,6 @@ void GameLevel::CreateMap()
   map->CreateEnemyAt(kGunman, 4, 4, kSouth);
   map->CreateEnemyAt(kGunman, 3, 2, kEast);
   map->CreateEnemyAt(kGunman, 2, 4, kEast);
-
-  // map->CreateAllyAt(kBrawler, 4, 5, kWest);
-  // map->CreateAllyAt(kSlasher, 3, 5, kWest);
-  // map->CreateAllyAt(kGunman, 2, 5, kWest);
 
   map->CreateCivillianAt(1, 1);
 
