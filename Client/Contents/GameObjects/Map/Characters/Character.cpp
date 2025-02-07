@@ -421,8 +421,13 @@ void Character::FindTargetInRange() {
         continue;
 
 			// Don't attack civilians.
-			if (searchTarget->GetGameObjectTag() == kFactionTags[kNeutral])
-        continue;
+      if (searchTarget->GetGameObjectTag() == kFactionTags[kNeutral])
+      {
+        // Don't attack.
+        distanceToTarget = -1;
+        isTargetInRange = false;
+        return;
+      }
 
 			// Skip the target that will be assassinated at the start of the game.
 			if (searchTarget == map->assassinationTarget)

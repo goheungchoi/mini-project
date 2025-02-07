@@ -13,7 +13,7 @@ void GameLevel::PrepareLevel()
   animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
   handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 
-  mapMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
+  mapMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002_2.glb");
 
   // UI Resource Load
 #ifdef USED2D
@@ -82,7 +82,7 @@ void GameLevel::CreateMap()
   map->CreateEnemyAt(kGunman, 3, 2, kEast);
   map->CreateEnemyAt(kGunman, 2, 4, kEast);
 
-  map->CreateCivillianAt(1, 1);
+  map->CreateCivillianAt(4, 1);
 
   map->CreateAllyAt(kGunman, 2, 5, kWest);
 }
