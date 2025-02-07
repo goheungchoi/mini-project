@@ -46,11 +46,9 @@ public:
                     LPCSTR diffuseIrrPath, LPCSTR specularIBLPath) override;
 
   void CreateBillboard(Billboard*& billboard) override;
-#ifdef _DEBUG
   void DrawDebugSphere(Matrix world, Color color) override;
   void DrawDebugBox(Matrix world, Color color) override;
   void DrawDebugCylinder(Matrix world, Color color) override;
-#endif
   void DrawBillBoard(Billboard* billboard) override;
 
 public:

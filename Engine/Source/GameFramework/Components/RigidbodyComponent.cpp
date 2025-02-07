@@ -149,19 +149,24 @@ void RigidbodyComponent::UpdateToTransform()
   //GetTransformComponent()->globalTransform = transform;
 }
 
-#ifdef _DEBUG
 void RigidbodyComponent::EnableDebugDraw()
 {
+#ifdef _DEBUG
   _bDebugDrawFlag = true;
+#endif
 }
 
 void RigidbodyComponent::DisableDebugDraw()
 {
+#ifdef _DEBUG
   _bDebugDrawFlag = false;
+#endif
 }
 
 void RigidbodyComponent::UpdateDebugDrawMatrix()
 {
+#ifdef _DEBUG
+
   debugDrawMatrix = XMMatrixScalingFromVector(offsetScale*scalingFactor) *
                     XMMatrixRotationQuaternion(offsetRotation) *
                     XMMatrixTranslationFromVector(offsetTranslation) *
@@ -169,8 +174,8 @@ void RigidbodyComponent::UpdateDebugDrawMatrix()
                         GetTransformComponent()->GetGlobalQuaternion()) *
                     XMMatrixTranslationFromVector(
                         GetTransformComponent()->GetGlobalTranslation());
-}
 #endif
+}
 
 void RigidbodyComponent::RegisterRigidBodyToWorld() {
   GetWorld()->RegisterRigidBodyComponent(this);
