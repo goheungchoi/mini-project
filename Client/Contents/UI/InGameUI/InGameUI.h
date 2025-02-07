@@ -7,7 +7,7 @@ public:
   InGameUI(class World* world);
   virtual ~InGameUI();
 
-private:
+public:
   class MainMission* _mainMission{nullptr};
   class SubMission* _subMission{nullptr};
   class PlayButton* _playBtn{nullptr};
