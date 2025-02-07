@@ -12,6 +12,9 @@ private:
   std::map<std::wstring, UIElement*> uiMap;
   std::list<class UIElement*> uiList;
 
+protected:
+  class Map* _map{};
+
 public:
   UIPanel(class World* world);
   virtual ~UIPanel();
@@ -20,7 +23,6 @@ public:
   void BeginLevel() override;
   void Update(float dt) override;
   void Render() override;
-
 
   template <typename T>
     requires UIElementType<T>
