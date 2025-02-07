@@ -78,20 +78,12 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
         //look up table pbrÀºÁ¤ÀûÀÌ¹Ç·Î ¹Ì¸® °è»êµÈ ÅØ½ºÃÄ·Î uvÁÂÇ¥ÀÇ ±Ù»ç°ªÀ» »ç¿ë
     float2 IBLSpecularBRDF = evnSpecularBRDF.Sample(samClamp, float2(NdotV, roughness)).rg;
     float3 specularIBL = (F0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
-        //´õÇÏ±â
-    
-    float4 ambientFactor = texOcclusion.Sample(samLinear, input.uv);
-    
-    if (length(ambientFactor) == 0.f)
-    {
-        ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
-    }
-    
+
     float ssaoFactor = ssaoMap.Sample(samLinear, input.uv).r;
     if(isSSAO)
-        ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor.xyz*ssaoFactor;
+        ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ssaoFactor;
     else
-        ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor.xyz;
+        ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity;
     //ambientLighting += 0;
     float4 positionShadow = deferredShadowPosition.Sample(samLinear, input.uv);
     float currShadowDepth = positionShadow.z; // / positionShadow.w;
@@ -318,15 +310,8 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
         //look up table pbrÀºÁ¤ÀûÀÌ¹Ç·Î ¹Ì¸® °è»êµÈ ÅØ½ºÃÄ·Î uvÁÂÇ¥ÀÇ ±Ù»ç°ªÀ» »ç¿ë
     float2 IBLSpecularBRDF = evnSpecularBRDF.Sample(samClamp, float2(NdotV, roughness)).rg;
     float3 specularIBL = (f0 * IBLSpecularBRDF.x + IBLSpecularBRDF.y) * specularIrradiance;
-        //´õÇÏ±â
-    float4 ambientFactor = texOcclusion.Sample(samLinear, input.uv);
-    
-    if (length(ambientFactor) == 0.f)
-    {
-        ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
-    }
-    
-    ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor;
+
+    ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity;
 
     float currShadowDepth = input.positionShadow.z / input.positionShadow.w;
     float2 uv = input.positionShadow.xy / input.positionShadow.w;
