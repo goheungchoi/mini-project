@@ -58,6 +58,33 @@ static const char* GetAssetDirectory()
   return assetDir.c_str();
 }
 
+static const char* GetLibraryDirectory() 
+{
+  static const std::string libraryDir = []() -> std::string {
+    fs::path cwd{fs::current_path()};
+    fs::path libraryDir;
+    if (fs::exists(cwd / "Library"))
+    {
+      libraryDir = fs::absolute(cwd / "Library");
+    }
+    else
+    { // Go to the parent path.
+      cwd = cwd.parent_path();
+      if (fs::exists(cwd / "Library"))
+      {
+        libraryDir = fs::absolute(cwd / "Library");
+      }
+      else
+      {
+        abort();
+      }
+    }
+    return libraryDir.string();
+  }();
+
+  return libraryDir.c_str();
+}
+
 static const char* GetResourceDirectory()
 {
   static const std::string resourceDir = []() -> std::string {
@@ -85,6 +112,64 @@ static const char* GetResourceDirectory()
   }();
 
   return resourceDir.c_str();
+}
+
+static const char* GetFontDirectory()
+{
+  static const std::string fontDir = []() -> std::string {
+    fs::path cwd{fs::current_path()};
+    fs::path fontDir;
+    if (fs::exists(cwd / "Library"))
+    {
+      fs::create_directory(cwd / "Library" / "Font");
+      fontDir = fs::absolute(cwd / "Library" / "Font");
+    }
+    else
+    { // Go to the parent path.
+      cwd = cwd.parent_path();
+      if (fs::exists(cwd / "Library"))
+      {
+        fs::create_directory(cwd / "Library" / "Font");
+        fontDir = fs::absolute(cwd / "Library" / "Font");
+      }
+      else
+      {
+        abort();
+      }
+    }
+    return fontDir.string();
+  }();
+
+  return fontDir.c_str();
+}
+
+static const char* GetDataDirectory()
+{
+  static const std::string dataDir = []() -> std::string {
+    fs::path cwd{fs::current_path()};
+    fs::path dataDir;
+    if (fs::exists(cwd / "Library"))
+    {
+      fs::create_directory(cwd / "Library" / "CSV");
+      dataDir = fs::absolute(cwd / "Library" / "CSV");
+    }
+    else
+    { // Go to the parent path.
+      cwd = cwd.parent_path();
+      if (fs::exists(cwd / "Library"))
+      {
+        fs::create_directory(cwd / "Library" / "CSV");
+        dataDir = fs::absolute(cwd / "Library" / "CSV");
+      }
+      else
+      {
+        abort();
+      }
+    }
+    return dataDir.string();
+  }();
+
+  return dataDir.c_str();
 }
 
 static const char* GetShaderDirectory() {
@@ -120,3 +205,8 @@ const char* ns::kProjectDir = GetProjectDirectory();
 const char* ns::kAssetDir = GetAssetDirectory();
 const char* ns::kResourceDir = GetResourceDirectory();
 const char* ns::kShaderDir = GetShaderDirectory();
+
+
+const char* ns::kLibraryDir = GetLibraryDirectory();
+const char* ns::kFontDir = GetFontDirectory();
+const char* ns::kDataDir = GetDataDirectory();

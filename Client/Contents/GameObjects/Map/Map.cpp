@@ -814,11 +814,18 @@ void Map::Update(float dt)
       // Assasination mode.
       if (isAssassinationMode)
       {
-        if (hoveredCharacter->faction == Faction::kEnemy)
+        if (INPUT.IsKeyDown(MouseState::LB))
         {
-          // Register the target to be assassinated,
-          // only if in assassination mode.
-          assassinationTarget = hoveredCharacter;
+          if (hoveredCharacter->faction == Faction::kEnemy)
+          {
+            // Register the target to be assassinated,
+            // only if in assassination mode.
+            assassinationTarget = hoveredCharacter;
+            isAssassinationMode = false;
+          }
+        }
+        else if (INPUT.IsKeyDown(MouseState::RB))
+        {
           isAssassinationMode = false;
         }
       }
