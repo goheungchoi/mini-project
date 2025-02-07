@@ -79,6 +79,7 @@ void Character::TriggerAction()
   isActionTriggered = true;
 
   HideOutline();
+  HideDeathIndicator();
 
   if (isTargetInRange)
 		animator->SetVariable<bool>("triggered", true, true);
@@ -214,8 +215,7 @@ void Character::OnHover() {
 
 void Character::OnBeginOverlap(GameObject* other) {
   GameObject::OnBeginOverlap(other);
-  if (!other->GetComponent<RigidbodyComponent>())
-    return;
+
   if (!isDead)
   {
     if (other->GetGameObjectTag() == "weapon")
@@ -359,7 +359,6 @@ void Character::PostUpdate(float dt) {
 }
 
 void Character::ApplyChangedGridLocation() {
-  count;
 	// Place the game object on the grid.
   grid->MoveGameObjectTo(this, grid_w, grid_h);
 	// Translate the game object.
