@@ -13,7 +13,13 @@ void GameLevel::PrepareLevel()
   animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
   handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 
-  mapMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
+  mapBarMeshHandle = LoadModel("Models\\Maps\\Map_001_Bar\\Map_001.glb");
+  mapMuseumMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
+  mapWarehouseMeshHandle =
+      LoadModel("Models\\Maps\\Map_003_Warehouse\\Map_003.glb");
+
+  OBsStoolHandle = LoadModel("Models\\Obstacles\\OBs_Stool.glb");
+  OBsBox02Handle = LoadModel("Models\\Obstacles\\OBs_Box02.glb");
 
   // UI Resource Load
 #ifdef USED2D
@@ -65,7 +71,9 @@ void GameLevel::CleanupLevel()
   UnloadModel(redCellModelHandle);
   UnloadModel(greenCellModelHandle);
 
-  UnloadModel(mapMeshHandle);
+  UnloadModel(mapBarMeshHandle);
+  UnloadModel(mapMuseumMeshHandle);
+  UnloadModel(mapWarehouseMeshHandle);
 
   UnloadModel(animTestHandle);
 }
@@ -74,7 +82,7 @@ void GameLevel::CreateMap()
 {
   pivot = world->CreateGameObject();
 
-  map = world->CreateGameObjectFromModel<Map>(mapMeshHandle);
+  map = world->CreateGameObjectFromModel<Map>(mapBarMeshHandle);
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
 
