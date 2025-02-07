@@ -145,7 +145,7 @@ void GridObject::TurnOffSelectionMode() {
 
 	for (auto* cell : grid)
   {
-    cell->SetCellType(CellType_Red);
+    cell->SetCellType(CellType_Placement);
     cell->SetInvisible();
   }
 }
@@ -165,13 +165,13 @@ void GridObject::FindHoveredCell()
     if (cell->isVisible && !anyHover &&
         obb.Intersects(cursorRay.position, cursorRay.direction, t))
     {
-      cell->SetCellType(CellType_Green);
+      cell->SetCellType(CellType_Default);
       selectedCell = cell;
       anyHover = true;
     }
     else
     {
-      cell->SetCellType(CellType_Red);
+      cell->SetCellType(CellType_Placement);
     }
   }
 

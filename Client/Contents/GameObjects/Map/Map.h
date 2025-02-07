@@ -4,6 +4,7 @@
 
 #include "Contents/GameObjects/Map/Grid/GridObject.h"
 #include "Contents/GameObjects/Map/Characters/Character.h"
+#include "Contents/GameObjects/Map/Obstacle/Obstacle.h"
 
 class Map : public GameObject
 {
@@ -29,6 +30,15 @@ public:
 	ModelHandle allyBrawlerModelHandle;
   ModelHandle allySlasherModelHandle;
   ModelHandle allyGunmanModelHandle;
+
+  ModelHandle obstacleBox01ModelHandle;
+  ModelHandle obstacleBox02ModelHandle;
+  ModelHandle obstacleDrumModelHandle;
+  ModelHandle obstacleDrumOldModelHandle;
+  ModelHandle obstacleLionModelHandle;
+  ModelHandle obstacleSofaModelHandle;
+  ModelHandle obstacleStoolModelHandle;
+  ModelHandle obstacleVBoxModelHandle;
 
 public:
 
@@ -59,13 +69,16 @@ public:
 
 
 	// Selection mode
-  bool isAnySelected{false};
+  bool isHoveredCharacterChanged{false};
+  Character* prevHoveredCharacter{nullptr};
   Character* hoveredCharacter{nullptr};
-
 
 	// Assassination target
   bool isAssassinationMode{false};
   Character* assassinationTarget{nullptr};
+
+  // 
+  std::optional<CharacterInfo> tmp;
 
 public:
 
@@ -77,6 +90,7 @@ public:
 
   bool bNeedUpdateAttackRange{true};
 	void ShowHoveredCharacterRange();
+  bool bRangeHided{true};
   void HideHoveredCharacterRange();
 
   void TurnOnAssassinationMode();
@@ -89,6 +103,8 @@ public:
   void PauseGame();
   void ResumeGame();
 
+  
+
 	void CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
                      Direction dir = kNorth);
 
@@ -97,7 +113,7 @@ public:
 
   void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth);
 
-  void CreateObstacleAt(uint32_t w, uint32_t h);
+  void CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h, Direction dir = kNorth);
 
   void DeleteCharacterFromMap(Character* character);
 

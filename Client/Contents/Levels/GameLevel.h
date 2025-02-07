@@ -15,10 +15,15 @@ protected:
   ModelHandle redCellModelHandle;
   ModelHandle greenCellModelHandle;
 
-  ModelHandle mapMeshHandle;
+  ModelHandle mapBarMeshHandle;
+  ModelHandle mapMuseumMeshHandle;
+  ModelHandle mapWarehouseMeshHandle;
 
   ModelHandle animTestHandle;
   ModelHandle handGunHandle;
+  
+  ModelHandle OBsStoolHandle;
+  ModelHandle OBsBox02Handle;
 
   
 
@@ -28,6 +33,8 @@ protected:
 
   class Map* map{nullptr};
   class GameManager* gameManager{nullptr};
+
+  class InGameUI* inGameUI;
 
 public:
   GameLevel(const std::string& name) : Level(name) {}

@@ -325,26 +325,34 @@ void DX11Renderer::CreateBillboard(Billboard*& billboard)
 {
   billboard = new Billboard(_device);
 }
-#ifdef _DEBUG
 void DX11Renderer::DrawDebugSphere(Matrix world, Color color)
 {
+#ifdef _DEBUG
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Sphere, world, color);
+#endif
 }
 
 void DX11Renderer::DrawDebugBox(Matrix world, Color color)
 {
+#ifdef _DEBUG
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Box, world, color);
+#endif
 }
 
 void DX11Renderer::DrawDebugCylinder(Matrix world, Color color)
 {
+#ifdef _DEBUG
   _passMgr->ClassifyGeometryPrimitive(Geometry::Type::Cylinder, world, color);
+#endif
 }
 
-#endif
 void DX11Renderer::DrawBillBoard(Billboard* billboard)
 {
   _passMgr->AddBillBoard(billboard->_quad);
+}
+void DX11Renderer::CreateTrail(Trail*& trail)
+{
+
 }
 void DX11Renderer::BeginImGuiDraw()
 {

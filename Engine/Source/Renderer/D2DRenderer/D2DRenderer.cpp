@@ -3,6 +3,7 @@
 #include "Renderer/DX11/Internal/SwapChain.h"
 #include "Resource2DManager/Resource2DManager.h"
 #include "Sprite/Sprite.h"
+#include "Shared/Config/Config.h"
 
 D2DRenderer::~D2DRenderer()
 {
@@ -42,7 +43,11 @@ bool D2DRenderer::Init(Device* device, SwapChain* swapChain,
   _pSpriteBatch->SetViewport(_viewport);
 
   // Font 초기화
+  fs::path fontDir = Utility::convertToUTF16(ns::kFontDir);
+
   _pFont = new Font;
+  _pFont->LoadFontFile((fontDir / "PT Noeul.ttf").wstring(),
+                       L"PT Noeul");
 
   Sprite::SetDevice(device);
   Sprite::SetD2DRenderer(this);
@@ -187,11 +192,50 @@ void D2DRenderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
 {
   _d2dRenderQueue.AddRender2DCmd([=]() {
     IDWriteTextFormat* textFormat = nullptr;
+    bool fontValid = true;
 
-    // 텍스트 포멧 설정
+    // 1. 커스텀 폰트 컬렉션 획득
+    IDWriteFontCollection1* pCustomCollection =
+        _pFont->GetFontCollection(textFormatInfo._fontName);
+
+    // 2. 컬렉션 존재 여부 확인
+    if (!pCustomCollection)
+    {
+      OutputDebugString(L"[ERROR] Font collection not found: ");
+      OutputDebugString(textFormatInfo._fontName.c_str());
+      OutputDebugString(L"\n");
+      fontValid = false;
+    }
+    else
+    {
+      // 3. 실제 패밀리 이름 존재 여부 확인
+      UINT32 index = 0;
+      BOOL exists = FALSE;
+      HRESULT hr = pCustomCollection->FindFamilyName(
+          textFormatInfo._fontName.c_str(), &index, &exists);
+
+      if (FAILED(hr) || !exists)
+      {
+        OutputDebugString(L"[ERROR] Font family not in collection: ");
+        OutputDebugString(textFormatInfo._fontName.c_str());
+        OutputDebugString(L"\n");
+        fontValid = false;
+      }
+    }
+
+    // 4. 폰트가 유효하지 않으면 시스템 폰트 사용 & 경고
+    if (!fontValid)
+    {
+      MessageBoxW(nullptr, L"커스텀 폰트 로드 실패! 시스템 폰트로 대체됩니다.",
+                  L"Font Error", MB_ICONWARNING);
+
+      // 시스템 폰트 컬렉션으로 대체
+      pCustomCollection = nullptr;
+    }
+
+    // 텍스트 포맷 생성 (나머지 코드 동일)
     HR_T(_pFont->GetIDWriteFactory()->CreateTextFormat(
-        textFormatInfo._fontName.c_str(), // 글꼴 이름
-        NULL, // 글꼴 컬렉션 (NULL은 시스템 기본 사용)
+        textFormatInfo._fontName.c_str(), pCustomCollection,
         static_cast<DWRITE_FONT_WEIGHT>(textFormatInfo._fontWeight),
         static_cast<DWRITE_FONT_STYLE>(textFormatInfo._fontStyle),
         static_cast<DWRITE_FONT_STRETCH>(textFormatInfo._fontStretch),

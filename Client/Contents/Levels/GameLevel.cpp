@@ -4,6 +4,7 @@
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "Resource2DManager/Resource2DManager.h"
+#include "Contents/UI/InGameUI/InGameUI.h"
 
 void GameLevel::PrepareLevel()
 {
@@ -13,7 +14,13 @@ void GameLevel::PrepareLevel()
   animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
   handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 
-  mapMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
+  mapBarMeshHandle = LoadModel("Models\\Maps\\Map_001_Bar\\Map_001.glb");
+  mapMuseumMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
+  mapWarehouseMeshHandle =
+      LoadModel("Models\\Maps\\Map_003_Warehouse\\Map_003.glb");
+
+  OBsStoolHandle = LoadModel("Models\\Obstacles\\OBs_Stool.glb");
+  OBsBox02Handle = LoadModel("Models\\Obstacles\\OBs_Box02.glb");
 
   // UI Resource Load
 #ifdef USED2D
@@ -57,6 +64,7 @@ void GameLevel::BeginLevel()
 
 #ifdef USED2D
   world->_canvas->CreatePanel<UICursor>(L"Cursor");
+  inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
 #endif // USED2D
 }
 
@@ -65,7 +73,9 @@ void GameLevel::CleanupLevel()
   UnloadModel(redCellModelHandle);
   UnloadModel(greenCellModelHandle);
 
-  UnloadModel(mapMeshHandle);
+  UnloadModel(mapBarMeshHandle);
+  UnloadModel(mapMuseumMeshHandle);
+  UnloadModel(mapWarehouseMeshHandle);
 
   UnloadModel(animTestHandle);
 }
@@ -74,7 +84,7 @@ void GameLevel::CreateMap()
 {
   pivot = world->CreateGameObject();
 
-  map = world->CreateGameObjectFromModel<Map>(mapMeshHandle);
+  map = world->CreateGameObjectFromModel<Map>(mapMuseumMeshHandle);
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
 
@@ -82,7 +92,7 @@ void GameLevel::CreateMap()
   map->CreateEnemyAt(kGunman, 3, 2, kEast);
   map->CreateEnemyAt(kGunman, 2, 4, kEast);
 
-  map->CreateCivillianAt(1, 1);
+  map->CreateCivillianAt(4, 1);
 
   map->CreateAllyAt(kGunman, 2, 5, kWest);
 }

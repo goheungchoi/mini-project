@@ -39,6 +39,11 @@ void RigidbodyComponent::SetCollisionEvent(IRigidBody* other,
   _rigidbody->SetCollisionEvent(eventType, other, event);
 }
 
+void RigidbodyComponent::RemoveCollisionEvent(IRigidBody* other)
+{
+  _rigidbody->RemoveCollisionEvent(other);
+}
+
 
 void RigidbodyComponent::SetOffsetTransform(const DirectX::SimpleMath::Vector3& offsetTranslation,
                                             const Quaternion& offsetQuaternion,
@@ -149,19 +154,24 @@ void RigidbodyComponent::UpdateToTransform()
   //GetTransformComponent()->globalTransform = transform;
 }
 
-#ifdef _DEBUG
 void RigidbodyComponent::EnableDebugDraw()
 {
+#ifdef _DEBUG
   _bDebugDrawFlag = true;
+#endif
 }
 
 void RigidbodyComponent::DisableDebugDraw()
 {
+#ifdef _DEBUG
   _bDebugDrawFlag = false;
+#endif
 }
 
 void RigidbodyComponent::UpdateDebugDrawMatrix()
 {
+#ifdef _DEBUG
+
   debugDrawMatrix = XMMatrixScalingFromVector(offsetScale*scalingFactor) *
                     XMMatrixRotationQuaternion(offsetRotation) *
                     XMMatrixTranslationFromVector(offsetTranslation) *
@@ -169,8 +179,8 @@ void RigidbodyComponent::UpdateDebugDrawMatrix()
                         GetTransformComponent()->GetGlobalQuaternion()) *
                     XMMatrixTranslationFromVector(
                         GetTransformComponent()->GetGlobalTranslation());
-}
 #endif
+}
 
 void RigidbodyComponent::RegisterRigidBodyToWorld() {
   GetWorld()->RegisterRigidBodyComponent(this);

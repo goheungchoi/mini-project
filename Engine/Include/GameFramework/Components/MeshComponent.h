@@ -24,4 +24,7 @@ public:
   void RegisterMeshToWorld();
   void SetVisible(bool visible) { isVisible = visible; }
   void SetCastShadow(bool shadow);
+
+  void ShowOutline() { renderTypeFlags = kOutline; }
+  void HideOutline() { renderTypeFlags = RenderTypeNone; }
 };

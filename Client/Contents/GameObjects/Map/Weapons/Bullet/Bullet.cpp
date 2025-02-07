@@ -14,7 +14,8 @@ void Bullet::OnAwake()
 
 	auto* rigidBody = CreateComponent<RigidbodyComponent>();
   auto v = transform->GetGlobalTranslation();
-
+  transform->SetScaling(XMVectorSet(.5f, .5f, .5f, 5.f));
+  
   rigidBody->Initialize({0, 0, 0}, Quaternion::Identity, {.1f, .1f, .1f},
                         ColliderShape::eCubeCollider, false, true,
                        GetWorld()->_phyjixWorld);

@@ -15,7 +15,7 @@ private:
   Device* _device = nullptr;
   // VARIABLE
   float _forwardDist = 0.f;
-  float _upLookAtDist = 310.764f;
+  float _upLookAtDist = 200.f;
 
   float _nearPlane = 150.f;
   float _farPlane = 10000.f;

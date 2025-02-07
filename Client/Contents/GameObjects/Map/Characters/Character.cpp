@@ -77,6 +77,10 @@ Character::~Character() {
 void Character::TriggerAction()
 {
   isActionTriggered = true;
+
+  HideOutline();
+  HideDeathIndicator();
+
   if (isTargetInRange)
 		animator->SetVariable<bool>("triggered", true, true);
 }
@@ -115,14 +119,17 @@ void Character::SetFaction(Faction faction) {
 
 	if (faction == Faction::kAlly)
   {
+    SetOutlineColor(Color(0.f, 1.f, 0.f));
     animator->BindSkeleton(playerSkeletonHandle);
 	}
 	else if (faction == Faction::kEnemy)
   {
+    SetOutlineColor(Color(1.f, 0.f, 0.f));
     animator->BindSkeleton(enemySkeletonHandle);
   }
   else
   {
+    SetOutlineColor(Color(0.f, 0.f, 1.f));
     animator->BindSkeleton(civilianSkeletonHandle);
   }
 }
@@ -198,7 +205,12 @@ void Character::OnHover() {
     rbComp->debugColor = Color(0, 1, 1, 1);
   }
 
-  map->hoveredCharacter = this;
+  if (map->hoveredCharacter != this)
+  {
+    map->isHoveredCharacterChanged = true;
+    map->bNeedUpdateAttackRange = true;
+    map->hoveredCharacter = this;
+  }
 }
 
 void Character::OnBeginOverlap(GameObject* other) {
@@ -347,7 +359,6 @@ void Character::PostUpdate(float dt) {
 }
 
 void Character::ApplyChangedGridLocation() {
-  count;
 	// Place the game object on the grid.
   grid->MoveGameObjectTo(this, grid_w, grid_h);
 	// Translate the game object.
@@ -413,8 +424,13 @@ void Character::FindTargetInRange() {
         continue;
 
 			// Don't attack civilians.
-			if (searchTarget->GetGameObjectTag() == kFactionTags[kNeutral])
-        continue;
+      if (searchTarget->GetGameObjectTag() == kFactionTags[kNeutral])
+      {
+        // Don't attack.
+        distanceToTarget = -1;
+        isTargetInRange = false;
+        return;
+      }
 
 			// Skip the target that will be assassinated at the start of the game.
 			if (searchTarget == map->assassinationTarget)

@@ -5,7 +5,7 @@
 #include "Core/Types/Billboard.h"
 #include "Core/Types/RenderType.h"
 #include "Core/Types/FontType.h"
-
+#include "Core/Types/Trail.h"
 using namespace std;
 /**
  * @brief
@@ -76,7 +76,6 @@ public:
 //   1. you can delete meshes render pass type.
 // * Param1 : own meshHandle
 // */
-#ifdef _DEBUG
   /**
    * @brief draw Sphere wireFrame, it's only work on debug
    * @param world world Matirx
@@ -95,16 +94,10 @@ public:
    * @param color color
    */
   virtual void DrawDebugCylinder(Matrix world, Color color) = 0;
-#endif
   virtual void DrawBillBoard(Billboard* billboard) = 0;
-  /**
-   * @brief About Particle
-   */
-
+  
   virtual void CreateBillboard(Billboard*& billboard) = 0;
-  /**
-   * @brief About Particle
-   */
+  virtual void CreateTrail(Trail*& trail) = 0;
 
   virtual void BindPipeline() = 0;
 

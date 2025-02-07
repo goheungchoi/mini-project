@@ -172,7 +172,7 @@ DEFFERED_PS_OUT ps_main(PS_INPUT input)
         float3 T = normalize(input.worldTangent);
         float3 B = normalize(input.worldBitangent);
         float3 normalTexColor;
-        normalTexColor = (normalTexture.rgb * 2.0) - 1.0;
+        normalTexColor = (normalize(normalTexture.rgb)* 2.0) - 1.0;
         normalTexColor = normalize(normalTexColor);
         float3x3 TBN = float3x3(T, B, N);
         N = normalize(mul(normalTexColor, TBN));
@@ -276,7 +276,7 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
     if (length(normalTexture) > 0.f)
     {
         float3 normalTexColor;
-        normalTexColor.xyz = normalTexture.rgb * 2.0 - 1.0;
+        normalTexColor.xyz = normalize(normalTexture.rgb) * 2.0 - 1.0;
         normalTexColor = normalize(normalTexColor);
         float3 tangent = normalize(input.worldTangent);
         float3 bitangent = normalize(input.worldBitangent);
@@ -624,7 +624,7 @@ float4 ssao_ao_write_ps_main(QUAD_PS_INPUT input) : SV_TARGET
         }
     }
 
-    // Normalize Occlusion Value
+    // Normalize Occlusion Valuef
     occlusion = (occlusion / 16);
 
     return float4(occlusion, occlusion, occlusion, 1.0f); // Grayscale SSAO

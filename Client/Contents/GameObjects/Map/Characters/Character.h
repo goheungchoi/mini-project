@@ -2,6 +2,8 @@
 
 #include "GameFramework/GameObject/GameObject.h"
 
+#include "Contents/GameObjects/Map/Types.h"
+
 enum Faction
 {
   kAlly = 0,
@@ -17,15 +19,6 @@ enum CharacterType
   kSlasher = 1,
   kGunman = 2,
   kCivilian = 3,
-};
-
-enum Direction
-{
-  kNorth = 0, // +z
-  kEast = 1,  // +x
-  kSouth = 2, // -z
-  kWest = 3,	// -x
-	kNumDirections
 };
 
 class Character : public GameObject

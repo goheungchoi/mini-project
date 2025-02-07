@@ -10,6 +10,7 @@ class PipeLine;
 class RenderPassManager;
 class SkyBox;
 class D2DRenderer;
+class Trail;
 class DX11Renderer : public IRenderer
 {
 public:
@@ -46,12 +47,11 @@ public:
                     LPCSTR diffuseIrrPath, LPCSTR specularIBLPath) override;
 
   void CreateBillboard(Billboard*& billboard) override;
-#ifdef _DEBUG
   void DrawDebugSphere(Matrix world, Color color) override;
   void DrawDebugBox(Matrix world, Color color) override;
   void DrawDebugCylinder(Matrix world, Color color) override;
-#endif
   void DrawBillBoard(Billboard* billboard) override;
+  void CreateTrail(Trail*& trail) override;
 
 public:
   // Render ImGui graphical interface.

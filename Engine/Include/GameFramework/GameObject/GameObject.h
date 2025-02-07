@@ -13,6 +13,7 @@
 #include "GameFramework/Components/TransformComponent.h"
 #include "GameFramework/Components/RigidbodyComponent.h"
 #include "GameFramework/Components/BillboardComponent.h"
+#include "GameFramework/Components/TrailComponent.h"
 
 class GameObject
 {
@@ -279,6 +280,10 @@ public:
 
   void SetVisible();
   void SetInvisible();
+
+  void SetOutlineColor(Color color);
+  void ShowOutline();
+  void HideOutline();
 
 	// TODO:
   // GameObject* Clone();

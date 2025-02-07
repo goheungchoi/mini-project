@@ -3,7 +3,7 @@
 
 UIText::UIText(World* world) : UIElement(world)
 {
-  _textFormatInfo._fontName = L"±Ã¼­";
+  _textFormatInfo._fontName = L"GangwonEduAll";
   _textFormatInfo._fontSize = 30.0f;
   _textFormatInfo._fontWeight = FontWeight::BOLD;
   _textFormatInfo._fontStyle = FontStyle::NORMAL;
@@ -25,11 +25,12 @@ void UIText::Render()
 
   _world->_renderer->DrawTexts(_format, _rect, _color, _opacity,
                                _textFormatInfo);
-
+  #ifndef NDEBUG
   if (bDebugDrawFlag)
   {
     _world->_renderer->DrawRectangle(Color(1, 0, 0, 1), _rect);
   }
+  #endif
 }
 
 void UIText::SetText(const wchar_t* format)
@@ -66,8 +67,9 @@ void UIText::SetParagraphAlignment(ParagraphAlignment paragraphAlignment)
 {
   _textFormatInfo._paragraphAlignment = paragraphAlignment;
 }
-
+#ifndef NDEBUG
 void UIText::SetDebugDraw(bool debugFlag)
 {
   bDebugDrawFlag = debugFlag;
 }
+#endif
