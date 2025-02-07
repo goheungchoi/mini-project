@@ -28,7 +28,7 @@ void UICursor::Update(float dt)
 
   if (_selectedIndex == 0)
   {
-    _sprites[0]->SetPos({curPos.x - 20, curPos.y - 15});
+    _sprites[0]->SetPos({curPos.x - 10, curPos.y});
   }
   else
   {

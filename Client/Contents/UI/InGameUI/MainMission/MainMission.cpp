@@ -12,8 +12,8 @@ MainMission::MainMission(World* world) : UIPanel(world)
   _mainMissionTxt->SetSize(
       {_mainMissionImg->GetSize().x, _mainMissionImg->GetSize().y});
   _mainMissionTxt->SetTextAlignment(TextAlignment::LEFTAlIGN);
-  //_mainMissonTxt->SetFont(L"강원교육모두 Bold");
-  _mainMissionTxt->SetFont(L"강원교육모두 굵게");
+  _mainMissionTxt->SetFont(L"GangwonEduAll");
+  _mainMissionTxt->SetFontWeight(FontWeight::BOLD);
   _mainMissionTxt->SetText(
       L"사라진 아이들에 대한 단서 찾기\n모든 적 처치 (0/8)");
   _mainMissionTxt->SetOpacity(1.0f);

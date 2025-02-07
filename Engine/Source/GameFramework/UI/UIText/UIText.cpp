@@ -3,7 +3,7 @@
 
 UIText::UIText(World* world) : UIElement(world)
 {
-  _textFormatInfo._fontName = L"±Ã¼­";
+  _textFormatInfo._fontName = L"GangwonEduAll";
   _textFormatInfo._fontSize = 30.0f;
   _textFormatInfo._fontWeight = FontWeight::BOLD;
   _textFormatInfo._fontStyle = FontStyle::NORMAL;
