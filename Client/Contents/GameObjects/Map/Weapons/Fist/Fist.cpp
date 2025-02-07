@@ -12,6 +12,7 @@ Fist::Fist(World* world) : GameObject(world) {
                         {.08f, .2f, .05f}, ColliderShape::eCubeCollider, false,
                         true, GetWorld()->_phyjixWorld);
   rigidBody->DisableSimulation();
+  
   rigidBody->EnableDebugDraw();
 }
 

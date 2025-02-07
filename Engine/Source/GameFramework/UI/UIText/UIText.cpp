@@ -25,11 +25,12 @@ void UIText::Render()
 
   _world->_renderer->DrawTexts(_format, _rect, _color, _opacity,
                                _textFormatInfo);
-
+  #ifndef NDEBUG
   if (bDebugDrawFlag)
   {
     _world->_renderer->DrawRectangle(Color(1, 0, 0, 1), _rect);
   }
+  #endif
 }
 
 void UIText::SetText(const wchar_t* format)
@@ -66,8 +67,9 @@ void UIText::SetParagraphAlignment(ParagraphAlignment paragraphAlignment)
 {
   _textFormatInfo._paragraphAlignment = paragraphAlignment;
 }
-
+#ifndef NDEBUG
 void UIText::SetDebugDraw(bool debugFlag)
 {
   bDebugDrawFlag = debugFlag;
 }
+#endif
