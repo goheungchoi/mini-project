@@ -237,6 +237,53 @@ void Map::ShowHoveredCharacterRange()
   break;
   case kSlasher: {
     // TODO:
+    auto [w_offset, h_offset] = hoveredCharacter->GetGridFrontDirection();
+    if (hoveredCharacter->isTargetInRange)
+    {
+      // Show the damage zone.
+      w += w_offset;
+      h += h_offset;
+      CellObject* cell = grid->GetCellObjectAt(w, h);
+
+      while (cell)
+      {
+        // Mark the damage zone.
+        cell->SetCellType(CellType_DamageZone);
+
+        // Mark the death indicator if any.
+        if (GameObject* gameObject = grid->GetGameObjectAt(w, h); gameObject)
+        {
+          // TODO: Mark the death indicator.
+          if (gameObject->GetGameObjectTag() == kFactionTags[kAlly] ||
+              gameObject->GetGameObjectTag() == kFactionTags[kEnemy] ||
+              gameObject->GetGameObjectTag() == kFactionTags[kNeutral])
+          {
+            Character* character = (Character*)gameObject;
+            character->ShowDeathIndicator();
+          }
+        }
+
+        // Progress
+        w += w_offset;
+        h += h_offset;
+        cell = grid->GetCellObjectAt(w, h);
+      }
+    }
+    else
+    {
+      w += w_offset;
+      h += h_offset;
+      CellObject* cell = grid->GetCellObjectAt(w, h);
+      while (cell)
+      {
+        cell->SetCellType(CellType_RangeZone);
+
+        w += w_offset;
+        h += h_offset;
+        cell = grid->GetCellObjectAt(w, h);
+      }
+    }
+
   }
   break;
   case kGunman: {
