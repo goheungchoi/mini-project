@@ -847,7 +847,7 @@ void Map::Update(float dt)
     placeholder->ShowOutline();
 
     // Cancel placement mode.
-    if (INPUT.IsKeyDown(Key::Escape) || INPUT.IsKeyDown(MouseState::RB))
+    if (INPUT.IsKeyPress(Key::Escape) || INPUT.IsKeyPress(MouseState::RB))
     {
       if (tmp)
       {
@@ -858,13 +858,13 @@ void Map::Update(float dt)
       TurnOffPlacementMode();
     }
     // Change the direction of the placeholder.
-    else if (INPUT.IsKeyDown(Key::Tab))
+    else if (INPUT.IsKeyPress(Key::Tab))
     {
       uint32_t dir = placeholder->GetDirection();
       placeholder->SetDirection((Direction)((dir + 1) % kNumDirections));
     }
     // Place the character.
-    else if (INPUT.IsKeyDown(MouseState::LB))
+    else if (INPUT.IsKeyPress(MouseState::LB))
     {
       if (grid->selectedCell)
       {
@@ -900,7 +900,7 @@ void Map::Update(float dt)
       // Assasination mode.
       if (isAssassinationMode)
       {
-        if (INPUT.IsKeyDown(MouseState::LB))
+        if (INPUT.IsKeyPress(MouseState::LB))
         {
           if (hoveredCharacter->faction == Faction::kEnemy)
           {
@@ -910,7 +910,7 @@ void Map::Update(float dt)
             isAssassinationMode = false;
           }
         }
-        else if (INPUT.IsKeyDown(MouseState::RB))
+        else if (INPUT.IsKeyPress(MouseState::RB))
         {
           isAssassinationMode = false;
         }
@@ -927,7 +927,7 @@ void Map::Update(float dt)
         ShowHoveredCharacterRange();
 
         // Right Click
-        if (INPUT.IsKeyDown(MouseState::RB))
+        if (INPUT.IsKeyPress(MouseState::RB))
         {
           // Remove the character
           if (hoveredCharacter->faction == Faction::kAlly)
@@ -937,7 +937,7 @@ void Map::Update(float dt)
           }
         }
         // Left click
-        else if (INPUT.IsKeyDown(MouseState::LB))
+        else if (INPUT.IsKeyPress(MouseState::LB))
         {
           // Character selection -> Placement mode.
           // Find if any "ally character" is selected.

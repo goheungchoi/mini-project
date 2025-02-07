@@ -173,15 +173,16 @@ void Slasher::Update(float dt) {
       knife->TurnOffCollision();
   }
 
-  if (!isMoved && currActionAnimation->GetCurrentAnimationTime() >= 0.75)
+  /*if (!isMoved && currActionAnimation->GetCurrentAnimationTime() >= 0.75)
   {
-    TurnOnCollision();
+    
     TakeOverTargetCell();
     isMoved = true;
-  }
+  }*/
 
 	if (animator->GetVariable<bool>("done"))
   {
+    TurnOnCollision();
     animator->SetVariable<bool>("done", false);
   }
 }

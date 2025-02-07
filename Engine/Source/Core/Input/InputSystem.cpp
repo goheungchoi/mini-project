@@ -57,7 +57,7 @@ void InputSystem::Update(const float& dt)
     _handleOut = true;
     return;
   }
-
+  
   // 포커스를 다시 얻었을 때 마우스 휠 값 초기화
   if (_handleOut)
   {
@@ -77,7 +77,7 @@ void InputSystem::Update(const float& dt)
 bool InputSystem::IsKeyPress(DirectX::Keyboard::Keys key) const
 {
   // 키보드 키가 눌렸는지 확인
-  return _keyboardState.IsKeyDown(key);
+  return _keyboardTracker.IsKeyPressed(key);
 }
 
 bool InputSystem::IsKeyPress(MouseState mouseState) const
@@ -102,7 +102,7 @@ bool InputSystem::IsKeyPress(MouseState mouseState) const
 bool InputSystem::IsKeyDown(DirectX::Keyboard::Keys key) const
 {
   // 키보드 키가 이번 프레임에서 눌렸는지 확인
-  return _keyboardTracker.IsKeyPressed(key);
+  return _keyboardState.IsKeyDown(key);
 }
 
 bool InputSystem::IsKeyDown(MouseState mouseState) const
