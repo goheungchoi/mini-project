@@ -1,6 +1,5 @@
 ﻿#include "GameLevel.h"
 
-#include "../UI/TransitionUI/TransitionUI.h"
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
@@ -50,6 +49,7 @@ void GameLevel::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Deact.png");
 
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Retry_Act.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Confirm_Act.png");
 
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Act_Fist.png");

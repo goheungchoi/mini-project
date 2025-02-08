@@ -8,10 +8,10 @@ public:
   virtual ~PlayButton();
 
   void Update(float dt) override;
+  bool _bPlayflag = false;
 
 private:
   class UIButton* _playBtn{nullptr};
   class UIImage* _playBtnImgs[3];
 
-  bool _bPlayflag = false;
 };
