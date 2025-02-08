@@ -398,6 +398,11 @@ void DX11Renderer::DrawRectangle(Color color, Vector4 rect, float stroke,
   _d2dRenderer->DrawRectangle(color, rect, stroke, opacity);
 }
 
+void DX11Renderer::FillRectangle(Color color, Vector4 rect, float opacity)
+{
+  _d2dRenderer->FillRectangle(color, rect, opacity);
+}
+
 void DX11Renderer::CreateEngineShader()
 {
   _passMgr->CreateMainShader();
