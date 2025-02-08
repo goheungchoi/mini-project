@@ -7,6 +7,7 @@
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "Contents/UI/InGameUI/MainMission/MainMission.h"
 #include "Contents/UI/InGameUI/SubMission/SubMission.h"
+#include "Contents/UI/InGameUI/ApplyButton/ApplyButton.h"
 
 void Level7::PrepareLevel() 
 {
@@ -19,7 +20,8 @@ void Level7::BeginLevel()
 
   __super::BeginLevel();
 
-  #ifdef USED2D
+#ifdef USED2D
+  // world->_canvas->CreatePanel<ReconfirmUI>(L"TestReconfirmUI");
   inGameUI->_agentStorage->SetAgent(kBrawler, {1200, 960});
   inGameUI->_agentStorage->SetAgent(kSlasher, {1400, 960});
   inGameUI->_agentStorage->SetAgent(kGunman, {1600, 960});
@@ -28,10 +30,6 @@ void Level7::BeginLevel()
   inGameUI->_subMission->SetText(L"何包 郡府磊 锐积");
 #endif
 
-  #ifdef USED2D
-  inGameUI->HideUI(L"RetryBtn");
-  //world->_canvas->CreatePanel<ReconfirmUI>(L"TestReconfirmUI");
-#endif
 }
 
 void Level7::CleanupLevel() {}
