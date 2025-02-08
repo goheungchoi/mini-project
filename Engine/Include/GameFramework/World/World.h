@@ -35,10 +35,10 @@ public:
   void Initialize(HWND hwnd, const std::wstring& title);
   
 public:
-  std::atomic_bool readyToChangeLevel{true};
-  std::atomic_bool changingLevel{false};
+  std::atomic_bool bReadyToChangeLevel{true};
+  std::atomic_bool bChangingLevel{false};
   std::unordered_map<std::string, Level*> _levelMap;
-  std::unordered_map<std::string, std::future<bool>> _levelPreparedMap;
+  std::unordered_map<std::string, std::future<bool>> _levelReadyFutureMap;
 
   Level* _preparingLevel{nullptr};
 

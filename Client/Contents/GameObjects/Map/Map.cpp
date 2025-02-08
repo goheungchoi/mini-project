@@ -106,6 +106,8 @@ Map::Map(World* world) : GameObject(world)
   // Get the player model data.
   ModelData& playerModel = AccessModelData(allyBrawlerModelHandle);
 
+  
+
   // Create a grid.
   grid = world->CreateGameObject<GridObject>();
   grid->CreateGrid(6, 6, 1.4f);
@@ -496,6 +498,23 @@ void Map::PauseGame()
 void Map::ResumeGame()
 {
   this->Activate();
+}
+
+bool Map::IsGameFinished()
+{
+  bool isAllCharacterFinishedActions{true};
+
+  for (Character* enemy : enemies)
+  {
+    isAllCharacterFinishedActions |= enemy->IsFinishedAction();
+  }
+
+  for (Character* ally : allies)
+  {
+    isAllCharacterFinishedActions |= ally->IsFinishedAction();
+  }
+
+  return isAllCharacterFinishedActions;
 }
 
 void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
@@ -1055,5 +1074,17 @@ void Map::TranslatePlaceholder()
     // follow the cursor pos.
     XMVECTOR cursorPos = GetCursorPosition();
     placeholder->SetTranslation(cursorPos);
+  }
+}
+
+void Map::TickGameFinishTimer() {
+  if (isActionTriggered)
+  {
+
+
+  }
+  else
+  {
+    
   }
 }

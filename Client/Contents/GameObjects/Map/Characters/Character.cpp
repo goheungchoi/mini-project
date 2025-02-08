@@ -85,6 +85,11 @@ void Character::TriggerAction()
 		animator->SetVariable<bool>("triggered", true, true);
 }
 
+bool Character::IsFinishedAction()
+{
+  return isActionFinished;
+}
+
 void Character::BindDirectionIndicator(GameObject* directionIndicator) {
   this->directionIndicator = directionIndicator;
   directionIndicator->SetTranslation(0.f, 0.f, -.8f);
@@ -274,6 +279,15 @@ void Character::Update(float dt)
     {
       rbComp->debugColor = Color(0, 1, 1, 1);
     }
+  }
+
+  if (animator->GetVariable<bool>("done"))
+  {
+    isActionFinished = true;
+  }
+  else
+  {
+    isActionFinished = false;
   }
   
 	if (isDead)
