@@ -13,12 +13,17 @@
 
 #include "Shared/Config/Config.h"
 
+#include <mutex>
+
 template <typename T, size_t GROW_SIZE = 1024>
 class ResourcePool
 {
   std::unordered_map<xUUID, uint32_t> _uuidMap;
 
 	HandleTable<T, GROW_SIZE> _handleTable;
+
+	// mutex
+	mutable std::mutex _resourcePoolMutex;
 
 public:
   Handle Load(const char* path, void* pReserved)
@@ -29,6 +34,9 @@ public:
     {
       return Handle::kInvalidHandle;
     }
+
+		// Lock the thread for safe multithreading.
+    std::lock_guard<std::mutex> lock(_resourcePoolMutex);
 
     // Check if the asset is already loaded
     if (auto it = _uuidMap.find(uuid); it == _uuidMap.end())
@@ -48,15 +56,24 @@ public:
   }
 
 	void DiscardDetailedData(Handle& handle, void* pReserved) {
+    // Lock the thread for safe multithreading.
+    std::lock_guard<std::mutex> lock(_resourcePoolMutex);
+
     DiscardDetailedDataImpl(handle, pReserved);
 	}
 
 	void RestoreDetailedData(Handle& handle, void* pReserved) {
+    // Lock the thread for safe multithreading.
+    std::lock_guard<std::mutex> lock(_resourcePoolMutex);
+
     RestoreDetailedDataImpl(handle, pReserved);
 	}
 
   void Unload(Handle& handle, void* pReserved)
   {
+    // Lock the thread for safe multithreading.
+    std::lock_guard<std::mutex> lock(_resourcePoolMutex);
+
     if (_handleTable.GetReferenceCount(handle) == 1)
     {
       UnloadImpl(handle, pReserved);
@@ -67,6 +84,9 @@ public:
   }
 
 	Handle Clone(const Handle& handle) { 
+		// Lock the thread for safe multithreading.
+    std::lock_guard<std::mutex> lock(_resourcePoolMutex);
+
 		if (!IsValidHandle(handle))
       // TODO: Error message
       throw std::exception("Invalid handle!");
@@ -81,6 +101,9 @@ public:
 
   T& AccessResourceData(const Handle& handle)
   {
+    // Lock the thread for safe multithreading.
+    std::lock_guard<std::mutex> lock(_resourcePoolMutex);
+
     if (!IsValidHandle(handle))
       // TODO: Error message
       throw std::exception("Invalid handle!");
