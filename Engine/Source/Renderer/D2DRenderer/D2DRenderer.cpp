@@ -241,15 +241,31 @@ void D2DRenderer::DrawTexts( std::wstring format, Vector4 rect, Color color,
       pCustomCollection = nullptr;
     }
 
-    // 텍스트 포맷 생성 (나머지 코드 동일)
-    HR_T(_pFont->GetIDWriteFactory()->CreateTextFormat(
-        textFormatInfo._fontName.c_str(), pCustomCollection,
-        static_cast<DWRITE_FONT_WEIGHT>(textFormatInfo._fontWeight),
-        static_cast<DWRITE_FONT_STYLE>(textFormatInfo._fontStyle),
-        static_cast<DWRITE_FONT_STRETCH>(textFormatInfo._fontStretch),
-        textFormatInfo._fontSize, // 글꼴 크기
-        L"ko-KR",                 // 로케일
-        &textFormat));
+    // 렌더링 전 캐시 검색
+    FontKey key = {textFormatInfo._fontName,
+                static_cast<DWRITE_FONT_WEIGHT>(textFormatInfo._fontWeight),
+                static_cast<DWRITE_FONT_STYLE>(textFormatInfo._fontStyle),
+                static_cast<DWRITE_FONT_STRETCH>(textFormatInfo._fontStretch),
+                textFormatInfo._fontSize};
+        
+    if (textFormatCache.find(key) != textFormatCache.end())
+    {
+      textFormat = textFormatCache[key].Get();
+    }
+    else
+    {
+      // 새로 생성 후 캐시에 저장
+      HR_T(_pFont->GetIDWriteFactory()->CreateTextFormat(
+          textFormatInfo._fontName.c_str(), pCustomCollection,
+          static_cast<DWRITE_FONT_WEIGHT>(textFormatInfo._fontWeight),
+          static_cast<DWRITE_FONT_STYLE>(textFormatInfo._fontStyle),
+          static_cast<DWRITE_FONT_STRETCH>(textFormatInfo._fontStretch),
+          textFormatInfo._fontSize, // 글꼴 크기
+          L"ko-KR",                 // 로케일
+          &textFormat));
+      textFormatCache.emplace(key, textFormat);
+    }
+
 
     // 텍스트 정렬
     textFormat->SetTextAlignment(

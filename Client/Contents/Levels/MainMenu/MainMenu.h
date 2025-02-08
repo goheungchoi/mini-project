@@ -6,6 +6,8 @@
 
 class MainMenu : public Level
 {
+  class TransitionUI* transitionUI;
+
 public:
   MainMenu(const std::string& name) : Level(name) {}
 

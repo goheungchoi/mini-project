@@ -64,10 +64,13 @@ void World::PrepareChangeLevel(const std::string& levelName)
     }
 
     _preparingLevel = it->second;
+    bReadyToChangeLevel = false;
 
-    _levelReadyFutureMap[levelName];
-
-    _preparingLevel->PrepareLevel();
+    // Async level preparation.
+    async::executor.silent_async("prepare level", [this]() {
+      _preparingLevel->PrepareLevel();
+      bReadyToChangeLevel = true;
+    });
   }
   else
   {
@@ -80,44 +83,58 @@ bool World::IsLevelChangeReady()
   if (!_preparingLevel)
     return false;
 
-  /* TODO: */
-  auto& f = _levelReadyFutureMap[_preparingLevel->name];
-
-  return f.valid() && f.wait_for(0s) == std::future_status::ready && f.get();
+  return bReadyToChangeLevel;
 }
 
 void World::CommitLevelChange()
 {
-  // async::executor.async([&]() {
-  //   auto& f = _levelReadyFutureMap[_preparingLevel->name];
-  //   f.get();
-
-  //  while (!bReadyToChangeLevel) {}  // Wait until
-  bChangingLevel = true;
-
-  if (_currentLevel)
+  // Check if any level is being prepared to be executed.
+  if (!_preparingLevel)
   {
-    _currentLevel->DestroyLevel();
-    _currentLevel->CleanupLevel();
-
-    rigidBodyComponents.clear();
-
-#ifdef USED2D
-    delete _canvas;
-    _canvas = new Canvas(this);
-#endif // USED2D
+    throw std::runtime_error("There no prepared level exists!");
   }
 
-  _currentLevel = _preparingLevel;
-  _currentLevel->BeginLevel();
-  _phyjixWorld->CreateRay(
-      mainCamera->GetPosition(),
-      Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
-      mainCamera->GetViewTransform(), mainCamera->GetProjectionMatrix(),
-      Vector2(kScreenWidth, kScreenHeight));
+  async::executor.silent_async("commit level change", [this]() {
+    // Wait until the level asset loading is done.
+    while (!bOkayToChangeLevel)
+    {
+    }
 
-  bChangingLevel = false;
-  // });
+    bChangingLevel = true;
+
+    if (_currentLevel)
+    {
+      _currentLevel->DestroyLevel();
+
+      auto& tmp = _currentLevel;
+      async::executor.silent_async([tmp]() { tmp->CleanupLevel(); });
+
+      rigidBodyComponents.clear();
+
+#ifdef USED2D
+      delete _canvas;
+      _canvas = new Canvas(this);
+#endif // USED2D
+    }
+
+    while (!bReadyToChangeLevel)
+    {
+    }
+
+    // Change the current level, and begin the level.
+    _currentLevel = _preparingLevel;
+    _currentLevel->BeginLevel();
+    _phyjixWorld->CreateRay(
+        mainCamera->GetPosition(),
+        Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
+        mainCamera->GetViewTransform(), mainCamera->GetProjectionMatrix(),
+        Vector2(kScreenWidth, kScreenHeight));
+
+    _preparingLevel = nullptr;
+    bReadyToChangeLevel = false;
+
+    bChangingLevel = false;
+  });
 }
 
 void World::AddLevel(Level* level)
@@ -375,7 +392,7 @@ void World::InitialStage()
     return;
 
   // Mark that it should not change the level while running the game loop.
-  bReadyToChangeLevel = false;
+  bOkayToChangeLevel = false;
 
   // Awake and activate game objects.
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
@@ -773,7 +790,7 @@ void World::CleanupStage()
   }
 
   // Mark that it's ready to change level.
-  bReadyToChangeLevel = true;
+  bOkayToChangeLevel = true;
 }
 
 void World::UpdateGameObjectHierarchy(GameObject* gameObject,

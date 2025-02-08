@@ -79,6 +79,39 @@ private:
 
 };
 
+struct FontKey
+{
+  std::wstring familyName;
+  DWRITE_FONT_WEIGHT weight;
+  DWRITE_FONT_STYLE style;
+  DWRITE_FONT_STRETCH stretch;
+  float size;
+
+  // 비교 연산자 오버로딩 (필수)
+  bool operator==(const FontKey& other) const
+  {
+    return familyName == other.familyName && weight == other.weight &&
+           style == other.style && stretch == other.stretch &&
+           size == other.size;
+  }
+};
+
+namespace std
+{
+template <>
+struct hash<FontKey>
+{
+  size_t operator()(const FontKey& key) const
+  {
+    return hash<wstring>()(key.familyName) ^
+           (hash<int>()(static_cast<int>(key.weight)) << 1) ^
+           (hash<int>()(static_cast<int>(key.style)) << 2) ^
+           (hash<int>()(static_cast<int>(key.stretch)) << 3) ^
+           (hash<float>()(key.size) << 4);
+  }
+};
+} // namespace std
+
 class D2DRenderer // D2D.ver
 {
   friend class Sprite;
@@ -121,6 +154,7 @@ public:
   // Font
   Font* _pFont;
 
+
 private:
   Device* _pDevice = nullptr;
   SwapChain* _pSwapChain = nullptr;
@@ -142,4 +176,7 @@ private:
   UINT _stencilRef{};
 
   Render2DQueue _d2dRenderQueue;
+  std::unordered_map<FontKey, Microsoft::WRL::ComPtr<IDWriteTextFormat>> textFormatCache;
+
+
 };
