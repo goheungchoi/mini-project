@@ -686,8 +686,7 @@ TRAIL_PS_INPUT trail_vs_main(TRAIL_VS_INPUT input)
 
 float4 trail_ps_main(TRAIL_PS_INPUT input):SV_Target0
 {
-    //float3 color = albedoFactor.rgb;
-    float3 color = float3(1.f, 1.f, 0.f);
+    float3 color = albedoFactor.rgb;
     float alpha = input.alpha;
     return float4(color, alpha);
 }

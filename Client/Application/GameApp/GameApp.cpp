@@ -186,7 +186,7 @@ void GameApp::Run()
 
       dt = TimeSystem::GetDeltaTime();
 
-      if (_world->changingLevel)
+      if (_world->bChangingLevel)
         continue;
 
       _world->InitialStage();

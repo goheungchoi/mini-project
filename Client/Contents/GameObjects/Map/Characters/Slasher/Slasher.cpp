@@ -94,6 +94,9 @@ void Slasher::TakeOverTargetCell() {
 }
 
 void Slasher::TurnOnCollision() {
+  if (isCollsionOn)
+    return;
+
   auto* rigidBody = GetComponent<RigidbodyComponent>();
   if (rigidBody)
   {
@@ -103,6 +106,9 @@ void Slasher::TurnOnCollision() {
 }
 
 void Slasher::TurnOffCollision() {
+  if (!isCollsionOn)
+    return;
+
   auto* rigidBody = GetComponent<RigidbodyComponent>();
   if (rigidBody)
   {
@@ -183,6 +189,5 @@ void Slasher::Update(float dt) {
 	if (animator->GetVariable<bool>("done"))
   {
     TurnOnCollision();
-    animator->SetVariable<bool>("done", false);
   }
 }

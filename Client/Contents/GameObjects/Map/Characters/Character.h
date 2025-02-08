@@ -87,6 +87,8 @@ public:
 	//
   bool isActionTriggered{false};
 
+  bool isActionFinished{false};
+
 
   // isPlacement mode on
   bool isPlacementModeOn{false};
@@ -99,6 +101,7 @@ public:
 	~Character();
 
 	virtual void TriggerAction();
+  bool IsFinishedAction();
 
   void BindDirectionIndicator(GameObject* directionIndicator);
 

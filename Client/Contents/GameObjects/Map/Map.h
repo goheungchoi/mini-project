@@ -103,7 +103,7 @@ public:
   void PauseGame();
   void ResumeGame();
 
-  
+  bool IsGameFinished();
 
 	void CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
                      Direction dir = kNorth);

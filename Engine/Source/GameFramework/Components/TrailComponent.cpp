@@ -29,3 +29,8 @@ void TrailComponent::SetDirection(DirectX::XMVECTOR direction)
 {
   trail->SetDirection(direction);
 }
+
+void TrailComponent::SetColor(Color color) 
+{
+  trail->SetColor(color);
+}
