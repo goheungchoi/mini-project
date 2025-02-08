@@ -10,6 +10,7 @@ public:
   void SetDuration(float duration);
   void SetWidth(float width);
   void SetDirection(DirectX::XMVECTOR direction);
+  void SetColor(Color color);
 
 public:
   bool isVisible{true};

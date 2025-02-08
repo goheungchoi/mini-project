@@ -14,6 +14,7 @@ class Trail
 private:
   float _maxDuration{2.f};
   float _width{1.f};
+  Color _color{1.f, 1.f, 0.f, 1.f};
   DirectX::XMVECTOR _direction;
 
 public:
@@ -25,11 +26,14 @@ public:
   void SetMaxDuration(float duration) { _maxDuration = duration; }
   void SetWidth(float width) { _width = width; }
   void SetDirection(DirectX::XMVECTOR direction) { _direction = direction; }
+  void SetColor(Color color) { _color = color; }
+
+  Color GetColor() { return _color; }
 
 public:
   TrailResource* trailResource{nullptr};
   Vector4 position;
-
+  
 private:
   std::deque<TrailPoint> _trailPoints;
 };

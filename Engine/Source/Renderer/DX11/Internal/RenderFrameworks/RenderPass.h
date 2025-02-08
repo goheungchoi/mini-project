@@ -1119,6 +1119,8 @@ private:
       const auto& [z, trail] = iter;
       Constant::World world = {Matrix::Identity};
       _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {.albedoFactor = trail->GetColor()};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
       dc->IASetVertexBuffers(
           0, 1, trail->trailResource->_vertexBuffer.GetAddressOf(),
           &trail->trailResource->stride, &trail->trailResource->offset);
