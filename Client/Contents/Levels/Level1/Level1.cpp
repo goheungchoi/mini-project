@@ -24,6 +24,8 @@ void Level1::BeginLevel()
 
   #ifdef USED2D
   inGameUI->HideUI(L"GunfireBtn");
+  inGameUI->HideUI(L"SubMission");
+
   inGameUI->_agentStorage->SetAgent(kBrawler, {1400, 960});
   inGameUI->_agentStorage->SetAgent(kSlasher, {1600, 960});
   inGameUI->_agentStorage->SetAgent(kGunman, {1800, 960});
@@ -47,7 +49,11 @@ void Level1::CreateMap()
   map->CreateEnemyAt(kGunman, 5, 3, kEast);
   map->CreateEnemyAt(kGunman, 5, 4, kEast);
 
-
+  map->CreateObstacleAt(ObstacleType_Stool, 4, 3, kNorth);
+  map->CreateObstacleAt(ObstacleType_Stool, 4, 4, kNorth);
+  map->CreateObstacleAt(ObstacleType_Stool, 5, 1, kNorth);
+  map->CreateObstacleAt(ObstacleType_Stool, 5, 2, kNorth);
+  map->CreateObstacleAt(ObstacleType_Box02, 5, 5, kWest);
 }
 
 void Level1::TriggerAction() {}

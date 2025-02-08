@@ -7,6 +7,9 @@ public:
   SubMission(class World* world);
   virtual ~SubMission();
 
+public:
+  void SetText(std::wstring text);
+
 private:
   class UIImage* _subMissionImg{nullptr};
   class UIText* _subMissionTxt{nullptr};

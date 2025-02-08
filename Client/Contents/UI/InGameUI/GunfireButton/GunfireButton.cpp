@@ -58,18 +58,20 @@ void GunfireButton::Update(float dt)
     _gunfireBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
     _gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
     _gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
+  }
 
-    _cursor = _world->_canvas->GetPanel<UICursor>(L"Cursor");
+  _cursor = _world->_canvas->GetPanel<UICursor>(L"Cursor");
 
-    if (_cursor)
+  if (_cursor)
+  {
+    if (_map->isAssassinationMode)
     {
       _cursor->SetCursorType(CursorType::SKILL);
     }
 
-    //if (_map->isAssassinationMode)
-    //{
-    //  _map->assassinationTarget = _map->hoveredCharacter;
-    //  _map->isAssassinationMode = false;
-    //}
+    if (_bGunFireUseFlag && !(_map->isAssassinationMode))
+    {
+      _cursor->SetCursorType(CursorType::DEFAULT);
+    }
   }
 }

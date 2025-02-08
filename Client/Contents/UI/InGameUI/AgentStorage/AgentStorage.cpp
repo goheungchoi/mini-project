@@ -3,6 +3,8 @@
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 
+int Agent::numAgent = 0;
+
 Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
@@ -70,14 +72,16 @@ Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
   case kGunman:
     // GunAgent
     {
-      _AgentImgs[0] = CreateUI<UIImage>(L"GunAgent_Act");
-      _AgentImgs[1] = CreateUI<UIImage>(L"GunAgent_Deact");
+      std::wstring wNumAgent = std::to_wstring(numAgent);
+
+      _AgentImgs[0] = CreateUI<UIImage>(L"GunAgent_Act" + wNumAgent);
+      _AgentImgs[1] = CreateUI<UIImage>(L"GunAgent_Deact" + wNumAgent);
 
       _AgentImgs[0]->SetSprite("2D\\UI\\UI_Storage_Act_Gun.png", pos);
       _AgentImgs[1]->SetSprite("2D\\UI\\UI_Storage_Deact_Gun.png", pos);
       _AgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
 
-      _AgentBtn = CreateUI<UIButton>(L"GunAgentBtn");
+      _AgentBtn = CreateUI<UIButton>(L"GunAgentBtn" + wNumAgent);
       _AgentBtn->SetSize(_AgentImgs[0]->GetSize());
       _AgentBtn->SetCenterPos(pos);
 
@@ -93,12 +97,15 @@ Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
         }
       });
 
+      numAgent++;
+
       break;
     }
 
   default:
     break;
   }
+
 }
 
 Agent::~Agent() {}
@@ -129,8 +136,9 @@ AgentStorage::~AgentStorage()
 
 void AgentStorage::SetAgent(CharacterType charType, Vector2 pos)
 {
-  std::wstring name = L"Agent" + AgentList.size();
+  std::wstring name = L"Agent" + std::to_wstring(AgentList.size());
   Agent* newAgent = CreateUI<Agent>(name, charType, pos);
 
   AgentList.push_back(newAgent);
+
 }

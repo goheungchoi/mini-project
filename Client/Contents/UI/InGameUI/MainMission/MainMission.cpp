@@ -18,6 +18,7 @@ void MainMission::SetText(std::wstring text)
       {_mainMissionImg->GetSize().x, _mainMissionImg->GetSize().y});
   _mainMissionTxt->SetTextAlignment(TextAlignment::LEFTAlIGN);
   _mainMissionTxt->SetFont(L"PT Noeul");
+  _mainMissionTxt->SetFontSize(30.0f);
   _mainMissionTxt->SetFontWeight(FontWeight::NORMAL);
   _mainMissionTxt->SetText(text);
   _mainMissionTxt->SetOpacity(1.0f);
