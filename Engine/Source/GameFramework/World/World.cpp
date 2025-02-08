@@ -94,42 +94,43 @@ void World::CommitLevelChange()
     throw std::runtime_error("There no prepared level exists!");
   }
 
-  // Wait until the level asset loading is done.
-  while (!bReadyToChangeLevel) {}
-  
-  
-  bChangingLevel = true;
+  async::executor.silent_async("commit level change", [this]() {
+    // Wait until the level asset loading is done.
+    while (!bOkayToChangeLevel)
+    {
+    }
 
-  if (_currentLevel)
-  {
-    _currentLevel->DestroyLevel();
+    bChangingLevel = true;
 
-    auto& tmp = _currentLevel;
-    async::executor.silent_async([tmp]() {
-      tmp->CleanupLevel();
-    });
+    if (_currentLevel)
+    {
+      _currentLevel->DestroyLevel();
 
-    rigidBodyComponents.clear();
+      auto& tmp = _currentLevel;
+      async::executor.silent_async([tmp]() { tmp->CleanupLevel(); });
+
+      rigidBodyComponents.clear();
 
 #ifdef USED2D
-    delete _canvas;
-    _canvas = new Canvas(this);
+      delete _canvas;
+      _canvas = new Canvas(this);
 #endif // USED2D
-  }
+    }
 
-  // Change the current level, and begin the level.
-  _currentLevel = _preparingLevel;
-  _currentLevel->BeginLevel();
-  _phyjixWorld->CreateRay(
-      mainCamera->GetPosition(),
-      Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
-      mainCamera->GetViewTransform(), mainCamera->GetProjectionMatrix(),
-      Vector2(kScreenWidth, kScreenHeight));
+    // Change the current level, and begin the level.
+    _currentLevel = _preparingLevel;
+    _currentLevel->BeginLevel();
+    _phyjixWorld->CreateRay(
+        mainCamera->GetPosition(),
+        Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
+        mainCamera->GetViewTransform(), mainCamera->GetProjectionMatrix(),
+        Vector2(kScreenWidth, kScreenHeight));
 
-  _preparingLevel = nullptr;
-  bReadyToChangeLevel = false;
+    _preparingLevel = nullptr;
+    bReadyToChangeLevel = false;
 
-  bChangingLevel = false;
+    bChangingLevel = false;
+  });
 }
 
 void World::AddLevel(Level* level)
@@ -387,7 +388,7 @@ void World::InitialStage()
     return;
 
   // Mark that it should not change the level while running the game loop.
-  bReadyToChangeLevel = false;
+  bOkayToChangeLevel = false;
 
   // Awake and activate game objects.
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
@@ -785,7 +786,7 @@ void World::CleanupStage()
   }
 
   // Mark that it's ready to change level.
-  bReadyToChangeLevel = true;
+  bOkayToChangeLevel = true;
 }
 
 void World::UpdateGameObjectHierarchy(GameObject* gameObject,
