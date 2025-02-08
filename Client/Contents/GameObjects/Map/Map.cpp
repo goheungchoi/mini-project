@@ -502,16 +502,16 @@ void Map::ResumeGame()
 
 bool Map::IsGameFinished()
 {
-  bool isAllCharacterFinishedActions{true};
+  bool isAllCharacterFinishedActions{isActionTriggered};
 
   for (Character* enemy : enemies)
   {
-    isAllCharacterFinishedActions |= enemy->IsFinishedAction();
+    isAllCharacterFinishedActions &= enemy->IsFinishedAction();
   }
 
   for (Character* ally : allies)
   {
-    isAllCharacterFinishedActions |= ally->IsFinishedAction();
+    isAllCharacterFinishedActions &= ally->IsFinishedAction();
   }
 
   return isAllCharacterFinishedActions;
@@ -1077,14 +1077,3 @@ void Map::TranslatePlaceholder()
   }
 }
 
-void Map::TickGameFinishTimer() {
-  if (isActionTriggered)
-  {
-
-
-  }
-  else
-  {
-    
-  }
-}
