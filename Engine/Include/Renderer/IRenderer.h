@@ -122,10 +122,12 @@ public:
   // D2D Renderer
   virtual void CreateSprite(LPCSTR path, Vector2 pos) = 0;
 
-  virtual void DrawTexts(const wchar_t* format, Vector4 rect, Color color,
+  virtual void DrawTexts(std::wstring format, Vector4 rect, Color color,
                          float opacity,
                          const TextFormatInfo& textFormatInfo) = 0;
 
   virtual void DrawRectangle(Color color, Vector4 rect, float stroke = 1.0f,
+                             float opacity = 1.0f) = 0;
+  virtual void FillRectangle(Color color, Vector4 rect,
                              float opacity = 1.0f) = 0;
 };

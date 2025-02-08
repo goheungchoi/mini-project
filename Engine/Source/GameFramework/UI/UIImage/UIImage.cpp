@@ -16,7 +16,8 @@ void UIImage::Render()
 {
   if (_status == EStatus_Active)
   {
-    _sprite->Render();
+    //_sprite->Render();
+    _sprite->Render(_position, _scale, _opacity); // 인스턴스 속성 전달
   }
 }
 
@@ -73,11 +74,19 @@ void UIImage::Transition(float dt)
   }
 }
 
+void UIImage::SetMasking(Color _col)
+{
+    _sprite->SetMasking(_col);
+}
+
 void UIImage::SetSprite(LPCSTR path, Vector2 pos)
 {
   _sprite = Resource2DManager::GetInstance()->GetSprite(path).get();
   _size = _sprite->GetTextureSize();
-  _sprite->SetPos({pos.x - (_size.x / 2), pos.y - (_size.y / 2)});
+  //_sprite->SetPos({pos.x - (_size.x / 2), pos.y - (_size.y / 2)});
+
+  _position = {pos.x - (_size.x / 2),
+               pos.y - (_size.y / 2)}; // 위치 계산 후 저장
 }
 
 void UIImage::SetCenterPos(Vector2 pos)

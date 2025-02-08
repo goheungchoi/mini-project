@@ -13,6 +13,7 @@ public:
   class PlayButton* _playBtn{nullptr};
   class GunfireButton* _gunfireBtn{nullptr};
   class AgentStorage* _agentStorage{nullptr};
+  class RetryButton* _retryBtn{nullptr};
 
   class UICursor* _cursor{nullptr};
 };

@@ -1,5 +1,6 @@
 ﻿#include "GameLevel.h"
 
+#include "../UI/TransitionUI/TransitionUI.h"
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
@@ -7,6 +8,7 @@
 #include "Resource2DManager/Resource2DManager.h"
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "Contents/UI/TransitionUI/TransitionUI.h"
+#include "GameFramework/UI/UIImage/UIImage.h"
 
 void GameLevel::PrepareLevel()
 {
@@ -47,6 +49,8 @@ void GameLevel::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Hover.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Deact.png");
 
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Retry_Act.png");
+
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Act_Fist.png");
   Resource2DManager::GetInstance()->LoadSprite(
@@ -60,6 +64,7 @@ void GameLevel::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Deact_Gun.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\FadeBlack.png");
+
 
 #endif // USED2D
 }
@@ -80,12 +85,17 @@ void GameLevel::BeginLevel()
   world->_canvas->CreatePanel<UICursor>(L"Cursor");
   inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
   transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
+  transitionUI->_blackImage->SetOpacity(1.0f);
+  transitionUI->FadeIn(2.f);
 
 #endif // USED2D
 }
 
 void GameLevel::CleanupLevel()
 {
+  transitionUI->FadeOut(2.f);
+
+
   UnloadModel(redCellModelHandle);
   UnloadModel(greenCellModelHandle);
 

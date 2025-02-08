@@ -17,6 +17,7 @@ private:
 public:
   void Render();
   void Render(Vector4 rect);
+  void Render(Vector2 pos, Vector2 scale, float opacity);
   void RenderCursor();
   void RenderTransition();
 
@@ -25,6 +26,9 @@ public:
   void SetOpacity(float opacity) { _opacity = opacity; }
   Vector2 GetTextureSize() { return _textureSize; }
   Vector2 GetPos() { return _pos; }
+
+  void SetMasking(Color _col) { _maskColor = _col; };
+
 
   static void SetDevice(Device* pDevice) { _pDevice = pDevice; }
   static void SetD2DRenderer(D2DRenderer* pD2DRenderer)
@@ -42,4 +46,6 @@ private:
   Vector2 _pos{};
   Vector2 _scale{1.0f, 1.0f};
   float _opacity = 1.f;
+  Color _maskColor = Color(1, 1, 1, 1);
+
 };

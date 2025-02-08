@@ -385,7 +385,7 @@ void DX11Renderer::CreateSprite(LPCSTR path, Vector2 pos)
   _d2dRenderer->CreateSprite(path, pos);
 }
 
-void DX11Renderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
+void DX11Renderer::DrawTexts(std::wstring format, Vector4 rect, Color color,
                              float opacity,
                              const TextFormatInfo& textFormatInfo)
 {
@@ -396,6 +396,11 @@ void DX11Renderer::DrawRectangle(Color color, Vector4 rect, float stroke,
                                  float opacity)
 {
   _d2dRenderer->DrawRectangle(color, rect, stroke, opacity);
+}
+
+void DX11Renderer::FillRectangle(Color color, Vector4 rect, float opacity)
+{
+  _d2dRenderer->FillRectangle(color, rect, opacity);
 }
 
 void DX11Renderer::CreateEngineShader()

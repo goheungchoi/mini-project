@@ -64,13 +64,7 @@ void TransitionUI::Update(float dt)
   else if (INPUT.IsKeyPress(Key::N))
     FadeOut(1.f);
 
-
   Transition(dt);
-
-
-
-
-
 }
 void TransitionUI::Render()
 {

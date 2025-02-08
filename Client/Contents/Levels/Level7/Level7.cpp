@@ -1,7 +1,8 @@
 #include "Level7.h"
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
-
+#include "GameFramework/UI/Canvas/Canvas.h"
+#include "Contents/UI/ReconfirmUI/ReconfirmUI.h"
 #include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "Contents/UI/InGameUI/MainMission/MainMission.h"
@@ -14,6 +15,8 @@ void Level7::PrepareLevel()
 
 void Level7::BeginLevel()
 {
+
+
   __super::BeginLevel();
 
   #ifdef USED2D
@@ -23,6 +26,11 @@ void Level7::BeginLevel()
   inGameUI->_agentStorage->SetAgent(kGunman, {1800, 960});
   inGameUI->_mainMission->SetText(L"최대한 희생 없이 모든 적 처치");
   inGameUI->_subMission->SetText(L"부관 엘리자 희생");
+#endif
+
+  #ifdef USED2D
+  inGameUI->HideUI(L"RetryBtn");
+  //world->_canvas->CreatePanel<ReconfirmUI>(L"TestReconfirmUI");
 #endif
 }
 
@@ -55,4 +63,12 @@ void Level7::CreateMap()
   map->CreateObstacleAt(ObstacleType_Sofa, 5, 1, kSouth);
 }
 
-void Level7::TriggerAction() {}
+void Level7::TriggerAction()
+{
+  for (const auto* civil : map->civilians)
+  {
+    if (civil->isDead)
+    {
+    }
+  }
+}
