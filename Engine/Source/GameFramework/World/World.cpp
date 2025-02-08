@@ -117,6 +117,10 @@ void World::CommitLevelChange()
 #endif // USED2D
     }
 
+    while (!bReadyToChangeLevel)
+    {
+    }
+
     // Change the current level, and begin the level.
     _currentLevel = _preparingLevel;
     _currentLevel->BeginLevel();

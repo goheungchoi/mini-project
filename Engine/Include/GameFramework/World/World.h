@@ -38,7 +38,7 @@ public:
   std::unordered_map<std::string, Level*> _levelMap;
 
   std::atomic<bool> bReadyToChangeLevel = ATOMIC_VAR_INIT(false);
-  std::atomic<bool> bOkayToChangeLevel = ATOMIC_VAR_INIT(false);
+  std::atomic<bool> bOkayToChangeLevel = ATOMIC_VAR_INIT(true);
   std::atomic<bool> bChangingLevel = ATOMIC_VAR_INIT(false);
   Level* _preparingLevel{nullptr};
   Level* _currentLevel{nullptr};
