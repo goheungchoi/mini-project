@@ -64,10 +64,13 @@ void World::PrepareChangeLevel(const std::string& levelName)
     }
 
     _preparingLevel = it->second;
+    bReadyToChangeLevel = false;
 
-    _levelReadyFutureMap[levelName];
-
-    _preparingLevel->PrepareLevel();
+    // Async level preparation.
+    async::executor.silent_async("prepare level", [this]() {
+      _preparingLevel->PrepareLevel();
+      bReadyToChangeLevel = true;
+    });
   }
   else
   {
@@ -80,25 +83,31 @@ bool World::IsLevelChangeReady()
   if (!_preparingLevel)
     return false;
 
-  /* TODO: */
-  auto& f = _levelReadyFutureMap[_preparingLevel->name];
-
-  return f.valid() && f.wait_for(0s) == std::future_status::ready && f.get();
+  return bReadyToChangeLevel;
 }
 
 void World::CommitLevelChange()
 {
-  // async::executor.async([&]() {
-  //   auto& f = _levelReadyFutureMap[_preparingLevel->name];
-  //   f.get();
+  // Check if any level is being prepared to be executed.
+  if (!_preparingLevel)
+  {
+    throw std::runtime_error("There no prepared level exists!");
+  }
 
-  //  while (!bReadyToChangeLevel) {}  // Wait until
+  // Wait until the level asset loading is done.
+  while (!bReadyToChangeLevel) {}
+  
+  
   bChangingLevel = true;
 
   if (_currentLevel)
   {
     _currentLevel->DestroyLevel();
-    _currentLevel->CleanupLevel();
+
+    auto& tmp = _currentLevel;
+    async::executor.silent_async([tmp]() {
+      tmp->CleanupLevel();
+    });
 
     rigidBodyComponents.clear();
 
@@ -108,6 +117,7 @@ void World::CommitLevelChange()
 #endif // USED2D
   }
 
+  // Change the current level, and begin the level.
   _currentLevel = _preparingLevel;
   _currentLevel->BeginLevel();
   _phyjixWorld->CreateRay(
@@ -116,8 +126,10 @@ void World::CommitLevelChange()
       mainCamera->GetViewTransform(), mainCamera->GetProjectionMatrix(),
       Vector2(kScreenWidth, kScreenHeight));
 
+  _preparingLevel = nullptr;
+  bReadyToChangeLevel = false;
+
   bChangingLevel = false;
-  // });
 }
 
 void World::AddLevel(Level* level)
