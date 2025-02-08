@@ -66,6 +66,8 @@ public:
   void DrawRectangle(Color color, Vector4 rect, float stroke = 1.0f,
                      float opacity = 1.0f) override;
 
+  void FillRectangle(Color color, Vector4 rect, float opacity = 1.0f) override;
+
 private:
   void CreateEngineShader();
 

@@ -128,4 +128,6 @@ public:
 
   virtual void DrawRectangle(Color color, Vector4 rect, float stroke = 1.0f,
                              float opacity = 1.0f) = 0;
+  virtual void FillRectangle(Color color, Vector4 rect,
+                             float opacity = 1.0f) = 0;
 };

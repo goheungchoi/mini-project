@@ -35,7 +35,7 @@ void SubMission::SetText(std::wstring text, Vector2 pos)
   _selectTxt->SetFont(L"PT Noeul");
   _selectTxt->SetFontSize(21.0f);
   _selectTxt->SetFontWeight(FontWeight::NORMAL);
-  _selectTxt->SetColor({0.75, 0.1, 0.12, 1});
+  _selectTxt->SetColor({0.302, 0.024, 0.08, 1});
   _selectTxt->SetText(L"(¼±ÅÃ)");
   _selectTxt->SetOpacity(1.0f);
 #ifdef _DEBUG
