@@ -17,6 +17,7 @@ private:
 public:
   void Render();
   void Render(Vector4 rect);
+  void Render(Vector2 pos, Vector2 scale, float opacity);
   void RenderCursor();
   void RenderTransition();
 

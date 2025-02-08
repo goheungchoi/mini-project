@@ -8,4 +8,5 @@ public:
   virtual ~ReconfirmUI();
 
 private:
+  class UIImage* _testImg;
 };

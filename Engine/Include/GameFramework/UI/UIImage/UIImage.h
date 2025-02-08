@@ -35,5 +35,6 @@ private:
   float _transitionEndOpacity = 0.f;
   bool _transitionFlag = false;
 
+  Vector2 _scale = {1.0f, 1.0f};
 
 };

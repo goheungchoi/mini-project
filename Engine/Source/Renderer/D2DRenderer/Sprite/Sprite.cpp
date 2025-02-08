@@ -92,6 +92,18 @@ void Sprite::Render(Vector4 rect)
   );
 }
 
+void Sprite::Render(Vector2 pos, Vector2 scale, float opacity)
+{
+  _pD2DRenderer->_d2dRenderQueue.AddRender2DCmd(
+      [=]() {
+        auto textureSRV = _pTexture->GetResource().Get();
+        _pD2DRenderer->_pSpriteBatch->Draw(
+            textureSRV, pos, nullptr, DirectX::Colors::White * opacity, 0.0f,
+            DirectX::SimpleMath::Vector2::Zero, scale);
+      },
+      PassType2D::SPRITE_BATCH);
+}
+
 void Sprite::RenderCursor()
 {
   _pD2DRenderer->_d2dRenderQueue.SetCursorRenderCmd(
