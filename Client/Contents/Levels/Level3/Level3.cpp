@@ -22,7 +22,7 @@ void Level3::BeginLevel()
   inGameUI->_agentStorage->SetAgent(kBrawler, {1400, 960});
   inGameUI->_agentStorage->SetAgent(kSlasher, {1600, 960});
   inGameUI->_agentStorage->SetAgent(kGunman, {1800, 960});
-  inGameUI->_mainMission->SetText(L"(선택) 최대한 희생 없이 모든 적 처치");
+  inGameUI->_mainMission->SetText(L"최대한 희생 없이 모든 적 처치");
 #endif
 }
 

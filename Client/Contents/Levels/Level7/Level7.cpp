@@ -21,8 +21,8 @@ void Level7::BeginLevel()
   inGameUI->_agentStorage->SetAgent(kSlasher, {1400, 960});
   inGameUI->_agentStorage->SetAgent(kGunman, {1600, 960});
   inGameUI->_agentStorage->SetAgent(kGunman, {1800, 960});
-  inGameUI->_mainMission->SetText(L"(선택) 최대한 희생 없이 모든 적 처치");
-  inGameUI->_subMission->SetText(L"(선택) 부관 엘리자 희생");
+  inGameUI->_mainMission->SetText(L"최대한 희생 없이 모든 적 처치");
+  inGameUI->_subMission->SetText(L"부관 엘리자 희생");
 #endif
 }
 
