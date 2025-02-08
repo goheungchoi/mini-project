@@ -9,13 +9,11 @@ UICursor::UICursor(World* world) : UIPanel(world)
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Cursor_Snipe.png");
 
   _sprites[0] = Resource2DManager::GetInstance()
-                    ->GetSprite("2D\\UI\\UI_Cursor_Basic_03.png")
-                    .get();
+                    ->GetSprite("2D\\UI\\UI_Cursor_Basic_03.png").get();
   _sprites[0]->SetScale({0.7, 0.7});
 
   _sprites[1] = Resource2DManager::GetInstance()
-                    ->GetSprite("2D\\UI\\UI_Cursor_Snipe.png")
-                    .get();
+                    ->GetSprite("2D\\UI\\UI_Cursor_Snipe.png").get();
 }
 
 UICursor::~UICursor() {}

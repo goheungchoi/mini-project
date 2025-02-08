@@ -21,7 +21,6 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
 
 
 
-
   _cursor = _world->_canvas->GetPanel<UICursor>(L"Cursor");
   _cursor->SetCursorType(CursorType::DEFAULT);
 

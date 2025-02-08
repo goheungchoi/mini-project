@@ -12,6 +12,7 @@ public:
 
   void SetText(const wstring format);
   void SetFont(const std::wstring& fontName);
+  void SetFontSize(const float fontSize);
   void SetColor(Color color);
   void SetOpacity(float opacity);
   void SetFontWeight(FontWeight fontWeight);

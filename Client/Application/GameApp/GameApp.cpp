@@ -13,6 +13,11 @@
 #include "Contents/Levels/Level1/Level1.h"
 #include "Contents/Levels/Level2/Level2.h"
 #include "Contents/Levels/Level3/Level3.h"
+#include "Contents/Levels/Level4/Level4.h"
+#include "Contents/Levels/Level5/Level5.h"
+//#include "Contents/Levels/Level6/Level6.h"
+//#include "Contents/Levels/Level7/Level7.h"
+//#include "Contents/Levels/Level8/Level8.h"
 
 
 static GameLevel* gameLevel;
@@ -20,6 +25,11 @@ static MainMenu* mainMenuLevel;
 static Level1* level1;
 static Level2* level2;
 static Level3* level3;
+static Level4* level4;
+static Level5* level5;
+//static Level6* level6;
+//static Level7* level7;
+//static Level8* level8;
 
 
 void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
@@ -43,12 +53,23 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   level1 = new Level1("Level1");
   level2 = new Level2("Level2");
   level3 = new Level3("Level3");
+  level4 = new Level4("Level4");
+  level5 = new Level5("Level5");
+  //level6 = new Level6("Level6");
+  //level7 = new Level7("Level7");
+  //level8 = new Level8("Level8");
 
   _world->AddLevel(gameLevel);
   _world->AddLevel(mainMenuLevel);
   _world->AddLevel(level1);
   _world->AddLevel(level2);
   _world->AddLevel(level3);
+  _world->AddLevel(level4);
+  _world->AddLevel(level5);
+  //_world->AddLevel(level6);
+  //_world->AddLevel(level7);
+  //_world->AddLevel(level8);
+
   _world->PrepareChangeLevel(level1->name);
   _world->CommitLevelChange();
 }
