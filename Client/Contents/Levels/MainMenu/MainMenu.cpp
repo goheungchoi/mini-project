@@ -10,28 +10,8 @@
 #include "Contents/UI/TransitionUI/TransitionUI.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 
-ModelHandle enemyBrawlerModelHandle;
-ModelHandle enemyGunmanModelHandle;
-
-ModelHandle allyBrawlerModelHandle;
-ModelHandle allySlasherModelHandle;
-ModelHandle allyGunmanModelHandle;
-
 void MainMenu::PrepareLevel()
 {
-  // Character model loadings.
-  enemyBrawlerModelHandle =
-      LoadModel("Models\\Character\\Enemy\\Enemy_Punch\\Enemy_Punch.glb");
-  enemyGunmanModelHandle =
-      LoadModel("Models\\Character\\Enemy\\EnemyGunman\\EnemyGunman.glb");
-
-  allyBrawlerModelHandle =
-      LoadModel("Models\\Character\\Player\\Player_Punch\\Player_Punch.glb");
-  allySlasherModelHandle =
-      LoadModel("Models\\Character\\Player\\Player_Knife\\Player_Knife.glb");
-  allyGunmanModelHandle =
-      LoadModel("Models\\Character\\Player\\Player_Gun\\Player_Gun.glb");
-
   // UI Resource Load
 #ifdef USED2D
   Resource2DManager::GetInstance()->LoadSprite("Textures\\TitleBackGround.png");
@@ -46,8 +26,6 @@ void MainMenu::PrepareLevel()
 
 void MainMenu::BeginLevel()
 {
-
-  GetWorld()->PrepareChangeLevel("Level1");
 #ifdef USED2D
   world->_canvas->CreatePanel<MainMenuUI>(L"MainMenuUI");
 
@@ -58,11 +36,6 @@ void MainMenu::BeginLevel()
 }
 
 void MainMenu::CleanupLevel() {
-  UnloadModel(enemyBrawlerModelHandle);
-  UnloadModel(enemyGunmanModelHandle);
-  UnloadModel(allyBrawlerModelHandle);
-  UnloadModel(allySlasherModelHandle);
-  UnloadModel(allyGunmanModelHandle);
 }
 
 void MainMenu::CreateMap() {}
