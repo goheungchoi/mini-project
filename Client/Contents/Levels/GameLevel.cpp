@@ -23,8 +23,8 @@ void GameLevel::PrepareLevel()
   mapWarehouseMeshHandle =
       LoadModel("Models\\Maps\\Map_003_Warehouse\\Map_003.glb");
 
-  //OBsStoolHandle = LoadModel("Models\\Obstacles\\OBs_Stool.glb");
-  //OBsBox02Handle = LoadModel("Models\\Obstacles\\OBs_Box02.glb");
+  OBsStoolHandle = LoadModel("Models\\Obstacles\\OBs_Stool.glb");
+  OBsBox02Handle = LoadModel("Models\\Obstacles\\OBs_Box02.glb");
 
   // Obstacle model load.
   LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
@@ -49,7 +49,7 @@ void GameLevel::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Hover.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Deact.png");
 
-  //Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Retry_Act.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Retry_Act.png");
 
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Act_Fist.png");
