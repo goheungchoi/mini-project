@@ -29,7 +29,8 @@ void Level7::BeginLevel()
 #endif
 
   #ifdef USED2D
-  world->_canvas->CreatePanel<ReconfirmUI>(L"TestReconfirmUI");
+  inGameUI->HideUI(L"RetryBtn");
+  //world->_canvas->CreatePanel<ReconfirmUI>(L"TestReconfirmUI");
 #endif
 }
 
