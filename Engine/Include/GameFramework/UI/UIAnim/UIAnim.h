@@ -67,6 +67,9 @@ public:
 
   void SetOpacity(std::string spritename, float opacity);
 
+  void SetMasking(Color _col) override;
+
+
 private:
   std::map<std::string,AnimSprite*> _sprites{};
   std::vector<class Sprite*> _spriteList;

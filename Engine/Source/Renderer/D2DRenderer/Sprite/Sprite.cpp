@@ -71,7 +71,7 @@ void Sprite::Render()
         auto textureSRV = _pTexture->GetResource().Get();
 
         _pD2DRenderer->_pSpriteBatch->Draw(
-            textureSRV, _pos, nullptr, DirectX::Colors::White * _opacity,
+            textureSRV, _pos, nullptr, _maskColor * _opacity,
                           0.0f, DirectX::SimpleMath::Vector2::Zero, _scale);
       },
       PassType2D::SPRITE_BATCH // SpriteBatch 전용 패스 사용
@@ -85,7 +85,7 @@ void Sprite::Render(Vector4 rect)
         auto textureSRV = _pTexture->GetResource().Get();
         const RECT* _srcRect = new RECT(rect.x, rect.y, rect.z, rect.w);
         _pD2DRenderer->_pSpriteBatch->Draw(
-            textureSRV, _pos, _srcRect, DirectX::Colors::White * _opacity, 0.0f,
+            textureSRV, _pos, _srcRect, _maskColor * _opacity, 0.0f,
             DirectX::SimpleMath::Vector2::Zero, _scale);
       },
       PassType2D::SPRITE_BATCH // SpriteBatch 전용 패스 사용

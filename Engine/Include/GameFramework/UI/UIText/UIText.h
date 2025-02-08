@@ -9,7 +9,7 @@ public:
 
 public:
   void Render() override;
-
+  void Update(float dt) override;
   void SetText(const wchar_t* format);
   void SetFont(const std::wstring& fontName);
   void SetColor(Color color);
@@ -17,17 +17,25 @@ public:
   void SetFontWeight(FontWeight fontWeight);
   void SetTextAlignment(TextAlignment textAlignment);
   void SetParagraphAlignment(ParagraphAlignment paragraphAlignment);
-
+  void SetTypoAnim(bool istypo = false) { _bIsTypo = istypo; };
+  void SetTypoInterval(float interval) { _typointerval = interval; };
 #ifdef _DEBUG
   void SetDebugDraw(bool debugFlag);
 #endif
 
 private:
+  bool _bIsTypo = false;
   TextFormatInfo _textFormatInfo;
   const wchar_t* _format;
+  wchar_t* _typoFormat;
   Vector4 _rect;
   Color _color;
   float _opacity;
+
+  float _typointerval = 0.1f;
+  float _typoElapsedTimer= 0.f;
+  int _typoIdx = 1;
+  wchar_t _typoChar;
 
 #ifdef _DEBUG
   bool bDebugDrawFlag = false;

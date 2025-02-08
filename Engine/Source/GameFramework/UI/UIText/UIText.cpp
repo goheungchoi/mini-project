@@ -22,9 +22,13 @@ void UIText::Render()
 {
   _rect = {_position.x, _position.y, _position.x + _size.x,
            _position.y + _size.y};
-
-  _world->_renderer->DrawTexts(_format, _rect, _color, _opacity,
+  if (!_bIsTypo)
+    _world->_renderer->DrawTexts(_format, _rect, _color, _opacity,
                                _textFormatInfo);
+  else
+    _world->_renderer->DrawTexts(_typoFormat, _rect, _color, _opacity,
+                               _textFormatInfo);
+  
   #ifndef NDEBUG
   if (bDebugDrawFlag)
   {
@@ -33,9 +37,43 @@ void UIText::Render()
   #endif
 }
 
+void UIText::Update(float dt)
+{
+  UIElement::Update(dt);
+ /* if (_bIsTypo)
+  {
+    if (!_typoFormat || wcslen(_format)==0)
+      return;
+    _typoElapsedTimer += dt;
+    if (_typoIdx == 1)
+    {
+      _typoChar = _typoFormat[_typoIdx];
+      _typoFormat[_typoIdx++] = L'\0';
+    }
+    if (_typoElapsedTimer >= _typointerval)
+    {
+      size_t totallength = wcslen(_format);
+      if (_typoIdx < totallength )
+      {
+
+        _typoFormat[_typoIdx - 1] = _typoChar;
+        _typoChar = _typoFormat[_typoIdx];
+        _typoFormat[_typoIdx++] = L'\0';
+        
+      }
+      _typoElapsedTimer=0;
+    }
+
+  }*/
+
+
+}
+
 void UIText::SetText(const wchar_t* format)
 {
   _format = format;
+  //  _typoFormat = const_cast < wchar_t *> (format);
+  //_typoIdx = 1;
 }
 
 void UIText::SetFont(const std::wstring& fontName)

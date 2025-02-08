@@ -70,7 +70,7 @@ void GameLevel::BeginLevel()
 
 #ifdef USED2D
   world->_canvas->CreatePanel<UICursor>(L"Cursor");
-  inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+  //inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
   transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
   transitionUI->_blackImage->SetOpacity(1.0f);
   transitionUI->FadeIn(2.f);

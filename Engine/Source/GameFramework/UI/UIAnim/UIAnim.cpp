@@ -159,3 +159,9 @@ void UIAnim::SetOpacity(std::string spritename, float opacity)
   _sprites.find(spritename)->second->_pSprite->SetOpacity(opacity);
   
 }
+
+void UIAnim::SetMasking(Color _col)
+{
+      _pCurrSprite->SetMasking(_col);
+  
+}
