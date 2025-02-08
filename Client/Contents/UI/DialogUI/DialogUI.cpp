@@ -42,9 +42,6 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _Eliza->SetCenterPos("Eliza_Resistance_Sad", {35, 156});
     _Eliza->SetScale("Eliza_Resistance_Sad", {.88f, .88f});
     _Eliza->SetCurrentAnimSprite("Eliza_Noble");
-
-
-
   }
 
   {
@@ -59,14 +56,14 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _dialogText->SetCenterPos({960, 900});
     _dialogText->SetFont(L"PT Noeul");
     _dialogText->SetOpacity(1.f);
-    _dialogText->SetColor(Color(1,1,1,1));
+    _dialogText->SetColor(Color(1, 1, 1, 1));
     _dialogText->SetTextAlignment(TextAlignment::CENTERAlIGN);
     _dialogText->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
     ParseDialogScript();
     SetStageDialogIndex(4);
 
     _speakerNameText = CreateUI<UIText>(L"speakerName");
-   // _speakerNameText->SetDebugDraw(true);
+    // _speakerNameText->SetDebugDraw(true);
     _speakerNameText->SetSize({300, 100});
     _speakerNameText->SetTextAlignment(TextAlignment::CENTERAlIGN);
     _speakerNameText->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
@@ -79,65 +76,47 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _speakerClassText->SetSize({100, 100});
     _speakerClassText->SetTextAlignment(TextAlignment::CENTERAlIGN);
     _speakerClassText->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
-    _speakerClassText->SetColor(Color(0.871f, 0.620f, 0.478f,1));
+    _speakerClassText->SetColor(Color(0.871f, 0.620f, 0.478f, 1));
     _speakerClassText->SetOpacity(1.f);
     _speakerClassText->SetCenterPos({325, 800});
     _speakerClassText->SetFont(L"PT Noeul");
     _speakerClassText->SetText(L"부관");
-
+    SetPrevBattleResult(eBattleResult::PerfectWin);
   }
 
   {
 
-    for (int i = 0; i < 11; i++)
-    {
-      _actionList.push_back([=]() {
-        _dialogText->SetText(_dialogList[i].dialogtext.c_str());
-        _Eliza->SetCurrentAnimSprite(_dialogList[i].ElizaAnim);
-        _speakerNameText->SetText(_dialogList[i].IsElizaSpeaking ? _nameEliza : _namePlayer);
-        if (_dialogList[i].IsElizaSpeaking)
-        {
-            _speakerClassText->SetOpacity(1.f);
-          _Eliza->SetMasking(Color(1, 1, 1, 1));
-          _Eliza->SetOpacity(_dialogList[i].ElizaAnim, 1.f);
-        }
-        else
-        {
-          _speakerClassText->SetOpacity(0.f);
-          _Eliza->SetMasking(Color(0.5f, 0.5f, 0.5f, 1));
-          _Eliza->SetOpacity(_dialogList[i].ElizaAnim, 0.8f);
-        }
-      });
-    }
+    _actionList.push_back([=]() { ElizaDialogStep(_prevBattleResult); });
+    for (int i = 6; i < _dialogList.size(); i++)
+      _actionList.push_back([=]() { ElizaDialogStep(i); });
+    _actionList.push_back([=]() { PlayerSelectDialogStep(); });
+    _actionList.push_back([=]() { ElizaDialogStep(5); });
   }
 }
-
 void DialogUI::Update(float dt)
 {
   UIPanel::Update(dt);
 
-  //if (isLClicked)
-  //  _clickTimer -= dt;
-  //if (INPUT.IsKeyPress(MouseState::LB))
+  // if (isLClicked)
+  //   _clickTimer -= dt;
+  // if (INPUT.IsKeyPress(MouseState::LB))
   //{
-  //  isLClicked = true;
-  //  if (!isClickActioned)
-  //  {
-  //    NextStep();
-  //    isClickActioned = true;
-  //  }
-  //}
-  //if (_clickTimer <= 0)
+  //   isLClicked = true;
+  //   if (!isClickActioned)
+  //   {
+  //     NextStep();
+  //     isClickActioned = true;
+  //   }
+  // }
+  // if (_clickTimer <= 0)
   //{
-  //  _clickTimer = _clickThreshold;
-  //  isLClicked = false;
-  //  isClickActioned = false;
-  //}
+  //   _clickTimer = _clickThreshold;
+  //   isLClicked = false;
+  //   isClickActioned = false;
+  // }
 
   if (INPUT.IsKeyPress(MouseState::LB))
-      NextStep();
-
-
+    NextStep();
 
   if (INPUT.IsKeyPress(Key::D1))
     _dialogTextBox->FadeIn(1.0f);
@@ -251,8 +230,34 @@ void DialogUI::SetStageDialogIndex(int StageIdx)
     while ((pos = token.find(L"\\n", pos)) != std::wstring::npos)
     {
       token.replace(pos, 2, L"\n");
-      pos += 1; 
+      pos += 1;
     }
     _dialogList[i].dialogtext = token;
   }
+}
+
+void DialogUI::ElizaDialogStep(int idx)
+{
+  _dialogText->SetText(_dialogList[idx].dialogtext.c_str());
+  _Eliza->SetCurrentAnimSprite(_dialogList[idx].ElizaAnim);
+  _speakerNameText->SetText(_dialogList[idx].IsElizaSpeaking
+                                ? _nameEliza
+                                : _namePlayer);
+  if (_dialogList[idx].IsElizaSpeaking)
+  {
+    _speakerClassText->SetOpacity(1.f);
+    _Eliza->SetMasking(Color(1, 1, 1, 1));
+    _Eliza->SetOpacity(_dialogList[idx].ElizaAnim, 1.f);
+  }
+  else
+  {
+    _speakerClassText->SetOpacity(0.f);
+    _Eliza->SetMasking(Color(0.5f, 0.5f, 0.5f, 1));
+    _Eliza->SetOpacity(_dialogList[idx].ElizaAnim, 0.8f);
+  }
+}
+
+void DialogUI::PlayerSelectDialogStep()
+{
+  
 }

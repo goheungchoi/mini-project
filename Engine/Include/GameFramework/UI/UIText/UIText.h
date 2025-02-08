@@ -27,8 +27,8 @@ public:
 private:
   bool _bIsTypo = false;
   TextFormatInfo _textFormatInfo;
-  const wchar_t* _format;
-  wchar_t* _typoFormat;
+  wstring _format;
+  wstring _typoFormat;
   Vector4 _rect;
   Color _color;
   float _opacity;

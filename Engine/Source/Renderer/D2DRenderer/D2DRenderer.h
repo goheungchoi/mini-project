@@ -108,7 +108,7 @@ public:
                 float stroke = 1.0f, float opacity = 1.0f);
 
   void CreateSprite(LPCSTR path, Vector2 pos);
-  void DrawTexts(const wchar_t* format, Vector4 rect, Color color,
+  void DrawTexts(std::wstring format, Vector4 rect, Color color,
                  float opacity, const TextFormatInfo& textFormatInfo);
 
 

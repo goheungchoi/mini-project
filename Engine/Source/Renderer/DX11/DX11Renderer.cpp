@@ -385,7 +385,7 @@ void DX11Renderer::CreateSprite(LPCSTR path, Vector2 pos)
   _d2dRenderer->CreateSprite(path, pos);
 }
 
-void DX11Renderer::DrawTexts(const wchar_t* format, Vector4 rect, Color color,
+void DX11Renderer::DrawTexts(std::wstring format, Vector4 rect, Color color,
                              float opacity,
                              const TextFormatInfo& textFormatInfo)
 {

@@ -1,5 +1,15 @@
 #pragma once
 #include "GameFramework\UI\UIPanel\UIPanel.h"
+
+enum eBattleResult
+{
+    PerfectWin,
+    CivilDeadWin,
+    AllyDeadWin
+};
+
+
+
 class DialogUI : public UIPanel
 {
   using Action = std::function<void(void)>;
@@ -27,9 +37,15 @@ public:
 
   void ParseDialogScript();
   void SetStageDialogIndex(int StageIdx);
-
+  void SetPrevBattleResult(eBattleResult result)
+  { _prevBattleResult = result;
+  }
+  void ElizaDialogStep(int idx);
+  void PlayerSelectDialogStep();
 
 private:
+
+  eBattleResult _prevBattleResult;
   struct dialogInfo
   {
     int idx;

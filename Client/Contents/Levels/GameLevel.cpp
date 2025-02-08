@@ -49,7 +49,7 @@ void GameLevel::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Hover.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Deact.png");
 
-  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Retry_Act.png");
+  //Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Retry_Act.png");
 
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Act_Fist.png");
@@ -83,7 +83,7 @@ void GameLevel::BeginLevel()
 
 #ifdef USED2D
   world->_canvas->CreatePanel<UICursor>(L"Cursor");
-  //inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+  inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
   transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
   transitionUI->_blackImage->SetOpacity(1.0f);
   transitionUI->FadeIn(2.f);

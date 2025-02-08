@@ -122,7 +122,7 @@ public:
   // D2D Renderer
   virtual void CreateSprite(LPCSTR path, Vector2 pos) = 0;
 
-  virtual void DrawTexts(const wchar_t* format, Vector4 rect, Color color,
+  virtual void DrawTexts(std::wstring format, Vector4 rect, Color color,
                          float opacity,
                          const TextFormatInfo& textFormatInfo) = 0;
 
