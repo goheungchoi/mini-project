@@ -1,6 +1,5 @@
 ﻿#include "GameLevel.h"
 
-#include "../UI/TransitionUI/TransitionUI.h"
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
 #include "GameFramework/UI/Canvas/Canvas.h"

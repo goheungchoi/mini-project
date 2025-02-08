@@ -24,11 +24,20 @@ public:
   class UIText* _speakerClassText {nullptr};
 
   class UIImage* _dialogTextBox{nullptr};
+  class UIText* _dialogText {nullptr};
   class UIImage* _dialogBtnImage{nullptr};
   class UIButton* _dialogButton{nullptr};
-  class UIText* _dialogText {nullptr};
+
+  class UIImage* _playerSelectBtnImage1{nullptr};
+  class UIButton* _playerSelectButton1{nullptr};
+  class UIText* _playerSelectBtnText1{nullptr};
+
+  class UIImage* _playerSelectBtnImage2{nullptr};
+  class UIButton* _playerSelectButton2{nullptr};
+  class UIText* _playerSelectBtnText2{nullptr};
 
   bool bInGame = false;
+  bool bPlayerSelection = false;
 
   void Update(float dt) override;
 
@@ -63,8 +72,8 @@ private:
   std::vector<Action> _actionList;
   UINT _currentActionIndex = 0;
 
-    bool isLClicked = false;
-  bool isClickActioned = false;
-  float _clickThreshold = .2f;
-  float _clickTimer = .2f;
+  //  bool isLClicked = false;
+  //bool isClickActioned = false;
+  //float _clickThreshold = .2f;
+  //float _clickTimer = .2f;
 };

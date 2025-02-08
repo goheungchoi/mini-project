@@ -25,7 +25,9 @@ public:
   void FadeOut(float threshold);
   void Transition(float dt);
 
- virtual void SetMasking(Color _col);
+  virtual void SetMasking(Color _col);
+
+  Vector2 GetTextureSize();
 
 
 private:

@@ -14,27 +14,6 @@
 void Level2::PrepareLevel()
 {
   // UI Resource Load
-
-
-  Resource2DManager::GetInstance()->LoadSprite(
-      "Textures\\Picture\\PhotoPanel.png");
-
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Initiative_Gunfire.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Noble.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Resistance_Despair30.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Resistance_Despair70.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Resistance_Joy.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Resistance_Sad.png");
-
-  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\FadeBlack.png");
-  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Textbox_01.png");
-  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Textbox_Button.png");
 }
 
 void Level2::BeginLevel()
