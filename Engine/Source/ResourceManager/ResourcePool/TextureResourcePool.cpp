@@ -52,5 +52,12 @@ Handle ResourcePool<TextureData>::LoadImpl(xUUID uuid, void* pUser)
 	Handle handle = _handleTable.ClaimHandle(
       std::move(data), (uint16_t)ResourceType::kTexture);
   _uuidMap[uuid] = handle.index;
+  _handleUUIDMap[handle] = uuid;
   return handle;
+}
+
+template<>
+void ResourcePool<TextureData>::UnloadImpl(Handle& handle, void* pReserved)
+{
+  
 }

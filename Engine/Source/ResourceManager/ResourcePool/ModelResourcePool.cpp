@@ -178,6 +178,57 @@ Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser)
 	Handle handle = _handleTable.ClaimHandle(std::move(model),
                                                 (uint16_t)ResourceType::kModel);
   _uuidMap[uuid] = handle.index;
+  _handleUUIDMap[handle] = uuid;
   return handle;
 }
 
+
+template <>
+void ResourcePool<ModelData>::UnloadImpl(Handle& handle, void* pReserved)
+{
+  ::pools = (Pools*)pReserved;
+  ::texturePool = pools->texturePool;
+  ::materialPool = pools->materialPool;
+  ::meshPool = pools->meshPool;
+  ::skeletonPool = pools->skeletonPool;
+  ::animationPool = pools->animationPool;
+
+  ModelData& model = _handleTable[handle].value();
+
+  for (MeshHandle mesh : model.meshes)
+  {
+    if (::meshPool->IsValidHandle(mesh))
+    {
+      meshPool->Unload(mesh, ::pools);
+    }
+  }
+
+  for (MaterialHandle mat : model.materials)
+  {
+    if (::materialPool->IsValidHandle(mat))
+    {
+      materialPool->Unload(mat, ::pools);
+    }
+  }
+
+  for (TextureHandle texture : model.textures)
+  {
+    if (::texturePool->IsValidHandle(texture))
+    {
+      texturePool->Unload(texture, ::pools);
+    }
+  }
+
+  for (AnimationHandle anim : model.animations)
+  {
+    if (::texturePool->IsValidHandle(anim))
+    {
+      texturePool->Unload(anim, nullptr);
+    }
+  }
+
+  if (::skeletonPool->IsValidHandle(model.skeleton))
+  {
+    ::skeletonPool->Unload(model.skeleton, nullptr);
+  }
+}

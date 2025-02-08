@@ -52,10 +52,18 @@ void PlayButton::Update(float dt)
 {
   __super::Update(dt);
 
+  if (GetStatus() == EStatus::EStatus_Active)
+  {
+    _bPlayflag = false;
+  }
+
   if (_bPlayflag == true)
   {
     _playBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
     _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
     _playBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
   }
+
+
+
 }

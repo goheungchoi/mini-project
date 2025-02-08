@@ -35,13 +35,14 @@ public:
   void Initialize(HWND hwnd, const std::wstring& title);
   
 public:
-  std::atomic_bool bReadyToChangeLevel{true};
-  std::atomic_bool bChangingLevel{false};
   std::unordered_map<std::string, Level*> _levelMap;
-  std::unordered_map<std::string, std::future<bool>> _levelReadyFutureMap;
+
+  std::atomic<bool> bOkayToChangeLevel = ATOMIC_VAR_INIT(true);
+  std::atomic<bool> bChangingLevel = ATOMIC_VAR_INIT(false);
+
+  std::unordered_map<std::string, std::atomic<bool>> _levelReadyFlagMap;
 
   Level* _preparingLevel{nullptr};
-
   Level* _currentLevel{nullptr};
   
   bool bCameraMove{false};

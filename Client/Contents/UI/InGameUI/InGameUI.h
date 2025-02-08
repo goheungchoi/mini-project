@@ -7,6 +7,8 @@ public:
   InGameUI(class World* world);
   virtual ~InGameUI();
 
+  void Update(float dt) override;
+
 public:
   class MainMission* _mainMission{nullptr};
   class SubMission* _subMission{nullptr};
@@ -14,6 +16,7 @@ public:
   class GunfireButton* _gunfireBtn{nullptr};
   class AgentStorage* _agentStorage{nullptr};
   class RetryButton* _retryBtn{nullptr};
+  class ApplyButton* _applyBtn{nullptr};
 
   class UICursor* _cursor{nullptr};
 };

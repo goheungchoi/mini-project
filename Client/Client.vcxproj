@@ -247,6 +247,8 @@
 		<ClInclude Include="Contents\UI\DialogUI\DialogUI.h" />
 		<ClCompile Include="Contents\UI\InGameUI\AgentStorage\AgentStorage.cpp" />
 		<ClInclude Include="Contents\UI\InGameUI\AgentStorage\AgentStorage.h" />
+		<ClCompile Include="Contents\UI\InGameUI\ApplyButton\ApplyButton.cpp" />
+		<ClInclude Include="Contents\UI\InGameUI\ApplyButton\ApplyButton.h" />
 		<ClCompile Include="Contents\UI\InGameUI\GunfireButton\GunfireButton.cpp" />
 		<ClInclude Include="Contents\UI\InGameUI\GunfireButton\GunfireButton.h" />
 		<ClCompile Include="Contents\UI\InGameUI\InGameUI.cpp" />
