@@ -49,5 +49,11 @@ Handle ResourcePool<SkeletonData>::LoadImpl(xUUID uuid, void* pUser)
   Handle handle = _handleTable.ClaimHandle(std::move(skeleton),
                                            (uint16_t)ResourceType::kSkeleton);
   _uuidMap[uuid] = handle.index;
+  _handleUUIDMap[handle] = uuid;
   return handle;
+}
+
+template <>
+void ResourcePool<SkeletonData>::UnloadImpl(Handle& handle, void* pReserved)
+{
 }

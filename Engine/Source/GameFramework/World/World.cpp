@@ -60,16 +60,23 @@ void World::PrepareChangeLevel(const std::string& levelName)
   {
     if (_preparingLevel)
     {
-      throw std::runtime_error("There is already a preparing level.");
+      // Prevent from loading a level more than twice.
+      if (_preparingLevel->name == levelName)
+      {
+        return;
+      }
+      else
+      {
+        throw std::runtime_error("There is already a preparing level.");
+      }
     }
 
     _preparingLevel = it->second;
-    bReadyToChangeLevel = false;
 
     // Async level preparation.
     async::executor.silent_async("prepare level", [this]() {
       _preparingLevel->PrepareLevel();
-      bReadyToChangeLevel = true;
+      _levelReadyFlagMap[_preparingLevel->name] = true;
     });
   }
   else
@@ -83,7 +90,7 @@ bool World::IsLevelChangeReady()
   if (!_preparingLevel)
     return false;
 
-  return bReadyToChangeLevel;
+  return _levelReadyFlagMap[_preparingLevel->name];
 }
 
 void World::CommitLevelChange()
@@ -117,21 +124,22 @@ void World::CommitLevelChange()
 #endif // USED2D
     }
 
-    while (!bReadyToChangeLevel)
+    while (!_levelReadyFlagMap[_preparingLevel->name])
     {
     }
-
+    
     // Change the current level, and begin the level.
     _currentLevel = _preparingLevel;
+
+    _levelReadyFlagMap[_preparingLevel->name] = false;
+    _preparingLevel = nullptr;
+
     _currentLevel->BeginLevel();
     _phyjixWorld->CreateRay(
         mainCamera->GetPosition(),
         Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
         mainCamera->GetViewTransform(), mainCamera->GetProjectionMatrix(),
         Vector2(kScreenWidth, kScreenHeight));
-
-    _preparingLevel = nullptr;
-    bReadyToChangeLevel = false;
 
     bChangingLevel = false;
   });
@@ -141,6 +149,7 @@ void World::AddLevel(Level* level)
 {
   level->world = this;
   _levelMap[level->name] = level;
+  _levelReadyFlagMap[level->name] = ATOMIC_VAR_INIT(false);
 }
 
 void World::SetMainCamera(Camera* camera)

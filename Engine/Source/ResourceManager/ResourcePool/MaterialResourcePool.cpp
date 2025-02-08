@@ -100,5 +100,40 @@ Handle ResourcePool<MaterialData>::LoadImpl(xUUID uuid, void* pUser)
 	Handle handle = _handleTable.ClaimHandle(std::move(mat),
                                            (uint16_t)ResourceType::kMaterial);
   _uuidMap[uuid] = handle.index;
+  _handleUUIDMap[handle] = uuid;
   return handle;
+}
+
+template <>
+void ResourcePool<MaterialData>::UnloadImpl(Handle& handle, void* pReserved)
+{
+  ::pools = (Pools*)pReserved;
+  ::texturePool = pools->texturePool;
+
+  MaterialData& data = _handleTable[handle].value();
+
+  if (::texturePool->IsValidHandle(data.albedoTexture))
+  {
+    ::texturePool->Unload(data.albedoTexture, ::pools);
+  }
+
+  if (::texturePool->IsValidHandle(data.metallicRoughnessTexture))
+  {
+    ::texturePool->Unload(data.metallicRoughnessTexture, ::pools);
+  }
+
+  if (::texturePool->IsValidHandle(data.normalTexture))
+  {
+    ::texturePool->Unload(data.normalTexture, ::pools);
+  }
+
+  if (::texturePool->IsValidHandle(data.occlusionTexture))
+  {
+    ::texturePool->Unload(data.occlusionTexture, ::pools);
+  }
+
+  if (::texturePool->IsValidHandle(data.emissiveTexture))
+  {
+    ::texturePool->Unload(data.emissiveTexture, ::pools);
+  }
 }

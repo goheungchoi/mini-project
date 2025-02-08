@@ -19,6 +19,7 @@ template <typename T, size_t GROW_SIZE = 1024>
 class ResourcePool
 {
   std::unordered_map<xUUID, uint32_t> _uuidMap;
+  std::unordered_map<Handle, xUUID> _handleUUIDMap;
 
 	HandleTable<T, GROW_SIZE> _handleTable;
 
@@ -74,20 +75,34 @@ public:
     // Lock the thread for safe multithreading.
     std::lock_guard<std::mutex> lock(_resourcePoolMutex);
 
-    if (_handleTable.GetReferenceCount(handle) == 1)
-    {
-      UnloadImpl(handle, pReserved);
-		}
+    if (!DeadlockFree_IsValidHandle(handle))
+      // TODO: Error message
+      throw std::exception("Invalid handle!");
+
+    // Temp
+    Handle tmp = handle;
+
+    // Specialized unloading logic implementation.
+    UnloadImpl(handle, pReserved);
 
     // Release the handle
     _handleTable.ReleaseHandle(handle);
+
+    // Erase the map histories.
+    if (_handleTable.GetReferenceCount(tmp) == 0)
+    {
+      xUUID uuid = _handleUUIDMap[tmp];
+      auto it = _uuidMap.find(uuid);
+      _uuidMap.erase(it);
+      _handleUUIDMap.erase(tmp);
+    }
   }
 
 	Handle Clone(const Handle& handle) { 
 		// Lock the thread for safe multithreading.
     std::lock_guard<std::mutex> lock(_resourcePoolMutex);
 
-		if (!IsValidHandle(handle))
+		if (!DeadlockFree_IsValidHandle(handle))
       // TODO: Error message
       throw std::exception("Invalid handle!");
 
@@ -96,6 +111,8 @@ public:
 
   bool IsValidHandle(const Handle& handle) const
   {
+    // Lock the thread for safe multithreading.
+    std::lock_guard<std::mutex> lock(_resourcePoolMutex);
     return _handleTable.IsValidHandle(handle);
   }
 
@@ -104,7 +121,7 @@ public:
     // Lock the thread for safe multithreading.
     std::lock_guard<std::mutex> lock(_resourcePoolMutex);
 
-    if (!IsValidHandle(handle))
+    if (!DeadlockFree_IsValidHandle(handle))
       // TODO: Error message
       throw std::exception("Invalid handle!");
 
@@ -112,6 +129,10 @@ public:
   }
 
 private:
+  bool DeadlockFree_IsValidHandle(const Handle& handle) const {
+    return _handleTable.IsValidHandle(handle);
+  }
+
   Handle LoadImpl(xUUID uuid, void* pReserved)
   {
     return Handle::kInvalidHandle;
@@ -125,28 +146,33 @@ private:
 };
 
 template <>
-Handle ResourcePool<ShaderData>::LoadImpl(xUUID uuid, void* pUser);
+Handle ResourcePool<ShaderData>::LoadImpl(xUUID uuid, void* pReserved);
 template <>
-Handle ResourcePool<TextureData>::LoadImpl(xUUID uuid, void* pUser);
+Handle ResourcePool<TextureData>::LoadImpl(xUUID uuid, void* pReserved);
 template <>
-Handle ResourcePool<MaterialData>::LoadImpl(xUUID uuid, void* pUser);
+Handle ResourcePool<MaterialData>::LoadImpl(xUUID uuid, void* pReserved);
 template <>
-Handle ResourcePool<MeshData>::LoadImpl(xUUID uuid, void* pUser);
+Handle ResourcePool<MeshData>::LoadImpl(xUUID uuid, void* pReserved);
 template <>
-Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser);
+Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pReserved);
 template <>
-Handle ResourcePool<SkeletonData>::LoadImpl(xUUID uuid, void* pUser);
+Handle ResourcePool<SkeletonData>::LoadImpl(xUUID uuid, void* pReserved);
 template <>
-Handle ResourcePool<AnimationData>::LoadImpl(xUUID uuid, void* pUser);
+Handle ResourcePool<AnimationData>::LoadImpl(xUUID uuid, void* pReserved);
 
-// TODO;
-//template <>
-//void ResourcePool<TextureData>::UnloadImpl(Handle& uuid, void* pUser);
-//template <>
-//void ResourcePool<ShaderData>::UnloadImpl(Handle& uuid, void* pUser);
-//template <>
-//void ResourcePool<MeshData>::UnloadImpl(Handle& uuid, void* pUser);
-//template <>
-//void ResourcePool<ModelData>::UnloadImpl(Handle& uuid, void* pUser);
+template <>
+void ResourcePool<ShaderData>::UnloadImpl(Handle& handle, void* pReserved);
+template <>
+void ResourcePool<TextureData>::UnloadImpl(Handle& handle, void* pReserved);
+template <>
+void ResourcePool<MaterialData>::UnloadImpl(Handle& handle, void* pReserved);
+template <>
+void ResourcePool<MeshData>::UnloadImpl(Handle& handle, void* pReserved);
+template <>
+void ResourcePool<ModelData>::UnloadImpl(Handle& handle, void* pReserved);
+template <>
+void ResourcePool<SkeletonData>::UnloadImpl(Handle& handle, void* pReserved);
+template <>
+void ResourcePool<AnimationData>::UnloadImpl(Handle& handle, void* pReserved);
 
 // TODO: Restore and discard detailed data.

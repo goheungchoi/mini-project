@@ -73,11 +73,13 @@ static MaterialHandle __LoadMaterial__(const std::string& path) {
   }
   return MaterialHandle();
 }
-static MaterialData& __AccessMaterialData__(MaterialHandle handle) {
+static MaterialData& __AccessMaterialData__(MaterialHandle handle) 
+{
   return _m().materialPool.AccessResourceData(handle);
 }
-static void __UnloadMaterial__(MaterialHandle handle) {
-	// TODO;
+static void __UnloadMaterial__(MaterialHandle handle) 
+{
+  _m().materialPool.Unload(handle, &_pools());
 }
 
 static MeshHandle __LoadMesh__(const std::string& path)
@@ -97,8 +99,9 @@ static MeshHandle __CloneMesh__(MeshHandle handle)
 {
   return _m().meshPool.Clone(handle);
 }
-static void __UnloadMesh__(MeshHandle handle) {
-	// TODO:
+static void __UnloadMesh__(MeshHandle handle) 
+{
+  _m().meshPool.Unload(handle, &_pools());
 }
 
 static ModelHandle __LoadModel__(const std::string& path)
@@ -164,7 +167,10 @@ static ModelHandle __CloneModel__(ModelHandle handle) {
 		return ModelHandle();
 	}
 }	
-static void __UnloadModel__(ModelHandle handle) {}
+static void __UnloadModel__(ModelHandle handle) 
+{
+  _m().modelPool.Unload(handle, &_pools());
+}
 
 // Skeleton
 static SkeletonHandle __LoadSkeleton__(const std::string& path)
@@ -180,7 +186,10 @@ static SkeletonData& __AccessSkeletonData__(SkeletonHandle handle)
 {
   return _m().skeletonPool.AccessResourceData(handle);
 }
-static void __UnloadSkeleton__(SkeletonHandle handle) {}
+static void __UnloadSkeleton__(SkeletonHandle handle) 
+{
+  _m().skeletonPool.Unload(handle, nullptr);
+}
 
 // Animation
 static AnimationHandle __LoadAnimation__(const std::string& path)
@@ -196,7 +205,10 @@ static AnimationData& __AccessAnimationData__(AnimationHandle handle)
 {
   return _m().animationPool.AccessResourceData(handle);
 }
-static void __UnloadAnimation__(AnimationHandle handle) {}
+static void __UnloadAnimation__(AnimationHandle handle) 
+{
+  _m().animationPool.Unload(handle, nullptr);
+}
 
 static ResourceType __GetResourceType__(const Handle& handle) {
   // TODO:

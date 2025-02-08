@@ -80,5 +80,12 @@ Handle ResourcePool<AnimationData>::LoadImpl(xUUID uuid, void* pUser)
   Handle handle = _handleTable.ClaimHandle(std::move(animation),
                                            (uint16_t)ResourceType::kAnimation);
   _uuidMap[uuid] = handle.index;
+  _handleUUIDMap[handle] = uuid;
   return handle;
+}
+
+template <>
+void ResourcePool<AnimationData>::UnloadImpl(Handle& handle, void* pReserved)
+{
+  
 }

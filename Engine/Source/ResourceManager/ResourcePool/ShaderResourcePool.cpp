@@ -78,5 +78,11 @@ Handle ResourcePool<ShaderData>::LoadImpl(xUUID uuid, void* pUser)
 	// Claim the handle and map the UUID.
   Handle handle = _handleTable.ClaimHandle(std::move(data));
   _uuidMap[uuid] = handle.index;
+  _handleUUIDMap[handle] = uuid;
   return handle;
+}
+
+template <>
+void ResourcePool<ShaderData>::UnloadImpl(Handle& handle, void* pReserved)
+{
 }

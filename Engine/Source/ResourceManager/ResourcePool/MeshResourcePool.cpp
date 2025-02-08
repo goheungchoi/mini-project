@@ -124,6 +124,21 @@ Handle ResourcePool<MeshData>::LoadImpl(xUUID uuid, void* pUser)
 	Handle handle =
       _handleTable.ClaimHandle(std::move(mesh), (uint16_t)ResourceType::kMesh);
   _uuidMap[uuid] = handle.index;
+  _handleUUIDMap[handle] = uuid;
   return handle;
 }
 
+template <>
+void ResourcePool<MeshData>::UnloadImpl(Handle& handle, void* pReserved)
+{
+  ::pools = (Pools*)pReserved;
+  ::texturePool = pools->texturePool;
+  ::materialPool = pools->materialPool;
+
+  MeshData& data = _handleTable[handle].value();
+
+  if (::materialPool->IsValidHandle(data.material))
+  {
+    ::materialPool->Unload(data.material, ::pools);
+  }
+}
