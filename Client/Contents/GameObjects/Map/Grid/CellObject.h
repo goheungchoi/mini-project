@@ -2,11 +2,14 @@
 
 #include "GameFramework/GameObject/GameObject.h"
 
+#include "Contents/GameObjects/Map/Types.h"
+
 enum CellType
 {
 	CellType_Default,
 	CellType_Placement,
   CellType_RangeZone,
+  CellType_DashZone,
   CellType_DamageZone,
 };
 
@@ -18,12 +21,17 @@ protected:
   ModelHandle defaultCellModelHandle;
 	ModelHandle placementCellModelHandle;
   ModelHandle rangeCellModelHandle;
+  ModelHandle dashCellModelHandle;
   ModelHandle damageCellModelHandle;
 
   GameObject* defaultCell;
 	GameObject* placementCell;
   GameObject* rangeCell;
+  GameObject* dashCell;
   GameObject* damageCell;
+
+  bool bDirectionChanged{false};
+  Direction dir{kEast};
 
 public:
   class GridObject* grid{nullptr};
@@ -41,13 +49,22 @@ public:
   void SetVisible();
 
   void ClearCell();
-	void SetCellType(CellType type);
+	
+  void SetCellType(CellType type);
   CellType GetCellType();
+
   void SetCellPosition(int w, int h);
   std::pair<int, int> GetCellPosition();
+
+  void SetCellDirection(Direction dir);
+  Direction GetCellDirection();
 
   // Game loop events
   void OnAwake();
 
   void Update(float dt) override;
+
+private:
+
+  void ApplyChangedDirection();
 };

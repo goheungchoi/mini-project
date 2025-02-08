@@ -10,3 +10,35 @@ SubMission::SubMission(World* world) : UIPanel(world)
 }
 
 SubMission::~SubMission() {}
+
+void SubMission::SetText(std::wstring text, Vector2 pos)
+{
+  _subMissionTxt = CreateUI<UIText>(L"SubMissionTxt");
+  _subMissionTxt->SetCenterPos({pos.x + 60, pos.y});
+  _subMissionTxt->SetSize(
+      {_subMissionImg->GetSize().x, _subMissionImg->GetSize().y});
+  _subMissionTxt->SetTextAlignment(TextAlignment::LEFTAlIGN);
+  _subMissionTxt->SetFont(L"PT Noeul");
+  _subMissionTxt->SetFontSize(21.0f);
+  _subMissionTxt->SetFontWeight(FontWeight::NORMAL);
+  _subMissionTxt->SetText(text);
+  _subMissionTxt->SetOpacity(1.0f);
+#ifdef _DEBUG
+  _subMissionTxt->SetDebugDraw(false);
+#endif // _DEBUG
+
+  _selectTxt = CreateUI<UIText>(L"SubSelectTxt");
+  _selectTxt->SetCenterPos(pos);
+  _selectTxt->SetSize(
+      {_subMissionImg->GetSize().x, _subMissionImg->GetSize().y});
+  _selectTxt->SetTextAlignment(TextAlignment::LEFTAlIGN);
+  _selectTxt->SetFont(L"PT Noeul");
+  _selectTxt->SetFontSize(21.0f);
+  _selectTxt->SetFontWeight(FontWeight::NORMAL);
+  _selectTxt->SetColor({0.75, 0.1, 0.12, 1});
+  _selectTxt->SetText(L"(¼±ÅÃ)");
+  _selectTxt->SetOpacity(1.0f);
+#ifdef _DEBUG
+  _selectTxt->SetDebugDraw(false);
+#endif // _DEBUG
+}

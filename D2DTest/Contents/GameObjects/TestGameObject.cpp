@@ -1,4 +1,4 @@
-﻿#include "TestGameObject.h"
+#include "TestGameObject.h"
 #include "GameFramework/World/World.h"
 
 #include "GameFramework/Level/Level.h"

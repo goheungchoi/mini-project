@@ -1,10 +1,10 @@
-﻿#include "GameFramework/World/World.h"
+#include "GameFramework/World/World.h"
 
 #include "Renderer/DX11/DX11Renderer.h"
 
 #include "Core/Camera/Camera.h"
-#include "Core/Input/InputSystem.h"
 #include "Core/Common.h"
+#include "Core/Input/InputSystem.h"
 #include "GameFramework/Components/Animation/AnimatorComponent.h"
 #include "GameFramework/Components/LightComponent.h"
 #include "GameFramework/Components/MeshComponent.h"
@@ -58,7 +58,14 @@ void World::PrepareChangeLevel(const std::string& levelName)
   /* TODO: */
   if (auto it = _levelMap.find(levelName); it != _levelMap.end())
   {
+    if (_preparingLevel)
+    {
+      throw std::runtime_error("There is already a preparing level.");
+    }
+
     _preparingLevel = it->second;
+
+    _levelReadyFutureMap[levelName];
 
     _preparingLevel->PrepareLevel();
   }
@@ -74,7 +81,7 @@ bool World::IsLevelChangeReady()
     return false;
 
   /* TODO: */
-  auto& f = _levelPreparedMap[_preparingLevel->name];
+  auto& f = _levelReadyFutureMap[_preparingLevel->name];
 
   return f.valid() && f.wait_for(0s) == std::future_status::ready && f.get();
 }
@@ -82,11 +89,11 @@ bool World::IsLevelChangeReady()
 void World::CommitLevelChange()
 {
   // async::executor.async([&]() {
-  //   auto& f = _levelPreparedMap[_preparingLevel->name];
+  //   auto& f = _levelReadyFutureMap[_preparingLevel->name];
   //   f.get();
 
-  //  while (!readyToChangeLevel) {}  // Wait until
-  changingLevel = true;
+  //  while (!bReadyToChangeLevel) {}  // Wait until
+  bChangingLevel = true;
 
   if (_currentLevel)
   {
@@ -109,7 +116,7 @@ void World::CommitLevelChange()
       mainCamera->GetViewTransform(), mainCamera->GetProjectionMatrix(),
       Vector2(kScreenWidth, kScreenHeight));
 
-  changingLevel = false;
+  bChangingLevel = false;
   // });
 }
 
@@ -351,8 +358,6 @@ void World::UnregisterRigidBodyComponent(RigidbodyComponent* rigidBody)
 {
   rigidBody->DisableSimulation();
 
-
-
   auto it = std::remove(rigidBodyComponents.begin(), rigidBodyComponents.end(),
                         rigidBody);
   rigidBodyComponents.erase(it, rigidBodyComponents.end());
@@ -362,16 +367,15 @@ void World::UnregisterRigidBodyComponent(RigidbodyComponent* rigidBody)
   }
 
   _phyjixWorld->RemoveRigidBody(rigidBody->GetRigidBody());
-
 }
 
 void World::InitialStage()
 {
-  if (!_currentLevel || changingLevel)
+  if (!_currentLevel || bChangingLevel)
     return;
 
   // Mark that it should not change the level while running the game loop.
-  readyToChangeLevel = false;
+  bReadyToChangeLevel = false;
 
   // Awake and activate game objects.
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
@@ -414,7 +418,7 @@ void World::InitialStage()
 
 // void World::FixedUpdate(float fixedRate)
 //{
-//   if (!_currentLevel || changingLevel)
+//   if (!_currentLevel || bChangingLevel)
 //     return;
 //
 //   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
@@ -427,7 +431,7 @@ void World::InitialStage()
 // }
 //
 // void World::PhysicsUpdate(float fixedRate) {
-//   if (!_currentLevel || changingLevel)
+//   if (!_currentLevel || bChangingLevel)
 //     return;
 //
 //   // TODO:
@@ -445,7 +449,7 @@ void World::ProcessInput(float dt)
 
 void World::PreUpdate(float dt)
 {
-  if (!_currentLevel || changingLevel)
+  if (!_currentLevel || bChangingLevel)
     return;
 
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
@@ -459,7 +463,7 @@ void World::PreUpdate(float dt)
 
 void World::Update(float dt)
 {
-  if (!_currentLevel || changingLevel)
+  if (!_currentLevel || bChangingLevel)
     return;
 
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
@@ -508,7 +512,7 @@ void World::Update(float dt)
 
 void World::AnimationUpdate(float dt)
 {
-  if (!_currentLevel || changingLevel)
+  if (!_currentLevel || bChangingLevel)
     return;
 
   // Animation update.
@@ -569,7 +573,7 @@ void World::AnimationUpdate(float dt)
 
 void World::PostUpdate(float dt)
 {
-  if (!_currentLevel || changingLevel)
+  if (!_currentLevel || bChangingLevel)
     return;
 
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
@@ -584,7 +588,7 @@ void World::PostUpdate(float dt)
 static DirectionalLight _mainLight;
 void World::RenderGameObjects()
 {
-  if (!_currentLevel || changingLevel)
+  if (!_currentLevel || bChangingLevel)
     return;
 
   Matrix view = mainCamera->GetViewTransform();
@@ -601,7 +605,7 @@ void World::RenderGameObjects()
     _mainLight.direction.y = _mainLightDir[1];
     _mainLight.direction.z = _mainLightDir[2];
     float _mainLightColor[4] = {_mainLight.radiance.x, _mainLight.radiance.y,
-                                _mainLight.radiance.z,1.f};
+                                _mainLight.radiance.z, 1.f};
     ImGui::ColorEdit3("Color", _mainLightColor);
     float _mainLightIntencity = _mainLight.radiance.w;
     ImGui::SliderFloat("intencity", &_mainLightIntencity, 0.f, 1.f);
@@ -616,7 +620,8 @@ void World::RenderGameObjects()
   // Rendering stage
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
   {
-    if (!(gameObject->status == EStatus_Active) && !(gameObject->status == EStatus_Inactive))
+    if (!(gameObject->status == EStatus_Active) &&
+        !(gameObject->status == EStatus_Inactive))
       continue;
 
     gameObject->OnRender();
@@ -635,8 +640,8 @@ void World::RenderGameObjects()
     }
     // Draw skeletal mesh
     if (auto* skeletalMeshComp =
-                 gameObject->GetComponent<SkeletalMeshComponent>();
-             skeletalMeshComp && skeletalMeshComp->isVisible)
+            gameObject->GetComponent<SkeletalMeshComponent>();
+        skeletalMeshComp && skeletalMeshComp->isVisible)
     {
       auto handle = skeletalMeshComp->GetHandle();
       // const auto& transform =
@@ -647,11 +652,17 @@ void World::RenderGameObjects()
           handle, XMMatrixIdentity(), skeletalMeshComp->renderTypeFlags,
           skeletalMeshComp->outlineColor, skeletalMeshComp->boneTransforms);
     }
-    if (auto* billboardComp =
-                 gameObject->GetComponent<BillboardComponent>();
-             billboardComp && billboardComp->isVisible)
+    // Draw Billboard
+    if (auto* billboardComp = gameObject->GetComponent<BillboardComponent>();
+        billboardComp && billboardComp->isVisible)
     {
-       _renderer->DrawBillBoard(billboardComp->billboard);
+      _renderer->DrawBillBoard(billboardComp->billboard);
+    }
+    // draw Trail
+    if (auto* trailComp = gameObject->GetComponent<TrailComponent>();
+        trailComp && trailComp->isVisible)
+    {
+      _renderer->DrawTrail(trailComp->trail);
     }
   }
 #ifdef _DEBUG
@@ -671,8 +682,7 @@ void World::RenderGameObjects()
         switch (rigidbody->GetRigidBody()->GetColliderShapeType())
         {
         case ColliderShape::eCubeCollider:
-          _renderer->DrawDebugBox(offsetMat,
-                                  rigidbody->debugColor);
+          _renderer->DrawDebugBox(offsetMat, rigidbody->debugColor);
           break;
         case ColliderShape::eSphereCollider:
           _renderer->DrawDebugSphere(offsetMat, rigidbody->debugColor);
@@ -684,8 +694,6 @@ void World::RenderGameObjects()
     }
   }
 #endif
-
-
 }
 
 void World::RenderUI()
@@ -699,7 +707,7 @@ void World::RenderUI()
 
 void World::CleanupStage()
 {
-  if (!_currentLevel || changingLevel)
+  if (!_currentLevel || bChangingLevel)
     return;
 
   // Find cleaned up game objects.
@@ -765,7 +773,7 @@ void World::CleanupStage()
   }
 
   // Mark that it's ready to change level.
-  readyToChangeLevel = true;
+  bReadyToChangeLevel = true;
 }
 
 void World::UpdateGameObjectHierarchy(GameObject* gameObject,

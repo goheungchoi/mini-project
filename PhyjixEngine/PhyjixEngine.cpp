@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "PhyjixEngine.h"
 
 bool PhyjixEngine::Initialize()

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "GameFramework/Level/Level.h"
 #include "GameFramework/World/World.h"

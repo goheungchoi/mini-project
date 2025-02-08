@@ -1,4 +1,4 @@
-﻿#include "GameFramework/UI/UIPanel/UIPanel.h"
+#include "GameFramework/UI/UIPanel/UIPanel.h"
 
 UIPanel::UIPanel(class World* world) : UIElement(world) {}
 

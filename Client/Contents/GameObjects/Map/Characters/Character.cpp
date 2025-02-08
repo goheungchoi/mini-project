@@ -82,7 +82,14 @@ void Character::TriggerAction()
   HideDeathIndicator();
 
   if (isTargetInRange)
-		animator->SetVariable<bool>("triggered", true, true);
+    animator->SetVariable<bool>("triggered", true, true);
+  else
+    animator->SetVariable<bool>("done", true);
+}
+
+bool Character::IsFinishedAction()
+{
+  return isActionFinished;
 }
 
 void Character::BindDirectionIndicator(GameObject* directionIndicator) {
@@ -274,6 +281,15 @@ void Character::Update(float dt)
     {
       rbComp->debugColor = Color(0, 1, 1, 1);
     }
+  }
+
+  if (animator->GetVariable<bool>("done"))
+  {
+    isActionFinished = true;
+  }
+  else
+  {
+    isActionFinished = false;
   }
   
 	if (isDead)

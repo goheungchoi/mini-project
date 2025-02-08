@@ -2,4 +2,6 @@
 
 #include "GameFramework/Components/Animation/AnimatorComponent.h"
 
-void DeadState::Toggle(AnimatorComponent*) {}
+void DeadState::Toggle(AnimatorComponent* animator) {
+  animator->SetVariable<bool>("done", true);
+}

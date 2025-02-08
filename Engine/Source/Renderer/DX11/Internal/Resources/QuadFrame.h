@@ -20,7 +20,7 @@ public:
   Device* _device = nullptr;
 
 public:
-  // SWTODO : �ʱ�ȭ
+  // SWTODO : √ ±‚»≠
   QuadFrame(Device* device) : _device{device} {}
   ~QuadFrame() {}
 

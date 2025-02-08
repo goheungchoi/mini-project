@@ -1,6 +1,6 @@
 #pragma once
 
-#include <directxtk/simplemath.h>							// ¼öÇĞ ¿¬»êÀ» ´Ü¼øÈ­ÇÏ´Â Å¬·¡½ºµéÀ» Á¦°ø
+#include <directxtk/simplemath.h>							// ìˆ˜í•™ ì—°ì‚°ì„ ë‹¨ìˆœí™”í•˜ëŠ” í´ë˜ìŠ¤ë“¤ì„ ì œê³µ
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
@@ -264,20 +264,20 @@ inline XMMATRIX BillboardMatrix(XMVECTOR objectPos, XMVECTOR cameraPos,
 inline XMMATRIX GetBillboardMatrix(XMVECTOR objectPos, XMVECTOR cameraPos,
                             XMVECTOR up = MathUtil::kUp)
 {
-  // Ä«¸Ş¶ó¿Í °´Ã¼ °£ÀÇ ¹æÇâ º¤ÅÍ °è»ê
+  // ì¹´ë©”ë¼ì™€ ê°ì²´ ê°„ì˜ ë°©í–¥ ë²¡í„° ê³„ì‚°
   XMVECTOR forward = cameraPos - objectPos;
   forward = XMVector3Normalize(forward);
 
-  // ¿ìÃø º¤ÅÍ °è»ê (±âº»ÀûÀ¸·Î XÃà ¹æÇâ)
+  // ìš°ì¸¡ ë²¡í„° ê³„ì‚° (ê¸°ë³¸ì ìœ¼ë¡œ Xì¶• ë°©í–¥)
   
   XMVECTOR right = XMVector3Cross(up, forward);
   right = XMVector3Normalize(right);
 
-  // »õ·Î¿î Up º¤ÅÍ °è»ê
+  // ìƒˆë¡œìš´ Up ë²¡í„° ê³„ì‚°
   XMVECTOR newUp = XMVector3Cross(forward, right);
   newUp = XMVector3Normalize(newUp);
 
-  // 4x4 Çà·Ä »ı¼º (LookAt ¹æ½Ä)
+  // 4x4 í–‰ë ¬ ìƒì„± (LookAt ë°©ì‹)
   return XMMatrixSet(XMVectorGetX(right), XMVectorGetY(right), XMVectorGetZ(right),
               0.f, XMVectorGetX(newUp), XMVectorGetY(newUp),
               XMVectorGetZ(newUp), 0.f, XMVectorGetX(forward),
@@ -313,24 +313,24 @@ inline XMVECTOR GetScalingFromMatrix(const XMMATRIX& matrix)
 }
 
 } // namespace MathUtil
-// È¸Àü ÃàÀ» °è»êÇÏ´Â ÇÔ¼ö
+// íšŒì „ ì¶•ì„ ê³„ì‚°í•˜ëŠ” í•¨ìˆ˜
 inline Vector3 AxisBillBoardRotate(const Matrix& local,
                                    const Vector3& cameraPos,
                                    const Vector3& worldPos)
 {
-  // ·ÎÄÃ Çà·Ä¿¡¼­ Forward º¤ÅÍ ÃßÃâ
+  // ë¡œì»¬ í–‰ë ¬ì—ì„œ Forward ë²¡í„° ì¶”ì¶œ
   Vector3 forward = local.Forward();
   forward.Normalize();
 
-  // Ä«¸Ş¶ó ¹æÇâ º¤ÅÍ
+  // ì¹´ë©”ë¼ ë°©í–¥ ë²¡í„°
   Vector3 targetDir = cameraPos - worldPos;
   targetDir.Normalize();
 
-  // È¸Àü Ãà °è»ê (Forward¿Í Ä«¸Ş¶ó ¹æÇâ º¤ÅÍÀÇ ¿ÜÀû)
+  // íšŒì „ ì¶• ê³„ì‚° (Forwardì™€ ì¹´ë©”ë¼ ë°©í–¥ ë²¡í„°ì˜ ì™¸ì )
   Vector3 axis = forward.Cross(targetDir);
   if (axis.LengthSquared() == 0.0f)
   {
-    axis = Vector3(0.f, 1.f, 0.f); // È¸Àü ÃàÀÌ ¾øÀ» °æ¿ì ±âº»ÀûÀ¸·Î YÃà »ç¿ë
+    axis = Vector3(0.f, 1.f, 0.f); // íšŒì „ ì¶•ì´ ì—†ì„ ê²½ìš° ê¸°ë³¸ì ìœ¼ë¡œ Yì¶• ì‚¬ìš©
   }
   else
   {

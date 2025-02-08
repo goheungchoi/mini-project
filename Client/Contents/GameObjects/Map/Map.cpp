@@ -61,6 +61,15 @@ Map::Map(World* world) : GameObject(world)
       LoadTexture("Models\\Indicator\\GunmanActiveIndicator\\Indicator1_On.png",
                   TextureType::kAlbedo);
 
+  obstacleBox01ModelHandle = LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
+  obstacleBox02ModelHandle = LoadModel("Models\\Obstacles\\Box02\\OBs_Box02.glb");
+  obstacleDrumModelHandle = LoadModel("Models\\Obstacles\\Drum\\OBs_Drum.glb");
+  obstacleDrumOldModelHandle = LoadModel("Models\\Obstacles\\DrumOld\\OBs_DrumOld.glb");
+  obstacleLionModelHandle = LoadModel("Models\\Obstacles\\Lion\\OBs_Lion.glb");
+  obstacleSofaModelHandle = LoadModel("Models\\Obstacles\\Sofa\\OBs_Sofa.glb");
+  obstacleStoolModelHandle = LoadModel("Models\\Obstacles\\Stool\\OBs_Stool.glb");
+  obstacleVBoxModelHandle = LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
+
   Character::enemyModelData = &AccessModelData(enemyGunmanModelHandle);
   Character::enemySkeletonHandle = Character::enemyModelData->skeleton;
 
@@ -96,6 +105,8 @@ Map::Map(World* world) : GameObject(world)
 
   // Get the player model data.
   ModelData& playerModel = AccessModelData(allyBrawlerModelHandle);
+
+  
 
   // Create a grid.
   grid = world->CreateGameObject<GridObject>();
@@ -214,7 +225,7 @@ void Map::ShowHoveredCharacterRange()
               grid->GetGameObjectAt(w + w_offset, h + h_offset);
           gameObject)
       {
-        // TODO: Mark the death indicator.
+        // Mark the death indicator.
         if (gameObject->GetGameObjectTag() == kFactionTags[kAlly] ||
             gameObject->GetGameObjectTag() == kFactionTags[kEnemy] ||
             gameObject->GetGameObjectTag() == kFactionTags[kNeutral])
@@ -237,6 +248,45 @@ void Map::ShowHoveredCharacterRange()
   break;
   case kSlasher: {
     // TODO:
+    auto [w_offset, h_offset] = hoveredCharacter->GetGridFrontDirection();
+    if (hoveredCharacter->isTargetInRange)
+    {
+      // Show the damage zone.
+      for (int i = 0; i < hoveredCharacter->distanceToTarget; ++i)
+      {
+        w += w_offset;
+        h += h_offset;
+        CellObject* cell = grid->GetCellObjectAt(w, h);
+        cell->SetCellType(CellType_DashZone);
+        cell->SetCellDirection(hoveredCharacter->dir);
+
+        // Shows death indicators.
+        if (GameObject* gameObject =
+                grid->GetGameObjectAt(w, h);
+            gameObject)
+        {
+          // Mark the death indicator.
+          if (gameObject->GetGameObjectTag() == kFactionTags[kAlly] ||
+              gameObject->GetGameObjectTag() == kFactionTags[kEnemy] ||
+              gameObject->GetGameObjectTag() == kFactionTags[kNeutral])
+          {
+            Character* character = (Character*)gameObject;
+            character->ShowDeathIndicator();
+          }
+        }
+      }
+    }
+    else
+    {
+      for (int i = 0; i < hoveredCharacter->range; ++i)
+      {
+        w += w_offset;
+        h += h_offset;
+        CellObject* cell = grid->GetCellObjectAt(w, h);
+        cell->SetCellType(CellType_RangeZone);
+      }
+    }
+
   }
   break;
   case kGunman: {
@@ -448,6 +498,23 @@ void Map::PauseGame()
 void Map::ResumeGame()
 {
   this->Activate();
+}
+
+bool Map::IsGameFinished()
+{
+  bool isAllCharacterFinishedActions{isActionTriggered};
+
+  for (Character* enemy : enemies)
+  {
+    isAllCharacterFinishedActions &= enemy->IsFinishedAction();
+  }
+
+  for (Character* ally : allies)
+  {
+    isAllCharacterFinishedActions &= ally->IsFinishedAction();
+  }
+
+  return isAllCharacterFinishedActions;
 }
 
 void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
@@ -799,7 +866,7 @@ void Map::Update(float dt)
     placeholder->ShowOutline();
 
     // Cancel placement mode.
-    if (INPUT.IsKeyDown(Key::Escape) || INPUT.IsKeyDown(MouseState::RB))
+    if (INPUT.IsKeyPress(Key::Escape) || INPUT.IsKeyPress(MouseState::RB))
     {
       if (tmp)
       {
@@ -810,13 +877,13 @@ void Map::Update(float dt)
       TurnOffPlacementMode();
     }
     // Change the direction of the placeholder.
-    else if (INPUT.IsKeyDown(Key::Tab))
+    else if (INPUT.IsKeyPress(Key::Tab))
     {
       uint32_t dir = placeholder->GetDirection();
       placeholder->SetDirection((Direction)((dir + 1) % kNumDirections));
     }
     // Place the character.
-    else if (INPUT.IsKeyDown(MouseState::LB))
+    else if (INPUT.IsKeyPress(MouseState::LB))
     {
       if (grid->selectedCell)
       {
@@ -852,7 +919,7 @@ void Map::Update(float dt)
       // Assasination mode.
       if (isAssassinationMode)
       {
-        if (INPUT.IsKeyDown(MouseState::LB))
+        if (INPUT.IsKeyPress(MouseState::LB))
         {
           if (hoveredCharacter->faction == Faction::kEnemy)
           {
@@ -862,7 +929,7 @@ void Map::Update(float dt)
             isAssassinationMode = false;
           }
         }
-        else if (INPUT.IsKeyDown(MouseState::RB))
+        else if (INPUT.IsKeyPress(MouseState::RB))
         {
           isAssassinationMode = false;
         }
@@ -879,7 +946,7 @@ void Map::Update(float dt)
         ShowHoveredCharacterRange();
 
         // Right Click
-        if (INPUT.IsKeyDown(MouseState::RB))
+        if (INPUT.IsKeyPress(MouseState::RB))
         {
           // Remove the character
           if (hoveredCharacter->faction == Faction::kAlly)
@@ -889,7 +956,7 @@ void Map::Update(float dt)
           }
         }
         // Left click
-        else if (INPUT.IsKeyDown(MouseState::LB))
+        else if (INPUT.IsKeyPress(MouseState::LB))
         {
           // Character selection -> Placement mode.
           // Find if any "ally character" is selected.
@@ -1009,3 +1076,4 @@ void Map::TranslatePlaceholder()
     placeholder->SetTranslation(cursorPos);
   }
 }
+

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "GameFramework/Common.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 

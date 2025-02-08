@@ -23,5 +23,5 @@ private:
   IDWriteFontSetBuilder1* _pfontSetBuilder;
 
   std::unordered_map<std::wstring, IDWriteFontCollection1*>
-      _fontCollections; // ÆùÆ® ÀÌ¸§À¸·Î ÄÃ·º¼Ç ¸ÅÇÎ
+      _fontCollections; // í°íŠ¸ ì´ë¦„ìœ¼ë¡œ ì»¬ë ‰ì…˜ ë§¤í•‘
 };

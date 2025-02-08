@@ -81,6 +81,11 @@ void UIText::SetFont(const std::wstring& fontName)
   _textFormatInfo._fontName = fontName;
 }
 
+void UIText::SetFontSize(const float fontSize)
+{
+  _textFormatInfo._fontSize = fontSize;
+}
+
 void UIText::SetColor(Color color)
 {
   _color = color;

@@ -14,7 +14,7 @@ WinApp::WinApp(const wchar_t* className, HINSTANCE hInstance)
   _hInstance = hInstance;
   _className = className;
 
-	// »ý¼ºÀÚ¿¡¼­ MyRegisterClass() ¸¦ ÇØÁà¾ß ÇÔ
+	// ìƒì„±ìžì—ì„œ MyRegisterClass() ë¥¼ í•´ì¤˜ì•¼ í•¨
   WNDCLASSEXW wcex;
 
   wcex.cbSize = sizeof(WNDCLASSEX);
@@ -39,23 +39,23 @@ WinApp::WinApp(const wchar_t* className, HINSTANCE hInstance)
 
 void WinApp::App_CreateWindow(int width, int height)
 {
-  // ¿øÇÏ´Â Å©±â°¡ Á¶Á¤µÇ¾î ¸®ÅÏ
+  // ì›í•˜ëŠ” í¬ê¸°ê°€ ì¡°ì •ë˜ì–´ ë¦¬í„´
   RECT rcClient = {0, 0, (LONG)width, (LONG)height};
 
   AdjustWindowRect(&rcClient, WS_OVERLAPPEDWINDOW, FALSE);
 
-  // Ã¢ ½ºÅ¸ÀÏ ¼³Á¤ ÇÃ·¡±× (Å¸ÀÌÆ²¹Ù / Á¾·á / ÃÖ¼ÒÈ­ / ÃÖ´ëÈ­)
+  // ì°½ ìŠ¤íƒ€ì¼ ì„¤ì • í”Œëž˜ê·¸ (íƒ€ì´í‹€ë°” / ì¢…ë£Œ / ìµœì†Œí™” / ìµœëŒ€í™”)
   DWORD dwStyle =
       WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
 
-// CreateWindowW() ÇÔ¼ö »ç¿ëÇÏ¿© hWnd ¸¸µé¾îÁÜ.
+// CreateWindowW() í•¨ìˆ˜ ì‚¬ìš©í•˜ì—¬ hWnd ë§Œë“¤ì–´ì¤Œ.
   _hwnd = CreateWindowEx(0, _className, _className, dwStyle, CW_USEDEFAULT,
                          CW_USEDEFAULT, rcClient.right - rcClient.left,
                          rcClient.bottom - rcClient.top, nullptr,
                        nullptr,
                        _hInstance, nullptr);
 
-// ShowWindow(_hWnd, SW_SHOWNORMAL); »ç¿ëÇÏ¿© Ã¢ ¶ç¿ò
+// ShowWindow(_hWnd, SW_SHOWNORMAL); ì‚¬ìš©í•˜ì—¬ ì°½ ë„ì›€
   ShowWindow(_hwnd, SW_SHOWNORMAL);
   UpdateWindow(_hwnd);
 }
@@ -75,24 +75,24 @@ LRESULT CALLBACK WinApp::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam,
 #endif // USED2D
 
   case WM_CREATE:
-  // TODO : À©µµ¿ì°¡ »ý¼ºµÉ ¶§ Ã³¸®
+  // TODO : ìœˆë„ìš°ê°€ ìƒì„±ë  ë•Œ ì²˜ë¦¬
     break;
 
   case WM_SIZE:
-  // TODO: À©µµ¿ì Å©±â°¡ º¯°æµÉ ¶§ Ã³¸®
+  // TODO: ìœˆë„ìš° í¬ê¸°ê°€ ë³€ê²½ë  ë•Œ ì²˜ë¦¬
     break;
 
 
   case WM_ACTIVATEAPP:
-    // TODO: ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀÌ È°¼ºÈ­µÇ°Å³ª ºñÈ°¼ºÈ­(else)µÉ ¶§ Ã³¸®
+    // TODO: ì• í”Œë¦¬ì¼€ì´ì…˜ì´ í™œì„±í™”ë˜ê±°ë‚˜ ë¹„í™œì„±í™”(else)ë  ë•Œ ì²˜ë¦¬
     DirectX::Keyboard::ProcessMessage(uMsg, wParam, lParam);
     DirectX::Mouse::ProcessMessage(uMsg, wParam, lParam);
     break;
 
   case WM_POWERBROADCAST:
-  // TODO: ½Ã½ºÅÛ Àü¿ø »óÅÂ°¡ º¯°æµÉ ¶§ Ã³¸®
-  // ½Ã½ºÅÛÀÌ ´ë±â ¸ðµå·Î ÀüÈ¯µÇ·Á°í ÇÒ ¶§ °ÔÀÓÀ» ÀÏ½Ã ÁßÁöÇÕ´Ï´Ù.
-  // ½Ã½ºÅÛÀÌ ´ë±â ¸ðµå¿¡¼­ º¹±ÍÇÒ ¶§ °ÔÀÓÀ» Àç°³ÇÕ´Ï´Ù.
+  // TODO: ì‹œìŠ¤í…œ ì „ì› ìƒíƒœê°€ ë³€ê²½ë  ë•Œ ì²˜ë¦¬
+  // ì‹œìŠ¤í…œì´ ëŒ€ê¸° ëª¨ë“œë¡œ ì „í™˜ë˜ë ¤ê³  í•  ë•Œ ê²Œìž„ì„ ì¼ì‹œ ì¤‘ì§€í•©ë‹ˆë‹¤.
+  // ì‹œìŠ¤í…œì´ ëŒ€ê¸° ëª¨ë“œì—ì„œ ë³µê·€í•  ë•Œ ê²Œìž„ì„ ìž¬ê°œí•©ë‹ˆë‹¤.
     break;
 
   case WM_DESTROY:
@@ -121,13 +121,13 @@ LRESULT CALLBACK WinApp::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam,
     break;
 
   case WM_SYSKEYDOWN:
-  // TODO: ½Ã½ºÅÛ Å°°¡ ´­·ÈÀ» ¶§ Ã³¸®
-  // ALT+ENTER Å° Á¶ÇÕÀÌ ´­·ÈÀ» ¶§ ÀüÃ¼ È­¸é ¸ðµå¸¦ Åä±ÛÇÕ´Ï´Ù.
+  // TODO: ì‹œìŠ¤í…œ í‚¤ê°€ ëˆŒë ¸ì„ ë•Œ ì²˜ë¦¬
+  // ALT+ENTER í‚¤ ì¡°í•©ì´ ëˆŒë ¸ì„ ë•Œ ì „ì²´ í™”ë©´ ëª¨ë“œë¥¼ í† ê¸€í•©ë‹ˆë‹¤.
     break;
 
   case WM_MENUCHAR:
-  // TODO: ¸Þ´º°¡ È°¼ºÈ­µÈ »óÅÂ¿¡¼­ À¯È¿ÇÏÁö ¾ÊÀº Å°¸¦ ´­·¶À» ¶§ Ã³¸®
-  // ¿À·ù °æ°íÀ½À» ¹æÁöÇÏ±â À§ÇØ ¸Þ½ÃÁö¸¦ ¹«½ÃÇÕ´Ï´Ù.
+  // TODO: ë©”ë‰´ê°€ í™œì„±í™”ëœ ìƒíƒœì—ì„œ ìœ íš¨í•˜ì§€ ì•Šì€ í‚¤ë¥¼ ëˆŒë €ì„ ë•Œ ì²˜ë¦¬
+  // ì˜¤ë¥˜ ê²½ê³ ìŒì„ ë°©ì§€í•˜ê¸° ìœ„í•´ ë©”ì‹œì§€ë¥¼ ë¬´ì‹œí•©ë‹ˆë‹¤.
   return MAKELRESULT(0, MNC_CLOSE);
 
   default:

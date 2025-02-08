@@ -13,6 +13,7 @@
 #include "../Resources/PipeLineState.h"
 #include "../Resources/Sampler.h"
 #include "../Resources/SkyBox.h"
+#include "../Resources/TrailResrouce.h"
 #include "Core/Common.h"
 #include "Core/Math/MathUtils.h"
 #include "Core/Types/RenderType.h"
@@ -55,6 +56,8 @@ private:
   unordered_map<std::string, PixelShader*> _pShaders;
   // Billboard
   map<pair<float, int>, BillboardQuad*, greater<pair<float, int>>> _billboards;
+  // Trail
+  map<pair<float, int>, Trail*, greater<pair<float, int>>> _trails;
   // pass
   ShadowPass* _shadow = nullptr;
   DefferedPass* _deffered = nullptr;
@@ -62,16 +65,16 @@ private:
   SSAOPass* _ssao = nullptr;
 
 private:
-  // renderer¿¡¼­ »ı¼ºÇÑ deive ÂüÁ¶.
+  // rendererì—ì„œ ìƒì„±í•œ deive ì°¸ì¡°.
   Device* _device;
   PipeLine* _pso = nullptr;
   ShaderCompiler* _compiler = nullptr;
   Renderer::Camera _camera;
   DirectionalLight _mainLight;
   int max = std::numeric_limits<int>::max();
-  float ambientIntencity = 0.516f;
+  float ambientIntencity = 0.1f;
   float emissiveIntencity = 0.523f;
-  float testradius = 0.005f;
+  float testradius = 0.008f;
   bool testIsSSAO = true;
 
 public:
@@ -167,13 +170,13 @@ public:
       }
       if (buff->flags & RenderPassType::kTransparentPass)
       {
-        // ºä °ø°£ÀÇ Z°ª °è»ê
-        Vector3 worldPos3 = world.Translation(); // ¿ùµå °ø°£¿¡¼­ÀÇ À§Ä¡
+        // ë·° ê³µê°„ì˜ Zê°’ ê³„ì‚°
+        Vector3 worldPos3 = world.Translation(); // ì›”ë“œ ê³µê°„ì—ì„œì˜ ìœ„ì¹˜
         Vector4 worldPos = {worldPos3.x, worldPos3.y, worldPos3.z,
-                            1.f}; // ¿ùµå °ø°£¿¡¼­ÀÇ À§Ä¡
+                            1.f}; // ì›”ë“œ ê³µê°„ì—ì„œì˜ ìœ„ì¹˜
         Vector4 viewPos =
-            Vector4::Transform(worldPos, _camera.view); // ºä °ø°£À¸·Î º¯È¯
-        float viewZ = viewPos.z; // ºä °ø°£ Z°ª ÃßÃâ
+            Vector4::Transform(worldPos, _camera.view); // ë·° ê³µê°„ìœ¼ë¡œ ë³€í™˜
+        float viewZ = viewPos.z; // ë·° ê³µê°„ Zê°’ ì¶”ì¶œ
         if (!buff->material->doubleSided)
           _staticTransMeshes[0].insert({{viewZ, max}, mesh});
         else
@@ -205,13 +208,13 @@ public:
       }
       if (buff->flags & RenderPassType::kTransparentPass)
       {
-        // ºä °ø°£ÀÇ Z°ª °è»ê
-        Vector3 worldPos3 = world.Translation(); // ¿ùµå °ø°£¿¡¼­ÀÇ À§Ä¡
+        // ë·° ê³µê°„ì˜ Zê°’ ê³„ì‚°
+        Vector3 worldPos3 = world.Translation(); // ì›”ë“œ ê³µê°„ì—ì„œì˜ ìœ„ì¹˜
         Vector4 worldPos = {worldPos3.x, worldPos3.y, worldPos3.z,
-                            1.f}; // ¿ùµå °ø°£¿¡¼­ÀÇ À§Ä¡
+                            1.f}; // ì›”ë“œ ê³µê°„ì—ì„œì˜ ìœ„ì¹˜
         Vector4 viewPos =
-            Vector4::Transform(worldPos, _camera.view); // ºä °ø°£À¸·Î º¯È¯
-        float viewZ = viewPos.z; // ºä °ø°£ Z°ª ÃßÃâ
+            Vector4::Transform(worldPos, _camera.view); // ë·° ê³µê°„ìœ¼ë¡œ ë³€í™˜
+        float viewZ = viewPos.z; // ë·° ê³µê°„ Zê°’ ì¶”ì¶œ
         if (!buff->material->doubleSided)
           _skelTransMeshes[0].insert({{viewZ, max}, mesh});
         else
@@ -274,18 +277,22 @@ public:
     //--------------------------------------------------------------------------------------//
     // OutLine
     this->DrawOutline(dc);
+    //--------------------------------------------------------------------------------------//
+    // Billboard
     this->DrawBillBoard(dc);
+    //--------------------------------------------------------------------------------------//
+    // Trail
+    this->DrawTrail(dc);
 // wireFrame pass -> Forward rendering
 #ifdef _DEBUG
     this->DrawGeometryPrimitveWireFrame(dc);
 #endif
 
-    // Ã³¸®ÈÄ Å¬¸®¾î
+    // ì²˜ë¦¬í›„ í´ë¦¬ì–´
     this->Clear();
 
-    // max°ª ÃÊ±âÈ­
+    // maxê°’ ì´ˆê¸°í™”
     max = std::numeric_limits<int>::max();
-    //dc->Draw()
   }
 
   void AddBillBoard(BillboardQuad* quad)
@@ -294,6 +301,13 @@ public:
     Vector4 viewPos = Vector4::Transform(worldPos, _camera.view);
     float viewZ = viewPos.z;
     _billboards.insert({{viewZ, max}, quad});
+  }
+  void AddTrail(Trail* trail)
+  {
+    Vector4 worldPos = trail->position;
+    Vector4 viewPos = Vector4::Transform(worldPos, _camera.view);
+    float viewZ = viewPos.z;
+    _trails.insert({{viewZ, max}, trail});
   }
   /**
    * @brief call per frame, update frame constantBuffer
@@ -386,6 +400,10 @@ public:
     macros = {{"Billboard", "1"}, {nullptr, nullptr}};
     _vShaders.insert({"Billboard", _compiler->CompileVertexShader(
                                        macros, "billboard_vs_main")});
+    macros.clear();
+    macros = {{"TRAIL", "1"}, {nullptr, nullptr}};
+    _vShaders.insert(
+        {"trail", _compiler->CompileVertexShader(macros, "trail_vs_main")});
 
     // ps
     macros = {{"Deffered", "1"}, {nullptr, nullptr}};
@@ -435,6 +453,10 @@ public:
     macros = {{"BLUR", "1"}, {nullptr, nullptr}};
     _pShaders.insert({"BlurVertical", _compiler->CompilePixelShader(
                                           macros, "blur_vertical_ps_main")});
+    macros.clear();
+    macros = {{"TRAIL", "1"}, {nullptr, nullptr}};
+    _pShaders.insert(
+        {"trail", _compiler->CompilePixelShader(macros, "trail_ps_main")});
   }
   void CreateSamplers()
   {
@@ -535,6 +557,7 @@ private:
   void DrawGeometryPrimitveWireFrame(ID3D11DeviceContext* dc)
   {
     _pso->SetWireFrame();
+    dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     dc->IASetInputLayout(_vShaders["Default"]->layout.Get());
     dc->VSSetShader(_vShaders["Default"]->shader.Get(), nullptr, 0);
     dc->PSSetShader(_pShaders["WireFrame"]->shader.Get(), nullptr, 0);
@@ -927,7 +950,6 @@ private:
 
   void DrawBillBoard(ID3D11DeviceContext* dc)
   {
-    //_pso->SetMainRS();
     _pso->TurnZBufferOn();
     dc->VSSetShader(_vShaders["Billboard"]->shader.Get(), nullptr, 0);
     dc->IASetInputLayout(_vShaders["Billboard"]->layout.Get());
@@ -1086,6 +1108,25 @@ private:
     _ssao->BlurVerticlePrepare();
     _ssao->QuadDraw();
   }
+
+  void DrawTrail(ID3D11DeviceContext* dc)
+  {
+    dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    dc->IASetInputLayout(_vShaders["trail"]->layout.Get());
+    dc->VSSetShader(_vShaders["trail"]->shader.Get(), nullptr, 0);
+    dc->PSSetShader(_pShaders["trail"]->shader.Get(), nullptr, 0);
+    std::ranges::for_each(_trails, [this, dc](const auto& iter) {
+      const auto& [z, trail] = iter;
+      Constant::World world = {Matrix::Identity};
+      _CB->UpdateContantBuffer(world, MeshCBType::World);
+      Constant::PixelData data = {.albedoFactor = trail->GetColor()};
+      _CB->UpdateContantBuffer(data, MeshCBType::PixelData);
+      dc->IASetVertexBuffers(
+          0, 1, trail->trailResource->_vertexBuffer.GetAddressOf(),
+          &trail->trailResource->stride, &trail->trailResource->offset);
+      dc->Draw(trail->trailResource->vertexCount, 0);
+    });
+  }
   void Clear()
   {
     // Transparent meshes
@@ -1122,6 +1163,7 @@ private:
     }
     _outLine->ClearMeshes();
     _billboards.clear();
+    _trails.clear();
 #ifdef _DEBUG
     _spheres.clear();
     _boxes.clear();

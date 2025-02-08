@@ -589,43 +589,45 @@ float4 ssao_normal_depth_write_ps_main(PS_INPUT input) : SV_Target0
     return float4(N, depth);
 }
 
-float4 ssao_ao_write_ps_main(QUAD_PS_INPUT input) : SV_TARGET
+float4 ssao_ao_write_ps_main(QUAD_PS_INPUT input) : SV_TARGET 
 {
     // Fetch Normal and Depth from GBuffer
     float4 normalData = ssaoNormalDepth.Sample(samLinear, input.uv);
     float3 normal = normalize(normalData.xyz); // Already in correct range
     float depth = normalData.w; // Depth stored in W component
-    //depth = (nearPlane * farPlane) / (farPlane - depth * (farPlane - nearPlane));
+
     float occlusion = 0.0f;
-    
+    float strengthFactor = 2.0f;  // SSAO 강도 조절
+    float contrastFactor = 2.0f;  // 대비 조절
+
     // SSAO Sampling Loop
     [unroll]
     for (int i = 0; i < 16; i++)
     {
-        // Create random sampling offset
         float3 sampleDir = normalize(SSAOKernel[i]);
         float3 samplePos = float3(input.uv, depth) + sampleDir * radius;
 
-        // Sample nearby depth values and normals
         float4 sampleNormalData = ssaoNormalDepth.Sample(samLinear, samplePos.xy);
         float3 sampleNormal = normalize(sampleNormalData.xyz);
         float sampleDepth = sampleNormalData.w;
 
-        // Compute the angle between the current normal and the sample normal
-        float3 toSampleDir = normalize(samplePos.xyz - float3(input.uv, depth)); // Vector to the sample position
-        float angle = max(dot(normal, sampleNormal), 0.0f); // Dot product to compute the angle between the two normals
+        float3 toSampleDir = normalize(samplePos.xyz - float3(input.uv, depth));
+        float angle = max(dot(normal, sampleNormal), 0.0f);
 
-        // Compare depth values (occlusion test)
         float depthDifference = samplePos.z - sampleDepth;
-        if (depthDifference > 0.0f && depthDifference < radius) // Within sampling range
+        if (depthDifference > 0.0f && depthDifference < radius)
         {
-            // Add weighted occlusion based on depth difference and normal angle
-            occlusion += saturate((1.0f - depthDifference / radius) * angle);
+            // Exponential Falloff 적용
+            float weight = exp(-depthDifference * 3.0f); // 3.0f는 Falloff 강도
+            occlusion += saturate(weight * angle);
         }
     }
 
-    // Normalize Occlusion Valuef
-    occlusion = (occlusion / 16);
+    // Normalize Occlusion Value
+    occlusion = (occlusion / 16.0f) * strengthFactor;
+
+    // Contrast 적용
+    occlusion = pow(saturate(occlusion), contrastFactor);
 
     return float4(occlusion, occlusion, occlusion, 1.0f); // Grayscale SSAO
 }
@@ -633,6 +635,7 @@ float4 ssao_ao_write_ps_main(QUAD_PS_INPUT input) : SV_TARGET
 
 #endif
 
+//---------------------------define BLUR--------------------------------------------
 #ifdef BLUR
 float4 blur_horizontal_ps_main(QUAD_PS_INPUT input) : SV_Target0
 {
@@ -665,5 +668,26 @@ float4 blur_vertical_ps_main(QUAD_PS_INPUT input):SV_Target
     }
 
     return float4(occlusion, 1.0f);
+}
+#endif
+
+//---------------------------define TRAIL--------------------------------------------
+#ifdef TRAIL
+TRAIL_PS_INPUT trail_vs_main(TRAIL_VS_INPUT input)
+{
+    TRAIL_PS_INPUT output = (TRAIL_PS_INPUT) 0;
+    output.position = mul(input.position, world);
+    output.position = mul(output.position, view);
+    output.position = mul(output.position, projection);
+    //output.uv = input.uv;
+    output.alpha = input.alpha;
+    return output;
+}
+
+float4 trail_ps_main(TRAIL_PS_INPUT input):SV_Target0
+{
+    float3 color = albedoFactor.rgb;
+    float alpha = input.alpha;
+    return float4(color, alpha);
 }
 #endif

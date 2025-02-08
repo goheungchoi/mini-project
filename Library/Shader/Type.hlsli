@@ -121,3 +121,16 @@ struct QUAD_PS_INPUT
     float4 positionShadow : POSITION;
 };
 
+struct TRAIL_VS_INPUT
+{
+    float4 position : POSITION;
+    //float2 uv : TEXCOORD0;
+    float alpha : ALPHA;
+};
+
+struct TRAIL_PS_INPUT
+{
+    float4 position : SV_Position;
+    //float2 uv : TEXCOORD0;
+    float alpha : ALPHA;
+};

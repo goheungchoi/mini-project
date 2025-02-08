@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Renderer/D2DRenderer/Common.h"
 
 

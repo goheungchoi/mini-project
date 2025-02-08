@@ -3,124 +3,142 @@
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 
-AgentStorage::AgentStorage(World* world) : UIPanel(world)
+int Agent::numAgent = 0;
+
+Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
 
-  // FistAgent
+  switch (charType)
   {
-    _fistAgentImgs[0] = CreateUI<UIImage>(L"FistAgent_Act");
-    _fistAgentImgs[1] = CreateUI<UIImage>(L"FistAgent_Deact");
+  case kBrawler:
+    // pos : 1400, 960
+    {
+      _AgentImgs[0] = CreateUI<UIImage>(L"FistAgent_Act");
+      _AgentImgs[1] = CreateUI<UIImage>(L"FistAgent_Deact");
 
-    _fistAgentImgs[0]->SetSprite("2D\\UI\\UI_Storage_Act_Fist.png",
-                                 {1400, 960});
-    _fistAgentImgs[1]->SetSprite("2D\\UI\\UI_Storage_Deact_Fist.png",
-                                 {1400, 960});
-    _fistAgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+      _AgentImgs[0]->SetSprite("2D\\UI\\UI_Storage_Act_Fist.png", pos);
+      _AgentImgs[1]->SetSprite("2D\\UI\\UI_Storage_Deact_Fist.png", pos);
+      _AgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
 
-    _fistAgentBtn = CreateUI<UIButton>(L"FistAgentBtn");
-    _fistAgentBtn->SetSize(_fistAgentImgs[0]->GetSize());
-    _fistAgentBtn->SetCenterPos({1400, 960});
+      _AgentBtn = CreateUI<UIButton>(L"FistAgentBtn");
+      _AgentBtn->SetSize(_AgentImgs[0]->GetSize());
+      _AgentBtn->SetCenterPos(pos);
 
 #ifdef _DEBUG
-    _fistAgentBtn->SetDebugDraw(true);
+      _AgentBtn->SetDebugDraw(true);
 #endif // _DEBUG
 
-    _fistAgentBtn->AddOnClickHandler([this]() {
-      if (_map && bFistUseFlag == false)
-      {
-        _map->TurnOnPlacementMode(kBrawler, kNorth);
-        bFistUseFlag = true;
-      }
-    });
+      _AgentBtn->AddOnClickHandler([this]() {
+        if (_map && bUseFlag == false)
+        {
+          _map->TurnOnPlacementMode(kBrawler, kNorth);
+          bUseFlag = true;
+        }
+      });
 
-    //_fistAgentBtn->AddOnHoveredHandler([this]() {
-    //  _fistAgentImgs[0]->SetStatus(EStatus::EStatus_Inactive);
-    //  _fistAgentImgs[1]->SetStatus(EStatus::EStatus_Active);
-    //});
-  }
+      break;
+    }
 
+  case kSlasher:
+    // RushAgent
+    {
+      _AgentImgs[0] = CreateUI<UIImage>(L"RushAgent_Act");
+      _AgentImgs[1] = CreateUI<UIImage>(L"RushAgent_Deact");
 
-  // RushAgent
-  {
-    _rushAgentImgs[0] = CreateUI<UIImage>(L"RushAgent_Act");
-    _rushAgentImgs[1] = CreateUI<UIImage>(L"RushAgent_Deact");
+      _AgentImgs[0]->SetSprite("2D\\UI\\UI_Storage_Act_Rush.png", pos);
+      _AgentImgs[1]->SetSprite("2D\\UI\\UI_Storage_Deact_Rush.png", pos);
+      _AgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
 
-    _rushAgentImgs[0]->SetSprite("2D\\UI\\UI_Storage_Act_Rush.png",
-                                 {1600, 960});
-    _rushAgentImgs[1]->SetSprite("2D\\UI\\UI_Storage_Deact_Rush.png",
-                                 {1600, 960});
-    _rushAgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
-
-    _rushAgentBtn = CreateUI<UIButton>(L"RushAgentBtn");
-    _rushAgentBtn->SetSize(_rushAgentImgs[0]->GetSize());
-    _rushAgentBtn->SetCenterPos({1600, 960});
+      _AgentBtn = CreateUI<UIButton>(L"RushAgentBtn");
+      _AgentBtn->SetSize(_AgentImgs[0]->GetSize());
+      _AgentBtn->SetCenterPos(pos);
 
 #ifdef _DEBUG
-    _rushAgentBtn->SetDebugDraw(true);
+      _AgentBtn->SetDebugDraw(true);
 #endif // _DEBUG
 
-    _rushAgentBtn->AddOnClickHandler([this]() {
-      if (_map && bGunUseFlag == false)
-      {
-        _map->TurnOnPlacementMode(kSlasher, kNorth);
-        bRushUseFlag = true;
-      }
-    });
-  }
+      _AgentBtn->AddOnClickHandler([this]() {
+        if (_map && bUseFlag == false)
+        {
+          _map->TurnOnPlacementMode(kSlasher, kNorth);
+          bUseFlag = true;
+        }
+      });
 
+      break;
+    }
 
-  // GunAgent
-  {
-    _gunAgentImgs[0] = CreateUI<UIImage>(L"GunAgent_Act");
-    _gunAgentImgs[1] = CreateUI<UIImage>(L"GunAgent_Deact");
+  case kGunman:
+    // GunAgent
+    {
+      std::wstring wNumAgent = std::to_wstring(numAgent);
 
-    _gunAgentImgs[0]->SetSprite("2D\\UI\\UI_Storage_Act_Gun.png", {1800, 960});
-    _gunAgentImgs[1]->SetSprite("2D\\UI\\UI_Storage_Deact_Gun.png",
-                                {1800, 960});
-    _gunAgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+      _AgentImgs[0] = CreateUI<UIImage>(L"GunAgent_Act" + wNumAgent);
+      _AgentImgs[1] = CreateUI<UIImage>(L"GunAgent_Deact" + wNumAgent);
 
-    _gunAgentBtn = CreateUI<UIButton>(L"GunAgentBtn");
-    _gunAgentBtn->SetSize(_gunAgentImgs[0]->GetSize());
-    _gunAgentBtn->SetCenterPos({1800, 960});
+      _AgentImgs[0]->SetSprite("2D\\UI\\UI_Storage_Act_Gun.png", pos);
+      _AgentImgs[1]->SetSprite("2D\\UI\\UI_Storage_Deact_Gun.png", pos);
+      _AgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+
+      _AgentBtn = CreateUI<UIButton>(L"GunAgentBtn" + wNumAgent);
+      _AgentBtn->SetSize(_AgentImgs[0]->GetSize());
+      _AgentBtn->SetCenterPos(pos);
 
 #ifdef _DEBUG
-    _gunAgentBtn->SetDebugDraw(true);
+      _AgentBtn->SetDebugDraw(true);
 #endif // _DEBUG
 
-    _gunAgentBtn->AddOnClickHandler([this]() {
-      if (_map && bGunUseFlag == false)
-      {
-        _map->TurnOnPlacementMode(kGunman, kNorth);
-        bGunUseFlag = true;
-      }
-    });
-  }
+      _AgentBtn->AddOnClickHandler([this]() {
+        if (_map && bUseFlag == false)
+        {
+          _map->TurnOnPlacementMode(kGunman, kNorth);
+          bUseFlag = true;
+        }
+      });
 
+      numAgent++;
+
+      break;
+    }
+
+  default:
+    break;
+  }
 
 }
 
-AgentStorage::~AgentStorage() {}
+Agent::~Agent() {}
 
-void AgentStorage::Update(float dt)
+void Agent::Update(float dt)
 {
   __super::Update(dt);
 
-  // FistAgent
+  if (bUseFlag == true)
   {
-    if (bFistUseFlag == true)
-    {
-      _fistAgentImgs[0]->SetStatus(EStatus::EStatus_Inactive);
-      _fistAgentImgs[1]->SetStatus(EStatus::EStatus_Active);
-    }
+    _AgentImgs[0]->SetStatus(EStatus::EStatus_Inactive);
+    _AgentImgs[1]->SetStatus(EStatus::EStatus_Active);
   }
+}
 
-  // GunAgent
+AgentStorage::AgentStorage(World* world) : UIPanel(world) {}
+
+AgentStorage::~AgentStorage()
+{
+  for (auto& agent : AgentList)
   {
-    if (bGunUseFlag == true)
-    {
-      _gunAgentImgs[0]->SetStatus(EStatus::EStatus_Inactive);
-      _gunAgentImgs[1]->SetStatus(EStatus::EStatus_Active);
-    }
+    agent->BeginDestroy();
+    agent->Destroy();
+    agent->FinishDestroy();
   }
+  AgentList.clear();
+}
+
+void AgentStorage::SetAgent(CharacterType charType, Vector2 pos)
+{
+  std::wstring name = L"Agent" + std::to_wstring(AgentList.size());
+  Agent* newAgent = CreateUI<Agent>(name, charType, pos);
+
+  AgentList.push_back(newAgent);
+
 }

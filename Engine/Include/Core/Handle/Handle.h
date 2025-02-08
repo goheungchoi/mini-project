@@ -2,6 +2,8 @@
 
 #include "Core/Common.h"
 
+#include <mutex>
+
 struct Handle {
   static constexpr size_t kNumIndexBits{32};
   static constexpr size_t kNumVersionBits{16};
@@ -83,6 +85,9 @@ class HandleTable
 
 	std::optional<T> _sentinel{std::nullopt};
 
+	// mutex
+  mutable std::mutex _handleTableMutex;
+
 public:
   HandleTable() { IncreaseCapacity(); }
 
@@ -92,6 +97,9 @@ public:
 	 */
   Handle ClaimHandle(T&& obj, uint16_t description = 0)
   {
+		// Lock the thread for safe multithreading.
+    std::lock_guard<std::mutex> lock(_handleTableMutex);
+
     // TODO: Can be optimized with a mem queue.
     uint64_t i = _slotStack.top();
     _slotStack.pop();
@@ -146,15 +154,21 @@ public:
 	 * @return Handle::kInvalidHandle if the input handle is not a valid handle.
 	 */
 	Handle DuplicateHandle(const Handle& handle) {
-    if (!IsValidHandle(handle))
-      return Handle::kInvalidHandle;
+    // Lock
+    std::lock_guard<std::mutex> lock(_handleTableMutex);
 
+    if (!DeadlockFree_IsValidHandle(handle))
+      return Handle::kInvalidHandle;
+		
 		_refCounts[handle.index]++;
 		return handle;
 	}
 
 	void ReleaseHandle(Handle& handle) {
-    if (!IsValidHandle(handle))
+    // Lock
+    std::lock_guard<std::mutex> lock(_handleTableMutex);
+
+    if (!DeadlockFree_IsValidHandle(handle))
       throw std::exception("invalid handle!");
 
     _refCounts[handle.index]--;
@@ -174,6 +188,9 @@ public:
 
 	uint32_t GetReferenceCount(const Handle& handle) const
   {
+    // Lock
+    std::lock_guard<std::mutex> lock(_handleTableMutex);
+
     return _refCounts[handle.index];
 	}
 
@@ -184,9 +201,12 @@ public:
    * returns the new handle of the cloned object.
    */
 	Handle Clone(Handle handle) {
-    if (!IsValidHandle(handle))
-      return Handle::kInvalidHandle;
+    // Lock
+    std::lock_guard<std::mutex> lock(_handleTableMutex);
 
+    if (!DeadlockFree_IsValidHandle(handle))
+      return Handle::kInvalidHandle;
+		
 		T clone = _table[handle.index].second.value();
     return ClaimHandle(std::move(clone), handle.desc);
 	}
@@ -198,6 +218,9 @@ public:
 	 */
 	bool IsValidHandle(const Handle& handle) const
   {
+    // Lock
+    std::lock_guard<std::mutex> lock(_handleTableMutex);
+
     if (handle == Handle::kInvalidHandle || handle.index >= _table.size())
       return false;
 
@@ -210,6 +233,9 @@ public:
 
 	inline 
 	Handle operator[](uint32_t index) const {
+    // Lock
+    std::lock_guard<std::mutex> lock(_handleTableMutex);
+
     if (index >= _table.size())
       throw std::out_of_range("Descriptor index out of range!");
     return _table[index].first;
@@ -217,15 +243,21 @@ public:
 
 	inline 
 	const std::optional<T>& operator[](const Handle& handle) const {
-    if (!IsValidHandle(handle))
-      return _sentinel;
+    // Lock
+    std::lock_guard<std::mutex> lock(_handleTableMutex);
 
+    if (!DeadlockFree_IsValidHandle(handle))
+      return _sentinel;
+		
 		return _table[handle.index].second;
 	}
 
 	inline 
 	std::optional<T>& operator[](const Handle& handle) {
-    if (!IsValidHandle(handle))
+    // Lock
+    std::lock_guard<std::mutex> lock(_handleTableMutex);
+
+    if (!DeadlockFree_IsValidHandle(handle))
       return _sentinel;
 
     return _table[handle.index].second;
@@ -245,5 +277,17 @@ private:
     _table.resize(newsize);
     _refCounts.resize(newsize);
 	}
+
+	bool DeadlockFree_IsValidHandle(const Handle& handle) const
+  {
+    if (handle == Handle::kInvalidHandle || handle.index >= _table.size())
+      return false;
+
+    // To be valid, the version and description has to be the same
+    const Handle& valid = _table[handle.index].first;
+    return _table[handle.index].second.has_value() && // Value existance check
+           handle.version == valid.version &&         // Handle out-dated check
+           handle.desc == valid.desc; // Handle type correction check
+  }
 
 };

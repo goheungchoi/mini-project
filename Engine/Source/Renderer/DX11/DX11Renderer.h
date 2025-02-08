@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Renderer/IRenderer.h"
 struct ResourceStorage;
 #ifdef _DEBUG
@@ -10,7 +10,6 @@ class PipeLine;
 class RenderPassManager;
 class SkyBox;
 class D2DRenderer;
-class Trail;
 class DX11Renderer : public IRenderer
 {
 public:
@@ -52,6 +51,7 @@ public:
   void DrawDebugCylinder(Matrix world, Color color) override;
   void DrawBillBoard(Billboard* billboard) override;
   void CreateTrail(Trail*& trail) override;
+  void DrawTrail(Trail* trail) override;
 
 public:
   // Render ImGui graphical interface.

@@ -31,35 +31,35 @@ void CameraObject::Update(float dt)
   if (!cam)
     return;
 
-  if (INPUT.IsKeyPress(Key::Q))
+  if (INPUT.IsKeyPress(Key::Q) || INPUT.IsKeyDown(Key::Q))
   {
     cam->MoveDownUp(-dt);
   }
-  if (INPUT.IsKeyPress(Key::E))
+  if (INPUT.IsKeyPress(Key::E) || INPUT.IsKeyDown(Key::E))
   {
     cam->MoveDownUp(dt);
   }
-  if (INPUT.IsKeyPress(Key::A))
+  if (INPUT.IsKeyPress(Key::A) || INPUT.IsKeyDown(Key::A))
   {
     cam->MoveLeftRight(-dt);
   }
-  if (INPUT.IsKeyPress(Key::D))
+  if (INPUT.IsKeyPress(Key::D) || INPUT.IsKeyDown(Key::D))
   {
     cam->MoveLeftRight(dt);
   }
-  if (INPUT.IsKeyPress(Key::W))
+  if (INPUT.IsKeyPress(Key::W) || INPUT.IsKeyDown(Key::W))
   {
     cam->MoveBackForward(dt);
   }
-  if (INPUT.IsKeyPress(Key::S))
+  if (INPUT.IsKeyPress(Key::S) || INPUT.IsKeyDown(Key::S))
   {
     cam->MoveBackForward(-dt);
   }
-  if (INPUT.IsKeyPress(Key::OemMinus))
+  if (INPUT.IsKeyPress(Key::OemMinus) || INPUT.IsKeyDown(Key::OemMinus))
   {
     cam->AddMoveSpeed(-10);
   }
-  if (INPUT.IsKeyPress(Key::OemPlus))
+  if (INPUT.IsKeyPress(Key::OemPlus) || INPUT.IsKeyDown(Key::OemPlus))
   {
     cam->AddMoveSpeed(+10);
   }

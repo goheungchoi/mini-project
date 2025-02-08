@@ -33,11 +33,12 @@ protected:
 
 	bool temp{false};
 
+  bool isMoved{false};
 	XMVECTOR currPos{};
   XMVECTOR targetPos{};
 
 public:
-  Slasher(World* world);
+  Slasher(class World* world);
   ~Slasher();
 
   void TriggerAction() override;

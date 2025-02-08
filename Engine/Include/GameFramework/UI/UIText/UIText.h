@@ -12,6 +12,7 @@ public:
   void Update(float dt) override;
   void SetText(const wchar_t* format);
   void SetFont(const std::wstring& fontName);
+  void SetFontSize(const float fontSize);
   void SetColor(Color color);
   void SetOpacity(float opacity);
   void SetFontWeight(FontWeight fontWeight);

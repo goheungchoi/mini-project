@@ -3,9 +3,9 @@
 #include "GameFramework/GameObject/GameObject.h"
 class Bullet : public GameObject
 {
-  float lifetime{5.f};
+  float lifetime{3.f};
 
-  float speed{1.4f * 12.f};
+  float speed{1.4f * 8.f};
 
 	XMVECTOR direction{};
 
@@ -19,4 +19,5 @@ public:
 
 	void OnAwake() override;
 	void Update(float dt) override;
+  void PostUpdate(float dt) override;
 };

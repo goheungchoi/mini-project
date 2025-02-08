@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Core/Common.h"
 #include "Core/Handle/ResourceHandle.h"
 #include "Core/Types/LightTypes.h"
@@ -95,7 +95,7 @@ public:
    */
   virtual void DrawDebugCylinder(Matrix world, Color color) = 0;
   virtual void DrawBillBoard(Billboard* billboard) = 0;
-  
+  virtual void DrawTrail(Trail* trail) = 0;
   virtual void CreateBillboard(Billboard*& billboard) = 0;
   virtual void CreateTrail(Trail*& trail) = 0;
 
