@@ -25,6 +25,9 @@ public:
   void FadeOut(float threshold);
   void Transition(float dt);
 
+ virtual void SetMasking(Color _col);
+
+
 private:
   class Sprite* _sprite{};
 
@@ -35,6 +38,7 @@ private:
   float _transitionEndOpacity = 0.f;
   bool _transitionFlag = false;
 
+  bool _maskFlag = false;
   Vector2 _scale = {1.0f, 1.0f};
 
 };

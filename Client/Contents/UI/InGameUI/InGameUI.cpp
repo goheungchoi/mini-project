@@ -15,7 +15,7 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _subMission = CreateUI<SubMission>(L"SubMission");
   
   _playBtn = CreateUI<PlayButton>(L"PlayBtn");
-  _retryBtn = CreateUI<RetryButton>(L"RetryBtn");
+  //_retryBtn = CreateUI<RetryButton>(L"RetryBtn");
 
   _gunfireBtn = CreateUI<GunfireButton>(L"GunfireBtn");
 

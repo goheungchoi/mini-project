@@ -21,7 +21,7 @@ void SubMission::SetText(std::wstring text, Vector2 pos)
   _subMissionTxt->SetFont(L"PT Noeul");
   _subMissionTxt->SetFontSize(21.0f);
   _subMissionTxt->SetFontWeight(FontWeight::NORMAL);
-  _subMissionTxt->SetText(text);
+  _subMissionTxt->SetText(text.c_str());
   _subMissionTxt->SetOpacity(1.0f);
 #ifdef _DEBUG
   _subMissionTxt->SetDebugDraw(false);

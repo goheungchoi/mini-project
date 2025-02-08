@@ -20,7 +20,7 @@ void MainMission::SetText(std::wstring text, Vector2 pos)
   _mainMissionTxt->SetFont(L"PT Noeul");
   _mainMissionTxt->SetFontSize(30.0f);
   _mainMissionTxt->SetFontWeight(FontWeight::NORMAL);
-  _mainMissionTxt->SetText(text);
+  _mainMissionTxt->SetText(text.c_str());
   _mainMissionTxt->SetOpacity(1.0f);
 #ifdef _DEBUG
   _mainMissionTxt->SetDebugDraw(false);

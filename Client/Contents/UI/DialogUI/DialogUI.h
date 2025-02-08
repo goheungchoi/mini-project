@@ -1,5 +1,15 @@
 #pragma once
 #include "GameFramework\UI\UIPanel\UIPanel.h"
+
+enum eBattleResult
+{
+    PerfectWin,
+    CivilDeadWin,
+    AllyDeadWin
+};
+
+
+
 class DialogUI : public UIPanel
 {
   using Action = std::function<void(void)>;
@@ -10,11 +20,13 @@ public:
   class UIImage* _PhotoPanel{nullptr};
 
   class UIAnim* _Eliza{nullptr};
+  class UIText* _speakerNameText {nullptr};
+  class UIText* _speakerClassText {nullptr};
 
   class UIImage* _dialogTextBox{nullptr};
   class UIImage* _dialogBtnImage{nullptr};
   class UIButton* _dialogButton{nullptr};
-  class UIText* _dialogText { nullptr};
+  class UIText* _dialogText {nullptr};
 
   bool bInGame = false;
 
@@ -23,10 +35,28 @@ public:
   void NextStep();
   void PrevStep();
 
+  void ParseDialogScript();
+  void SetStageDialogIndex(int StageIdx);
+  void SetPrevBattleResult(eBattleResult result)
+  { _prevBattleResult = result;
+  }
+  void ElizaDialogStep(int idx);
+  void PlayerSelectDialogStep();
+
 private:
-  std::vector<std::wstring> _dialogList;
 
-
+  eBattleResult _prevBattleResult;
+  struct dialogInfo
+  {
+    int idx;
+    bool IsElizaSpeaking = true;
+    std::wstring dialogtext;
+    std::string ElizaAnim;
+  };
+  std::vector<dialogInfo> _dialogList;
+  std::vector<std::string> _csvlist;
+  const wchar_t* _nameEliza = L"¿¤¸®ÀÚ";
+  const wchar_t* _namePlayer = L"´ç½Å";
 
 
   bool isCurrentActionFinished = true;

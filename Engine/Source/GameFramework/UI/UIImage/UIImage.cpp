@@ -74,6 +74,11 @@ void UIImage::Transition(float dt)
   }
 }
 
+void UIImage::SetMasking(Color _col)
+{
+    _sprite->SetMasking(_col);
+}
+
 void UIImage::SetSprite(LPCSTR path, Vector2 pos)
 {
   _sprite = Resource2DManager::GetInstance()->GetSprite(path).get();
