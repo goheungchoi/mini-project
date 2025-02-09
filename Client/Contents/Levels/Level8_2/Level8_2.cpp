@@ -1,23 +1,22 @@
-#include "Level8.h"
+#include "Level8_2.h"
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
 
 #include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "Contents/UI/InGameUI/MainMission/MainMission.h"
-#include "Contents/UI/InGameUI/SubMission/SubMission.h"
+//#include "Contents/UI/InGameUI/SubMission/SubMission.h"
 
-void Level8::PrepareLevel()
+void Level8_2::PrepareLevel()
 {
   __super::PrepareLevel();
 }
 
-void Level8::BeginLevel()
+void Level8_2::BeginLevel()
 {
   __super::BeginLevel();
 
-  #ifdef USED2D
-  inGameUI->HideUI(L"GunfireBtn");
+#ifdef USED2D
   inGameUI->HideUI(L"SubMission");
 
   inGameUI->_agentStorage->SetAgent(kBrawler, {1200, 960});
@@ -28,9 +27,9 @@ void Level8::BeginLevel()
 #endif
 }
 
-void Level8::CleanupLevel() {}
+void Level8_2::CleanupLevel() {}
 
-void Level8::CreateMap()
+void Level8_2::CreateMap()
 {
   pivot = world->CreateGameObject();
 
@@ -39,18 +38,20 @@ void Level8::CreateMap()
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
 
-  map->CreateEnemyAt(kGunman, 0, 1, kSouth);
-  map->CreateEnemyAt(kGunman, 0, 3, kEast);
-  map->CreateEnemyAt(kGunman, 0, 5, kEast);
-  map->CreateEnemyAt(kGunman, 2, 0, kNorth);
-  map->CreateEnemyAt(kGunman, 2, 4, kSouth);
-  map->CreateEnemyAt(kGunman, 5, 0, kNorth);
-  map->CreateEnemyAt(kBrawler, 5, 4, kSouth);
-  map->CreateEnemyAt(kGunman, 5, 5, kWest);
+  map->CreateEnemyAt(kGunman, 0, 0, kEast);
+  map->CreateEnemyAt(kGunman, 0, 2, kNorth);
+  map->CreateEnemyAt(kGunman, 0, 5, kSouth);
+  map->CreateEnemyAt(kGunman, 1, 1, kEast);
+  map->CreateEnemyAt(kGunman, 1, 5, kSouth);
+  map->CreateEnemyAt(kGunman, 4, 0, kWest);
+  map->CreateEnemyAt(kGunman, 4, 3, kWest);
+  map->CreateEnemyAt(kGunman, 5, 1, kNorth);
+  map->CreateEnemyAt(kGunman, 5, 5, kSouth);
 
-  map->CreateObstacleAt(ObstacleType_Sofa, 1, 0, kNorth);
-  map->CreateObstacleAt(ObstacleType_Sofa, 1, 4, kSouth);
-  map->CreateObstacleAt(ObstacleType_Lion, 4, 0, kNorth);
+  map->CreateCivillianAt(2, 5, kSouth);
+
+  map->CreateObstacleAt(ObstacleType_Lion, 3, 5, kSouth);
+  map->CreateObstacleAt(ObstacleType_Lion, 4, 4, kWest);
 }
 
-void Level8::TriggerAction() {}
+void Level8_2::TriggerAction() {}
