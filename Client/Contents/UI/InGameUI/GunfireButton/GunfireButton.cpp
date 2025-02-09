@@ -7,6 +7,7 @@
 #include "GameFramework/UI/UIAnim//UIAnim.h"
 #include "Shared/Config/Config.h"
 
+
 GunfireButton::GunfireButton(World* world) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
@@ -99,4 +100,14 @@ void GunfireButton::Update(float dt)
       _cursor->SetCursorType(CursorType::DEFAULT);
     }
   }
+
+  if (!_map->isAssassinationMode && !_map->assassinationTarget)
+  {
+    _bGunFireUseFlag = false;
+  }
+  else if (!_map->isAssassinationMode && _map->assassinationTarget)
+  {
+    _bGunFireUseFlag = true;
+  }
+
 }

@@ -6,6 +6,7 @@
 
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "Contents/UI/InGameUI/GunfireButton/GunfireButton.h"
+#include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
 #include "GameFramework/UI/UIAnim//UIAnim.h"
 
 PlayButton::PlayButton(World* world) : UIPanel(world)
@@ -43,14 +44,28 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
     });
 
     _playBtn->AddOnClickHandler([this]() {
+
+      _playBtn->Deactivate();
+
       if (_map)
       {
-        _map->TriggerAction();
         _bPlayflag = true;
+        _map->TriggerAction();
 
+        // GunfireButtonr과 AgentStorage 비활성화 하기.
+        auto * agentStorage = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+            ->GetUI<AgentStorage>(L"AgentStorage");
+        for (auto* agent : agentStorage->AgentList)
+        {
+          agent->_AgentBtn->Deactivate();
+        }
+        _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                               ->GetUI<GunfireButton>(L"GunfireBtn")
+                               ->_gunfireBtn->Deactivate();
+
+        // gunfireBtn 이 있고 gunfireBtn을 사용했을 때, ElizaAnim 출력
         auto* gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
-                       ->GetUI<GunfireButton>(L"GunfireBtn");
-
+                               ->GetUI<GunfireButton>(L"GunfireBtn");
         if (gunfireBtn && gunfireBtn->_bGunFireUseFlag == true)
         {
           gunfireBtn->GetUI<UIAnim>(L"ElizaAnim")
@@ -58,9 +73,9 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
         }
       }
 
-      // GunfireButtonr과 AgentStorage 비활성화 하기.
-      _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->HideUI(L"GunfireBtn");
-      _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->HideUI(L"AgentStorage");
+      _playBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
+      _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+      _playBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
 
     });
 }
@@ -71,17 +86,17 @@ void PlayButton::Update(float dt)
 {
   __super::Update(dt);
 
-  if (GetStatus() == EStatus::EStatus_Active)
-  {
-    _bPlayflag = false;
-  }
-
   if (_bPlayflag == true)
   {
     _playBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
     _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
     _playBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
   }
-
-
+  else
+  {
+    _playBtnImgs[0]->SetStatus(EStatus::EStatus_Active);
+    _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+    _playBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
+  }
 }
+

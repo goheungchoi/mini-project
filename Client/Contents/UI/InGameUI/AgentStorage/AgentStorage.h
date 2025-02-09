@@ -10,8 +10,8 @@ public:
 
   void Update(float dt) override;
 
-private:
   class UIButton* _AgentBtn{nullptr};
+private:
   class UIImage* _AgentImgs[2]{nullptr};
   bool bUseFlag = false;
   static int numGunAgent;

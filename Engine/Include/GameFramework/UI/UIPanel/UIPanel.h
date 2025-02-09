@@ -8,7 +8,7 @@ concept UIElementType = std::is_base_of<UIElement, T>::value;
 
 class UIPanel : public UIElement
 {
-private:
+public:
   std::map<std::wstring, UIElement*> uiMap;
   std::list<class UIElement*> uiList;
 
