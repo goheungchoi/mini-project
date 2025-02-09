@@ -26,72 +26,72 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
 
     if (_map->IsGameFinished())
     {
-      if (world->GetCurrentLevel()->name == "Level6")
-      {
-        if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::Lose);
-        else if (_map->GetNumDeadAllies() >= 3)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::AllyDeadLose);
-        else if (_map->GetNumDeadAllies() > 1 &&
-                 _map->GetNumDeadCivilians() > 0)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::BothDeadWin);
-        else if (_map->GetNumDeadAllies() <= 1 &&
-                 _map->GetNumDeadCivilians() > 0)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::CivilDeadWin);
-        else if (_map->GetNumDeadAllies() > 1 &&
-                 _map->GetNumDeadCivilians() <= 0)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::AllyDeadWin);
-        else if (_map->GetNumDeadAllies() <= 1 &&
-                 _map->GetNumDeadCivilians() <= 0)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::PerfectWin);
-      }
-      else if (world->GetCurrentLevel()->name == "Level7")
-      {
-        if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::Lose);
-        else if (_map->GetNumDeadAllies() >= 3)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::AllyDeadLose);
-        else if (_map->GetNumDeadCivilians() > 0 &&
-                 _map->GetNumDeadAllies() < 2)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::CivilDeadWin);
-        else if (_map->GetNumDeadCivilians() <= 0 &&
-                 _map->GetNumDeadAllies() >= 2)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::AllyDeadWin);
-      }
-      else
-      {
-        if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::Lose);
-        else if (_map->GetNumDeadAllies() >= 3)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::AllyDeadLose);
-        else if (_map->GetNumDeadAllies() > 0 &&
-                 _map->GetNumDeadCivilians() > 0)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::BothDeadWin);
-        else if (_map->GetNumDeadAllies() <= 0 &&
-                 _map->GetNumDeadCivilians() > 0)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::CivilDeadWin);
-        else if (_map->GetNumDeadAllies() > 0 &&
-                 _map->GetNumDeadCivilians() <= 0)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::AllyDeadWin);
-        else
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::PerfectWin);
-      }
+      //if (world->GetCurrentLevel()->name == "Level6")
+      //{
+      //  if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::Lose);
+      //  else if (_map->GetNumDeadAllies() >= 3)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::AllyDeadLose);
+      //  else if (_map->GetNumDeadAllies() > 1 &&
+      //           _map->GetNumDeadCivilians() > 0)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::BothDeadWin);
+      //  else if (_map->GetNumDeadAllies() <= 1 &&
+      //           _map->GetNumDeadCivilians() > 0)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::CivilDeadWin);
+      //  else if (_map->GetNumDeadAllies() > 1 &&
+      //           _map->GetNumDeadCivilians() <= 0)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::AllyDeadWin);
+      //  else if (_map->GetNumDeadAllies() <= 1 &&
+      //           _map->GetNumDeadCivilians() <= 0)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::PerfectWin);
+      //}
+      //else if (world->GetCurrentLevel()->name == "Level7")
+      //{
+      //  if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::Lose);
+      //  else if (_map->GetNumDeadAllies() >= 3)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::AllyDeadLose);
+      //  else if (_map->GetNumDeadCivilians() > 0 &&
+      //           _map->GetNumDeadAllies() < 2)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::CivilDeadWin);
+      //  else if (_map->GetNumDeadCivilians() <= 0 &&
+      //           _map->GetNumDeadAllies() >= 2)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::AllyDeadWin);
+      //}
+      //else
+      //{
+      //  if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::Lose);
+      //  else if (_map->GetNumDeadAllies() >= 3)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::AllyDeadLose);
+      //  else if (_map->GetNumDeadAllies() > 0 &&
+      //           _map->GetNumDeadCivilians() > 0)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::BothDeadWin);
+      //  else if (_map->GetNumDeadAllies() <= 0 &&
+      //           _map->GetNumDeadCivilians() > 0)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::CivilDeadWin);
+      //  else if (_map->GetNumDeadAllies() > 0 &&
+      //           _map->GetNumDeadCivilians() <= 0)
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::AllyDeadWin);
+      //  else
+      //    static_cast<GameLevel*>(world->GetCurrentLevel())
+      //        ->SetBattleResult(eBattleResult::PerfectWin);
+      //}
       if (static_cast<GameLevel*>(world->GetCurrentLevel())
               ->GetBattleResult() != eBattleResult::PerfectWin)
       {
