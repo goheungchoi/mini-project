@@ -1,9 +1,11 @@
 #include "AgentStorage.h"
 #include "Contents/GameObjects/Map/Map.h"
+#include "GameFramework/UI/Canvas/Canvas.h"
+#include "Contents/UI/InGameUI/InGameUI.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 
-int Agent::numAgent = 0;
+int Agent::numGunAgent = 0;
 
 Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
 {
@@ -73,7 +75,7 @@ Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
   case kGunman:
     // GunAgent
     {
-      std::wstring wNumAgent = std::to_wstring(numAgent);
+      std::wstring wNumAgent = std::to_wstring(numGunAgent);
 
       _AgentImgs[0] = CreateUI<UIImage>(L"GunAgent_Act" + wNumAgent);
       _AgentImgs[1] = CreateUI<UIImage>(L"GunAgent_Deact" + wNumAgent);
@@ -98,7 +100,7 @@ Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
         }
       });
 
-      numAgent++;
+      numGunAgent++;
 
       break;
     }
@@ -121,12 +123,52 @@ void Agent::Update(float dt)
     _AgentImgs[1]->SetStatus(EStatus::EStatus_Active);
   }
 
+
   if (_map->deleteCharType == _charType)
   {
-    bUseFlag = false;
-    _AgentImgs[0]->SetStatus(EStatus::EStatus_Active);
-    _AgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+    if (numGunAgent < 2)
+    {
+      bUseFlag = false;
+      _AgentImgs[0]->SetStatus(EStatus::EStatus_Active);
+      _AgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+    }
+    else if (numGunAgent >= 2)
+    {
+      if (_map->deleteCharType != CharacterType::kGunman)
+      {
+        bUseFlag = false;
+        _AgentImgs[0]->SetStatus(EStatus::EStatus_Active);
+        _AgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+      }
+      else
+      {
+        auto* agentStorage = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                                 ->GetUI<AgentStorage>(L"AgentStorage");
+
+        if (agentStorage)
+        {
+          if (agentStorage->GetUI<Agent>(L"Agent2")->bUseFlag == false)
+          {
+            agentStorage->GetUI<Agent>(L"Agent3")->bUseFlag = false;
+            agentStorage->GetUI<Agent>(L"Agent3")->_AgentImgs[0]->SetStatus(
+                EStatus::EStatus_Active);
+            agentStorage->GetUI<Agent>(L"Agent3")->_AgentImgs[1]->SetStatus(
+                EStatus::EStatus_Inactive);
+          }
+          else if (agentStorage->GetUI<Agent>(L"Agent2")->bUseFlag == true)
+          {
+            agentStorage->GetUI<Agent>(L"Agent2")->bUseFlag = false;
+            agentStorage->GetUI<Agent>(L"Agent2")->_AgentImgs[0]->SetStatus(
+                EStatus::EStatus_Active);
+            agentStorage->GetUI<Agent>(L"Agent2")->_AgentImgs[1]->SetStatus(
+                EStatus::EStatus_Inactive);
+          }
+        }
+      }
+    }
+
     _map->deleteCharType = CharacterType::kCivilian;
+
   }
 }
 

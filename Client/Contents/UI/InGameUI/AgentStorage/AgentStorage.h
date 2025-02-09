@@ -14,7 +14,7 @@ private:
   class UIButton* _AgentBtn{nullptr};
   class UIImage* _AgentImgs[2]{nullptr};
   bool bUseFlag = false;
-  static int numAgent;
+  static int numGunAgent;
   CharacterType _charType;
 };
 
@@ -26,6 +26,5 @@ public:
 
   void SetAgent(CharacterType charType, Vector2 pos);
 
-private:
   vector<Agent*> AgentList;
 };
