@@ -30,7 +30,11 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
       gunfireBtn->_bGunFireUseFlag = false;
     }
 
+    // GunfireButtonr과 AgentStorage 활성화 하기.
     _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->ShowUI(L"GunfireBtn");
+    _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->ShowUI(L"AgentStorage");
+
+
   });
 
 }

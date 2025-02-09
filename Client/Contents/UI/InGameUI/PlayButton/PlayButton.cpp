@@ -57,6 +57,11 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
               ->SetStatus(EStatus::EStatus_Active);
         }
       }
+
+      // GunfireButtonr과 AgentStorage 비활성화 하기.
+      _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->HideUI(L"GunfireBtn");
+      _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->HideUI(L"AgentStorage");
+
     });
 }
 
