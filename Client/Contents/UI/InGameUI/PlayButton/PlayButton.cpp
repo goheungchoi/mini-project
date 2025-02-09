@@ -72,11 +72,6 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
               ->SetStatus(EStatus::EStatus_Active);
         }
       }
-
-      _playBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
-      _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
-      _playBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
-
     });
 }
 
