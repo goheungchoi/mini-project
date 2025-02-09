@@ -116,11 +116,13 @@ void Character::BindActiveIndicator(GameObject* activeIndicator)
 }
 
 void Character::ShowDeathIndicator() {
-  deathIndicator->SetVisible();
+  if (deathIndicator)
+    deathIndicator->SetVisible();
 }
 
 void Character::HideDeathIndicator() {
-  deathIndicator->SetInvisible();
+  if (deathIndicator)
+    deathIndicator->SetInvisible();
 }
 
 void Character::SetFaction(Faction faction) {
@@ -207,6 +209,24 @@ void Character::Die() {
   {
     rbComp->DisableSimulation();
   }
+
+  // 
+  if (inactiveIndicator && activeIndicator)
+  {
+    if (auto bbComp = inactiveIndicator->GetComponent<BillboardComponent>();
+        bbComp)
+    {
+      bbComp->isVisible = false;
+    }
+
+    if (auto bbComp = activeIndicator->GetComponent<BillboardComponent>();
+        bbComp)
+    {
+      bbComp->isVisible = false;
+    }
+  }
+
+  HideDeathIndicator();
 
   // Play sound.
   if (faction == Faction::kEnemy)
@@ -325,19 +345,30 @@ void Character::Update(float dt)
     isActionFinished = false;
   }
   
-	if (isDead)
-  {
-		// TODO: 
-		return;
-	}
-
   if (isActionTriggered)
   {
     if (inactiveIndicator && activeIndicator)
     {
-      inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = false;
-      activeIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+      if (auto bbComp = inactiveIndicator->GetComponent<BillboardComponent>();
+          bbComp)
+      {
+        bbComp->isVisible = false;
+      }
+
+      if (auto bbComp = activeIndicator->GetComponent<BillboardComponent>();
+          bbComp)
+      {
+        bbComp->isVisible = false;
+      }
     }
+
+    HideDeathIndicator();
+  }
+
+  if (isDead)
+  {
+    // TODO:
+    return;
   }
 	
 	if (bGridLocationChanged)
@@ -381,6 +412,7 @@ void Character::PostUpdate(float dt) {
     return;
   }
 
+  // Indicator transforms
   if (inactiveIndicator && activeIndicator)
   {
     if (isTargetInRange)
