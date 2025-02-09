@@ -388,6 +388,54 @@ void Map::TurnOffAssasinationMode()
   isAssassinationMode = false;
 }
 
+int Map::GetNumEnemies()
+{
+  return enemies.size();
+}
+
+int Map::GetNumAllies()
+{
+  return allies.size();
+}
+
+int Map::GetNumCivilians()
+{
+  return civilians.size();
+}
+
+int Map::GetNumDeadEnemies()
+{
+  int count = 0;
+  for (Character* enemy : enemies)
+  {
+    count += enemy->isDead;
+  }
+
+  return count;
+}
+
+int Map::GetNumDeadAllies()
+{
+  int count = 0;
+  for (Character* ally : allies)
+  {
+    count += ally->isDead;
+  }
+
+  return count;
+}
+
+int Map::GetNumDeadCivilians()
+{
+  int count = 0;
+  for (Character* civilian : civilians)
+  {
+    count += civilian->isDead;
+  }
+
+  return count;
+}
+
 void Map::TriggerAction()
 {
   isActionTriggered = true;

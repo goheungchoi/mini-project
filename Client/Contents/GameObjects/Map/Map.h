@@ -97,6 +97,14 @@ public:
   void TurnOnAssassinationMode();
   void TurnOffAssasinationMode();
 
+  int GetNumEnemies();
+  int GetNumAllies();
+  int GetNumCivilians();
+
+  int GetNumDeadEnemies();
+  int GetNumDeadAllies();
+  int GetNumDeadCivilians();
+
 	void TriggerAction();
 
 	void ResetGame();

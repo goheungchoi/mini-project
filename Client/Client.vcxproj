@@ -245,6 +245,8 @@
 		<ClCompile Include="Contents\Levels\MainMenu\MainMenu.cpp" />
 		<ClInclude Include="Contents\Levels\MainMenu\MainMenu.h" />
 		<ClInclude Include="Contents\Levels\TestLevel.h" />
+		<ClCompile Include="Contents\SoundList\SoundList.cpp" />
+		<ClInclude Include="Contents\SoundList\SoundList.h" />
 		<ClCompile Include="Contents\UI\DialogUI\DialogUI.cpp" />
 		<ClInclude Include="Contents\UI\DialogUI\DialogUI.h" />
 		<ClCompile Include="Contents\UI\InGameUI\AgentStorage\AgentStorage.cpp" />
