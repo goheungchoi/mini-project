@@ -120,7 +120,7 @@ public:
   void CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
                     Direction dir = kNorth);
 
-  void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth, bool isEliza = );
+  void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth, bool isEliza = false);
 
   void CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h, Direction dir = kNorth);
 
