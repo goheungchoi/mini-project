@@ -30,6 +30,7 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
       gunfireBtn->_bGunFireUseFlag = false;
     }
 
+    _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->ShowUI(L"GunfireBtn");
   });
 
 }
