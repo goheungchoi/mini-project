@@ -1029,6 +1029,17 @@ void Map::Update(float dt)
             deleteCharType = hoveredCharacter->type;
             hoveredCharacter->Destroy();
           }
+          // Cancel the assassination.
+          else if (hoveredCharacter->faction == Faction::kEnemy)
+          {
+            if (assassinationTarget == hoveredCharacter)
+            {
+              SoundManager::PlaySound(SoundList::Snipping_Selection);
+              // Register the target to be assassinated,
+              // only if in assassination mode.
+              assassinationTarget = nullptr;
+            }
+          }
         }
         // Left click
         else if (INPUT.IsKeyPress(MouseState::LB))

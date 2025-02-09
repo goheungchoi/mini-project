@@ -412,6 +412,7 @@ void Character::PostUpdate(float dt) {
     return;
   }
 
+  // Indicator transforms
   if (inactiveIndicator && activeIndicator)
   {
     if (isTargetInRange)
