@@ -245,6 +245,8 @@
 		<ClInclude Include="Contents\Levels\TestLevel.h" />
 		<ClCompile Include="Contents\UI\DialogUI\DialogUI.cpp" />
 		<ClInclude Include="Contents\UI\DialogUI\DialogUI.h" />
+		<ClCompile Include="Contents\UI\DialogUI\ResultDialogUI.cpp" />
+		<ClInclude Include="Contents\UI\DialogUI\ResultDialogUI.h" />
 		<ClCompile Include="Contents\UI\InGameUI\AgentStorage\AgentStorage.cpp" />
 		<ClInclude Include="Contents\UI\InGameUI\AgentStorage\AgentStorage.h" />
 		<ClCompile Include="Contents\UI\InGameUI\ApplyButton\ApplyButton.cpp" />

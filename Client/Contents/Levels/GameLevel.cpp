@@ -6,6 +6,7 @@
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "Resource2DManager/Resource2DManager.h"
 #include "Contents/UI/InGameUI/InGameUI.h"
+#include "Contents/UI/DialogUI/ResultDialogUI.h"
 #include "Contents/UI/TransitionUI/TransitionUI.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 
@@ -84,6 +85,8 @@ void GameLevel::BeginLevel()
 #ifdef USED2D
   world->_canvas->CreatePanel<UICursor>(L"Cursor");
   inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+  resultDialogUI =
+      world->_canvas->CreatePanel<ResultDialogUI>(L"ResultDialogUI");
   transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
   transitionUI->_blackImage->SetOpacity(1.0f);
   transitionUI->FadeIn(2.f);

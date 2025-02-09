@@ -34,7 +34,8 @@ protected:
   class Map* map{nullptr};
   class GameManager* gameManager{nullptr};
 
-  class InGameUI* inGameUI;
+  class InGameUI* inGameUI{nullptr};
+  class ResultDialogUI* resultDialogUI{nullptr};
   class TransitionUI* transitionUI;
 
 public:

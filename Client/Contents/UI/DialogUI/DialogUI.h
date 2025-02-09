@@ -36,23 +36,20 @@ public:
   class UIButton* _playerSelectButton2{nullptr};
   class UIText* _playerSelectBtnText2{nullptr};
 
-  bool bInGame = false;
   bool bPlayerSelection = false;
 
-  void Update(float dt) override;
+  virtual void Update(float dt) override;
 
-  void NextStep();
-  void PrevStep();
+  virtual void NextStep();
+  virtual void PrevStep();
 
   void ParseDialogScript();
   void SetStageDialogIndex(int StageIdx);
-  void SetPrevBattleResult(eBattleResult result)
-  { _prevBattleResult = result;
-  }
-  void ElizaDialogStep(int idx);
-  void PlayerSelectDialogStep();
+  void SetPrevBattleResult(eBattleResult result) { _prevBattleResult = result; }
+  virtual void ElizaDialogStep(int idx);
+  virtual void PlayerSelectDialogStep();
 
-private:
+protected:
 
   eBattleResult _prevBattleResult;
   struct dialogInfo

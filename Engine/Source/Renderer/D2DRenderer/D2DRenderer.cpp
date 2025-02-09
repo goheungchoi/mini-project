@@ -273,11 +273,11 @@ void D2DRenderer::DrawTexts( std::wstring format, Vector4 rect, Color color,
     textFormat->SetParagraphAlignment(static_cast<DWRITE_PARAGRAPH_ALIGNMENT>(
         textFormatInfo._paragraphAlignment));
 
-    //textFormat->SetLineSpacing(
-    //    DWRITE_LINE_SPACING_METHOD_UNIFORM, // 일정한 간격 적용
-    //    43.0f, // 줄 높이 (기본 폰트 크기보다 크면 간격 증가)
-    //    30.0f  // 기준선 오프셋 (보통 0 또는 폰트 크기의 일부)
-    //);
+    textFormat->SetLineSpacing(
+        DWRITE_LINE_SPACING_METHOD_UNIFORM, // 일정한 간격 적용
+        60.0f, // 줄 높이 (기본 폰트 크기보다 크면 간격 증가)
+        30.0f  // 기준선 오프셋 (보통 0 또는 폰트 크기의 일부)
+    );
 
     // 텍스트 그리기
     D2D1_RECT_F rec = D2D1_RECT_F(rect.x, rect.y, rect.z, rect.w);

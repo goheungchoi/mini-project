@@ -50,27 +50,27 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _dialogTextBox->SetSprite("2D\\UI\\UI_Textbox_01.png");
     _dialogTextBox->SetScale({1.f,0.8f});
     _dialogTextBox->SetSize(_dialogTextBox->GetTextureSize());
-    _dialogTextBox->SetCenterPos({960, 850});
-    _dialogTextBox->SetOpacity(.6f);
+    _dialogTextBox->SetCenterPos({960, 900});
+    _dialogTextBox->SetOpacity(1.f);
     _dialogText = CreateUI<UIText>(L"DialogText");
-    //_dialogText->SetDebugDraw(true);
     _dialogText->SetSize(
-        {_dialogTextBox->GetSize().x, _dialogTextBox->GetSize().y});
-    _dialogText->SetCenterPos({960, 900});
+        {_dialogTextBox->GetSize().x*0.8f, _dialogTextBox->GetSize().y*0.3f});
+    _dialogText->SetCenterPos({960, 960});
     _dialogText->SetFont(L"PT Noeul");
+    _dialogText->SetFontSize(35.f);
     _dialogText->SetOpacity(1.f);
     _dialogText->SetColor(Color(1, 1, 1, 1));
-    _dialogText->SetTextAlignment(TextAlignment::CENTERAlIGN);
-    _dialogText->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
+    _dialogText->SetTextAlignment(TextAlignment::LEFTAlIGN);
+    _dialogText->SetParagraphAlignment(ParagraphAlignment::TOPALIGN);
     ParseDialogScript();
     SetStageDialogIndex(4);
 
     _dialogBtnImage = CreateUI<UIImage>(L"dialogBtnImage");
     _dialogBtnImage->SetSprite("2D\\UI\\UI_Textbox_Button.png");
-    _dialogBtnImage->SetCenterPos({1600, 900});
+    _dialogBtnImage->SetCenterPos({1700, 1000});
     _dialogButton = CreateUI<UIButton>(L"dialogButton");
     _dialogButton->SetSize(_dialogBtnImage->GetSize());
-    _dialogButton->SetCenterPos({1600, 900});
+    _dialogButton->SetCenterPos({1700, 1000});
     _dialogButton->AddOnClickHandler([=]()
         {
       if (!bPlayerSelection)NextStep();
@@ -90,7 +90,7 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _speakerNameText->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
     _speakerNameText->SetColor(Color(1, 1, 1, 1));
     _speakerNameText->SetOpacity(1.f);
-    _speakerNameText->SetCenterPos({350, 775});
+    _speakerNameText->SetCenterPos({350, 815});
     _speakerNameText->SetFont(L"PT Noeul");
     _speakerNameText->SetFontSize(47.5f);
 
@@ -100,7 +100,7 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _speakerClassText->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
     _speakerClassText->SetColor(Color(0.871f, 0.620f, 0.478f, 1));
     _speakerClassText->SetOpacity(1.f);
-    _speakerClassText->SetCenterPos({230, 775});
+    _speakerClassText->SetCenterPos({230, 815});
     _speakerClassText->SetFont(L"PT Noeul");
     _speakerClassText->SetFontSize(47.5f);
     _speakerClassText->SetText(L"부관");
@@ -108,13 +108,13 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _playerSelectBtnImage1 = CreateUI<UIImage>(L"playerbuttonimage1");
     _playerSelectBtnImage1->SetSprite("2D\\UI\\UI_Selectbox_01.png");
     _playerSelectBtnImage1->SetScale({1.5f, 1.5f});
-    _playerSelectBtnImage1->SetCenterPos({1600, 600});
+    _playerSelectBtnImage1->SetCenterPos({1600, 540});
     _playerSelectBtnImage1->SetOpacity(1.f);
 
     _playerSelectButton1 = CreateUI<UIButton>(L"playerbutton1");
     _playerSelectButton1->SetSize({_playerSelectBtnImage1->GetSize().x * 1.3f,
                                    _playerSelectBtnImage1->GetSize().y});
-    _playerSelectButton1->SetCenterPos({1550, 600});
+    _playerSelectButton1->SetCenterPos({1550, 540});
     _playerSelectButton1->AddOnClickHandler([=]() {
       HideUI(L"playerbuttonimage1");
       HideUI(L"playerbutton1");
@@ -133,24 +133,25 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
 
     _playerSelectBtnText1 = CreateUI<UIText>(L"playerbuttontext1");
     _playerSelectBtnText1->SetSize(_playerSelectBtnImage1->GetSize());
-    _playerSelectBtnText1->SetCenterPos({1550, 600});
+    _playerSelectBtnText1->SetCenterPos({1550, 540});
     _playerSelectBtnText1->SetFont(L"PT Noeul");
 
     _playerSelectBtnText1->SetTextAlignment(TextAlignment::CENTERAlIGN);
     _playerSelectBtnText1->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
     _playerSelectBtnText1->SetColor(Color(1, 1, 1, 1));
     _playerSelectBtnText1->SetOpacity(1.f);
+    _playerSelectBtnText1->SetFontSize(35.f);
 
     _playerSelectBtnImage2 = CreateUI<UIImage>(L"playerbuttonimage2");
     _playerSelectBtnImage2->SetSprite("2D\\UI\\UI_Selectbox_01.png");
     _playerSelectBtnImage2->SetScale({1.5f, 1.5f});
-    _playerSelectBtnImage2->SetCenterPos({1600, 750});
+    _playerSelectBtnImage2->SetCenterPos({1600, 700});
     _playerSelectBtnImage2->SetOpacity(1.f);
 
     _playerSelectButton2 = CreateUI<UIButton>(L"playerbutton2");
     _playerSelectButton2->SetSize({_playerSelectBtnImage2->GetSize().x*1.3f,
                                    _playerSelectBtnImage2->GetSize().y});
-    _playerSelectButton2->SetCenterPos({1550, 750});
+    _playerSelectButton2->SetCenterPos({1550, 700});
     _playerSelectButton2->AddOnClickHandler([=]() {
       HideUI(L"playerbuttonimage1");
       HideUI(L"playerbutton1");
@@ -170,11 +171,12 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _playerSelectBtnText2 = CreateUI<UIText>(L"playerbuttontext2");
     _playerSelectBtnText2->SetSize(_playerSelectBtnImage1->GetSize());
     _playerSelectBtnText2->SetFont(L"PT Noeul");
-    _playerSelectBtnText2->SetCenterPos({1550, 750});
+    _playerSelectBtnText2->SetCenterPos({1550, 700});
     _playerSelectBtnText2->SetTextAlignment(TextAlignment::CENTERAlIGN);
     _playerSelectBtnText2->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
     _playerSelectBtnText2->SetColor(Color(1, 1, 1, 1));
     _playerSelectBtnText2->SetOpacity(1.f);
+    _playerSelectBtnText2->SetFontSize(35.f);
 
     HideUI(L"playerbuttonimage1");
     HideUI(L"playerbutton1");
@@ -203,6 +205,10 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
 void DialogUI::Update(float dt)
 {
   UIPanel::Update(dt);
+  if (INPUT.IsKeyPress(MouseState::LB) && !bPlayerSelection)
+    NextStep();
+      
+
   if (isCurrentActionFinished && _currentActionIndex <= _actionList.size() - 1)
   {
     isCurrentActionFinished = false;
@@ -353,6 +359,9 @@ void DialogUI::PlayerSelectDialogStep()
   }
   else
   {
+    _playerSelectBtnText1->SetCenterPos({1550, 620});
+    _playerSelectButton1->SetCenterPos({1550, 620});
+    _playerSelectBtnImage1->SetCenterPos({1600, 620});
 
     _playerSelectBtnText1->SetText(_dialogList[3].dialogtext.c_str());
     ShowUI(L"playerbuttonimage1");

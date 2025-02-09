@@ -22,8 +22,10 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
 	  //_bApplyflag = true;
     _world->_canvas->HidePanel(L"InGameUI");
 
+
+	//if (_map->)
 	// ReconfirmUI 여기서 활성화 해야함
-    //_world->_canvas->ShowPanel(L"ReconfirmUI");
+    _world->_canvas->ShowPanel(L"ResultDialogUI");
 	  });
 }
 
