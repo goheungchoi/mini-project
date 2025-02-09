@@ -37,6 +37,12 @@ protected:
 	XMVECTOR currPos{};
   XMVECTOR targetPos{};
 
+
+  bool bArm{false};
+  bool bShout{false};
+  bool bRushing{false};
+  bool bStab{false};
+
 public:
   Slasher(class World* world);
   ~Slasher();

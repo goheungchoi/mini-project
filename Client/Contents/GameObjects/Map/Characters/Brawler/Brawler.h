@@ -18,6 +18,9 @@ protected:
 
   std::pair<float, float> interval;
 
+  bool bShout{false};
+  bool bPunch{false};
+
 public:
   Brawler(World* world);
   ~Brawler();

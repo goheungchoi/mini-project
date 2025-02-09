@@ -96,6 +96,10 @@ void GameLevel::PrepareLevel()
 
 
 
+  // Test용 이미지
+    Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\UI_Storage_Deact_Gun.png");
+  Resource2DManager::GetInstance()->LoadSprite("Textures\\X_test.png");
 #endif // USED2D
 }
 

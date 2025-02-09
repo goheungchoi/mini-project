@@ -9,7 +9,8 @@
 #include "Contents/GameObjects/Map/Characters/Gunman/Gunman.h"
 #include "Contents/GameObjects/Map/Characters/Slasher/Slasher.h"
 
-// #include "SoundSystem/SoundManager.h"
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
 
 constexpr float kIndicatorScale{0.7f};
 
@@ -258,6 +259,9 @@ void Map::ShowHoveredCharacterRange()
         w += w_offset;
         h += h_offset;
         CellObject* cell = grid->GetCellObjectAt(w, h);
+        if (!cell)
+          break;
+
         cell->SetCellType(CellType_DashZone);
         cell->SetCellDirection(hoveredCharacter->dir);
 
@@ -284,6 +288,9 @@ void Map::ShowHoveredCharacterRange()
         w += w_offset;
         h += h_offset;
         CellObject* cell = grid->GetCellObjectAt(w, h);
+        if (!cell)
+          break;
+
         cell->SetCellType(CellType_RangeZone);
       }
     }
@@ -932,11 +939,17 @@ void Map::Update(float dt)
         tmp.reset();
       }
 
+      if (placeholder != nullptr)
+      {
+        deleteCharType = placeholder->type;
+      }
+
       TurnOffPlacementMode();
     }
     // Change the direction of the placeholder.
     else if (INPUT.IsKeyPress(Key::Tab))
     {
+      SoundManager::PlaySound(SoundList::Placeholder_Rotation);
       uint32_t dir = placeholder->GetDirection();
       placeholder->SetDirection((Direction)((dir + 1) % kNumDirections));
     }
@@ -945,6 +958,8 @@ void Map::Update(float dt)
     {
       if (grid->selectedCell)
       {
+        SoundManager::PlaySound(SoundList::Grid_Placement_Click);
+
         // Detect which grid cell is pointed.
         auto [w, h] = grid->selectedCell->GetCellPosition();
 
@@ -981,6 +996,7 @@ void Map::Update(float dt)
         {
           if (hoveredCharacter->faction == Faction::kEnemy)
           {
+            SoundManager::PlaySound(SoundList::Snipping_Selection);
             // Register the target to be assassinated,
             // only if in assassination mode.
             assassinationTarget = hoveredCharacter;
@@ -1010,7 +1026,19 @@ void Map::Update(float dt)
           if (hoveredCharacter->faction == Faction::kAlly)
           {
             DeleteCharacterFromMap(hoveredCharacter);
+            deleteCharType = hoveredCharacter->type;
             hoveredCharacter->Destroy();
+          }
+          // Cancel the assassination.
+          else if (hoveredCharacter->faction == Faction::kEnemy)
+          {
+            if (assassinationTarget == hoveredCharacter)
+            {
+              SoundManager::PlaySound(SoundList::Snipping_Selection);
+              // Register the target to be assassinated,
+              // only if in assassination mode.
+              assassinationTarget = nullptr;
+            }
           }
         }
         // Left click
@@ -1082,6 +1110,12 @@ void Map::Update(float dt)
     }
   }
 
+  // Show death indicator.
+  if (assassinationTarget)
+  {
+    assassinationTarget->ShowDeathIndicator();
+  }
+
   // Reset the hovered character.
   prevHoveredCharacter = hoveredCharacter;
   hoveredCharacter = nullptr;
@@ -1132,6 +1166,14 @@ void Map::TranslatePlaceholder()
     // follow the cursor pos.
     XMVECTOR cursorPos = GetCursorPosition();
     placeholder->SetTranslation(cursorPos);
+  }
+}
+
+void Map::AssassinateTarget() {
+  if (assassinationTarget)
+  {
+    assassinationTarget->Die();
+    assassinationTarget = nullptr;
   }
 }
 

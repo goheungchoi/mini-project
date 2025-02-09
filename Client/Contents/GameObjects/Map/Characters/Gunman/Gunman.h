@@ -25,6 +25,11 @@ protected:
 	Animation* ready2;
   AnimationState* ready2State;
 
+	bool bPullOutGun{false};
+	bool bRackSlide{false};
+  bool bHammerSpur{false};
+  bool bFireBullet{false};
+
 	Animation* fire;
   AnimationState* fireState;
 

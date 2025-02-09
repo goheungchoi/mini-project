@@ -63,10 +63,4 @@ void Level7::CreateMap()
 
 void Level7::TriggerAction()
 {
-  for (const auto* civil : map->civilians)
-  {
-    if (civil->isDead)
-    {
-    }
-  }
 }

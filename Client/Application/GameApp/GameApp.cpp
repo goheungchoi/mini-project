@@ -21,6 +21,7 @@
 #include "Contents/Levels/Level8_2/Level8_2.h"
 #include "Contents/Levels/DialogLevel/DialogLevel.h"
 
+#include "Contents/SoundList/SoundList.h"
 
 static GameLevel* gameLevel;
 static MainMenu* mainMenuLevel;
@@ -48,6 +49,8 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
     FILE* _tempFile;
     freopen_s(&_tempFile, "CONOUT$", "w", stdout);
   }
+
+  RegisterSoundList();
 
   _world = World::CreateWorld(_hwnd, title);
 

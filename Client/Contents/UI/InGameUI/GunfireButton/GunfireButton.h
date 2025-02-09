@@ -8,10 +8,14 @@ public:
   virtual ~GunfireButton();
 
   void Update(float dt) override;
+  
+  class UIAnim* _ellizaAnim{nullptr};
+  bool _bGunFireUseFlag = false;
 
-private:
+//private:
   class UICursor* _cursor{nullptr};
   class UIButton* _gunfireBtn{nullptr};
   class UIImage* _gunfireBtnImgs[3];
-  bool _bGunFireUseFlag = false;
+
+
 };

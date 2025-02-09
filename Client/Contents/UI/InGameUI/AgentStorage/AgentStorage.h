@@ -10,11 +10,12 @@ public:
 
   void Update(float dt) override;
 
-private:
   class UIButton* _AgentBtn{nullptr};
+private:
   class UIImage* _AgentImgs[2]{nullptr};
   bool bUseFlag = false;
-  static int numAgent;
+  static int numGunAgent;
+  CharacterType _charType;
 };
 
 class AgentStorage : public UIPanel
@@ -25,6 +26,5 @@ public:
 
   void SetAgent(CharacterType charType, Vector2 pos);
 
-private:
   vector<Agent*> AgentList;
 };

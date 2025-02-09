@@ -10,6 +10,9 @@
 
 #include "Contents/GameObjects/Map/Weapons/Bullet/Bullet.h"
 
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
+
 Gunman::Gunman(World* world) : Character(world) {
   type = kGunman;
   range = 5;
@@ -94,15 +97,30 @@ void Gunman::OnAwake() {
 void Gunman::Update(float dt) {
   Super::Update(dt);
 
-  if (animator->GetVariable<bool>("arm"))
+  if (animator->GetVariable<bool>("arm") && !bPullOutGun)
   {
+    SoundManager::PlaySound(SoundList::Gunman_Ready1);
     handgun->SetVisible();
-    animator->SetVariable<bool>("arm", false);
+    bPullOutGun = true;
   }
 
-	if (animator->GetVariable<bool>("fire") && fire->GetCurrentAnimationTime() >= 0.65f)
+  if (animator->GetVariable<bool>("arm") && !bRackSlide &&
+      (0.65f <= ready2->GetCurrentAnimationTime()))
   {
+    SoundManager::PlaySound(SoundList::Gunman_Ready2);
+    bRackSlide = true;
+  }
 
+  if (animator->GetVariable<bool>("fire") && !bHammerSpur &&
+      (0.54f <= fire->GetCurrentAnimationTime()))
+  {
+    SoundManager::PlaySound(SoundList::Gunman_Ready3);
+    bHammerSpur = true;
+  }
+
+	if (animator->GetVariable<bool>("fire") && !bFireBullet &&
+      (0.65f <= fire->GetCurrentAnimationTime()))
+  {
     Bullet* bullet =
         world->CreateGameObjectFromModel<Bullet>(muzzleModelHandle);
     bullet->SetTranslation(muzzle->transform->GetGlobalTranslation());
@@ -111,7 +129,8 @@ void Gunman::Update(float dt) {
     bullet->SetDirection(-this->GetGlobalFront());
     bullet->SetScaling(10.f, 10.f, 10.f);
 
+    SoundManager::PlaySound(SoundList::Gunman_Fire);
 
-		animator->SetVariable<bool>("fire", false);
+		bFireBullet = true;
 	}
 }

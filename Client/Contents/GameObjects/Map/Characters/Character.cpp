@@ -6,7 +6,7 @@
 #include "Contents/GameObjects/Map/Map.h"
 #include "Contents/GameObjects/Map/Grid/GridObject.h"
 
-#include "Core/Utils/RandomGenerator.h"
+#include "Contents/SoundList/SoundList.h"
 #include "SoundSystem/SoundManager.h"
 
 const std::string kFactionTags[3] = {"Ally", "Enemy", "Neutral"};
@@ -116,11 +116,13 @@ void Character::BindActiveIndicator(GameObject* activeIndicator)
 }
 
 void Character::ShowDeathIndicator() {
-  deathIndicator->SetVisible();
+  if (deathIndicator)
+    deathIndicator->SetVisible();
 }
 
 void Character::HideDeathIndicator() {
-  deathIndicator->SetInvisible();
+  if (deathIndicator)
+    deathIndicator->SetInvisible();
 }
 
 void Character::SetFaction(Faction faction) {
@@ -208,7 +210,48 @@ void Character::Die() {
     rbComp->DisableSimulation();
   }
 
+  // 
+  if (inactiveIndicator && activeIndicator)
+  {
+    if (auto bbComp = inactiveIndicator->GetComponent<BillboardComponent>();
+        bbComp)
+    {
+      bbComp->isVisible = false;
+    }
+
+    if (auto bbComp = activeIndicator->GetComponent<BillboardComponent>();
+        bbComp)
+    {
+      bbComp->isVisible = false;
+    }
+  }
+
+  HideDeathIndicator();
+
   // Play sound.
+  if (faction == Faction::kEnemy)
+  {
+    SoundManager::PlaySound(GetAny(SoundList::Enemy_Die));
+  }
+  else if (faction == Faction::kAlly)
+  {
+    switch (type)
+    {
+    case kBrawler:
+      SoundManager::PlaySound(GetAny(SoundList::Ally_Brawler_Die));
+      break;
+    case kSlasher:
+      SoundManager::PlaySound(GetAny(SoundList::Ally_Slasher_Die));
+      break;
+    case kGunman:
+      SoundManager::PlaySound(GetAny(SoundList::Ally_Gunman_Die));
+      break;
+    }
+  }
+  else
+  {
+    SoundManager::PlaySound(GetAny(SoundList::Civilian_Die));
+  }
 }
 
 void Character::OnHover() {
@@ -219,6 +262,11 @@ void Character::OnHover() {
 
   if (map->hoveredCharacter != this)
   {
+    if (map->prevHoveredCharacter != this)
+    {
+      SoundManager::PlaySound(SoundList::Character_Hover);
+    }
+
     map->isHoveredCharacterChanged = true;
     map->bNeedUpdateAttackRange = true;
     map->hoveredCharacter = this;
@@ -297,19 +345,30 @@ void Character::Update(float dt)
     isActionFinished = false;
   }
   
-	if (isDead)
-  {
-		// TODO: 
-		return;
-	}
-
   if (isActionTriggered)
   {
     if (inactiveIndicator && activeIndicator)
     {
-      inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = false;
-      activeIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+      if (auto bbComp = inactiveIndicator->GetComponent<BillboardComponent>();
+          bbComp)
+      {
+        bbComp->isVisible = false;
+      }
+
+      if (auto bbComp = activeIndicator->GetComponent<BillboardComponent>();
+          bbComp)
+      {
+        bbComp->isVisible = false;
+      }
     }
+
+    HideDeathIndicator();
+  }
+
+  if (isDead)
+  {
+    // TODO:
+    return;
   }
 	
 	if (bGridLocationChanged)
@@ -353,6 +412,7 @@ void Character::PostUpdate(float dt) {
     return;
   }
 
+  // Indicator transforms
   if (inactiveIndicator && activeIndicator)
   {
     if (isTargetInRange)
