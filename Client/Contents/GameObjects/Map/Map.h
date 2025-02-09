@@ -26,6 +26,7 @@ public:
   ModelHandle enemyGunmanModelHandle;
 
   ModelHandle civilianModelHandle;
+  ModelHandle elizaModelHandle;
 
 	ModelHandle allyBrawlerModelHandle;
   ModelHandle allySlasherModelHandle;
@@ -96,6 +97,14 @@ public:
   void TurnOnAssassinationMode();
   void TurnOffAssasinationMode();
 
+  int GetNumEnemies();
+  int GetNumAllies();
+  int GetNumCivilians();
+
+  int GetNumDeadEnemies();
+  int GetNumDeadAllies();
+  int GetNumDeadCivilians();
+
 	void TriggerAction();
 
 	void ResetGame();
@@ -111,7 +120,7 @@ public:
   void CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
                     Direction dir = kNorth);
 
-  void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth);
+  void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth, bool isEliza = false);
 
   void CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h, Direction dir = kNorth);
 

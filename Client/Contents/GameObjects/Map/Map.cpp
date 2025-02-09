@@ -34,6 +34,7 @@ Map::Map(World* world) : GameObject(world)
       LoadModel("Models\\Character\\Player\\Player_Gun\\Player_Gun.glb");
 
   civilianModelHandle = LoadModel("Models\\Civilian\\Eliza.glb");
+  elizaModelHandle = LoadModel("Models\\Civilian\\Eliza.glb");
 
   allyDirectionIndicatorModelHandle = LoadModel(
       "Models\\Indicator\\AllyDirectionIndicator\\AllyDirectionIndicator.glb");
@@ -387,6 +388,54 @@ void Map::TurnOffAssasinationMode()
   isAssassinationMode = false;
 }
 
+int Map::GetNumEnemies()
+{
+  return enemies.size();
+}
+
+int Map::GetNumAllies()
+{
+  return allies.size();
+}
+
+int Map::GetNumCivilians()
+{
+  return civilians.size();
+}
+
+int Map::GetNumDeadEnemies()
+{
+  int count = 0;
+  for (Character* enemy : enemies)
+  {
+    count += enemy->isDead;
+  }
+
+  return count;
+}
+
+int Map::GetNumDeadAllies()
+{
+  int count = 0;
+  for (Character* ally : allies)
+  {
+    count += ally->isDead;
+  }
+
+  return count;
+}
+
+int Map::GetNumDeadCivilians()
+{
+  int count = 0;
+  for (Character* civilian : civilians)
+  {
+    count += civilian->isDead;
+  }
+
+  return count;
+}
+
 void Map::TriggerAction()
 {
   isActionTriggered = true;
@@ -736,11 +785,20 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
   }
 }
 
-void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
+void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir, bool isEliza)
 {
   // TODO: Civilian model
-  Civilian* civilian =
-      world->CreateGameObjectFromModel<Civilian>(civilianModelHandle);
+  Civilian* civilian;
+
+  if (isEliza)
+  {
+    civilian = world->CreateGameObjectFromModel<Civilian>(civilianModelHandle);
+  }
+  else
+  {
+    civilian = world->CreateGameObjectFromModel<Civilian>(civilianModelHandle);
+  }
+
   civilian->SetGridLocation(w, h);
   civilian->SetDirection(dir);
   civilians.push_back(civilian);

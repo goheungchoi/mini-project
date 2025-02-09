@@ -240,9 +240,13 @@
 		<ClInclude Include="Contents\Levels\Level7\Level7.h" />
 		<ClCompile Include="Contents\Levels\Level8\Level8.cpp" />
 		<ClInclude Include="Contents\Levels\Level8\Level8.h" />
+		<ClCompile Include="Contents\Levels\Level8_2\Level8_2.cpp" />
+		<ClInclude Include="Contents\Levels\Level8_2\Level8_2.h" />
 		<ClCompile Include="Contents\Levels\MainMenu\MainMenu.cpp" />
 		<ClInclude Include="Contents\Levels\MainMenu\MainMenu.h" />
 		<ClInclude Include="Contents\Levels\TestLevel.h" />
+		<ClCompile Include="Contents\SoundList\SoundList.cpp" />
+		<ClInclude Include="Contents\SoundList\SoundList.h" />
 		<ClCompile Include="Contents\UI\DialogUI\DialogUI.cpp" />
 		<ClInclude Include="Contents\UI\DialogUI\DialogUI.h" />
 		<ClCompile Include="Contents\UI\DialogUI\ResultDialogUI.cpp" />
