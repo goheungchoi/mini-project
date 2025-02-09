@@ -8,6 +8,17 @@
 
 #include "Contents/GameObjects/CameraObject.h"
 
+enum eBattleResult
+{
+  PerfectWin,
+  CivilDeadWin,
+  AllyDeadWin,
+  BothDeadWin,
+  AllyDeadLose,
+  Lose
+};
+
+
 class GameLevel : public Level
 {
 protected:
@@ -38,6 +49,8 @@ protected:
   class ResultDialogUI* resultDialogUI{nullptr};
   class TransitionUI* transitionUI;
 
+  class DialogLevel* dialoglevel{nullptr};
+
 public:
   GameLevel(const std::string& name) : Level(name) {}
 
@@ -47,8 +60,12 @@ public:
 
   // virtual void DestroyLevel() override { Level::DestroyLevel(); }
   virtual void CleanupLevel() override;
+  eBattleResult GetBattleResult();
+  void SetBattleResult(eBattleResult br);
+  int stageIdx = 0;
 
 protected:
+  eBattleResult _battleResult;
   virtual void CreateMap();
 
   void TriggerAction();

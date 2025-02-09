@@ -9,8 +9,9 @@ public:
 
   void Update(float dt) override;
   bool _bApplyflag = false;
-
+  
 private:
+  
   class UIButton* _applyBtn{nullptr};
   class UIImage* _applyBtnImgs[3];
 };

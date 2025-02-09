@@ -24,6 +24,17 @@ public:
   void AddOnUnHoveredHandler(std::function<void()> handler);
   void AddOnPressedHandler(std::function<void()> handler);
 
+  void ClearHandlers()
+  {
+    ClearClickHandler();
+    ClearHoverHandler();
+    ClearUnHoverHandler();
+    ClearPressHandler();
+  }
+  void ClearClickHandler() { onClickHandlers.clear(); }
+  void ClearHoverHandler() { onHoveredHandlers.clear(); }
+  void ClearUnHoverHandler() { onUnHoveredHandlers.clear(); }
+  void ClearPressHandler() { onPressedHandlers.clear(); }
   void Render() override;
 #ifdef _DEBUG
   void SetDebugDraw(bool debugFlag);

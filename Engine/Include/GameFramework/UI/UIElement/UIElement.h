@@ -23,18 +23,33 @@ public:
 
   void SetownerPanel(class UIPanel* ownerPanel) { _ownerPanel = ownerPanel; }
 
+
   virtual void SetDefaultPos(Vector2 pos);
   virtual void SetCenterPos(Vector2 pos);
   Vector2 GetPosition() { return _position; }
 
   void SetSize(Vector2 size) { _size = size; }
+
+  std::wstring GetName() { return uiname; }
+  void SetName(std::wstring _name) { uiname = _name; }
   Vector2 GetSize() { return _size; }
 
   EStatus GetStatus() { return _status; }
   void SetStatus(EStatus status) { _status = status; }
 
+  virtual void SetOnActivatedEvent(std::function<void(void)> event)
+  {
+    OnActivated = event;
+  }
+
+  virtual void SetOnDeactivatedEvent(std::function<void(void)> event)
+  {
+    OnDeactivated = event;
+  }
+
+
   // State change
-  void Activate()
+  virtual void Activate()
   {
     if (_status == EStatus_Active)
     {
@@ -43,12 +58,14 @@ public:
     else
     {
       _status = EStatus_Active;
+      OnActivated();
     }
 
     bShouldActivate = true;
     bShouldDeactivate = false;
+    
   }
-  void Deactivate()
+  virtual void Deactivate()
   {
     if (_status == EStatus_Inactive)
     {
@@ -56,6 +73,7 @@ public:
     }
     else
     {
+      OnDeactivated();
       _status = EStatus_Inactive;
     }
 
@@ -83,6 +101,7 @@ public:
   void FinishDestroy() { _status = EStatus_Destroyed; }
 
 protected:
+  std::wstring uiname;
   class World* _world = nullptr;
   Vector2 _position{};
   Vector2 _size{100, 100}; // width, height
@@ -94,6 +113,11 @@ protected:
 
   EStatus _status{EStatus_Awake};
   bool isActive{false};
+
+  std::function<void(void)> OnActivated = []() {};
+  std::function<void(void)> OnDeactivated = []() {};
+
+
 
   class UIPanel* _ownerPanel = nullptr;
 };

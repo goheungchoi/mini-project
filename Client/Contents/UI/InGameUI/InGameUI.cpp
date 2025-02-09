@@ -1,5 +1,7 @@
 #include "InGameUI.h"
 #include "Contents/GameObjects/Map/Map.h"
+#include "Contents/Levels/GameLevel.h"
+#include "Contents/UI/DialogUI/ResultDialogUI.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 
 #include "Contents/UI/InGameUI/MainMission/MainMission.h"
@@ -36,6 +38,21 @@ InGameUI::~InGameUI() {}
 void InGameUI::Update(float dt)
 {
   __super::Update(dt);
+
+  if (INPUT.IsKeyDown(Key::F1))
+  {
+
+      _world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")
+          ->bIsElizaDead = true;
+  }
+  if (INPUT.IsKeyPress(Key::F2)) static_cast<GameLevel*>(_world->GetCurrentLevel())->SetBattleResult(eBattleResult::CivilDeadWin);
+  if (INPUT.IsKeyPress(Key::F3)) static_cast<GameLevel*>(_world->GetCurrentLevel())->SetBattleResult(eBattleResult::AllyDeadWin);
+  if (INPUT.IsKeyPress(Key::F4)) static_cast<GameLevel*>(_world->GetCurrentLevel())->SetBattleResult(eBattleResult::BothDeadWin);
+  if (INPUT.IsKeyPress(Key::F5)) static_cast<GameLevel*>(_world->GetCurrentLevel())->SetBattleResult(eBattleResult::AllyDeadLose);
+  if (INPUT.IsKeyPress(Key::F6)) static_cast<GameLevel*>(_world->GetCurrentLevel())->SetBattleResult(eBattleResult::Lose);
+
+
+
 
   if (_map)
   {

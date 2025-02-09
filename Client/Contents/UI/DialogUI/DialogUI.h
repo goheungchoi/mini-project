@@ -1,12 +1,7 @@
 #pragma once
+#include "Contents/Levels/GameLevel.h"
 #include "GameFramework\UI\UIPanel\UIPanel.h"
 
-enum eBattleResult
-{
-    PerfectWin,
-    CivilDeadWin,
-    AllyDeadWin
-};
 
 
 
@@ -23,9 +18,9 @@ public:
   class UIText* _speakerNameText {nullptr};
   class UIText* _speakerClassText {nullptr};
 
-  class UIImage* _dialogTextBox{nullptr};
-  class UIText* _dialogText {nullptr};
-  class UIImage* _dialogBtnImage{nullptr};
+  class UIImage*  _dialogTextBox{nullptr};
+  class UIText*   _dialogText {nullptr};
+  class UIImage*  _dialogBtnImage{nullptr};
   class UIButton* _dialogButton{nullptr};
 
   class UIImage* _playerSelectBtnImage1{nullptr};
@@ -44,14 +39,16 @@ public:
   virtual void PrevStep();
 
   void ParseDialogScript();
-  void SetStageDialogIndex(int StageIdx);
+  void SetStageDialogIndex();
   void SetPrevBattleResult(eBattleResult result) { _prevBattleResult = result; }
   virtual void ElizaDialogStep(int idx);
   virtual void PlayerSelectDialogStep();
 
+  static eBattleResult _prevBattleResult;
+  static int StageIdx;
+
 protected:
 
-  eBattleResult _prevBattleResult;
   struct dialogInfo
   {
     int idx;

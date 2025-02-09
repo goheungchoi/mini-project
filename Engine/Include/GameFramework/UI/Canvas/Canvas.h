@@ -33,7 +33,7 @@ public:
     {
       return nullptr;
     }
-
+    panel->SetName(name);
     panelMap[name] = panel;
     panelList.push_back(panel);
 

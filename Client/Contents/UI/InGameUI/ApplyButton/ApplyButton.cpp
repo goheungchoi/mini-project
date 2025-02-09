@@ -1,9 +1,11 @@
 #include "ApplyButton.h"
+#include "Contents/GameObjects/Map/Map.h"
+#include "Contents/Levels/GameLevel.h"
+#include "Contents/UI/DialogUI/ResultDialogUI.h"
+#include "Contents/UI/InGameUI/InGameUI.h"
+#include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
-#include "Contents/GameObjects/Map/Map.h"
-#include "GameFramework/UI/Canvas/Canvas.h"
-#include "Contents/UI/InGameUI/InGameUI.h"
 
 ApplyButton::ApplyButton(World* world) : UIPanel(world)
 {
@@ -18,15 +20,91 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
   _applyBtn->SetDebugDraw(true);
 #endif // _DEBUG
 
-  _applyBtn->AddOnClickHandler([this]() { 
-	  //_bApplyflag = true;
+  _applyBtn->AddOnClickHandler([=]() {
+    //_bApplyflag = true;
     _world->_canvas->HidePanel(L"InGameUI");
 
-
-	//if (_map->)
-	// ReconfirmUI 여기서 활성화 해야함
-    _world->_canvas->ShowPanel(L"ResultDialogUI");
-	  });
+    if (_map->IsGameFinished())
+    {
+      if (world->GetCurrentLevel()->name == "Level6")
+      {
+        if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::Lose);
+        else if (_map->GetNumDeadAllies() >= 3)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::AllyDeadLose);
+        else if (_map->GetNumDeadAllies() > 1 &&
+                 _map->GetNumDeadCivilians() > 0)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::BothDeadWin);
+        else if (_map->GetNumDeadAllies() <= 1 &&
+                 _map->GetNumDeadCivilians() > 0)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::CivilDeadWin);
+        else if (_map->GetNumDeadAllies() > 1 &&
+                 _map->GetNumDeadCivilians() <= 0)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::AllyDeadWin);
+        else if (_map->GetNumDeadAllies() <= 1 &&
+                 _map->GetNumDeadCivilians() <= 0)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::PerfectWin);
+      }
+      else if (world->GetCurrentLevel()->name == "Level7")
+      {
+        if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::Lose);
+        else if (_map->GetNumDeadAllies() >= 3)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::AllyDeadLose);
+        else if (_map->GetNumDeadCivilians() > 0 &&
+                 _map->GetNumDeadAllies() < 2)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::CivilDeadWin);
+        else if (_map->GetNumDeadCivilians() <= 0 &&
+                 _map->GetNumDeadAllies() >= 2)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::AllyDeadWin);
+      }
+      else
+      {
+        if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::Lose);
+        else if (_map->GetNumDeadAllies() >= 3)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::AllyDeadLose);
+        else if (_map->GetNumDeadAllies() > 0 &&
+                 _map->GetNumDeadCivilians() > 0)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::BothDeadWin);
+        else if (_map->GetNumDeadAllies() <= 0 &&
+                 _map->GetNumDeadCivilians() > 0)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::CivilDeadWin);
+        else if (_map->GetNumDeadAllies() > 0 &&
+                 _map->GetNumDeadCivilians() <= 0)
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::AllyDeadWin);
+        else
+          static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::PerfectWin);
+      }
+      if (static_cast<GameLevel*>(world->GetCurrentLevel())
+              ->GetBattleResult() != eBattleResult::PerfectWin)
+      {
+        _world->_canvas->ShowPanel(L"ResultDialogUI");
+        
+      }
+      else
+      {
+        world->PrepareChangeLevel("Dialog Level");
+        world->CommitLevelChange();
+      }
+    }
+  });
 }
 
 ApplyButton::~ApplyButton() {}

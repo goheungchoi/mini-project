@@ -38,6 +38,7 @@ void DialogLevel::BeginLevel()
   //gameManager = world->CreateGameObject<GameManager>();
 #ifdef USED2D
   dialogUI =world->_canvas->CreatePanel<DialogUI>(L"ElizaDialog");
+  dialogUI->SetStageDialogIndex();
   world->_canvas->CreatePanel<UICursor>(L"Cursor");
   transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
   transitionUI->_blackImage->SetOpacity(1.0f);

@@ -4,6 +4,8 @@
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "Shared/Config/Config.h"
 
+eBattleResult DialogUI::_prevBattleResult = eBattleResult::PerfectWin;
+int DialogUI::StageIdx = 1;
 DialogUI::DialogUI(class World* world) : UIPanel(world)
 {
   {
@@ -63,7 +65,7 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _dialogText->SetTextAlignment(TextAlignment::LEFTAlIGN);
     _dialogText->SetParagraphAlignment(ParagraphAlignment::TOPALIGN);
     ParseDialogScript();
-    SetStageDialogIndex(4);
+    SetStageDialogIndex();
 
     _dialogBtnImage = CreateUI<UIImage>(L"dialogBtnImage");
     _dialogBtnImage->SetSprite("2D\\UI\\UI_Textbox_Button.png");
@@ -189,9 +191,17 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     SetPrevBattleResult(eBattleResult::PerfectWin);
   }
   {
-    _actionList.push_back([=]() { ElizaDialogStep(_prevBattleResult); });
+    if (_prevBattleResult == 3)
+    {
+      _actionList.push_back([=]() { ElizaDialogStep(1); });
+      _actionList.push_back([=]() { ElizaDialogStep(2); });
+    }
+    else
+      _actionList.push_back([=]() { ElizaDialogStep(_prevBattleResult); });
+
     for (int i = 6; i < _dialogList.size(); i++)
       _actionList.push_back([=]() { ElizaDialogStep(i); });
+
     _actionList.push_back([=]() {
       bPlayerSelection = true;
       PlayerSelectDialogStep();
@@ -199,6 +209,9 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _actionList.push_back([=]() {
       bPlayerSelection = false;
       ElizaDialogStep(5);
+    });
+    _actionList.push_back(
+        [=]() { world->PrepareChangeLevel("Level" + to_string(StageIdx+1));
     });
   }
 }
@@ -261,7 +274,7 @@ void DialogUI::ParseDialogScript()
     }
   }
 }
-void DialogUI::SetStageDialogIndex(int StageIdx)
+void DialogUI::SetStageDialogIndex()
 {
   fs::path p = ns::kDataDir;
   std::string rootpath = p.string();

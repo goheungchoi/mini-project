@@ -55,14 +55,23 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   mainMenuLevel = new MainMenu("Main Menu");
   dialogLevel = new DialogLevel("Dialog Level");
   level1 = new Level1("Level1");
+  level1->stageIdx = 1;
   level2 = new Level2("Level2");
+  level2->stageIdx = 2;
   level3 = new Level3("Level3");
+  level3->stageIdx = 3;
   level4 = new Level4("Level4");
+  level4->stageIdx = 4;
   level5 = new Level5("Level5");
+  level5->stageIdx = 5;
   level6 = new Level6("Level6");
+  level6->stageIdx = 6;
   level7 = new Level7("Level7");
+  level7->stageIdx = 7;
   level8 = new Level8("Level8");
+  level8->stageIdx = 8;
   level8_2 = new Level8_2("Level8_2");
+  level8_2->stageIdx = 9;
 
   _world->AddLevel(gameLevel);
   _world->AddLevel(mainMenuLevel);
@@ -77,7 +86,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _world->AddLevel(level8);
   _world->AddLevel(level8_2);
 
-  _world->PrepareChangeLevel(dialogLevel->name);
+  _world->PrepareChangeLevel(level4->name);
   _world->CommitLevelChange();
 }
 
