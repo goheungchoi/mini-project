@@ -996,6 +996,7 @@ void Map::Update(float dt)
         {
           if (hoveredCharacter->faction == Faction::kEnemy)
           {
+            SoundManager::PlaySound(SoundList::Snipping_Selection);
             // Register the target to be assassinated,
             // only if in assassination mode.
             assassinationTarget = hoveredCharacter;
@@ -1098,6 +1099,12 @@ void Map::Update(float dt)
     }
   }
 
+  // Show death indicator.
+  if (assassinationTarget)
+  {
+    assassinationTarget->ShowDeathIndicator();
+  }
+
   // Reset the hovered character.
   prevHoveredCharacter = hoveredCharacter;
   hoveredCharacter = nullptr;
@@ -1148,6 +1155,14 @@ void Map::TranslatePlaceholder()
     // follow the cursor pos.
     XMVECTOR cursorPos = GetCursorPosition();
     placeholder->SetTranslation(cursorPos);
+  }
+}
+
+void Map::AssassinateTarget() {
+  if (assassinationTarget)
+  {
+    assassinationTarget->Die();
+    assassinationTarget = nullptr;
   }
 }
 

@@ -136,5 +136,7 @@ public:
 private:
   XMVECTOR GetCursorPosition() const;
   void TranslatePlaceholder();
+
+  void AssassinateTarget();
 };
 
