@@ -15,6 +15,7 @@ private:
   class UIImage* _AgentImgs[2]{nullptr};
   bool bUseFlag = false;
   static int numAgent;
+  CharacterType _charType;
 };
 
 class AgentStorage : public UIPanel

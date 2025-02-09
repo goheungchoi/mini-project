@@ -8,6 +8,7 @@ int Agent::numAgent = 0;
 Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
+  _charType = charType;
 
   switch (charType)
   {
@@ -118,6 +119,14 @@ void Agent::Update(float dt)
   {
     _AgentImgs[0]->SetStatus(EStatus::EStatus_Inactive);
     _AgentImgs[1]->SetStatus(EStatus::EStatus_Active);
+  }
+
+  if (_map->deleteCharType == _charType)
+  {
+    bUseFlag = false;
+    _AgentImgs[0]->SetStatus(EStatus::EStatus_Active);
+    _AgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+    _map->deleteCharType = CharacterType::kCivilian;
   }
 }
 
