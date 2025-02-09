@@ -2,6 +2,11 @@
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 #include "Contents/GameObjects/Map/Map.h"
+#include "GameFramework/UI/Canvas/Canvas.h"
+
+#include "Contents/UI/InGameUI/InGameUI.h"
+#include "Contents/UI/InGameUI/GunfireButton/GunfireButton.h"
+#include "GameFramework/UI/UIAnim//UIAnim.h"
 
 PlayButton::PlayButton(World* world) : UIPanel(world)
 {
@@ -42,6 +47,15 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
       {
         _map->TriggerAction();
         _bPlayflag = true;
+
+        auto* gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                       ->GetUI<GunfireButton>(L"GunfireBtn");
+
+        if (gunfireBtn && gunfireBtn->_bGunFireUseFlag == true)
+        {
+          gunfireBtn->GetUI<UIAnim>(L"ElizaAnim")
+              ->SetStatus(EStatus::EStatus_Active);
+        }
       }
     });
 }
@@ -63,7 +77,6 @@ void PlayButton::Update(float dt)
     _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
     _playBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
   }
-
 
 
 }

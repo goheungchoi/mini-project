@@ -64,8 +64,12 @@ void GameLevel::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Deact_Gun.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\FadeBlack.png");
-
-
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\Animation\\Eliza_Initiative_Gunfire.png");
+  // Test용 이미지
+    Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\UI_Storage_Deact_Gun.png");
+  Resource2DManager::GetInstance()->LoadSprite("Textures\\X_test.png");
 #endif // USED2D
 }
 

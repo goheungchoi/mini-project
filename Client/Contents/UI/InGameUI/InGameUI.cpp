@@ -53,6 +53,4 @@ void InGameUI::Update(float dt)
     }
   }
 
-
-
 }

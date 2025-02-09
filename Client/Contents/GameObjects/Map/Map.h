@@ -81,6 +81,8 @@ public:
   // 
   std::optional<CharacterInfo> tmp;
 
+  CharacterType deleteCharType = kCivilian;
+
 public:
 
 	Map(World* world);

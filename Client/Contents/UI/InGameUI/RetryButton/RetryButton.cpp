@@ -3,6 +3,8 @@
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
+#include "Contents/UI/InGameUI/InGameUI.h"
+#include "Contents/UI/InGameUI/GunfireButton/GunfireButton.h"
 
 RetryButton::RetryButton(World* world) : UIPanel(world)
 {
@@ -19,6 +21,15 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
 
   _retryBtn->AddOnClickHandler([this]() {
 	  _map->ResetGame();
+      
+      auto* gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+          ->GetUI<GunfireButton>(L"GunfireBtn");
+
+    if (gunfireBtn && gunfireBtn->_bGunFireUseFlag == true)
+    {
+      gunfireBtn->_bGunFireUseFlag = false;
+    }
+
   });
 
 }

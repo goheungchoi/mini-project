@@ -939,6 +939,11 @@ void Map::Update(float dt)
         tmp.reset();
       }
 
+      if (placeholder != nullptr)
+      {
+        deleteCharType = placeholder->type;
+      }
+
       TurnOffPlacementMode();
     }
     // Change the direction of the placeholder.
@@ -1020,6 +1025,7 @@ void Map::Update(float dt)
           if (hoveredCharacter->faction == Faction::kAlly)
           {
             DeleteCharacterFromMap(hoveredCharacter);
+            deleteCharType = hoveredCharacter->type;
             hoveredCharacter->Destroy();
           }
         }
