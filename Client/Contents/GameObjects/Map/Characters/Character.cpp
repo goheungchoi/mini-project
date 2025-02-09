@@ -6,6 +6,9 @@
 #include "Contents/GameObjects/Map/Map.h"
 #include "Contents/GameObjects/Map/Grid/GridObject.h"
 
+#include "Core/Utils/RandomGenerator.h"
+#include "SoundSystem/SoundManager.h"
+
 const std::string kFactionTags[3] = {"Ally", "Enemy", "Neutral"};
 
 static Animation* anim;
@@ -204,6 +207,8 @@ void Character::Die() {
   {
     rbComp->DisableSimulation();
   }
+
+  // Play sound.
 }
 
 void Character::OnHover() {

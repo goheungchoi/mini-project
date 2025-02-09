@@ -34,6 +34,7 @@ Map::Map(World* world) : GameObject(world)
       LoadModel("Models\\Character\\Player\\Player_Gun\\Player_Gun.glb");
 
   civilianModelHandle = LoadModel("Models\\Civilian\\Eliza.glb");
+  elizaModelHandle = LoadModel("Models\\Civilian\\Eliza.glb");
 
   allyDirectionIndicatorModelHandle = LoadModel(
       "Models\\Indicator\\AllyDirectionIndicator\\AllyDirectionIndicator.glb");
@@ -736,11 +737,20 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
   }
 }
 
-void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir)
+void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir, bool isEliza)
 {
   // TODO: Civilian model
-  Civilian* civilian =
-      world->CreateGameObjectFromModel<Civilian>(civilianModelHandle);
+  Civilian* civilian;
+
+  if (isEliza)
+  {
+    civilian = world->CreateGameObjectFromModel<Civilian>(civilianModelHandle);
+  }
+  else
+  {
+    civilian = world->CreateGameObjectFromModel<Civilian>(civilianModelHandle);
+  }
+
   civilian->SetGridLocation(w, h);
   civilian->SetDirection(dir);
   civilians.push_back(civilian);
