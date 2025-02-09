@@ -220,6 +220,8 @@
 		<ClCompile Include="Contents\GameObjects\Map\Weapons\Knife\Knife.cpp" />
 		<ClInclude Include="Contents\GameObjects\Map\Weapons\Knife\Knife.h" />
 		<ClInclude Include="Contents\GameObjects\TestGameObject.h" />
+		<ClCompile Include="Contents\Levels\DialogLevel\DialogLevel.cpp" />
+		<ClInclude Include="Contents\Levels\DialogLevel\DialogLevel.h" />
 		<ClCompile Include="Contents\Levels\GameLevel.cpp" />
 		<ClInclude Include="Contents\Levels\GameLevel.h" />
 		<ClCompile Include="Contents\Levels\Level1\Level1.cpp" />
@@ -238,6 +240,8 @@
 		<ClInclude Include="Contents\Levels\Level7\Level7.h" />
 		<ClCompile Include="Contents\Levels\Level8\Level8.cpp" />
 		<ClInclude Include="Contents\Levels\Level8\Level8.h" />
+		<ClCompile Include="Contents\Levels\Level8_2\Level8_2.cpp" />
+		<ClInclude Include="Contents\Levels\Level8_2\Level8_2.h" />
 		<ClCompile Include="Contents\Levels\MainMenu\MainMenu.cpp" />
 		<ClInclude Include="Contents\Levels\MainMenu\MainMenu.h" />
 		<ClInclude Include="Contents\Levels\TestLevel.h" />

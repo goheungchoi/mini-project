@@ -18,6 +18,8 @@
 #include "Contents/Levels/Level6/Level6.h"
 #include "Contents/Levels/Level7/Level7.h"
 #include "Contents/Levels/Level8/Level8.h"
+#include "Contents/Levels/Level8_2/Level8_2.h"
+#include "Contents/Levels/DialogLevel/DialogLevel.h"
 
 
 static GameLevel* gameLevel;
@@ -30,7 +32,8 @@ static Level5* level5;
 static Level6* level6;
 static Level7* level7;
 static Level8* level8;
-
+static Level8_2* level8_2;
+static DialogLevel* dialogLevel;
 
 void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
                          const std::wstring& title)
@@ -50,6 +53,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
 
   gameLevel = new GameLevel("Game Level");
   mainMenuLevel = new MainMenu("Main Menu");
+  dialogLevel = new DialogLevel("Dialog Level");
   level1 = new Level1("Level1");
   level2 = new Level2("Level2");
   level3 = new Level3("Level3");
@@ -58,9 +62,11 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   level6 = new Level6("Level6");
   level7 = new Level7("Level7");
   level8 = new Level8("Level8");
+  level8_2 = new Level8_2("Level8_2");
 
   _world->AddLevel(gameLevel);
   _world->AddLevel(mainMenuLevel);
+  _world->AddLevel(dialogLevel);
   _world->AddLevel(level1);
   _world->AddLevel(level2);
   _world->AddLevel(level3);
@@ -69,6 +75,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _world->AddLevel(level6);
   _world->AddLevel(level7);
   _world->AddLevel(level8);
+  _world->AddLevel(level8_2);
 
   _world->PrepareChangeLevel(level7->name);
   _world->CommitLevelChange();

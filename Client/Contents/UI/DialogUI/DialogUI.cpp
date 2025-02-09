@@ -1,6 +1,7 @@
 ﻿#include "DialogUI.h"
 #include "GameFramework/UI/UIAnim//UIAnim.h"
 #include "GameFramework/UI/UIText/UIText.h"
+#include "GameFramework/UI/UIButton/UIButton.h"
 #include "Shared/Config/Config.h"
 
 DialogUI::DialogUI(class World* world) : UIPanel(world)
@@ -47,8 +48,10 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
   {
     _dialogTextBox = CreateUI<UIImage>(L"DialogTextBox");
     _dialogTextBox->SetSprite("2D\\UI\\UI_Textbox_01.png");
-    _dialogTextBox->SetCenterPos({960, 900});
-    _dialogTextBox->SetOpacity(1.f);
+    _dialogTextBox->SetScale({1.f,0.8f});
+    _dialogTextBox->SetSize(_dialogTextBox->GetTextureSize());
+    _dialogTextBox->SetCenterPos({960, 850});
+    _dialogTextBox->SetOpacity(.6f);
     _dialogText = CreateUI<UIText>(L"DialogText");
     //_dialogText->SetDebugDraw(true);
     _dialogText->SetSize(
@@ -62,15 +65,34 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     ParseDialogScript();
     SetStageDialogIndex(4);
 
+    _dialogBtnImage = CreateUI<UIImage>(L"dialogBtnImage");
+    _dialogBtnImage->SetSprite("2D\\UI\\UI_Textbox_Button.png");
+    _dialogBtnImage->SetCenterPos({1600, 900});
+    _dialogButton = CreateUI<UIButton>(L"dialogButton");
+    _dialogButton->SetSize(_dialogBtnImage->GetSize());
+    _dialogButton->SetCenterPos({1600, 900});
+    _dialogButton->AddOnClickHandler([=]()
+        {
+      if (!bPlayerSelection)NextStep();
+    });
+    _dialogButton->AddOnHoveredHandler([=]()
+        {
+      _dialogBtnImage->SetOpacity(0.7f);
+    });
+    _dialogButton->AddOnUnHoveredHandler([=]()
+        {
+      _dialogBtnImage->SetOpacity(1.f);
+    });
+
     _speakerNameText = CreateUI<UIText>(L"speakerName");
-    // _speakerNameText->SetDebugDraw(true);
     _speakerNameText->SetSize({300, 100});
     _speakerNameText->SetTextAlignment(TextAlignment::CENTERAlIGN);
     _speakerNameText->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
     _speakerNameText->SetColor(Color(1, 1, 1, 1));
     _speakerNameText->SetOpacity(1.f);
-    _speakerNameText->SetCenterPos({400, 800});
+    _speakerNameText->SetCenterPos({350, 775});
     _speakerNameText->SetFont(L"PT Noeul");
+    _speakerNameText->SetFontSize(47.5f);
 
     _speakerClassText = CreateUI<UIText>(L"speakerClass");
     _speakerClassText->SetSize({100, 100});
@@ -78,59 +100,109 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _speakerClassText->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
     _speakerClassText->SetColor(Color(0.871f, 0.620f, 0.478f, 1));
     _speakerClassText->SetOpacity(1.f);
-    _speakerClassText->SetCenterPos({325, 800});
+    _speakerClassText->SetCenterPos({230, 775});
     _speakerClassText->SetFont(L"PT Noeul");
+    _speakerClassText->SetFontSize(47.5f);
     _speakerClassText->SetText(L"부관");
+
+    _playerSelectBtnImage1 = CreateUI<UIImage>(L"playerbuttonimage1");
+    _playerSelectBtnImage1->SetSprite("2D\\UI\\UI_Selectbox_01.png");
+    _playerSelectBtnImage1->SetScale({1.5f, 1.5f});
+    _playerSelectBtnImage1->SetCenterPos({1600, 600});
+    _playerSelectBtnImage1->SetOpacity(1.f);
+
+    _playerSelectButton1 = CreateUI<UIButton>(L"playerbutton1");
+    _playerSelectButton1->SetSize({_playerSelectBtnImage1->GetSize().x * 1.3f,
+                                   _playerSelectBtnImage1->GetSize().y});
+    _playerSelectButton1->SetCenterPos({1550, 600});
+    _playerSelectButton1->AddOnClickHandler([=]() {
+      HideUI(L"playerbuttonimage1");
+      HideUI(L"playerbutton1");
+      HideUI(L"playerbuttontext1");
+      HideUI(L"playerbuttonimage2");
+      HideUI(L"playerbutton2");
+      HideUI(L"playerbuttontext2");
+      NextStep();
+    });
+    _playerSelectButton1->AddOnHoveredHandler([=]() 
+        { _playerSelectBtnImage1->SetOpacity(0.5f);
+    });
+    _playerSelectButton1->AddOnUnHoveredHandler([=]() 
+        { _playerSelectBtnImage1->SetOpacity(1.f);
+    });
+
+    _playerSelectBtnText1 = CreateUI<UIText>(L"playerbuttontext1");
+    _playerSelectBtnText1->SetSize(_playerSelectBtnImage1->GetSize());
+    _playerSelectBtnText1->SetCenterPos({1550, 600});
+    _playerSelectBtnText1->SetFont(L"PT Noeul");
+
+    _playerSelectBtnText1->SetTextAlignment(TextAlignment::CENTERAlIGN);
+    _playerSelectBtnText1->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
+    _playerSelectBtnText1->SetColor(Color(1, 1, 1, 1));
+    _playerSelectBtnText1->SetOpacity(1.f);
+
+    _playerSelectBtnImage2 = CreateUI<UIImage>(L"playerbuttonimage2");
+    _playerSelectBtnImage2->SetSprite("2D\\UI\\UI_Selectbox_01.png");
+    _playerSelectBtnImage2->SetScale({1.5f, 1.5f});
+    _playerSelectBtnImage2->SetCenterPos({1600, 750});
+    _playerSelectBtnImage2->SetOpacity(1.f);
+
+    _playerSelectButton2 = CreateUI<UIButton>(L"playerbutton2");
+    _playerSelectButton2->SetSize({_playerSelectBtnImage2->GetSize().x*1.3f,
+                                   _playerSelectBtnImage2->GetSize().y});
+    _playerSelectButton2->SetCenterPos({1550, 750});
+    _playerSelectButton2->AddOnClickHandler([=]() {
+      HideUI(L"playerbuttonimage1");
+      HideUI(L"playerbutton1");
+      HideUI(L"playerbuttontext1");
+      HideUI(L"playerbuttonimage2");
+      HideUI(L"playerbutton2");
+      HideUI(L"playerbuttontext2");
+      NextStep();
+    });
+    _playerSelectButton2->AddOnHoveredHandler([=]() {
+          _playerSelectBtnImage2->SetOpacity(0.5f);
+        });
+    _playerSelectButton2->AddOnUnHoveredHandler([=]() {
+          _playerSelectBtnImage2->SetOpacity(1.f);
+        });
+
+    _playerSelectBtnText2 = CreateUI<UIText>(L"playerbuttontext2");
+    _playerSelectBtnText2->SetSize(_playerSelectBtnImage1->GetSize());
+    _playerSelectBtnText2->SetFont(L"PT Noeul");
+    _playerSelectBtnText2->SetCenterPos({1550, 750});
+    _playerSelectBtnText2->SetTextAlignment(TextAlignment::CENTERAlIGN);
+    _playerSelectBtnText2->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
+    _playerSelectBtnText2->SetColor(Color(1, 1, 1, 1));
+    _playerSelectBtnText2->SetOpacity(1.f);
+
+    HideUI(L"playerbuttonimage1");
+    HideUI(L"playerbutton1");
+    HideUI(L"playerbuttontext1");
+    HideUI(L"playerbuttonimage2");
+    HideUI(L"playerbutton2");
+    HideUI(L"playerbuttontext2");
+
+    //test
     SetPrevBattleResult(eBattleResult::PerfectWin);
   }
-
   {
-
     _actionList.push_back([=]() { ElizaDialogStep(_prevBattleResult); });
     for (int i = 6; i < _dialogList.size(); i++)
       _actionList.push_back([=]() { ElizaDialogStep(i); });
-    _actionList.push_back([=]() { PlayerSelectDialogStep(); });
-    _actionList.push_back([=]() { ElizaDialogStep(5); });
+    _actionList.push_back([=]() {
+      bPlayerSelection = true;
+      PlayerSelectDialogStep();
+    });
+    _actionList.push_back([=]() {
+      bPlayerSelection = false;
+      ElizaDialogStep(5);
+    });
   }
 }
 void DialogUI::Update(float dt)
 {
   UIPanel::Update(dt);
-
-  // if (isLClicked)
-  //   _clickTimer -= dt;
-  // if (INPUT.IsKeyPress(MouseState::LB))
-  //{
-  //   isLClicked = true;
-  //   if (!isClickActioned)
-  //   {
-  //     NextStep();
-  //     isClickActioned = true;
-  //   }
-  // }
-  // if (_clickTimer <= 0)
-  //{
-  //   _clickTimer = _clickThreshold;
-  //   isLClicked = false;
-  //   isClickActioned = false;
-  // }
-
-  if (INPUT.IsKeyPress(MouseState::LB))
-    NextStep();
-
-  if (INPUT.IsKeyPress(Key::D1))
-    _dialogTextBox->FadeIn(1.0f);
-  if (INPUT.IsKeyPress(Key::D2))
-    _Eliza->SetCurrentAnimSprite("Eliza_Resistance_Despair30");
-  if (INPUT.IsKeyPress(Key::D3))
-    _Eliza->SetCurrentAnimSprite("Eliza_Resistance_Despair70");
-  if (INPUT.IsKeyPress(Key::D4))
-    _Eliza->SetCurrentAnimSprite("Eliza_Noble");
-  if (INPUT.IsKeyPress(Key::D5))
-    _Eliza->SetCurrentAnimSprite("Eliza_Resistance_Sad");
-  if (INPUT.IsKeyPress(Key::D6))
-    _Eliza->SetCurrentAnimSprite("Eliza_Resistance_Joy");
-
   if (isCurrentActionFinished && _currentActionIndex <= _actionList.size() - 1)
   {
     isCurrentActionFinished = false;
@@ -183,7 +255,6 @@ void DialogUI::ParseDialogScript()
     }
   }
 }
-
 void DialogUI::SetStageDialogIndex(int StageIdx)
 {
   fs::path p = ns::kDataDir;
@@ -235,7 +306,6 @@ void DialogUI::SetStageDialogIndex(int StageIdx)
     _dialogList[i].dialogtext = token;
   }
 }
-
 void DialogUI::ElizaDialogStep(int idx)
 {
   _dialogText->SetText(_dialogList[idx].dialogtext.c_str());
@@ -245,19 +315,51 @@ void DialogUI::ElizaDialogStep(int idx)
                                 : _namePlayer);
   if (_dialogList[idx].IsElizaSpeaking)
   {
+    _speakerNameText->SetTextAlignment(TextAlignment::CENTERAlIGN);
     _speakerClassText->SetOpacity(1.f);
     _Eliza->SetMasking(Color(1, 1, 1, 1));
     _Eliza->SetOpacity(_dialogList[idx].ElizaAnim, 1.f);
   }
   else
   {
+    _speakerNameText->SetTextAlignment(TextAlignment::LEFTAlIGN);
     _speakerClassText->SetOpacity(0.f);
     _Eliza->SetMasking(Color(0.5f, 0.5f, 0.5f, 1));
     _Eliza->SetOpacity(_dialogList[idx].ElizaAnim, 0.8f);
   }
 }
-
 void DialogUI::PlayerSelectDialogStep()
 {
+  int lastIdx = _dialogList.size() - 1;
+  _dialogText->SetText(_dialogList[lastIdx].dialogtext.c_str());
+  _Eliza->SetCurrentAnimSprite(_dialogList[lastIdx].ElizaAnim);
+  _speakerNameText->SetText(_dialogList[lastIdx].IsElizaSpeaking ? _nameEliza
+                                                             : _namePlayer);
+  _speakerNameText->SetTextAlignment(TextAlignment::LEFTAlIGN);
+  _speakerClassText->SetOpacity(0.f);
+  _Eliza->SetMasking(Color(0.5f, 0.5f, 0.5f, 1));
+  _Eliza->SetOpacity(_dialogList[lastIdx].ElizaAnim, 0.8f);
+
+  if (_dialogList[4].dialogtext.length()>0)
+  {
+    _playerSelectBtnText1->SetText(_dialogList[3].dialogtext.c_str());
+    _playerSelectBtnText2->SetText(_dialogList[4].dialogtext.c_str());
+    ShowUI(L"playerbuttonimage1");
+    ShowUI(L"playerbutton1");
+    ShowUI(L"playerbuttontext1");
+    ShowUI(L"playerbuttonimage2");
+    ShowUI(L"playerbutton2");
+    ShowUI(L"playerbuttontext2");
+  }
+  else
+  {
+
+    _playerSelectBtnText1->SetText(_dialogList[3].dialogtext.c_str());
+    ShowUI(L"playerbuttonimage1");
+    ShowUI(L"playerbutton1");
+    ShowUI(L"playerbuttontext1");
+  }
+
+
   
 }

@@ -34,6 +34,7 @@ void UIImage::SetOpacity(float opacity)
 
 void UIImage::SetScale(::DirectX::SimpleMath::Vector2 scale)
 {
+  _scale = scale;
   _sprite->SetScale(scale);
 }
 
@@ -92,6 +93,11 @@ void UIImage::SetSprite(LPCSTR path, Vector2 pos)
 void UIImage::SetCenterPos(Vector2 pos)
 {
   //UIElement::SetCenterPos(pos);
-  _position = {pos.x - (_size.x / 2), pos.y - (_size.y / 2)};
+  _position = {pos.x - (_size.x / 2 * _scale.x),
+               pos.y - (_size.y / 2 * _scale.y)};
   _sprite->SetPos(_position);
+}
+Vector2 UIImage::GetTextureSize()
+{
+  return _sprite->GetTextureSize();
 }

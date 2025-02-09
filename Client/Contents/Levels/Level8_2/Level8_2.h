@@ -1,13 +1,12 @@
 #pragma once
-
 #include "Contents/Levels/GameLevel.h"
 #include "GameFramework/World/World.h"
 
-// (ºÎ°ü(¿¤¸®ÀÚ)À» Èñ»ý½ÃÄ×À» ¶§)
-class Level8 : public GameLevel
+// ´ë¿ø 2¸íÀ» Èñ»ý½ÃÄ×À» ¶§
+class Level8_2 : public GameLevel
 {
 public:
-  Level8(const std::string& name) : GameLevel(name) {}
+  Level8_2(const std::string& name) : GameLevel(name) {}
 
   virtual void PrepareLevel() override;
 

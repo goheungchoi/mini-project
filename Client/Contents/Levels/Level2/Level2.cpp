@@ -6,50 +6,59 @@
 #include "Contents/UI/TransitionUI/TransitionUI.h"
 #include "Resource2DManager/Resource2DManager.h"
 
-#include "Contents/UI/InGameUI/InGameUI.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIPanel/UIPanel.h"
-#include "GameFramework/UI/UICursor/UICursor.h"
+#include "Contents/UI/InGameUI/InGameUI.h"
+#include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
+#include "Contents/UI/InGameUI/MainMission/MainMission.h"
+
+
 
 void Level2::PrepareLevel()
 {
-  // UI Resource Load
-
-
-  Resource2DManager::GetInstance()->LoadSprite(
-      "Textures\\Picture\\PhotoPanel.png");
-
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Initiative_Gunfire.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Noble.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Resistance_Despair30.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Resistance_Despair70.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Resistance_Joy.png");
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\Animation\\Eliza_Resistance_Sad.png");
-
-  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\FadeBlack.png");
-  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Textbox_01.png");
-  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Textbox_Button.png");
+  __super::PrepareLevel();
 }
 
 void Level2::BeginLevel()
 {
+  __super::BeginLevel();
+
 #ifdef USED2D
-  world->_canvas->CreatePanel<DialogUI>(L"ElizaDialog");
-world->_canvas->CreatePanel<UICursor>(L"Cursor");
-  world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
+  inGameUI->HideUI(L"GunfireBtn");
+  inGameUI->HideUI(L"SubMission");
 
-
-#endif // USED2D
+  inGameUI->_agentStorage->SetAgent(kBrawler, {1400, 960});
+  inGameUI->_agentStorage->SetAgent(kSlasher, {1600, 960});
+  inGameUI->_agentStorage->SetAgent(kGunman, {1800, 960});
+  inGameUI->_mainMission->SetText(L"최대한 희생 없이 모든 적 처치");
+#endif
 }
 
 void Level2::CleanupLevel() {}
 
-void Level2::CreateMap() {}
+void Level2::CreateMap()
+{
+  pivot = world->CreateGameObject();
+
+  map = world->CreateGameObjectFromModel<Map>(mapMuseumMeshHandle);
+
+  pivot->AddChildGameObject(map);
+  map->Translate(-4, 0, -4);
+
+  map->CreateEnemyAt(kGunman, 0, 0, kEast);
+  map->CreateEnemyAt(kGunman, 0, 5, kEast);
+  map->CreateEnemyAt(kBrawler, 2, 3, kNorth);
+  map->CreateEnemyAt(kGunman, 4, 5, kWest);
+  map->CreateEnemyAt(kBrawler, 5, 2, kWest);
+  map->CreateEnemyAt(kGunman, 5, 3, kEast);
+
+
+  map->CreateObstacleAt(ObstacleType_Lion, 0, 1, kSouth);
+  map->CreateObstacleAt(ObstacleType_Sofa, 0, 4, kNorth);
+  map->CreateObstacleAt(ObstacleType_Sofa, 1, 5, kWest);
+  map->CreateObstacleAt(ObstacleType_Sofa, 4, 4, kNorth);
+  map->CreateObstacleAt(ObstacleType_Lion, 5, 1, kNorth);
+  map->CreateObstacleAt(ObstacleType_Sofa, 5, 5, kWest);
+}
 
 void Level2::TriggerAction() {}
