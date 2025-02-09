@@ -14,5 +14,5 @@ extern const wchar_t* Enemy_Die[5];
 
 extern const wchar_t* Ally_Gunman_Die[2];
 
-}
+};
 
