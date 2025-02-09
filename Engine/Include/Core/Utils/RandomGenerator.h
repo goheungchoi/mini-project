@@ -4,6 +4,26 @@
 
 #include <random>
 
+
+// NOTE: ChatGPU generated
+// Primary template: assumes T is NOT an iterator
+template <typename, typename = void>
+struct is_iterator : std::false_type
+{
+};
+
+// Specialization: T is an iterator if std::iterator_traits<T>::value_type is
+// valid
+template <typename T>
+struct is_iterator<T, std::void_t<typename std::iterator_traits<T>::value_type>>
+    : std::true_type
+{
+};
+
+// Helper variable template (C++17)
+template <typename T>
+inline constexpr bool is_iterator_v = is_iterator<T>::value;
+
 class Random
 {
   std::random_device rd; // a seed source for the random number engine
@@ -111,7 +131,8 @@ private:
   }
 
   template <typename Integer, typename InputIt>
-  std::enable_if_t<std::is_integral<Integer>::value, Integer> operator()(
+  std::enable_if_t<std::is_integral<Integer>::value && is_iterator_v<InputIt>, Integer>
+  operator()(
       InputIt first, InputIt last)
   {
     std::discrete_distribution<Integer> discrete_dist(first, last);
@@ -119,8 +140,9 @@ private:
   }
 
   template <typename Float, typename InputIt>
-  std::enable_if_t<std::is_floating_point<Float>::value, Float> operator()(
-      InputIt first, InputIt last)
+  std::enable_if_t<
+      std::is_floating_point<Float>::value && is_iterator_v<InputIt>, Float>
+  operator()(InputIt first, InputIt last)
   {
     std::discrete_distribution<Float> discrete_dist(first, last);
     return discrete_dist(gen);

@@ -9,6 +9,9 @@
 
 #include "Contents/GameObjects/Map/Weapons/Knife/Knife.h"
 
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
+
 Slasher::Slasher(World* world) : Character(world) {
   type = kSlasher;
   range = 2;
@@ -154,14 +157,22 @@ void Slasher::OnAwake() {
 void Slasher::Update(float dt) {
   Super::Update(dt);
 
-  if (animator->GetVariable<bool>("arm"))
+  if (!bArm && (0.4f <= ready->GetCurrentAnimationTime()))
   {
+    SoundManager::PlaySound(SoundList::Slasher_Ready1);
     knife->SetVisible();
-    animator->SetVariable<bool>("arm", false);
+    bArm = true;
+  }
+
+  if (!bShout && animator->GetVariable<bool>("arm"))
+  {
+    SoundManager::PlaySound(SoundList::Slasher_Ready2);
+    bShout = true;
   }
 
   if (animator->GetVariable<bool>("fire"))
   {
+    SoundManager::PlaySound(SoundList::Slasher_Rush);
     TurnOffCollision();
     animator->SetVariable<bool>("fire", false);
   }
@@ -170,6 +181,13 @@ void Slasher::Update(float dt) {
   if (interval.first <= currActionAnimation->GetCurrentAnimationTime() &&
       currActionAnimation->GetCurrentAnimationTime() <= interval.second)
   {
+    if (!bStab)
+    {
+      SoundManager::StopSound(SoundList::Slasher_Rush);
+      SoundManager::PlaySound(SoundList::Slasher_Fire);
+      bStab = true;
+    }
+
     if (!knife->isCollsionOn)
       knife->TurnOnCollision();
   }

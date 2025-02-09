@@ -8,6 +8,9 @@
 
 #include "Contents/GameObjects/Map/Weapons/Fist/Fist.h"
 
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
+
 Brawler::Brawler(World* world) : Character(world)
 {
   type = kBrawler;
@@ -60,10 +63,22 @@ void Brawler::OnAwake() {
 void Brawler::Update(float dt) {
   Super::Update(dt);
 
+  if (!bShout && (0.12 <= action->GetCurrentAnimationTime()))
+  {
+    SoundManager::PlaySound(SoundList::Brawler_Ready);
+    bShout = true;
+  }
+
   // Turn on and off the knife collision.
   if (interval.first <= action->GetCurrentAnimationTime() &&
       action->GetCurrentAnimationTime() <= interval.second)
   {
+    if (!bPunch)
+    {
+      SoundManager::PlaySound(SoundList::Brawler_Fire);
+      bPunch = true;
+    }
+
     if (!fist->isCollsionOn)
       fist->TurnOnCollision();
   }

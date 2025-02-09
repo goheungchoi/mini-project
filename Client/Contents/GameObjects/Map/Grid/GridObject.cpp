@@ -4,6 +4,9 @@
 
 #include "Core/Input/InputSystem.h"
 
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
+
 void GridObject::CreateGrid(uint32_t width, uint32_t height, float actualCellSize)
 {
   this->actualCellSize = actualCellSize;
@@ -220,6 +223,10 @@ void GridObject::FindHoveredCell()
     if (!cell->isOccupied && !anyHover &&
         obb.Intersects(cursorRay.position, cursorRay.direction, t))
     {
+      if (selectedCell != cell)
+      {
+        SoundManager::PlaySound(SoundList::Grid_Placement_Hover);
+      }
       cell->SetCellType(CellType_Placement);
       selectedCell = cell;
       anyHover = true;

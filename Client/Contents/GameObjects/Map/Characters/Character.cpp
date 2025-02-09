@@ -6,7 +6,7 @@
 #include "Contents/GameObjects/Map/Map.h"
 #include "Contents/GameObjects/Map/Grid/GridObject.h"
 
-#include "Core/Utils/RandomGenerator.h"
+#include "Contents/SoundList/SoundList.h"
 #include "SoundSystem/SoundManager.h"
 
 const std::string kFactionTags[3] = {"Ally", "Enemy", "Neutral"};
@@ -209,6 +209,29 @@ void Character::Die() {
   }
 
   // Play sound.
+  if (faction == Faction::kEnemy)
+  {
+    SoundManager::PlaySound(GetAny(SoundList::Enemy_Die));
+  }
+  else if (faction == Faction::kAlly)
+  {
+    switch (type)
+    {
+    case kBrawler:
+      SoundManager::PlaySound(GetAny(SoundList::Ally_Brawler_Die));
+      break;
+    case kSlasher:
+      SoundManager::PlaySound(GetAny(SoundList::Ally_Slasher_Die));
+      break;
+    case kGunman:
+      SoundManager::PlaySound(GetAny(SoundList::Ally_Gunman_Die));
+      break;
+    }
+  }
+  else
+  {
+    SoundManager::PlaySound(GetAny(SoundList::Civilian_Die));
+  }
 }
 
 void Character::OnHover() {
@@ -219,6 +242,11 @@ void Character::OnHover() {
 
   if (map->hoveredCharacter != this)
   {
+    if (map->prevHoveredCharacter != this)
+    {
+      SoundManager::PlaySound(SoundList::Character_Hover);
+    }
+
     map->isHoveredCharacterChanged = true;
     map->bNeedUpdateAttackRange = true;
     map->hoveredCharacter = this;

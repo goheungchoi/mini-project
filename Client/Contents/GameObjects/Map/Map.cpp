@@ -9,7 +9,8 @@
 #include "Contents/GameObjects/Map/Characters/Gunman/Gunman.h"
 #include "Contents/GameObjects/Map/Characters/Slasher/Slasher.h"
 
-// #include "SoundSystem/SoundManager.h"
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
 
 constexpr float kIndicatorScale{0.7f};
 
@@ -258,6 +259,9 @@ void Map::ShowHoveredCharacterRange()
         w += w_offset;
         h += h_offset;
         CellObject* cell = grid->GetCellObjectAt(w, h);
+        if (!cell)
+          break;
+
         cell->SetCellType(CellType_DashZone);
         cell->SetCellDirection(hoveredCharacter->dir);
 
@@ -284,6 +288,9 @@ void Map::ShowHoveredCharacterRange()
         w += w_offset;
         h += h_offset;
         CellObject* cell = grid->GetCellObjectAt(w, h);
+        if (!cell)
+          break;
+
         cell->SetCellType(CellType_RangeZone);
       }
     }
@@ -937,6 +944,7 @@ void Map::Update(float dt)
     // Change the direction of the placeholder.
     else if (INPUT.IsKeyPress(Key::Tab))
     {
+      SoundManager::PlaySound(SoundList::Placeholder_Rotation);
       uint32_t dir = placeholder->GetDirection();
       placeholder->SetDirection((Direction)((dir + 1) % kNumDirections));
     }
@@ -945,6 +953,8 @@ void Map::Update(float dt)
     {
       if (grid->selectedCell)
       {
+        SoundManager::PlaySound(SoundList::Grid_Placement_Click);
+
         // Detect which grid cell is pointed.
         auto [w, h] = grid->selectedCell->GetCellPosition();
 
