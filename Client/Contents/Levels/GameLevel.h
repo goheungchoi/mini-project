@@ -7,7 +7,7 @@
 #include "GameFramework/Components/Animation/AnimationState.h"
 
 #include "Contents/GameObjects/CameraObject.h"
-
+#include "Contents/GameObjects/Map/FixedCamera/FixedCamera.h"
 enum eBattleResult
 {
   PerfectWin,
@@ -17,7 +17,6 @@ enum eBattleResult
   AllyDeadLose,
   Lose
 };
-
 
 class GameLevel : public Level
 {
@@ -32,14 +31,12 @@ protected:
 
   ModelHandle animTestHandle;
   ModelHandle handGunHandle;
-  
+
   ModelHandle OBsStoolHandle;
   ModelHandle OBsBox02Handle;
 
-  
-
-  CameraObject* testCamera;
-
+  // CameraObject* testCamera;
+  FixedCamera* testCamera;
   GameObject* pivot{nullptr};
 
   class Map* map{nullptr};
@@ -69,4 +66,5 @@ protected:
   virtual void CreateMap();
 
   void TriggerAction();
+
 };

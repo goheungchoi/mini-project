@@ -24,4 +24,7 @@ public:
 
   // Default camera update logic
   virtual void Update(float dt) override;
+  virtual void OnRender() override;
+  float cameraPos[3] = {-30.f, 20.f, -30.f};
+  float LookAt[3] = {3.f, 0.f, 3.f};
 };

@@ -3,10 +3,16 @@
 #include "GameFramework/World/World.h"
 
 #include "Core/Input/InputSystem.h"
+#ifdef _DEBUG
+#include <imgui.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_win32.h>
+#endif
 
 FixedCamera::FixedCamera(World* world) : GameObject(world)
 {
-  cam = new Camera(kScreenWidth, kScreenHeight, XM_PIDIV4, 0.01f, 1000.f);
+  float angle = XM_PIDIV2 / 9*2;
+  cam = new Camera(kScreenWidth, kScreenHeight, angle, 10.f, 100.f);
 }
 
 void FixedCamera::SetCameraPosition(XMVECTOR position)
@@ -53,6 +59,7 @@ void FixedCamera::Update(float dt)
     }
   }
 
+
   // XMVECTOR toCamera = XMVectorSubtract(cam->GetPosition(), this->focus);
   // float rotationAngle = cam->GetRotationSpeed() *
   //                       XMConvertToRadians(30.0f * dt); // 5 degrees per
@@ -90,4 +97,20 @@ void FixedCamera::Update(float dt)
   // }
 
   // cam->LookAt(focus);
+}
+
+void FixedCamera::OnRender() 
+{
+#ifndef NDEBUG
+  if (ImGui::Begin("FixedCamera"))
+  {
+    ImGui::SliderFloat3("fixedCameraPos", cameraPos, 0.f, 50.f);
+    ImGui::SliderFloat3("fixedCameralookat", LookAt, -10.f, 10.f);
+  }
+  ImGui::End();
+  XMVECTOR cp = {cameraPos[0], cameraPos[1], cameraPos[2]};
+  XMVECTOR la = {LookAt[0], LookAt[1], LookAt[2]};
+  cam->SetPosition(cp);
+  cam->LookAt(la);
+#endif // !NDEBUG
 }
