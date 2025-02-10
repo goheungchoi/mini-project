@@ -30,7 +30,7 @@ extern const wchar_t* Placeholder_Rotation; // DONE
 
 // Character
 extern const wchar_t* Character_Hover;  // DONE
-
+ 
 // Brawler
 extern const wchar_t* Brawler_Ready;  // DONE
 extern const wchar_t* Brawler_Fire;   // DONE

@@ -55,6 +55,9 @@ public:
   TextureHandle deathIndicatorHandle;
   GameObject* deathIndicator{nullptr};
 
+  TextureHandle tabIndicatorHandle;
+  GameObject* tabIndicator{nullptr};
+
   GameObject* directionIndicator{nullptr};
   GameObject* inactiveIndicator{nullptr};
   GameObject* activeIndicator{nullptr};

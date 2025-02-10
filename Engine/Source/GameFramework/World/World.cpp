@@ -471,6 +471,63 @@ void World::ProcessInput(float dt)
   {
     _phyjixWorld->LeftClick();
   }
+
+
+    if (INPUT.IsKeyPress(Key::F12))
+  {
+      PrepareChangeLevel("Main Menu");
+    CommitLevelChange();
+  }
+  else if (INPUT.IsKeyPress(Key::F1))
+  {
+    PrepareChangeLevel("Level1");
+    CommitLevelChange();
+  }
+  else if (INPUT.IsKeyPress(Key::F2))
+  {
+    PrepareChangeLevel("Level2");
+    CommitLevelChange();
+  }
+  else if (INPUT.IsKeyPress(Key::F3))
+  {
+    PrepareChangeLevel("Level3");
+    CommitLevelChange();
+  }
+  else if (INPUT.IsKeyPress(Key::F4))
+  {
+    PrepareChangeLevel("Level4");
+    CommitLevelChange();
+  }
+  else if (INPUT.IsKeyPress(Key::F5))
+  {
+    PrepareChangeLevel("Level5");
+    CommitLevelChange();
+  }
+  else if (INPUT.IsKeyPress(Key::F6))
+  {
+    PrepareChangeLevel("Level6");
+    CommitLevelChange();
+  }
+  else if (INPUT.IsKeyPress(Key::F7))
+  {
+    PrepareChangeLevel("Level7");
+    CommitLevelChange();
+  }
+  else if (INPUT.IsKeyPress(Key::F8))
+  {
+    PrepareChangeLevel("Level8");
+    CommitLevelChange();
+  }
+  else if (INPUT.IsKeyPress(Key::F9))
+  {
+    PrepareChangeLevel("Level8_2");
+    CommitLevelChange();
+  }
+  /*else if (INPUT.IsKeyPress(Key::F10))
+  {
+    PrepareChangeLevel("Level10");
+    CommitLevelChange();
+  }*/
 }
 
 void World::PreUpdate(float dt)

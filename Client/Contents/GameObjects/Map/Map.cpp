@@ -91,9 +91,9 @@ Map::Map(World* world) : GameObject(world)
   Character::civilianSkeletonHandle = Character::civilianModelData->skeleton;
   auto civilAnimIt = Character::civilianModelData->animations.begin();
 
-  Character::civilianIdleAnimation = *std::next(civilAnimIt, 0);
+  Character::civilianIdleAnimation = *std::next(civilAnimIt, 2);
   Character::civilianSurrenderAnimation = *std::next(civilAnimIt, 3);
-  Character::civilianDeadAnimation = *std::next(civilAnimIt, 1);
+  Character::civilianDeadAnimation = *std::next(civilAnimIt, 0);
 
   // Animations
   auto animIt = Character::playerModelData->animations.begin();
@@ -860,7 +860,7 @@ void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir, bool isEliza)
 
   if (isEliza)
   {
-    civilian = world->CreateGameObjectFromModel<Civilian>(civilianModelHandle);
+    civilian = world->CreateGameObjectFromModel<Civilian>(elizaModelHandle);
   }
   else
   {
@@ -988,6 +988,12 @@ void Map::Update(float dt)
   // Detect hovered character changes.
   if (hoveredCharacter)
   {
+    if (prevHoveredCharacter && prevHoveredCharacter->status != EStatus_Active)
+      prevHoveredCharacter = nullptr;
+
+    if (hoveredCharacter && hoveredCharacter->status != EStatus_Active)
+      hoveredCharacter = nullptr;
+
     if (prevHoveredCharacter != hoveredCharacter)
       isHoveredCharacterChanged = true;
     else
@@ -1093,12 +1099,12 @@ void Map::Update(float dt)
     grid->TurnOnSelectionMode();
     grid->TurnOffGridHover();
 
-    if (prevHoveredCharacter)
+    if (prevHoveredCharacter && prevHoveredCharacter->status == EStatus_Active)
     {
       prevHoveredCharacter->HideOutline();
     }
 
-    if (hoveredCharacter)
+    if (hoveredCharacter && hoveredCharacter->status == EStatus_Active)
     {
       hoveredCharacter->ShowOutline();
     }
@@ -1144,6 +1150,7 @@ void Map::Update(float dt)
             DeleteCharacterFromMap(hoveredCharacter);
             deleteCharType = hoveredCharacter->type;
             hoveredCharacter->Destroy();
+            hoveredCharacter = nullptr;
           }
           // Cancel the assassination.
           else if (hoveredCharacter->faction == Faction::kEnemy)
