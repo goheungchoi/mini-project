@@ -64,12 +64,13 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
                                ->_gunfireBtn->Deactivate();
 
         // gunfireBtn 이 있고 gunfireBtn을 사용했을 때, ElizaAnim 출력
-        auto* gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+        _gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
                                ->GetUI<GunfireButton>(L"GunfireBtn");
-        if (gunfireBtn && gunfireBtn->_bGunFireUseFlag == true)
+
+        if (_gunfireBtn && _gunfireBtn->_bGunFireUseFlag == true)
         {
-          gunfireBtn->GetUI<UIAnim>(L"ElizaAnim")
-              ->SetStatus(EStatus::EStatus_Active);
+          _elizaAnim = _gunfireBtn->GetUI<UIAnim>(L"ElizaAnim");
+          _elizaAnim->SetStatus(EStatus::EStatus_Active);
         }
       }
     });
@@ -87,11 +88,5 @@ void PlayButton::Update(float dt)
     _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
     _playBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
   }
-  //else
-  //{
-  //  _playBtnImgs[0]->SetStatus(EStatus::EStatus_Active);
-  //  _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
-  //  _playBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
-  //}
 }
 

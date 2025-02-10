@@ -15,4 +15,7 @@ private:
   class UIButton* _playBtn{nullptr};
   class UIImage* _playBtnImgs[3];
 
+  class GunfireButton* _gunfireBtn{nullptr};
+  class UIAnim* _elizaAnim{nullptr};
+
 };
