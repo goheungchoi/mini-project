@@ -16,7 +16,6 @@ Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
   switch (charType)
   {
   case kBrawler:
-    // pos : 1400, 960
     {
       _AgentImgs[0] = CreateUI<UIImage>(L"FistAgent_Act");
       _AgentImgs[1] = CreateUI<UIImage>(L"FistAgent_Deact");

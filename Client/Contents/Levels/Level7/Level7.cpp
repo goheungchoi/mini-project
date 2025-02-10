@@ -16,8 +16,6 @@ void Level7::PrepareLevel()
 
 void Level7::BeginLevel()
 {
-
-
   __super::BeginLevel();
 
 #ifdef USED2D
@@ -29,7 +27,8 @@ void Level7::BeginLevel()
   inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
 
   inGameUI->_mainMission->SetText(L"弥措茄 锐积 绝捞 葛电 利 贸摹");
-  inGameUI->_subMission->SetText(L"何包 郡府磊 锐积");
+  inGameUI->_subMission[0]->SetText(L"何包 郡府磊 锐积");
+  inGameUI->_subMission[1]->SetText(L"风农客 力捞固 锐积");
 #endif
 
 }

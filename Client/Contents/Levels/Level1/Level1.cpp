@@ -26,6 +26,7 @@ void Level1::BeginLevel()
 
   inGameUI->HideUI(L"GunfireBtn");
   inGameUI->HideUI(L"SubMission");
+  inGameUI->HideUI(L"SubMission_2");
 
   inGameUI->_agentStorage->SetAgent(kBrawler, {AgentPos.x - spacing * 2, AgentPos.y});
   inGameUI->_agentStorage->SetAgent(kSlasher, {AgentPos.x - spacing * 1, AgentPos.y});

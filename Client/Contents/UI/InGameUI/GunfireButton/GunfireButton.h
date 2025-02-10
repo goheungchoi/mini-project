@@ -18,6 +18,7 @@ public:
   class UIImage* _gunfireBtnImgs[3];
 
 private:
+  Vector2 _pos = {1750, 690};
   bool _bHover = false;
   void UpdateButtonState();
 };

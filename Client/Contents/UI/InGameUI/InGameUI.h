@@ -13,7 +13,7 @@ public:
   class UIImage* _gradientIMG{nullptr};
 
   class MainMission* _mainMission{nullptr};
-  class SubMission* _subMission{nullptr};
+  class SubMission* _subMission[2] {nullptr};
   class PlayButton* _playBtn{nullptr};
   class GunfireButton* _gunfireBtn{nullptr};
   class AgentStorage* _agentStorage{nullptr};

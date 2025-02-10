@@ -18,15 +18,15 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
     _playBtnImgs[1] = CreateUI<UIImage>(L"PlayBtnImg_Hover");
     _playBtnImgs[2] = CreateUI<UIImage>(L"PlayBtnImg_Deact");
 
-    _playBtnImgs[0]->SetSprite("2D\\UI\\UI_Play_Act.png", {1800, 100});
-    _playBtnImgs[1]->SetSprite("2D\\UI\\UI_Play_Hover.png", {1800, 100});
+    _playBtnImgs[0]->SetSprite("2D\\UI\\UI_Play_Act.png", _pos);
+    _playBtnImgs[1]->SetSprite("2D\\UI\\UI_Play_Hover.png", _pos);
     _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
-    _playBtnImgs[2]->SetSprite("2D\\UI\\UI_Play_Deact.png", {1800, 100});
+    _playBtnImgs[2]->SetSprite("2D\\UI\\UI_Play_Deact.png", _pos);
     _playBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
 
     _playBtn = CreateUI<UIButton>(L"PlayBtn");
     _playBtn->SetSize(_playBtnImgs[0]->GetSize());
-    _playBtn->SetCenterPos({1800, 100});
+    _playBtn->SetCenterPos(_pos);
 #ifdef _DEBUG
     _playBtn->SetDebugDraw(true);
 #endif // _DEBUG
