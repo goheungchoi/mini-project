@@ -18,6 +18,8 @@
 InGameUI::InGameUI(World* world) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
+  
+  levelIdx = static_cast<GameLevel*>(_world->GetCurrentLevel())->GetStageIdx();
 
   _mainMission = CreateUI<MainMission>(L"MainMission");
   _subMission = CreateUI<SubMission>(L"SubMission");
@@ -36,6 +38,8 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _gradientIMG = CreateUI<UIImage>(L"GradientIMG");
   _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1600, 1000});
   _gradientIMG->SetScale({1.0f, 0.3f});
+
+
 }
 
 InGameUI::~InGameUI() {}
@@ -70,44 +74,40 @@ void InGameUI::Update(float dt)
   // ElizaAnim 이 Active상태이면 위치 움직임
   UIAnim* _elizaAnim = _gunfireBtn->GetUI<UIAnim>(L"ElizaAnim");
 
- if (_elizaAnim && _elizaAnim->GetStatus() == EStatus_Active)
+  if (_elizaAnim)
   {
-    _elizaAnim->SetCenterPos({animPos.x, 300});
-
-    // 복귀 동작 (Fade Out 으로 사라짐)
-    if (elapsedTime >= stopTime)
+    if (_elizaAnim->GetStatus() == EStatus_Active)
     {
-      // 3단계: 복귀 이동
-      //if (animPos.x > BackPos.x)
-      //{
-      //  animPos.x -= dt * animSpeed;
-      //  if (animPos.x < BackPos.x)
-      //    animPos.x = BackPos.x;
-      //}
+      _elizaAnim->SetCenterPos({animPos.x, 300});
 
-     _elizaAnim->FadeOut(1.0f);
-
-    }
-    // 이동 & 대기 단계
-    else if (animPos.x < GoalPos.x)
-    {
-      // 1단계: 전진 이동
-      animPos.x += dt * animSpeed;
-      if (animPos.x > GoalPos.x)
-        animPos.x = GoalPos.x;
-      elapsedTime = 0; // 이동 시 타이머 초기화
-    }
-    else
-    {
-      // 2단계: 대기 시간 누적
-      elapsedTime += dt;
+      // 복귀 동작 (Fade Out 으로 사라짐)
+      if (elapsedTime >= stopTime)
+      {
+        if (fadeflag)
+        {
+          _elizaAnim->FadeOut(1.0f);
+          fadeflag = false;
+        }
+      }
+      // 이동 & 대기 단계
+      else if (animPos.x < GoalPos.x)
+      {
+        // 1단계: 전진 이동
+        _elizaAnim->SetOpacity("Eliza_Initiative_Gunfire", 1.0f);
+        animPos.x += dt * animSpeed;
+        if (animPos.x > GoalPos.x)
+          animPos.x = GoalPos.x;
+        elapsedTime = 0; // 이동 시 타이머 초기화
+      }
+      else
+      {
+        // 2단계: 대기 시간 누적
+        elapsedTime += dt;
+      }
     }
   }
-  else if (_elizaAnim && _elizaAnim->GetStatus() == EStatus_Inactive)
-  {
-    animPos = DefaultPos;
-    elapsedTime = 0.0f;
-  }
+ 
+
 
   if (_map)
   {
@@ -116,6 +116,9 @@ void InGameUI::Update(float dt)
       ShowUI(L"PlayBtn");
       HideUI(L"RetryBtn");
       HideUI(L"ApplyBtn");
+      fadeflag = true;
+      animPos = DefaultPos;
+      elapsedTime = 0.0f;
     }
     else
     {
@@ -123,6 +126,15 @@ void InGameUI::Update(float dt)
       ShowUI(L"RetryBtn");
       ShowUI(L"ApplyBtn");
     }
+  }
+
+    if (levelIdx == 5 || levelIdx == 7 || levelIdx == 9)
+  {
+    return;
+  }
+  else
+  {
+    _gunfireBtn->Deactivate();
   }
 
 }

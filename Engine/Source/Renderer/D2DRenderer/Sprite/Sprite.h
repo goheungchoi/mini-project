@@ -36,7 +36,10 @@ public:
     _pD2DRenderer = pD2DRenderer;
   }
 
+  bool bLateRender = false;
+
 private:
+  
   static Device* _pDevice;
   static D2DRenderer* _pD2DRenderer;
 

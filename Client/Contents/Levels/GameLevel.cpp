@@ -2,13 +2,16 @@
 
 #include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
+#include "Contents/UI/DialogUI/ResultDialogUI.h"
+#include "Contents/UI/InGameUI/InGameUI.h"
+#include "Contents/UI/TransitionUI/TransitionUI.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UICursor/UICursor.h"
+#include "GameFramework/UI/UIImage/UIImage.h"
 #include "Resource2DManager/Resource2DManager.h"
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "Contents/UI/DialogUI/ResultDialogUI.h"
 #include "Contents/UI/TransitionUI/TransitionUI.h"
-#include "DialogLevel/DialogLevel.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 
 void GameLevel::PrepareLevel()
@@ -81,8 +84,7 @@ void GameLevel::PrepareLevel()
 
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\FadeBlack.png");
 
-
-    Resource2DManager::GetInstance()->LoadSprite(
+  Resource2DManager::GetInstance()->LoadSprite(
       "Textures\\Picture\\PhotoPanel.png");
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\Animation\\Eliza_Initiative_Gunfire.png");
@@ -104,15 +106,8 @@ void GameLevel::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Selectbox_02.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Selectbox_03.png");
 
-
-
-
-
-
-
-
   // Test용 이미지
-    Resource2DManager::GetInstance()->LoadSprite(
+  Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Deact_Gun.png");
   Resource2DManager::GetInstance()->LoadSprite("Textures\\X_test.png");
 #endif // USED2D
@@ -123,7 +118,11 @@ void GameLevel::BeginLevel()
   testCamera = world->CreateGameObject<CameraObject>();
   testCamera->InitCamera(kScreenWidth, kScreenHeight, XM_PIDIV4);
   testCamera->SetAsMainCamera();
-
+  //testCamera = world->CreateGameObject<FixedCamera>();
+  //
+  //testCamera->SetCameraPosition({-20.f, 20.f, -20.f, 1.f});
+  //testCamera->SetFocus({3.f, 0.f, 3.f, 1.f});
+  //testCamera->SetAsMainCamera();
   // map->Translate(0.6f, -0.01f, 0.8f);
   CreateMap();
 
@@ -146,7 +145,6 @@ void GameLevel::BeginLevel()
 void GameLevel::CleanupLevel()
 {
   transitionUI->FadeOut(2.f);
-
 
   UnloadModel(redCellModelHandle);
   UnloadModel(greenCellModelHandle);
@@ -173,7 +171,6 @@ void GameLevel::SetBattleResult(eBattleResult br)
   dialoglevel->SetBattleResult(br);
   resultDialogUI->SetPrevBattleResult(br);
 }
-
 
 void GameLevel::CreateMap()
 {

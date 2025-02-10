@@ -21,7 +21,7 @@ private:
   std::vector<ComPtr<ID3D11RenderTargetView>> _renderTargets;
   std::vector<ComPtr<ID3D11ShaderResourceView>> _renderTargetSRVs;
   size_t _gBuffSize = 5;
-  float _clearColor[4] = {0.f, 0.f, 0.f, 1.f};
+  float _clearColor[4] = {0.1568f, 0.1568f, 0.1568f, 1.f};
   float _clearColor2[4] = {0.2f, 0.2f, 0.2f, 1.f};
 
 public:
@@ -70,6 +70,13 @@ public:
 public:
   void Prepare(BackBuffer* backBuffer)
   {
+    #ifndef NDEBUG
+    ImGui::Begin("backbuffer");
+    {
+      ImGui::ColorEdit3("backbuffer", _clearColor);
+    }
+    ImGui::End();
+    #endif
     std::ranges::for_each(_renderTargets,
                           [&](ComPtr<ID3D11RenderTargetView>& targetView) {
                             _device->GetImmContext()->ClearRenderTargetView(

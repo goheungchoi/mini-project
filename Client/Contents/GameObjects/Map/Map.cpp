@@ -4,8 +4,6 @@
 
 #include "GameFramework/World/World.h"
 
-#include "Contents/GameObjects/Map/Wall/Wall.h"
-
 #include "Contents/GameObjects/Map/Characters/Brawler/Brawler.h"
 #include "Contents/GameObjects/Map/Characters/Civilian/Civilian.h"
 #include "Contents/GameObjects/Map/Characters/Gunman/Gunman.h"
@@ -13,7 +11,11 @@
 
 #include "Contents/SoundList/SoundList.h"
 #include "SoundSystem/SoundManager.h"
-
+#ifdef _DEBUG
+#include <imgui.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_win32.h>
+#endif
 constexpr float kIndicatorScale{0.7f};
 
 Map::Map(World* world) : GameObject(world)
@@ -67,12 +69,15 @@ Map::Map(World* world) : GameObject(world)
                   TextureType::kAlbedo);
 
   obstacleBox01ModelHandle = LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
-  obstacleBox02ModelHandle = LoadModel("Models\\Obstacles\\Box02\\OBs_Box02.glb");
+  obstacleBox02ModelHandle =
+      LoadModel("Models\\Obstacles\\Box02\\OBs_Box02.glb");
   obstacleDrumModelHandle = LoadModel("Models\\Obstacles\\Drum\\OBs_Drum.glb");
-  obstacleDrumOldModelHandle = LoadModel("Models\\Obstacles\\DrumOld\\OBs_DrumOld.glb");
+  obstacleDrumOldModelHandle =
+      LoadModel("Models\\Obstacles\\DrumOld\\OBs_DrumOld.glb");
   obstacleLionModelHandle = LoadModel("Models\\Obstacles\\Lion\\OBs_Lion.glb");
   obstacleSofaModelHandle = LoadModel("Models\\Obstacles\\Sofa\\OBs_Sofa.glb");
-  obstacleStoolModelHandle = LoadModel("Models\\Obstacles\\Stool\\OBs_Stool.glb");
+  obstacleStoolModelHandle =
+      LoadModel("Models\\Obstacles\\Stool\\OBs_Stool.glb");
   obstacleVBoxModelHandle = LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
 
   Character::enemyModelData = &AccessModelData(enemyGunmanModelHandle);
@@ -110,8 +115,6 @@ Map::Map(World* world) : GameObject(world)
 
   // Get the player model data.
   ModelData& playerModel = AccessModelData(allyBrawlerModelHandle);
-
-  
 
   // Create a grid.
   grid = world->CreateGameObject<GridObject>();
@@ -337,9 +340,7 @@ void Map::ShowHoveredCharacterRange()
         cell->SetCellDirection(hoveredCharacter->dir);
 
         // Shows death indicators.
-        if (GameObject* gameObject =
-                grid->GetGameObjectAt(w, h);
-            gameObject)
+        if (GameObject* gameObject = grid->GetGameObjectAt(w, h); gameObject)
         {
           // Mark the death indicator.
           if (gameObject->GetGameObjectTag() == kFactionTags[kAlly] ||
@@ -365,7 +366,6 @@ void Map::ShowHoveredCharacterRange()
         cell->SetCellType(CellType_RangeZone);
       }
     }
-
   }
   break;
   case kGunman: {
@@ -879,28 +879,36 @@ void Map::CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h,
   switch (type)
   {
   case ObstacleType_Stool:
-    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleStoolModelHandle);
+    obstacle =
+        world->CreateGameObjectFromModel<Obstacle>(obstacleStoolModelHandle);
     break;
   case ObstacleType_Box01:
-    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleBox01ModelHandle);
+    obstacle =
+        world->CreateGameObjectFromModel<Obstacle>(obstacleBox01ModelHandle);
     break;
   case ObstacleType_Box02:
-    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleBox02ModelHandle);
+    obstacle =
+        world->CreateGameObjectFromModel<Obstacle>(obstacleBox02ModelHandle);
     break;
   case ObstacleType_Drum:
-    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleDrumModelHandle);
+    obstacle =
+        world->CreateGameObjectFromModel<Obstacle>(obstacleDrumModelHandle);
     break;
   case ObstacleType_DrumOld:
-    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleDrumOldModelHandle);
+    obstacle =
+        world->CreateGameObjectFromModel<Obstacle>(obstacleDrumOldModelHandle);
     break;
   case ObstacleType_VBox:
-    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleVBoxModelHandle);
+    obstacle =
+        world->CreateGameObjectFromModel<Obstacle>(obstacleVBoxModelHandle);
     break;
   case ObstacleType_Lion:
-    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleLionModelHandle);
+    obstacle =
+        world->CreateGameObjectFromModel<Obstacle>(obstacleLionModelHandle);
     break;
   case ObstacleType_Sofa:
-    obstacle = world->CreateGameObjectFromModel<Obstacle>(obstacleSofaModelHandle);
+    obstacle =
+        world->CreateGameObjectFromModel<Obstacle>(obstacleSofaModelHandle);
     break;
   }
 
@@ -996,23 +1004,26 @@ void Map::Update(float dt)
     DetectPlacementAtIndicator();
   }
 
-  // Rotate this map.
-  if (INPUT.IsKeyPress(Key::Q))
-  {
-    parent->RotateAroundYAxis(dt);
-  }
-  if (INPUT.IsKeyPress(Key::E))
-  {
-    parent->RotateAroundYAxis(-dt);
-  }
-
+  //// Rotate this map.
+  //if (INPUT.IsKeyPress(Key::Q) || INPUT.IsKeyDown(Key::Q))
+  //{
+  //  mapRot -= dt;
+  //}
+  //if (INPUT.IsKeyPress(Key::E) || INPUT.IsKeyDown(Key::E))
+  //{
+  //  mapRot += dt;
+  //}
+  //float oneDegree = XM_PIDIV2 / 90.f;
+  //float maxAngle = oneDegree * 27.2;
+  //mapRot = std::clamp(mapRot, -maxAngle, maxAngle);
+  //parent->SetRotationAroundYAxis(mapRot);
   // Action mode
   if (isActionTriggered)
   {
     grid->TurnOffSelectionMode();
     grid->TurnOffGridHover();
 
-		// TODO: Remove a simulating character.
+    // TODO: Remove a simulating character.
 
     if (INPUT.IsKeyPress(Key::R))
     {
@@ -1025,7 +1036,7 @@ void Map::Update(float dt)
     grid->TurnOnSelectionMode();
     grid->TurnOnGridHover();
 
-		// If a placeholder is not set
+    // If a placeholder is not set
     if (!placeholder)
     {
       isPlacementModeOn = false;
@@ -1179,7 +1190,7 @@ void Map::Update(float dt)
             TurnOnPlacementMode(type, dir);
           }
         }
-      } 
+      }
     }
     else
     {
@@ -1229,6 +1240,20 @@ void Map::Update(float dt)
 void Map::PostUpdate(float dt)
 {
   // hoveredCharacter = nullptr;
+}
+
+void Map::OnRender()
+{
+#ifdef _DEBUG
+  if (ImGui::Begin("mapPos"))
+  {
+    ImGui::SliderFloat3("mapPos", mapPos, -10.f, 10.f);
+  }
+  ImGui::End();
+  XMVECTOR mp = {mapPos[0], mapPos[1], mapPos[2]};
+  SetTranslation(mp);
+ 
+#endif // !_DEBUG
 }
 
 XMVECTOR Map::GetCursorPosition() const
@@ -1328,4 +1353,3 @@ void Map::AssassinateTarget()
     assassinationTarget = nullptr;
   }
 }
-

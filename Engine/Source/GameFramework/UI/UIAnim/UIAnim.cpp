@@ -7,6 +7,7 @@ UIAnim::~UIAnim() {}
 
 void UIAnim::Update(float dt)
 {
+  Transition(dt);
   if (_pCurrAnimInfo == nullptr)
   {
     return;
@@ -48,14 +49,14 @@ void UIAnim::Render()
   if (_pCurrAnimInfo == nullptr) return;
   if (_status == EStatus_Active)
   {
-    _pCurrSprite->Render(_srcRect);
+    _sprite->Render(_srcRect);
   }
 }
 
 void UIAnim::SetCurrentAnimSprite(std::string AnimName)
 {
   auto* animsprite = _sprites.find(AnimName)->second;
-  _pCurrSprite = animsprite->_pSprite;
+  _sprite = animsprite->_pSprite;
   _pCurrAnimInfo = animsprite->_pAnimInfo;
   _curFrameIndex = 0;
   _pCurrFrameInfo = _pCurrAnimInfo->Frames[_curFrameIndex];
@@ -162,6 +163,6 @@ void UIAnim::SetOpacity(std::string spritename, float opacity)
 
 void UIAnim::SetMasking(Color _col)
 {
-      _pCurrSprite->SetMasking(_col);
+  _sprite->SetMasking(_col);
   
 }

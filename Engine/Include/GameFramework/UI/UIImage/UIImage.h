@@ -16,7 +16,9 @@ public:
   void SetSprite(class Sprite* sprite) { _sprite = sprite; }
 
   void SetOpacity(float opacity);
- 
+
+  void SetLateRender(bool flag) { bLateRender = flag; }
+
   virtual void SetCenterPos(Vector2 pos) override;
 
   void SetScale(Vector2 scale);
@@ -30,9 +32,9 @@ public:
   Vector2 GetTextureSize();
 
 
-private:
+protected:
   class Sprite* _sprite{};
-
+  bool bLateRender = false;
   float _transitionElaspedTimer = 0.f;
   float _transitionThreshold = 1.f;
   float _transitionOpacity = 0.f;

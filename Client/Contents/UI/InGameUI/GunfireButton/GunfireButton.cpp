@@ -6,7 +6,7 @@
 #include "GameFramework/UI/UIImage/UIImage.h"
 #include "GameFramework/UI/UIAnim//UIAnim.h"
 #include "Shared/Config/Config.h"
-
+#include "Contents/Levels/GameLevel.h"
 
 GunfireButton::GunfireButton(World* world) : UIPanel(world)
 {
@@ -20,7 +20,7 @@ GunfireButton::GunfireButton(World* world) : UIPanel(world)
   std::string gunfire = "\\Eliza_Animation\\Eliza_Initiative_Gunfire.csv";
   _ellizaAnim->LoadAnimSprite("2D\\Animation\\Eliza_Initiative_Gunfire.png",
                               rootpath + gunfire);
-  _ellizaAnim->SetCenterPos("Eliza_Initiative_Gunfire", {-200, 300});
+  _ellizaAnim->SetCenterPos("Eliza_Initiative_Gunfire", {-600, 300});
   _ellizaAnim->SetScale("Eliza_Initiative_Gunfire", {.7f, .7f});
   _ellizaAnim->SetOpacity("Eliza_Initiative_Gunfire", 1.0f);
   _ellizaAnim->SetCurrentAnimSprite("Eliza_Initiative_Gunfire");
@@ -55,6 +55,7 @@ GunfireButton::GunfireButton(World* world) : UIPanel(world)
       _bGunFireUseFlag = true;
       _map->TurnOnAssassinationMode();
     }
+    //_bHover = false;
   });
 }
 
@@ -63,6 +64,8 @@ GunfireButton::~GunfireButton() {}
 void GunfireButton::Update(float dt)
 {
   __super::Update(dt);
+
+
 
   _cursor = _world->_canvas->GetPanel<UICursor>(L"Cursor");
 

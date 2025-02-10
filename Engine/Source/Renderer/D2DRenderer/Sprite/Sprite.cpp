@@ -65,7 +65,7 @@ Vector2 Sprite::CalculateTextureSize()
 
 void Sprite::Render()
 {
-
+  if (!bLateRender)
   _pD2DRenderer->_d2dRenderQueue.AddRender2DCmd(
       [=]() {
         auto textureSRV = _pTexture->GetResource().Get();
@@ -76,10 +76,21 @@ void Sprite::Render()
       },
       PassType2D::SPRITE_BATCH // SpriteBatch 전용 패스 사용
   );
+  else 
+    _pD2DRenderer->_d2dRenderQueue.AddLateRender2DCmd(
+        [=]() {
+          auto textureSRV = _pTexture->GetResource().Get();
+
+          _pD2DRenderer->_pSpriteBatch->Draw(
+              textureSRV, _pos, nullptr, _maskColor * _opacity, 0.0f,
+              DirectX::SimpleMath::Vector2::Zero, _scale);
+        }
+    );
 }
 
 void Sprite::Render(Vector4 rect)
 {
+  if (!bLateRender)
   _pD2DRenderer->_d2dRenderQueue.AddRender2DCmd(
       [=]() {
         auto textureSRV = _pTexture->GetResource().Get();
@@ -90,10 +101,21 @@ void Sprite::Render(Vector4 rect)
       },
       PassType2D::SPRITE_BATCH // SpriteBatch 전용 패스 사용
   );
+  else
+    _pD2DRenderer->_d2dRenderQueue.AddLateRender2DCmd(
+        [=]() {
+          auto textureSRV = _pTexture->GetResource().Get();
+          const RECT* _srcRect = new RECT(rect.x, rect.y, rect.z, rect.w);
+          _pD2DRenderer->_pSpriteBatch->Draw(
+              textureSRV, _pos, _srcRect, _maskColor * _opacity, 0.0f,
+              DirectX::SimpleMath::Vector2::Zero, _scale);
+        }
+    );
 }
 
 void Sprite::Render(Vector2 pos, Vector2 scale, float opacity)
 {
+  if (!bLateRender)
   _pD2DRenderer->_d2dRenderQueue.AddRender2DCmd(
       [=]() {
         auto textureSRV = _pTexture->GetResource().Get();
@@ -102,6 +124,17 @@ void Sprite::Render(Vector2 pos, Vector2 scale, float opacity)
             DirectX::SimpleMath::Vector2::Zero, scale);
       },
       PassType2D::SPRITE_BATCH);
+  else
+    _pD2DRenderer->_d2dRenderQueue.AddLateRender2DCmd(
+      [=]() {
+        auto textureSRV = _pTexture->GetResource().Get();
+        _pD2DRenderer->_pSpriteBatch->Draw(
+            textureSRV, pos, nullptr, DirectX::Colors::White * opacity, 0.0f,
+            DirectX::SimpleMath::Vector2::Zero, scale);
+      }
+    );
+
+
 }
 
 void Sprite::RenderCursor()
