@@ -6,7 +6,10 @@
 #define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
 #include "GameApp/GameApp.h"
 #include <Windows.h>
+
 #ifdef _DEBUG
+#include "Core/Utils/Console.h"
+
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
@@ -51,6 +54,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 {
   //_CrtSetBreakAlloc(568);
 #ifdef _DEBUG
+  AttachDebugConsole();
   _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
@@ -61,6 +65,10 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
   app.Initialize(kScreenWidth, kScreenHeight, L"Rebellion");
   app.Execute();
   app.Shutdown();
+
+#ifdef _DEBUG
+	DetachDebugConsole();
+#endif
 
   return 0;
 }

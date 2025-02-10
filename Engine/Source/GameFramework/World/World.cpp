@@ -55,19 +55,29 @@ World* World::CreateWorld(HWND hwnd, const std::wstring& title)
 
 void World::PrepareChangeLevel(const std::string& levelName)
 {
+  if (_currentLevel && _currentLevel->name == levelName)
+	{
+    std::cout << "Can't change the level to the current level. " << std::endl;
+    return;
+	}
+
   /* TODO: */
   if (auto it = _levelMap.find(levelName); it != _levelMap.end())
   {
     if (_preparingLevel)
     {
-      // Prevent from loading a level more than twice.
-      if (_preparingLevel->name == levelName)
+      // Prevent from loading the same level more than twice.
+      if (_preparingLevel.load()->name == levelName)
       {
+        std::cout << "The current preparing level is " << levelName << ". "
+                  << std::endl;
         return;
       }
       else
       {
-        throw std::runtime_error("There is already a preparing level.");
+        std::cout << "There is already a preparing level!" << std::endl;
+        return;
+        // throw std::runtime_error("There is already a preparing level.");
       }
     }
 
@@ -75,8 +85,8 @@ void World::PrepareChangeLevel(const std::string& levelName)
 
     // Async level preparation.
     async::executor.silent_async("prepare level", [this]() {
-      _preparingLevel->PrepareLevel();
-      _levelReadyFlagMap[_preparingLevel->name] = true;
+      _preparingLevel.load()->PrepareLevel();
+      _levelReadyFlagMap[_preparingLevel.load()->name] = true;
     });
   }
   else
@@ -87,18 +97,28 @@ void World::PrepareChangeLevel(const std::string& levelName)
 
 bool World::IsLevelChangeReady()
 {
-  if (!_preparingLevel)
+  if (!_preparingLevel.load())
     return false;
 
-  return _levelReadyFlagMap[_preparingLevel->name];
+  return _levelReadyFlagMap[_preparingLevel.load()->name];
 }
 
 void World::CommitLevelChange()
 {
+	if (bChangingLevel)
+	{
+    std::cout
+        << "Another attempt to change a level detected while changing level."
+        << std::endl;
+    return;
+	}
+
   // Check if any level is being prepared to be executed.
-  if (!_preparingLevel)
+  if (_preparingLevel.load() == nullptr)
   {
-    throw std::runtime_error("There no prepared level exists!");
+    std::cout << "There no prepared level exists!" << std::endl;
+    return;
+    // throw std::runtime_error("There no prepared level exists!");
   }
 
   async::executor.silent_async("commit level change", [this]() {
@@ -111,9 +131,11 @@ void World::CommitLevelChange()
 
     if (_currentLevel)
     {
+      std::cout << "Current level is " << _currentLevel->name << "." << std::endl;
+
       _currentLevel->DestroyLevel();
 
-      auto& tmp = _currentLevel;
+      Level* tmp = _currentLevel;
       async::executor.silent_async([tmp]() { tmp->CleanupLevel(); });
 
       rigidBodyComponents.clear();
@@ -124,14 +146,17 @@ void World::CommitLevelChange()
 #endif // USED2D
     }
 
-    while (!_levelReadyFlagMap[_preparingLevel->name])
+    while (!_levelReadyFlagMap[_preparingLevel.load()->name])
     {
     }
+
+		std::cout << "Next level is " << _preparingLevel.load()->name << "."
+              << std::endl;
     
     // Change the current level, and begin the level.
     _currentLevel = _preparingLevel;
 
-    _levelReadyFlagMap[_preparingLevel->name] = false;
+    _levelReadyFlagMap[_preparingLevel.load()->name] = false;
     _preparingLevel = nullptr;
 
     _currentLevel->BeginLevel();

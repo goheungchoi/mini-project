@@ -42,7 +42,7 @@ public:
 
   std::unordered_map<std::string, std::atomic<bool>> _levelReadyFlagMap;
 
-  Level* _preparingLevel{nullptr};
+  std::atomic<Level*> _preparingLevel{nullptr};
   Level* _currentLevel{nullptr};
   
   bool bCameraMove{false};
