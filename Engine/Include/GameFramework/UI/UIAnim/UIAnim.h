@@ -73,7 +73,7 @@ public:
 private:
   std::map<std::string,AnimSprite*> _sprites{};
   std::vector<class Sprite*> _spriteList;
-  class Sprite* _pCurrSprite;
+  //class Sprite* _pCurrSprite;
   ANIMATION_INFO* _pCurrAnimInfo; // 현재 애니메이션정보
   FRAME_INFO _pCurrFrameInfo;
   string _animCSV;

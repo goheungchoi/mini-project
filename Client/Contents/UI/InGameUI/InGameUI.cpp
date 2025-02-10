@@ -84,8 +84,11 @@ void InGameUI::Update(float dt)
       //  if (animPos.x < BackPos.x)
       //    animPos.x = BackPos.x;
       //}
-
+      if (fadeflag)
+      {
      _elizaAnim->FadeOut(1.0f);
+        fadeflag = false; 
+      }
 
     }
     // 이동 & 대기 단계
