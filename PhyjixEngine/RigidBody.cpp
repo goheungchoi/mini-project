@@ -300,6 +300,19 @@ void RigidBody::DisableSimulation()
   
 }
 
+void RigidBody::EnableSceneQuery()
+{
+
+  _defaultShape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+  _triggerShape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+}
+
+void RigidBody::DisableSceneQuery()
+{
+  _defaultShape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+  _triggerShape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+}
+
 void RigidBody::WakeUp()
 {
   GetDynamicActor()->wakeUp();

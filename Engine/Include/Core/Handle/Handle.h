@@ -106,8 +106,19 @@ public:
 
 		// If the current slot is not empty,
 		// return an invalid handle
-    if (_table[i].second.has_value())
-      return Handle::kInvalidHandle;
+    while (_table[i].second.has_value())
+    {
+      if (_slotStack.empty())
+      {
+        std::cout << "Handle allocation failed!" << std::endl;
+        abort();
+
+        // return Handle::kInvalidHandle;
+      }
+
+      i = _slotStack.top();
+      _slotStack.pop();
+    }
 
 		// Create a new valid handle
 		Handle& curr = _table[i].first;
@@ -176,6 +187,11 @@ public:
 		// The reference count reaches the zero
 		if (_refCounts[handle.index] == 0)
     {
+      if (handle.index == 22)
+      {
+        int i = 0;
+      }
+
       // Empty the spot
       _table[handle.index].second.reset();
 			// Push the index to the next empty slot

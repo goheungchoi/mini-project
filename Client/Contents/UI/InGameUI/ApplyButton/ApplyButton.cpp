@@ -105,6 +105,10 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
       }
       else
       {
+        static_cast<GameLevel*>(_world->_currentLevel)
+            ->SetBattleResult(static_cast<GameLevel*>(_world->_currentLevel)->GetBattleResult());
+        static_cast<GameLevel*>(_world->_currentLevel)
+            ->SetStageIdx(static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx());
         world->PrepareChangeLevel("Dialog Level");
         world->CommitLevelChange();
       }
