@@ -1,6 +1,7 @@
 #include "ResultDialogUI.h"
 
 #include "Contents/GameObjects/Map/Map.h"
+#include "Contents/Levels/DialogLevel/DialogLevel.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIAnim//UIAnim.h"
 #include "GameFramework/UI/UIText/UIText.h"
@@ -43,7 +44,7 @@ ResultDialogUI::ResultDialogUI(class World* world) : DialogUI(world)
     _playerSelectButton2->SetCenterPos({1550, 700});
 
     _actionList.clear();
-    StageIdx = static_cast<GameLevel*>(_world->GetCurrentLevel())->stageIdx;
+    StageIdx = static_cast<GameLevel*>(_world->GetCurrentLevel())->GetStageIdx();
 
     _Eliza->SetCurrentAnimSprite("Eliza_Resistance_Sad");
     _playerSelectButton1->ClearHandlers();
@@ -70,6 +71,9 @@ ResultDialogUI::ResultDialogUI(class World* world) : DialogUI(world)
       _playerSelectBtnText1->SetText(L"이대로 명령한다");
       _playerSelectBtnText2->SetText(L"다시 생각한다");
       _playerSelectButton1->AddOnClickHandler([=]() {
+        static_cast<GameLevel*>(_world->_currentLevel)
+            ->SetBattleResult(_prevBattleResult);
+        static_cast<GameLevel*>(_world->_currentLevel)->SetStageIdx(StageIdx);
         _world->PrepareChangeLevel("Dialog Level");
         _world->CommitLevelChange();
       });

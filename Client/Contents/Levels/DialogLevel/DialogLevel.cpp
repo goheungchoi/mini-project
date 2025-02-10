@@ -38,6 +38,8 @@ void DialogLevel::BeginLevel()
   //gameManager = world->CreateGameObject<GameManager>();
 #ifdef USED2D
   dialogUI =world->_canvas->CreatePanel<DialogUI>(L"ElizaDialog");
+  dialogUI->StageIdx = _stageidx;
+  dialogUI->_prevBattleResult = _battleResult;
   dialogUI->SetStageDialogIndex();
   world->_canvas->CreatePanel<UICursor>(L"Cursor");
   transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
@@ -52,4 +54,14 @@ void DialogLevel::CleanupLevel()
 {
   Level::CleanupLevel();
   transitionUI->FadeOut(2.f);
+}
+
+void DialogLevel::SetStageIdx(int stageIdx)
+{
+  _stageidx = stageIdx;
+}
+
+void DialogLevel::SetBattleResult(eBattleResult battleresult)
+{
+  _battleResult = battleresult;
 }
