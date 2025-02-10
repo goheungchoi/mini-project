@@ -25,22 +25,22 @@ GunfireButton::GunfireButton(World* world) : UIPanel(world)
   _ellizaAnim->SetOpacity("Eliza_Initiative_Gunfire", 1.0f);
   _ellizaAnim->SetCurrentAnimSprite("Eliza_Initiative_Gunfire");
   _ellizaAnim->SetStatus(EStatus_Inactive);
-
+  _ellizaAnim->SetLateRender(true);
   // Image
   _gunfireBtnImgs[0] = CreateUI<UIImage>(L"OrderBtnImg_Act");
   _gunfireBtnImgs[1] = CreateUI<UIImage>(L"OrderBtnImg_Hover");
   _gunfireBtnImgs[2] = CreateUI<UIImage>(L"OrderBtnImg_Deact");
 
-  _gunfireBtnImgs[0]->SetSprite("2D\\UI\\UI_Order_Act.png", {1760, 690});
-  _gunfireBtnImgs[1]->SetSprite("2D\\UI\\UI_Order_Hover.png", {1760, 690});
+  _gunfireBtnImgs[0]->SetSprite("2D\\UI\\UI_Order_Act.png", _pos);
+  _gunfireBtnImgs[1]->SetSprite("2D\\UI\\UI_Order_Hover.png", _pos);
   _gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
-  _gunfireBtnImgs[2]->SetSprite("2D\\UI\\UI_Order_Deact.png", {1760, 690});
+  _gunfireBtnImgs[2]->SetSprite("2D\\UI\\UI_Order_Deact.png", _pos);
   _gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
 
   // Button
   _gunfireBtn = CreateUI<UIButton>(L"GunfireBtn");
   _gunfireBtn->SetSize(_gunfireBtnImgs[0]->GetSize());
-  _gunfireBtn->SetCenterPos({1760, 690});
+  _gunfireBtn->SetCenterPos(_pos);
 #ifdef _DEBUG
   _gunfireBtn->SetDebugDraw(true);
 #endif

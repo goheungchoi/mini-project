@@ -18,15 +18,15 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
     _playBtnImgs[1] = CreateUI<UIImage>(L"PlayBtnImg_Hover");
     _playBtnImgs[2] = CreateUI<UIImage>(L"PlayBtnImg_Deact");
 
-    _playBtnImgs[0]->SetSprite("2D\\UI\\UI_Play_Act.png", {1800, 100});
-    _playBtnImgs[1]->SetSprite("2D\\UI\\UI_Play_Hover.png", {1800, 100});
+    _playBtnImgs[0]->SetSprite("2D\\UI\\UI_Play_Act.png", _pos);
+    _playBtnImgs[1]->SetSprite("2D\\UI\\UI_Play_Hover.png", _pos);
     _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
-    _playBtnImgs[2]->SetSprite("2D\\UI\\UI_Play_Deact.png", {1800, 100});
+    _playBtnImgs[2]->SetSprite("2D\\UI\\UI_Play_Deact.png", _pos);
     _playBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
 
     _playBtn = CreateUI<UIButton>(L"PlayBtn");
     _playBtn->SetSize(_playBtnImgs[0]->GetSize());
-    _playBtn->SetCenterPos({1800, 100});
+    _playBtn->SetCenterPos(_pos);
 #ifdef _DEBUG
     _playBtn->SetDebugDraw(true);
 #endif // _DEBUG
@@ -63,8 +63,12 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
 
         // 여기서 Eliza Anim이랑 시뮬레이션 Play 순서 바꿔야 함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // 현재는 애니메이션이랑 시뮬레이션 같이 나옴
-
-        _map->TriggerAction();
+        auto* inGameUi = _world->_canvas->GetPanel<InGameUI>(L"InGameUI");
+        //if (inGameUi->animPos.x >= inGameUi->GoalPos.x &&
+        //    inGameUi->fadeflag == false)
+        //{
+          _map->TriggerAction();
+        //}
 
         // GunfireButtonr과 AgentStorage 비활성화 하기.
         auto * agentStorage = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")

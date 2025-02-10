@@ -18,13 +18,15 @@ void Level5::BeginLevel()
   __super::BeginLevel();
 
   #ifdef USED2D
+  inGameUI->HideUI(L"SubMission_2");
+
   inGameUI->_agentStorage->SetAgent(kBrawler, {AgentPos.x - spacing * 3, AgentPos.y});
   inGameUI->_agentStorage->SetAgent(kSlasher, {AgentPos.x - spacing * 2, AgentPos.y});
   inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x - spacing, AgentPos.y});
   inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
 
   inGameUI->_mainMission->SetText(L"최대한 희생 없이 모든 적 처치");
-  inGameUI->_subMission->SetText(L"시작의 총성으로 적 처치");
+  inGameUI->_subMission[0]->SetText(L"시작의 총성으로 적 처치");
 #endif
 }
 

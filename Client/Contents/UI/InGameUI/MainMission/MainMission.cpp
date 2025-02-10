@@ -5,15 +5,17 @@
 MainMission::MainMission(World* world) : UIPanel(world)
 {
   _mainMissionImg = CreateUI<UIImage>(L"MainMissonImg");
-  _mainMissionImg->SetSprite("2D\\UI\\UI_Stage_L.png", {338, 100});
+  _mainMissionImg->SetSprite("2D\\UI\\UI_Stage_L.png", _pos);
 }
 
 MainMission::~MainMission() {}
 
-void MainMission::SetText(std::wstring text, Vector2 pos)
+void MainMission::SetText(std::wstring text)
 {
+  Vector2 textPos = {_pos.x + 50, _pos.y + 25};
+
   _mainMissionTxt = CreateUI<UIText>(L"MainMissonTxt");
-  _mainMissionTxt->SetCenterPos({pos.x + 85, pos.y});
+  _mainMissionTxt->SetCenterPos({textPos});
   _mainMissionTxt->SetSize(
       {_mainMissionImg->GetSize().x, _mainMissionImg->GetSize().y});
   _mainMissionTxt->SetTextAlignment(TextAlignment::LEFTAlIGN);
@@ -28,7 +30,7 @@ void MainMission::SetText(std::wstring text, Vector2 pos)
 
 
     _selectTxt = CreateUI<UIText>(L"MainSelectTxt");
-  _selectTxt->SetCenterPos(pos);
+  _selectTxt->SetCenterPos({textPos.x - 85, textPos.y});
   _selectTxt->SetSize(
       {_mainMissionImg->GetSize().x, _mainMissionImg->GetSize().y});
   _selectTxt->SetTextAlignment(TextAlignment::LEFTAlIGN);
