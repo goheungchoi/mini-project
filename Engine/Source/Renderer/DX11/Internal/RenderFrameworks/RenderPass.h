@@ -1150,12 +1150,14 @@ private:
     dc->VSSetShader(_vShaders["Quad"]->shader.Get(), nullptr, 0);
     dc->PSSetShader(_pShaders["Vinette"]->shader.Get(), nullptr, 0);
     _pso->TurnZBufferOff();
+    #ifndef NDEBUG
     ImGui::Begin("vinette");
     {
       ImGui::SliderFloat("radius", &testvinetteRadius, 0.f, 1.f);
       ImGui::SliderFloat("softness", &testvinetteSoftNess, 0.f, 2.f);
     }
     ImGui::End();
+    #endif
     Constant::VinetteParames vinetteCB = {
         .vinetteRadius = testvinetteRadius,
         .softness = testvinetteSoftNess,
