@@ -30,7 +30,7 @@ public:
   Vector2 GetTextureSize();
 
 
-private:
+protected:
   class Sprite* _sprite{};
 
   float _transitionElaspedTimer = 0.f;

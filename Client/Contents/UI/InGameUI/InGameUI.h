@@ -21,6 +21,8 @@ public:
   class UICursor* _cursor{nullptr};
 
 private:
+
+  bool fadeflag = true;
   Vector2 animPos{-200, 300};
   const Vector2 DefaultPos{-200, 300};
   const Vector2 GoalPos{70, 300};
