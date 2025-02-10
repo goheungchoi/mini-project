@@ -98,6 +98,7 @@ Character::~Character() {
     deathIndicator->Destroy();
 
   UnloadTexture(deathIndicatorHandle);
+  UnloadTexture(tabIndicatorHandle);
 }
 
 void Character::TriggerAction()

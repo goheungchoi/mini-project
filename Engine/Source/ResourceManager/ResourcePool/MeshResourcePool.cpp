@@ -123,6 +123,18 @@ Handle ResourcePool<MeshData>::LoadImpl(xUUID uuid, void* pUser)
 
 	Handle handle =
       _handleTable.ClaimHandle(std::move(mesh), (uint16_t)ResourceType::kMesh);
+  if (!_handleTable.IsValidHandle(handle))
+  {
+    std::cout << uuid.ToString() << "; mesh loading failed." << std::endl;
+    terminate();
+  }
+  else
+  {
+    std::cout << uuid.ToString()
+              << "; mesh loading succeeded: " << handle.index << ", "
+              << handle.version << "." << std::endl;
+  }
+
   _uuidMap[uuid] = handle.index;
   _handleUUIDMap[handle] = uuid;
   return handle;
@@ -137,8 +149,33 @@ void ResourcePool<MeshData>::UnloadImpl(Handle& handle, void* pReserved)
 
   MeshData& data = _handleTable[handle].value();
 
+	std::cout << "mesh unloading succeeded : " << handle.index
+            << ", " << handle.version << "." << std::endl;
+
   if (::materialPool->IsValidHandle(data.material))
   {
     ::materialPool->Unload(data.material, ::pools);
   }
+}
+
+
+template <>
+Handle ResourcePool<MeshData>::DuplicateHandleImpl(const Handle& handle,
+	void* pReserved)
+{
+  ::pools = (Pools*)pReserved;
+  ::texturePool = pools->texturePool;
+  ::materialPool = pools->materialPool;
+
+  MeshData& data = _handleTable[handle].value();
+
+  std::cout << "Duplicate " << handle.index << ", "
+            << handle.version << "." << std::endl;
+
+  if (::materialPool->IsValidHandle(data.material))
+  {
+    ::materialPool->DuplicateHandle(data.material, ::pools);
+  }
+
+	return _handleTable.DuplicateHandle(handle);
 }

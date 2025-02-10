@@ -24,18 +24,18 @@ class GameLevel : public Level
 {
 protected:
   // Resource handles
-  ModelHandle redCellModelHandle;
-  ModelHandle greenCellModelHandle;
-
   ModelHandle mapBarMeshHandle;
   ModelHandle mapMuseumMeshHandle;
   ModelHandle mapWarehouseMeshHandle;
 
-  ModelHandle animTestHandle;
-  ModelHandle handGunHandle;
-
-  ModelHandle OBsStoolHandle;
-  ModelHandle OBsBox02Handle;
+	ModelHandle obstacleBox01;
+	ModelHandle obstacleBox02;
+	ModelHandle obstacleDrum;
+	ModelHandle obstacleDrumOld;
+	ModelHandle obstacleLion;
+	ModelHandle obstacleSofa;
+	ModelHandle obstacleStool;
+	ModelHandle obstacleVBox;
 
   //CameraObject* testCamera;
   FixedCamera* testCamera;

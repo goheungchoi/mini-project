@@ -22,7 +22,8 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   levelIdx = static_cast<GameLevel*>(_world->GetCurrentLevel())->GetStageIdx();
 
   _mainMission = CreateUI<MainMission>(L"MainMission");
-  _subMission = CreateUI<SubMission>(L"SubMission");
+  _subMission[0] = CreateUI<SubMission>(L"SubMission"); // 엘리자 희생
+  _subMission[1] = CreateUI<SubMission>(L"SubMission_2", Vector2(208, 340));  // 대원 2명 희생
 
   _playBtn = CreateUI<PlayButton>(L"PlayBtn");
   _retryBtn = CreateUI<RetryButton>(L"RetryBtn");
@@ -38,8 +39,6 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _gradientIMG = CreateUI<UIImage>(L"GradientIMG");
   _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1475, 910});
   _gradientIMG->SetScale({1.0f, 1.0f});
-
-
 }
 
 InGameUI::~InGameUI() {}
@@ -116,9 +115,15 @@ void InGameUI::Update(float dt)
       ShowUI(L"PlayBtn");
       HideUI(L"RetryBtn");
       HideUI(L"ApplyBtn");
-      fadeflag = true;
-      animPos = DefaultPos;
-      elapsedTime = 0.0f;
+
+      //// Eliza Anim 초기화
+      if (!_map->isActionTriggered)
+      {
+        fadeflag = true;
+        animPos = DefaultPos;
+        elapsedTime = 0.0f;
+      }
+
     }
     else
     {
@@ -128,7 +133,8 @@ void InGameUI::Update(float dt)
     }
   }
 
-    if (levelIdx == 5 || levelIdx == 7 || levelIdx == 9)
+  // Lv.5, Lv.7, Lv.8_2(9) 제외 GunfireBtn 비활성화
+  if (levelIdx == 5 || levelIdx == 7 || levelIdx == 9)
   {
     return;
   }
@@ -136,5 +142,6 @@ void InGameUI::Update(float dt)
   {
     _gunfireBtn->Deactivate();
   }
+
 
 }

@@ -20,6 +20,8 @@ constexpr float kIndicatorScale{0.7f};
 extern DirectionalLight _mainLight;
 Map::Map(World* world) : GameObject(world)
 {
+  std::cout << " + Map creation." << std::endl;
+
   record.reserve(32);
 
   // The base models.
@@ -27,7 +29,7 @@ Map::Map(World* world) : GameObject(world)
   enemyBrawlerModelHandle =
       LoadModel("Models\\Character\\Enemy\\Enemy_Punch\\Enemy_Punch.glb");
   enemyGunmanModelHandle =
-      LoadModel("Models\\Character\\Enemy\\EnemyGunman\\EnemyGunman.glb");
+      LoadModel("Models\\Character\\Enemy\\Enemy_Gun\\Enemy_Gun.glb");
 
   allyBrawlerModelHandle =
       LoadModel("Models\\Character\\Player\\Player_Punch\\Player_Punch.glb");
@@ -68,7 +70,7 @@ Map::Map(World* world) : GameObject(world)
       LoadTexture("Models\\Indicator\\GunmanActiveIndicator\\Indicator1_On.png",
                   TextureType::kAlbedo);
 
-  obstacleBox01ModelHandle = LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
+  obstacleBox01ModelHandle = LoadModel("Models\\Obstacles\\Box01\\OBs_Box01.glb");
   obstacleBox02ModelHandle =
       LoadModel("Models\\Obstacles\\Box02\\OBs_Box02.glb");
   obstacleDrumModelHandle = LoadModel("Models\\Obstacles\\Drum\\OBs_Drum.glb");
@@ -193,13 +195,36 @@ Map::Map(World* world) : GameObject(world)
     rigidBody->GetRigidBody()->DisableSceneQuery();
     wall4->RotateAroundYAxis(XM_PI + XM_PIDIV2);
   }
+
+	std::cout << " + Map creation done." << std::endl;
 }
 
 Map::~Map()
 {
-
-  UnloadModel(allyBrawlerModelHandle);
+  UnloadModel(allyDirectionIndicatorModelHandle);
+  UnloadModel(enemyDirectionIndicatorModelHandle);
+  UnloadTexture(brawlerInactiveIndicatorTextureHandle);
+  UnloadTexture(brawlerActiveIndicatorTextureHandle);
+  UnloadTexture(slasherInactiveIndicatorTextureHandle);
+  UnloadTexture(slasherActiveIndicatorTextureHandle);
+  UnloadTexture(gunmanInactiveIndicatorTextureHandle);
+  UnloadTexture(gunmanActiveIndicatorTextureHandle);
+  UnloadModel(enemyBrawlerModelHandle);
   UnloadModel(enemyGunmanModelHandle);
+  UnloadModel(civilianModelHandle);
+  UnloadModel(elizaModelHandle);
+  UnloadModel(allyBrawlerModelHandle);
+  UnloadModel(allySlasherModelHandle);
+  UnloadModel(allyGunmanModelHandle);
+  UnloadModel(characterIndicatorModelHandle);
+  UnloadModel(obstacleBox01ModelHandle);
+  UnloadModel(obstacleBox02ModelHandle);
+  UnloadModel(obstacleDrumModelHandle);
+  UnloadModel(obstacleDrumOldModelHandle);
+  UnloadModel(obstacleLionModelHandle);
+  UnloadModel(obstacleSofaModelHandle);
+  UnloadModel(obstacleStoolModelHandle);
+  UnloadModel(obstacleVBoxModelHandle);
 }
 
 void Map::TurnOnPlacementMode(CharacterType type, Direction dir)
@@ -610,7 +635,7 @@ void Map::ResetGame()
       CreateEnemyAt(info.type, info.w, info.h, info.dir);
       break;
     case kNeutral:
-      CreateCivillianAt(info.w, info.h, info.dir);
+      CreateCivillianAt(info.w, info.h, info.dir, info.type == kEliza);
       break;
     }
   }
@@ -650,6 +675,8 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
   switch (type)
   {
   case kBrawler: {
+    std::cout << " + Create Enemy Brawler." << std::endl;
+
     Brawler* brawler =
         world->CreateGameObjectFromModel<Brawler>(enemyBrawlerModelHandle);
 
@@ -689,6 +716,8 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
   }
   break;
   case kGunman: {
+    std::cout << " + Create Enemy Gunman." << std::endl;
+
     Gunman* gunman =
         world->CreateGameObjectFromModel<Gunman>(enemyGunmanModelHandle);
 
@@ -735,6 +764,8 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
   switch (type)
   {
   case kBrawler: {
+    std::cout << " + Create Ally Brawler." << std::endl;
+
     Brawler* brawler =
         world->CreateGameObjectFromModel<Brawler>(allyBrawlerModelHandle);
 
@@ -774,6 +805,8 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
   }
   break;
   case kSlasher: {
+    std::cout << " + Create Ally Slasher." << std::endl;
+
     Slasher* slasher =
         world->CreateGameObjectFromModel<Slasher>(allySlasherModelHandle);
 
@@ -813,6 +846,8 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
   }
   break;
   case kGunman: {
+    std::cout << " + Create Ally Gunman." << std::endl;
+
     Gunman* gunman =
         world->CreateGameObjectFromModel<Gunman>(allyGunmanModelHandle);
 
@@ -860,10 +895,13 @@ void Map::CreateCivillianAt(uint32_t w, uint32_t h, Direction dir, bool isEliza)
 
   if (isEliza)
   {
+    std::cout << " + Create Eliza." << std::endl;
     civilian = world->CreateGameObjectFromModel<Civilian>(elizaModelHandle);
+    civilian->type = kEliza;
   }
   else
   {
+    std::cout << " + Create Civilian." << std::endl;
     civilian = world->CreateGameObjectFromModel<Civilian>(civilianModelHandle);
   }
 
@@ -879,34 +917,42 @@ void Map::CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h,
   switch (type)
   {
   case ObstacleType_Stool:
+    std::cout << " + Create Stool." << std::endl;
     obstacle =
         world->CreateGameObjectFromModel<Obstacle>(obstacleStoolModelHandle);
     break;
   case ObstacleType_Box01:
+    std::cout << " + Create Box01." << std::endl;
     obstacle =
         world->CreateGameObjectFromModel<Obstacle>(obstacleBox01ModelHandle);
     break;
   case ObstacleType_Box02:
+    std::cout << " + Create Box02." << std::endl;
     obstacle =
         world->CreateGameObjectFromModel<Obstacle>(obstacleBox02ModelHandle);
     break;
   case ObstacleType_Drum:
+    std::cout << " + Create Drum." << std::endl;
     obstacle =
         world->CreateGameObjectFromModel<Obstacle>(obstacleDrumModelHandle);
     break;
   case ObstacleType_DrumOld:
+    std::cout << " + Create DrumOld." << std::endl;
     obstacle =
         world->CreateGameObjectFromModel<Obstacle>(obstacleDrumOldModelHandle);
     break;
   case ObstacleType_VBox:
+    std::cout << " + Create VBox." << std::endl;
     obstacle =
         world->CreateGameObjectFromModel<Obstacle>(obstacleVBoxModelHandle);
     break;
   case ObstacleType_Lion:
+    std::cout << " + Create Lion." << std::endl;
     obstacle =
         world->CreateGameObjectFromModel<Obstacle>(obstacleLionModelHandle);
     break;
   case ObstacleType_Sofa:
+    std::cout << " + Create Sofa." << std::endl;
     obstacle =
         world->CreateGameObjectFromModel<Obstacle>(obstacleSofaModelHandle);
     break;

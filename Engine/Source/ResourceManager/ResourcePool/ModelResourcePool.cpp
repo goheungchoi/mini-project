@@ -99,6 +99,11 @@ static void ProcessGeoNode(ModelData& model,
                  .firstChild = geoNode->firstChild(),
                  .nextSibling = geoNode->nextSibling()};
   node.meshes.reserve(geoNode->meshes()->size());
+
+	if (node.name == "Lion.001")
+	{
+    int i = 0;
+	}
 	for (const auto* geoMesh : *geoNode->meshes())
   {
     ProcessGeoMesh(model, node, geoMesh);
@@ -177,6 +182,20 @@ Handle ResourcePool<ModelData>::LoadImpl(xUUID uuid, void* pUser)
 	// Claim the handle and map the UUID.
 	Handle handle = _handleTable.ClaimHandle(std::move(model),
                                                 (uint16_t)ResourceType::kModel);
+
+	if (!_handleTable.IsValidHandle(handle))
+  {
+    std::cout << uuid.ToString() << "; model loading failed." << std::endl;
+    terminate();
+  }
+  else
+  {
+    std::cout << uuid.ToString()
+              << "; model loading succeeded: " << handle.index << ", "
+              << handle.version << "."
+              << std::endl;
+	}
+
   _uuidMap[uuid] = handle.index;
   _handleUUIDMap[handle] = uuid;
   return handle;
@@ -195,6 +214,14 @@ void ResourcePool<ModelData>::UnloadImpl(Handle& handle, void* pReserved)
 
   ModelData& model = _handleTable[handle].value();
 
+	std::cout << "model unloading succeeded : " << handle.index << ", "
+            << handle.version << "." << std::endl;
+
+	if (model.nodes[0].name == "Lion.001")
+  {
+    int i = 0;
+  }
+
   for (MeshHandle mesh : model.meshes)
   {
     if (::meshPool->IsValidHandle(mesh))
@@ -203,27 +230,11 @@ void ResourcePool<ModelData>::UnloadImpl(Handle& handle, void* pReserved)
     }
   }
 
-  for (MaterialHandle mat : model.materials)
-  {
-    if (::materialPool->IsValidHandle(mat))
-    {
-      materialPool->Unload(mat, ::pools);
-    }
-  }
-
-  for (TextureHandle texture : model.textures)
-  {
-    if (::texturePool->IsValidHandle(texture))
-    {
-      texturePool->Unload(texture, ::pools);
-    }
-  }
-
   for (AnimationHandle anim : model.animations)
   {
-    if (::texturePool->IsValidHandle(anim))
+    if (::animationPool->IsValidHandle(anim))
     {
-      texturePool->Unload(anim, nullptr);
+      animationPool->Unload(anim, nullptr);
     }
   }
 
@@ -231,4 +242,51 @@ void ResourcePool<ModelData>::UnloadImpl(Handle& handle, void* pReserved)
   {
     ::skeletonPool->Unload(model.skeleton, nullptr);
   }
+}
+
+
+template<>
+Handle ResourcePool<ModelData>::DuplicateHandleImpl(const Handle& handle,
+                                                    void* pReserved)
+{
+  ::pools = (Pools*)pReserved;
+  ::texturePool = pools->texturePool;
+  ::materialPool = pools->materialPool;
+  ::meshPool = pools->meshPool;
+  ::skeletonPool = pools->skeletonPool;
+  ::animationPool = pools->animationPool;
+
+  // Duplicate the handle
+  ModelData& model = _handleTable[handle].value();
+
+  if (model.nodes[0].name == "Lion.001")
+  {
+    int i = 0;
+  }
+
+  for (MeshHandle mesh : model.meshes)
+  {
+    if (::meshPool->IsValidHandle(mesh))
+    {
+      meshPool->DuplicateHandle(mesh, ::pools);
+    }
+  }
+
+  for (AnimationHandle anim : model.animations)
+  {
+    if (::animationPool->IsValidHandle(anim))
+    {
+      animationPool->DuplicateHandle(anim, nullptr);
+    }
+  }
+
+  if (::skeletonPool->IsValidHandle(model.skeleton))
+  {
+    ::skeletonPool->DuplicateHandle(model.skeleton, nullptr);
+  }
+
+  std::cout << "Duplicate " << handle.index << ", " << handle.version << ", "
+            << handle.desc << std::endl;
+
+  return _handleTable.DuplicateHandle(handle);
 }

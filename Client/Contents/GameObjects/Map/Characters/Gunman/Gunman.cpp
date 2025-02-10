@@ -75,6 +75,7 @@ Gunman::~Gunman() {
   delete fire;
   delete fireState;
 
+	UnloadModel(muzzleModelHandle);
   UnloadModel(handgunModelHandle);
 }
 

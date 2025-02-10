@@ -36,5 +36,10 @@ Civilian::~Civilian() {
 }
 
 void Civilian::TriggerAction() {
+  isActionTriggered = true;
+
+  HideOutline();
+  HideDeathIndicator();
+
   animator->SetVariable<bool>("triggered", true, true);
 }

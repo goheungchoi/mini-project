@@ -49,6 +49,7 @@ void UIAnim::Render()
   if (_pCurrAnimInfo == nullptr) return;
   if (_status == EStatus_Active)
   {
+    _sprite->bLateRender = bLateRender;
     _sprite->Render(_srcRect);
   }
 }

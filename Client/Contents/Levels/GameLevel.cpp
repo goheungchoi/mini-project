@@ -16,29 +16,20 @@
 
 void GameLevel::PrepareLevel()
 {
-  redCellModelHandle = LoadModel("Models\\RedCell\\RedCell.glb");
-  greenCellModelHandle = LoadModel("Models\\GreenCell\\GreenCell.glb");
-
-  animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
-  handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
-
-  mapBarMeshHandle = LoadModel("Models\\Maps\\Map_001_Bar\\Map_001.glb");
+  /*mapBarMeshHandle = LoadModel("Models\\Maps\\Map_001_Bar\\Map_001.glb");
   mapMuseumMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
   mapWarehouseMeshHandle =
-      LoadModel("Models\\Maps\\Map_003_Warehouse\\Map_003.glb");
-
-  OBsStoolHandle = LoadModel("Models\\Obstacles\\OBs_Stool.glb");
-  OBsBox02Handle = LoadModel("Models\\Obstacles\\OBs_Box02.glb");
+      LoadModel("Models\\Maps\\Map_003_Warehouse\\Map_003.glb");*/
 
   // Obstacle model load.
-  LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
-  LoadModel("Models\\Obstacles\\Box02\\OBs_Box02.glb");
-  LoadModel("Models\\Obstacles\\Drum\\OBs_Drum.glb");
-  LoadModel("Models\\Obstacles\\DrumOld\\OBs_DrumOld.glb");
-  LoadModel("Models\\Obstacles\\Lion\\OBs_Lion.glb");
-  LoadModel("Models\\Obstacles\\Sofa\\OBs_Sofa.glb");
-  LoadModel("Models\\Obstacles\\Stool\\OBs_Stool.glb");
-  LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
+  obstacleBox01 = LoadModel("Models\\Obstacles\\Box01\\OBs_Box01.glb");
+  obstacleBox02 = LoadModel("Models\\Obstacles\\Box02\\OBs_Box02.glb");
+  obstacleDrum = LoadModel("Models\\Obstacles\\Drum\\OBs_Drum.glb");
+  obstacleDrumOld = LoadModel("Models\\Obstacles\\DrumOld\\OBs_DrumOld.glb");
+  obstacleLion = LoadModel("Models\\Obstacles\\Lion\\OBs_Lion.glb");
+  obstacleSofa = LoadModel("Models\\Obstacles\\Sofa\\OBs_Sofa.glb");
+  obstacleStool = LoadModel("Models\\Obstacles\\Stool\\OBs_Stool.glb");
+  obstacleVBox = LoadModel("Models\\Obstacles\\VBox\\OBs_VBox.glb");
 
   // UI Resource Load
 #ifdef USED2D
@@ -146,14 +137,18 @@ void GameLevel::CleanupLevel()
 {
   transitionUI->FadeOut(2.f);
 
-  UnloadModel(redCellModelHandle);
-  UnloadModel(greenCellModelHandle);
-
-  UnloadModel(mapBarMeshHandle);
+  /*UnloadModel(mapBarMeshHandle);
   UnloadModel(mapMuseumMeshHandle);
-  UnloadModel(mapWarehouseMeshHandle);
+  UnloadModel(mapWarehouseMeshHandle);*/
 
-  UnloadModel(animTestHandle);
+	UnloadModel(obstacleBox01);
+  UnloadModel(obstacleBox02);
+  UnloadModel(obstacleDrum);
+  UnloadModel(obstacleDrumOld);
+  UnloadModel(obstacleLion);
+  UnloadModel(obstacleSofa);
+  UnloadModel(obstacleStool);
+  UnloadModel(obstacleVBox);
 }
 
 void GameLevel::BindDialogLevel(class DialogLevel* dialoglevelptr)

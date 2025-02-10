@@ -15,6 +15,8 @@
 void Level1::PrepareLevel()
 {
   __super::PrepareLevel();
+
+	mapBarMeshHandle = LoadModel("Models\\Maps\\Map_001_Bar\\Map_001.glb");
 }
 
 void Level1::BeginLevel()
@@ -23,9 +25,9 @@ void Level1::BeginLevel()
 
   #ifdef USED2D
 
-
   inGameUI->HideUI(L"GunfireBtn");
   inGameUI->HideUI(L"SubMission");
+  inGameUI->HideUI(L"SubMission_2");
 
   inGameUI->_agentStorage->SetAgent(kBrawler, {AgentPos.x - spacing * 2, AgentPos.y});
   inGameUI->_agentStorage->SetAgent(kSlasher, {AgentPos.x - spacing * 1, AgentPos.y});
@@ -35,6 +37,11 @@ void Level1::BeginLevel()
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
   _audioDrama->SetTotalTime(25.f);
   #endif
+}
+
+void Level1::CleanupLevel() {
+  GameLevel::CleanupLevel();
+  UnloadModel(mapBarMeshHandle);
 }
 
 

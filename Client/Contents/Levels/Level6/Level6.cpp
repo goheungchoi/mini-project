@@ -10,6 +10,8 @@
 void Level6::PrepareLevel()
 {
   __super::PrepareLevel();
+	mapWarehouseMeshHandle =
+      LoadModel("Models\\Maps\\Map_003_Warehouse\\Map_003.glb");
 }
 
 void Level6::BeginLevel()
@@ -18,6 +20,7 @@ void Level6::BeginLevel()
 
 #ifdef USED2D
   inGameUI->HideUI(L"SubMission");
+  inGameUI->HideUI(L"SubMission_2");
 
   inGameUI->_agentStorage->SetAgent(kBrawler, {AgentPos.x - spacing * 3, AgentPos.y});
   inGameUI->_agentStorage->SetAgent(kSlasher, {AgentPos.x - spacing * 2, AgentPos.y});
@@ -28,7 +31,10 @@ void Level6::BeginLevel()
 #endif
 }
 
-void Level6::CleanupLevel() {}
+void Level6::CleanupLevel() {
+  GameLevel::CleanupLevel();
+  UnloadModel(mapWarehouseMeshHandle);
+}
 
 void Level6::CreateMap()
 {

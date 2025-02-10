@@ -19,6 +19,7 @@ enum CharacterType
   kSlasher = 1,
   kGunman = 2,
   kCivilian = 3,
+	kEliza = 4,
 };
 
 class Character : public GameObject
