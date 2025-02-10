@@ -17,6 +17,7 @@ void UIImage::Render()
   if (_status == EStatus_Active)
   {
     //_sprite->Render();
+    _sprite->bLateRender = bLateRender;
     _sprite->Render(_position, _scale, _opacity); // 인스턴스 속성 전달
   }
 }

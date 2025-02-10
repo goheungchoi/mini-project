@@ -122,6 +122,7 @@ void D2DRenderer::EndDraw()
   _pD2D1DeviceContext->EndDraw();
 
   BeginSprites();
+  _d2dRenderQueue.ExecuteLateSpriteRenderCmd();
   _d2dRenderQueue.ExcuteTransitionRenderCmd();
   _d2dRenderQueue.ExcuteCursorRenderCmd();
   EndSprites();

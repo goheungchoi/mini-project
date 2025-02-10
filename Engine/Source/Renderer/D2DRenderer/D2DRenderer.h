@@ -35,6 +35,12 @@ public:
       _SpriteRenderCmds.push_back(command);
     }
   }
+  void AddLateRender2DCmd(std::function<void()> command)
+  {
+    _SpriteLateRenderCmds.push_back(command);
+  }
+
+
   void Execute2DRenderCmd()
   {
     for (auto& command : _2DRenderCmds)
@@ -54,7 +60,15 @@ public:
 
     _SpriteRenderCmds.clear();
   }
+  void ExecuteLateSpriteRenderCmd()
+  {
+    for (auto& command : _SpriteLateRenderCmds)
+    {
+      command();
+    }
 
+    _SpriteLateRenderCmds.clear();
+  }
   void SetCursorRenderCmd(std::function<void()> event)
   {
     _cursorRenderCmd = event;
@@ -74,6 +88,7 @@ public:
 private:
   std::vector<std::function<void()>> _2DRenderCmds;
   std::vector<std::function<void()>> _SpriteRenderCmds;
+  std::vector<std::function<void()>> _SpriteLateRenderCmds;
   std::function<void()> _transitionRenderCmd = [] () {}; 
   std::function<void()> _cursorRenderCmd = []() {}; 
 
