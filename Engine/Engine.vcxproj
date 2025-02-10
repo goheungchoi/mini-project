@@ -321,6 +321,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\Shader.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShaderModule.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShadowPass.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\VinettePass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\ResourceStorage.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\BillboardQuad.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Buffer.h" />

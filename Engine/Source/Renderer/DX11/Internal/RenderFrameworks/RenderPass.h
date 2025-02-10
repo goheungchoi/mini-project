@@ -7,6 +7,7 @@
 #include "../RenderFrameworks/PostProcess/SSAOPass.h"
 #include "../RenderFrameworks/Shader.h"
 #include "../RenderFrameworks/ShadowPass.h"
+#include "../RenderFrameworks/VinettePass.h"
 #include "../Resources/BillboardQuad.h"
 #include "../Resources/ConstantBuffer.h"
 #include "../Resources/GeometryPrimitive.h"
@@ -63,6 +64,7 @@ private:
   DefferedPass* _deffered = nullptr;
   OutLinePass* _outLine = nullptr;
   SSAOPass* _ssao = nullptr;
+  VinettePass* _vinettes = nullptr;
 
 private:
   // renderer에서 생성한 deive 참조.
@@ -76,6 +78,8 @@ private:
   float emissiveIntencity = 0.523f;
   float testradius = 0.008f;
   bool testIsSSAO = true;
+  float testvinetteRadius = 0.f;
+  float testvinetteSoftNess = 1.005f;
 
 public:
   RenderPassManager(Device* device, SwapChain* swapchain, int width, int height)
@@ -94,6 +98,7 @@ public:
     _geometry = new GeometryPrimitive(_device);
     _outLine = new OutLinePass(_CB);
     _ssao = new SSAOPass(_device);
+    _vinettes = new VinettePass(_device);
     ID3D11DeviceContext* dc = _device->GetImmContext();
     dc->VSSetConstantBuffers(
         2, 1,
@@ -110,6 +115,7 @@ public:
     dc->VSSetConstantBuffers(1, 1, _frameCB->_constantBuffer.GetAddressOf());
     dc->PSSetConstantBuffers(1, 1, _frameCB->_constantBuffer.GetAddressOf());
     dc->PSSetConstantBuffers(5, 1, _utilityCB->_ssaoParams.GetAddressOf());
+    dc->PSSetConstantBuffers(6, 1, _utilityCB->_vinetteParams.GetAddressOf());
 
     _staticTransMeshes.resize(2);
     _skelTransMeshes.resize(2);
@@ -257,6 +263,7 @@ public:
   void ProcessPass()
   {
     ID3D11DeviceContext* dc = _device->GetImmContext();
+    _pso->ClearBackBufferRTV();
     _pso->ClearBackBufferDSV();
     _pso->SetMainRS();
     _pso->TurnZBufferOn();
@@ -266,6 +273,9 @@ public:
     //--------------------------------------------------------------------------------------//
     // SSAO pass
     this->DrawSSAO(dc);
+    // Vinette
+    //--------------------------------------------------------------------------------------//
+    this->DrawVinette(dc);
     //--------------------------------------------------------------------------------------//
     // Deferred pass
     this->DrawDeffered(dc);
@@ -457,6 +467,10 @@ public:
     macros = {{"TRAIL", "1"}, {nullptr, nullptr}};
     _pShaders.insert(
         {"trail", _compiler->CompilePixelShader(macros, "trail_ps_main")});
+    macros.clear();
+    macros = {{"VINETTE", "1"}, {nullptr, nullptr}};
+    _pShaders.insert(
+        {"Vinette", _compiler->CompilePixelShader(macros, "vinette_ps_main")});
   }
   void CreateSamplers()
   {
@@ -706,6 +720,8 @@ private:
 
   void DrawDeffered(ID3D11DeviceContext* dc)
   {
+    _deffered->ClearRenderTargets();
+    _pso->SetBlendOnEnable(false);
     _pso->TurnZBufferOn();
     _pso->SetMainViewPort();
     _pso->SetMainRS();
@@ -809,7 +825,7 @@ private:
       mesh.buffer->material->PSSetResourceViews(_device);
       dc->DrawIndexed(mesh.buffer->nIndices, 0, 0);
     });
-    _pso->ClearBackBufferRTV();
+    
     _pso->TurnZBufferOff();
     dc->IASetInputLayout(_vShaders["Quad"]->layout.Get());
     dc->VSSetShader(_vShaders["Quad"]->shader.Get(), nullptr, 0);
@@ -818,7 +834,7 @@ private:
     _shadow->SetDepthSRV();
     _ssao->SetFinalSSAOTexture();
     _deffered->QuadDraw();
-    _deffered->ClearRenderTargets();
+    _deffered->ClearSrvs();
   }
 
   void DrawTransparency(ID3D11DeviceContext* dc)
@@ -1126,6 +1142,28 @@ private:
           &trail->trailResource->stride, &trail->trailResource->offset);
       dc->Draw(trail->trailResource->vertexCount, 0);
     });
+  }
+
+  void DrawVinette(ID3D11DeviceContext* dc)
+  {
+    dc->IASetInputLayout(_vShaders["Quad"]->layout.Get());
+    dc->VSSetShader(_vShaders["Quad"]->shader.Get(), nullptr, 0);
+    dc->PSSetShader(_pShaders["Vinette"]->shader.Get(), nullptr, 0);
+    _pso->TurnZBufferOff();
+    ImGui::Begin("vinette");
+    {
+      ImGui::SliderFloat("radius", &testvinetteRadius, 0.f, 1.f);
+      ImGui::SliderFloat("softness", &testvinetteSoftNess, 0.f, 2.f);
+    }
+    ImGui::End();
+    Constant::VinetteParames vinetteCB = {
+        .vinetteRadius = testvinetteRadius,
+        .softness = testvinetteSoftNess,
+    };
+    _utilityCB->UpdateVinetteParams(vinetteCB);
+    _pso->SetBlendOnEnable(true);
+    _pso->SetMainRenderTart();
+    _vinettes->QuadDraw();
   }
   void Clear()
   {

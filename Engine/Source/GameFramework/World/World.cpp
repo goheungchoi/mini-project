@@ -671,7 +671,7 @@ void World::PostUpdate(float dt)
   }
 }
 
-static DirectionalLight _mainLight;
+DirectionalLight _mainLight{};
 void World::RenderGameObjects()
 {
   if (!_currentLevel || bChangingLevel)
@@ -681,27 +681,7 @@ void World::RenderGameObjects()
   Matrix projection = mainCamera->GetProjectionMatrix();
   _renderer->BeginFrame(mainCamera->GetPosition(), view, projection,
                         _mainLight);
-#ifdef _DEBUG
-  if (ImGui::Begin("main Light"))
-  {
-    float _mainLightDir[3] = {_mainLight.direction.x, _mainLight.direction.y,
-                              _mainLight.direction.z};
-    ImGui::SliderFloat3("direction", _mainLightDir, -1.f, 1.f);
-    _mainLight.direction.x = _mainLightDir[0];
-    _mainLight.direction.y = _mainLightDir[1];
-    _mainLight.direction.z = _mainLightDir[2];
-    float _mainLightColor[4] = {_mainLight.radiance.x, _mainLight.radiance.y,
-                                _mainLight.radiance.z, 1.f};
-    ImGui::ColorEdit3("Color", _mainLightColor);
-    float _mainLightIntencity = _mainLight.radiance.w;
-    ImGui::SliderFloat("intencity", &_mainLightIntencity, 0.f, 1.f);
-    _mainLight.radiance.x = _mainLightColor[0];
-    _mainLight.radiance.y = _mainLightColor[1];
-    _mainLight.radiance.z = _mainLightColor[2];
-    _mainLight.radiance.w = _mainLightIntencity;
-  }
-  ImGui::End();
-#endif
+
 
   // Rendering stage
   for (GameObject* gameObject : _currentLevel->GetGameObjectList())
