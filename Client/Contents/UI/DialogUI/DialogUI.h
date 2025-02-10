@@ -40,12 +40,15 @@ public:
 
   void ParseDialogScript();
   void SetStageDialogIndex();
-  void SetPrevBattleResult(eBattleResult result) { _prevBattleResult = result; }
+  void SetPrevBattleResult(eBattleResult result)
+  {
+    _prevBattleResult = result;
+  }
   virtual void ElizaDialogStep(int idx);
   virtual void PlayerSelectDialogStep();
 
-  static eBattleResult _prevBattleResult;
-  static int StageIdx;
+  eBattleResult _prevBattleResult = eBattleResult::PerfectWin;
+  int StageIdx = 1;
 
 protected:
 

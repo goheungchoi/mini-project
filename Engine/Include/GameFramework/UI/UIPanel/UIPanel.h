@@ -65,25 +65,6 @@ public:
     return dynamic_cast<T*>(uiMap[name]);
   }
 
-  virtual void Activate() override
-  {
-    UIElement::Activate();
-    for (auto element: uiMap)
-    {
-      if (element.second->GetStatus() == EStatus_Active)
-        element.second->Activate();
-    }
-  }
-  virtual void Deactivate() override
-  {
-    UIElement::Deactivate();
-
-    //for (auto element : uiMap)
-    //{
-    //  element.second->Deactivate();
-    //}
-  }
-
 
   void ShowUI(std::wstring name) { uiMap[name]->Activate(); }
   void HideUI(std::wstring name) { uiMap[name]->Deactivate(); }

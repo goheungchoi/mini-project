@@ -7,6 +7,8 @@
 #include "GameFramework/Components/Animation/AnimationState.h"
 
 #include "Contents/GameObjects/CameraObject.h"
+#include "DialogLevel/DialogLevel.h"
+
 #include "Contents/GameObjects/Map/FixedCamera/FixedCamera.h"
 enum eBattleResult
 {
@@ -57,11 +59,19 @@ public:
 
   // virtual void DestroyLevel() override { Level::DestroyLevel(); }
   virtual void CleanupLevel() override;
+  void BindDialogLevel(class DialogLevel* dialoglevelptr);
   eBattleResult GetBattleResult();
+  int GetStageIdx() { return stageIdx; }
   void SetBattleResult(eBattleResult br);
-  int stageIdx = 0;
+  void SetStageIdx(int _stageIdx)
+  {
+    stageIdx = _stageIdx;
+    dialoglevel->SetStageIdx(_stageIdx);
+
+  };
 
 protected:
+  int stageIdx = 0;
   eBattleResult _battleResult;
   virtual void CreateMap();
 

@@ -6,6 +6,7 @@
 #include "GameFramework/UI/UIImage/UIImage.h"
 
 int Agent::numGunAgent = 0;
+int Agent::prevAgentNum = 0;
 
 Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
 {
@@ -186,9 +187,27 @@ void Agent::Update(float dt)
       }
     }
 
+    if (!_map->isPlacementModeOn)
+    {
+      if (prevAgentNum == _map->GetNumAllies())
+      {
+        _AgentImgs[0]->SetStatus(EStatus::EStatus_Inactive);
+        _AgentImgs[1]->SetStatus(EStatus::EStatus_Active);
+      }
+      else
+      {
+        _AgentImgs[0]->SetStatus(EStatus::EStatus_Active);
+        _AgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+      }
+    }
+
     _map->deleteCharType = CharacterType::kCivilian;
 
   }
+
+
+
+  prevAgentNum = _map->GetNumAllies();
 }
 
 AgentStorage::AgentStorage(World* world) : UIPanel(world) {}

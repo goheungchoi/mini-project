@@ -9,6 +9,10 @@
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 #include "Resource2DManager/Resource2DManager.h"
+#include "Contents/UI/InGameUI/InGameUI.h"
+#include "Contents/UI/DialogUI/ResultDialogUI.h"
+#include "Contents/UI/TransitionUI/TransitionUI.h"
+#include "GameFramework/UI/UIImage/UIImage.h"
 
 void GameLevel::PrepareLevel()
 {
@@ -113,9 +117,9 @@ void GameLevel::BeginLevel()
 
 #ifdef USED2D
   world->_canvas->CreatePanel<UICursor>(L"Cursor");
-  inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
   resultDialogUI =
       world->_canvas->CreatePanel<ResultDialogUI>(L"ResultDialogUI");
+  inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
   world->_canvas->HidePanel(L"ResultDialogUI");
   transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
   transitionUI->_blackImage->SetOpacity(1.0f);
@@ -138,6 +142,11 @@ void GameLevel::CleanupLevel()
   UnloadModel(animTestHandle);
 }
 
+void GameLevel::BindDialogLevel(class DialogLevel* dialoglevelptr)
+{
+  dialoglevel = dialoglevelptr;
+}
+
 eBattleResult GameLevel::GetBattleResult()
 {
   return _battleResult;
@@ -145,6 +154,7 @@ eBattleResult GameLevel::GetBattleResult()
 void GameLevel::SetBattleResult(eBattleResult br)
 {
   _battleResult = br;
+  dialoglevel->SetBattleResult(br);
   resultDialogUI->SetPrevBattleResult(br);
 }
 

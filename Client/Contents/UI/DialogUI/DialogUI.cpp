@@ -4,8 +4,8 @@
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "Shared/Config/Config.h"
 
-eBattleResult DialogUI::_prevBattleResult = eBattleResult::PerfectWin;
-int DialogUI::StageIdx = 1;
+//eBattleResult DialogUI::_prevBattleResult = eBattleResult::PerfectWin;
+//int DialogUI::StageIdx = 1;
 DialogUI::DialogUI(class World* world) : UIPanel(world)
 {
   {
@@ -191,28 +191,7 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     SetPrevBattleResult(eBattleResult::PerfectWin);
   }
   {
-    if (_prevBattleResult == 3)
-    {
-      _actionList.push_back([=]() { ElizaDialogStep(1); });
-      _actionList.push_back([=]() { ElizaDialogStep(2); });
-    }
-    else
-      _actionList.push_back([=]() { ElizaDialogStep(_prevBattleResult); });
-
-    for (int i = 6; i < _dialogList.size(); i++)
-      _actionList.push_back([=]() { ElizaDialogStep(i); });
-
-    _actionList.push_back([=]() {
-      bPlayerSelection = true;
-      PlayerSelectDialogStep();
-    });
-    _actionList.push_back([=]() {
-      bPlayerSelection = false;
-      ElizaDialogStep(5);
-    });
-    _actionList.push_back(
-        [=]() { world->PrepareChangeLevel("Level" + to_string(StageIdx+1));
-    });
+   
   }
 }
 void DialogUI::Update(float dt)
@@ -324,6 +303,35 @@ void DialogUI::SetStageDialogIndex()
     }
     _dialogList[i].dialogtext = token;
   }
+
+  _actionList.clear();
+   if (_prevBattleResult == 3)
+  {
+    _actionList.push_back([=]() { ElizaDialogStep(1); });
+    _actionList.push_back([=]() { ElizaDialogStep(2); });
+  }
+  else
+    _actionList.push_back([=]() { ElizaDialogStep(_prevBattleResult); });
+
+  for (int i = 6; i < _dialogList.size(); i++)
+    _actionList.push_back([=]() { ElizaDialogStep(i); });
+
+  _actionList.push_back([=]() {
+    bPlayerSelection = true;
+    PlayerSelectDialogStep();
+  });
+  _actionList.push_back([=]() {
+    bPlayerSelection = false;
+    ElizaDialogStep(5);
+  });
+  _actionList.push_back([=]() {
+    _world->PrepareChangeLevel("Level" + to_string(StageIdx + 1));
+    _world->CommitLevelChange();
+  });
+
+
+
+
 }
 void DialogUI::ElizaDialogStep(int idx)
 {

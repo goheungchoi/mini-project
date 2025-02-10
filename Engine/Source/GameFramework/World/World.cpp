@@ -383,16 +383,16 @@ void World::RegisterRigidBodyComponent(RigidbodyComponent* rigidBody)
 void World::UnregisterRigidBodyComponent(RigidbodyComponent* rigidBody)
 {
   rigidBody->DisableSimulation();
-
+  rigidBody->GetRigidBody()->DisableSceneQuery();
   auto it = std::remove(rigidBodyComponents.begin(), rigidBodyComponents.end(),
                         rigidBody);
   rigidBodyComponents.erase(it, rigidBodyComponents.end());
-  for (auto rigidbody : rigidBodyComponents)
-  {
-    rigidbody->RemoveCollisionEvent(rigidBody->GetRigidBody());
-  }
+  //for (auto rigidbody : rigidBodyComponents)
+  //{
+  //  rigidbody->RemoveCollisionEvent(rigidBody->GetRigidBody());
+  //}
 
-  _phyjixWorld->RemoveRigidBody(rigidBody->GetRigidBody());
+  //_phyjixWorld->RemoveRigidBody(rigidBody->GetRigidBody());
 }
 
 void World::InitialStage()
@@ -508,19 +508,22 @@ void World::Update(float dt)
       component->UpdateKinematicTransform();
   }
 
-  // phjix simulate
-  if (INPUT.IsKeyPress(MouseState::LB))
-    _phyjixWorld->LeftClick();
-  if (INPUT.IsKeyPress(MouseState::RB))
-    _phyjixWorld->RightClick();
-  _phyjixWorld->UpdateRay(
-      mainCamera->GetPosition(),
-      Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
-      mainCamera->GetViewTransform(), mainCamera->GetProjectionMatrix(),
-      Vector2(kScreenWidth, kScreenHeight));
-  _phyjixWorld->CastRay();
-  _phyjixEngine->Update(dt);
-
+  if (!rigidBodyComponents.empty())
+  {
+    // phjix simulate
+    if (INPUT.IsKeyPress(MouseState::LB))
+      _phyjixWorld->LeftClick();
+    if (INPUT.IsKeyPress(MouseState::RB))
+      _phyjixWorld->RightClick();
+    _phyjixWorld->UpdateRay(
+        mainCamera->GetPosition(),
+        Vector2(INPUT.GetCurrMouseState().x, INPUT.GetCurrMouseState().y),
+        mainCamera->GetViewTransform(), mainCamera->GetProjectionMatrix(),
+        Vector2(kScreenWidth, kScreenHeight));
+    _phyjixWorld->CastRay();
+    _phyjixEngine->Update(dt);
+  }
+  
   // Rigidbody updateTotransform
   for (RigidbodyComponent* component : rigidBodyComponents)
   {

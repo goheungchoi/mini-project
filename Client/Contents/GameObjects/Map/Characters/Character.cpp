@@ -254,7 +254,15 @@ void Character::Die() {
   }
 }
 
-void Character::OnHover() {
+void Character::DisableHover() {
+  bHoverDisabled = true;
+}
+
+void Character::OnHover()
+{
+  if (bHoverDisabled)
+    return;
+
   if (isActionTriggered)
     return;
 
@@ -278,6 +286,11 @@ void Character::OnHover() {
 
 void Character::OnBeginOverlap(GameObject* other) {
   GameObject::OnBeginOverlap(other);
+
+  if (isPlacementModeOn)
+  {
+    return;
+  }
 
   if (!isDead)
   {
@@ -350,27 +363,30 @@ void Character::Update(float dt)
   
   if (isActionTriggered)
   {
-    if (auto* rbComp = GetComponent<RigidbodyComponent>())
+    if (!isPlacementModeOn)
     {
-      rbComp->EnableSimulation();
-    }
-
-    if (inactiveIndicator && activeIndicator)
-    {
-      if (auto bbComp = inactiveIndicator->GetComponent<BillboardComponent>();
-          bbComp)
+      if (auto* rbComp = GetComponent<RigidbodyComponent>())
       {
-        bbComp->isVisible = false;
+        rbComp->EnableSimulation();
       }
 
-      if (auto bbComp = activeIndicator->GetComponent<BillboardComponent>();
-          bbComp)
+      if (inactiveIndicator && activeIndicator)
       {
-        bbComp->isVisible = false;
-      }
-    }
+        if (auto bbComp = inactiveIndicator->GetComponent<BillboardComponent>();
+            bbComp)
+        {
+          bbComp->isVisible = false;
+        }
 
-    HideDeathIndicator();
+        if (auto bbComp = activeIndicator->GetComponent<BillboardComponent>();
+            bbComp)
+        {
+          bbComp->isVisible = false;
+        }
+      }
+
+      HideDeathIndicator();
+    }
   }
 
   if (isDead)
@@ -391,23 +407,29 @@ void Character::Update(float dt)
 
   if (!isActionTriggered)
   {
-    // Search the direction in range.
-    FindTargetInRange();
-    if (isTargetInRange)
+    if (!isPlacementModeOn)
     {
-      // TODO: Indicator on
-      if (inactiveIndicator && activeIndicator)
+      // Search the direction in range.
+      FindTargetInRange();
+      if (isTargetInRange)
       {
-        inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = false;
-        activeIndicator->GetComponent<BillboardComponent>()->isVisible = true;
+        // TODO: Indicator on
+        if (inactiveIndicator && activeIndicator)
+        {
+          inactiveIndicator->GetComponent<BillboardComponent>()->isVisible =
+              false;
+          activeIndicator->GetComponent<BillboardComponent>()->isVisible = true;
+        }
       }
-    }
-    else
-    {
-      if (inactiveIndicator && activeIndicator)
+      else
       {
-        inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = true;
-        activeIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+        if (inactiveIndicator && activeIndicator)
+        {
+          inactiveIndicator->GetComponent<BillboardComponent>()->isVisible =
+              true;
+          activeIndicator->GetComponent<BillboardComponent>()->isVisible =
+              false;
+        }
       }
     }
   }
@@ -421,20 +443,17 @@ void Character::PostUpdate(float dt) {
   }
 
   // Indicator transforms
-  if (inactiveIndicator && activeIndicator)
+  if (activeIndicator && isTargetInRange)
   {
-    if (isTargetInRange)
-    {
-      auto* billboard = activeIndicator->GetComponent<BillboardComponent>();
-      billboard->SetPosition(
-          activeIndicator->transform->GetGlobalTranslation());
-    }
-    else
-    {
-      auto* billboard = inactiveIndicator->GetComponent<BillboardComponent>();
-      billboard->SetPosition(
-          inactiveIndicator->transform->GetGlobalTranslation());
-    }
+    auto* billboard = activeIndicator->GetComponent<BillboardComponent>();
+    billboard->SetPosition(activeIndicator->transform->GetGlobalTranslation());
+  }
+
+  if (inactiveIndicator && !isTargetInRange)
+  {
+    auto* billboard = inactiveIndicator->GetComponent<BillboardComponent>();
+    billboard->SetPosition(
+        inactiveIndicator->transform->GetGlobalTranslation());
   }
 
   if (deathIndicator)

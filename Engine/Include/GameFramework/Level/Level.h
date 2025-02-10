@@ -38,10 +38,14 @@ public:
 
   virtual void DestroyLevel()
   {
-    for (auto it = gameObjects.begin(); it != gameObjects.end();)
+    for (GameObject* gameObject : gameObjects)
     {
-      GameObject* gameObject = *it;
-      it = gameObjects.erase(it);
+      for (auto [type_id, pComp] : gameObject->components)
+      {
+        delete pComp;
+      }
+      gameObject->components.clear();
+
       delete gameObject;
 		}
     gameObjects.clear();

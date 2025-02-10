@@ -22,8 +22,6 @@ Map::Map(World* world) : GameObject(world)
 {
   record.reserve(32);
 
-  animTestHandle = LoadModel("Models\\AnimTest\\AnimTest.glb");
-
   // The base models.
   // enemyModelHandle = LoadModel("Models\\Character\\Enemy\\Enemy.glb");
   enemyBrawlerModelHandle =
@@ -37,6 +35,9 @@ Map::Map(World* world) : GameObject(world)
       LoadModel("Models\\Character\\Player\\Player_Knife\\Player_Knife.glb");
   allyGunmanModelHandle =
       LoadModel("Models\\Character\\Player\\Player_Gun\\Player_Gun.glb");
+
+  characterIndicatorModelHandle =
+      LoadModel("Models\\Character\\Player\\Player_Alpha\\Player_Alpha.glb");
 
   civilianModelHandle = LoadModel("Models\\Civilian\\Eliza.glb");
   elizaModelHandle = LoadModel("Models\\Civilian\\Eliza.glb");
@@ -121,11 +122,73 @@ Map::Map(World* world) : GameObject(world)
   grid->Translate(-0.6f, +0.01f, -0.8f);
   AddChildGameObject(grid);
 
-  // NOTE: Sound test.
-  /*SoundManager::LoadSound(L"PubBGM.wav", true);
-  SoundManager::PlaySound(L"PubBGM.wav");*/
+  // Create walls.
+  // Front
+  GameObject* wall1 = world->CreateGameObject();
+  AddChildGameObject(wall1);
+  wall1->SetGameObjectTag("Wall");
+  {
+    auto* rigidBody = wall1->CreateComponent<RigidbodyComponent>();
+    rigidBody->Initialize({5.f, 0, 10.f}, Quaternion::Identity,
+                          {10.f, 10.f, 1.f}, ColliderShape::eCubeCollider,
+                          false, true, GetWorld()->_phyjixWorld);
+    rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
+      rigidBody->debugColor = Color(0, 1, 1, 1);
+    });
+    rigidBody->EnableDebugDraw();
+    rigidBody->EnableSimulation();
+  }
 
+  // Right
+  GameObject* wall2 = world->CreateGameObject();
+  AddChildGameObject(wall2);
+  wall2->SetGameObjectTag("Wall");
+  {
+    auto* rigidBody = wall2->CreateComponent<RigidbodyComponent>();
+    rigidBody->Initialize({-5.f, 0, 10.f}, Quaternion::Identity,
+                          {10.f, 10.f, 1.f}, ColliderShape::eCubeCollider,
+                          false, true, GetWorld()->_phyjixWorld);
+    rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
+      rigidBody->debugColor = Color(0, 1, 1, 1);
+    });
+    rigidBody->EnableDebugDraw();
+    rigidBody->EnableSimulation();
+    wall2->RotateAroundYAxis(XM_PIDIV2);
+  }
 
+  // Back
+  GameObject* wall3 = world->CreateGameObject();
+  AddChildGameObject(wall3);
+  wall3->SetGameObjectTag("Wall");
+  {
+    auto* rigidBody = wall3->CreateComponent<RigidbodyComponent>();
+    rigidBody->Initialize({-5.f, 0, 2.f}, Quaternion::Identity,
+                          {10.f, 10.f, 1.f}, ColliderShape::eCubeCollider,
+                          false, true, GetWorld()->_phyjixWorld);
+    rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
+      rigidBody->debugColor = Color(0, 1, 1, 1);
+    });
+    rigidBody->EnableDebugDraw();
+    rigidBody->EnableSimulation();
+    wall3->RotateAroundYAxis(XM_PI);
+  }
+  
+  // Left
+  GameObject* wall4 = world->CreateGameObject();
+  AddChildGameObject(wall4);
+  wall4->SetGameObjectTag("Wall");
+  {
+    auto* rigidBody = wall4->CreateComponent<RigidbodyComponent>();
+    rigidBody->Initialize({5.f, 0, 2.f}, Quaternion::Identity,
+                          {10.f, 10.f, 1.f}, ColliderShape::eCubeCollider,
+                          false, true, GetWorld()->_phyjixWorld);
+    rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
+      rigidBody->debugColor = Color(0, 1, 1, 1);
+    });
+    rigidBody->EnableDebugDraw();
+    rigidBody->EnableSimulation();
+    wall4->RotateAroundYAxis(XM_PI + XM_PIDIV2);
+  }
 }
 
 Map::~Map()
@@ -850,6 +913,44 @@ void Map::CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h,
   obstacle->SetDirection(dir);
 }
 
+void Map::PlaceCharacterIndicatorAt(uint32_t w, uint32_t h,
+                                    Direction dir)
+{
+  // TODO: 
+  Slasher* slasher =
+      world->CreateGameObjectFromModel<Slasher>(characterIndicatorModelHandle);
+
+  slasher->animator->PauseAnimation();
+
+  indicatorPosition = {w, h};
+
+  auto [pos_x, pos_z] = grid->GetActualPositionAt(w, h);
+
+  // Apply global transformation
+  XMVECTOR pos{pos_x - 0.6f, 0.f, pos_z - 0.8f, 1.f};
+
+  // Bind an inactive indicator.
+  tempInactiveIndicator = world->CreateGameObject();
+  if (auto* bbComp =
+          tempInactiveIndicator->CreateComponent<BillboardComponent>();
+      bbComp)
+  {
+    bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
+    bbComp->SetTexture(slasherInactiveIndicatorTextureHandle);
+  }
+  slasher->BindInactiveIndicator(tempInactiveIndicator);
+  tempInactiveIndicator->SetVisible();
+
+  slasher->SetTranslation(pos);
+  slasher->SetDirection(dir);
+  slasher->DisableHover();
+  slasher->SetPlacementMode(true);
+
+  characterIndicator = slasher;
+
+  AddChildGameObject(slasher);
+}
+
 void Map::DeleteCharacterFromMap(Character* character)
 {
   grid->RemoveGameObject(character);
@@ -896,7 +997,7 @@ void Map::Update(float dt)
   // Transparent indicator.
   if (characterIndicator)
   {
-    // 
+    DetectPlacementAtIndicator();
   }
 
   //// Rotate this map.
@@ -1127,6 +1228,8 @@ void Map::Update(float dt)
     assassinationTarget->ShowDeathIndicator();
   }
 
+  GetNumDeadEnemies();
+
   // Reset the hovered character.
   prevHoveredCharacter = hoveredCharacter;
   hoveredCharacter = nullptr;
@@ -1191,6 +1294,52 @@ void Map::TranslatePlaceholder()
     // follow the cursor pos.
     XMVECTOR cursorPos = GetCursorPosition();
     placeholder->SetTranslation(cursorPos);
+  }
+}
+
+void Map::DetectPlacementAtIndicator()
+{
+  if (characterIndicator && tempInactiveIndicator)
+  {
+    if (isActionTriggered)
+    {
+      HideCharacterIndicator();
+      return;
+    }
+
+    if (grid->GetGameObjectAt(indicatorPosition.first,
+                              indicatorPosition.second))
+    {
+      HideCharacterIndicator();
+    }
+    else
+    {
+      ShowCharacterIndicator();
+    }
+  }
+}
+
+void Map::ShowCharacterIndicator()
+{
+  tempInactiveIndicator->SetVisible();
+  for (auto* child : characterIndicator->childrens)
+  {
+    if (auto* skelMesh = child->GetComponent<SkeletalMeshComponent>(); skelMesh)
+    {
+      skelMesh->SetVisible(true);
+    }
+  }
+}
+
+void Map::HideCharacterIndicator()
+{
+  tempInactiveIndicator->SetInvisible();
+  for (auto* child : characterIndicator->childrens)
+  {
+    if (auto* skelMesh = child->GetComponent<SkeletalMeshComponent>(); skelMesh)
+    {
+      skelMesh->SetVisible(false);
+    }
   }
 }
 

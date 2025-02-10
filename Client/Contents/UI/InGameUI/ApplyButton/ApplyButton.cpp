@@ -92,6 +92,7 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
       //    static_cast<GameLevel*>(world->GetCurrentLevel())
       //        ->SetBattleResult(eBattleResult::PerfectWin);
       //}
+
       if (static_cast<GameLevel*>(world->GetCurrentLevel())
               ->GetBattleResult() != eBattleResult::PerfectWin)
       {
@@ -100,11 +101,27 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
       }
       else
       {
+        static_cast<GameLevel*>(_world->_currentLevel)
+            ->SetBattleResult(static_cast<GameLevel*>(_world->_currentLevel)->GetBattleResult());
+        static_cast<GameLevel*>(_world->_currentLevel)
+            ->SetStageIdx(static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx());
         world->PrepareChangeLevel("Dialog Level");
         world->CommitLevelChange();
       }
     }
   });
+
+
+  _applyBtn->AddOnHoveredHandler(
+      [this]() { 
+      
+      });
+
+  _applyBtn->AddOnUnHoveredHandler(
+      [this]() { 
+      
+      });
+
 }
 
 ApplyButton::~ApplyButton() {}
