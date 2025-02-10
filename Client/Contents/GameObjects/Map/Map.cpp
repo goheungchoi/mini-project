@@ -1221,8 +1221,6 @@ void Map::Update(float dt)
     assassinationTarget->ShowDeathIndicator();
   }
 
-  GetNumDeadEnemies();
-
   // Reset the hovered character.
   prevHoveredCharacter = hoveredCharacter;
   hoveredCharacter = nullptr;
