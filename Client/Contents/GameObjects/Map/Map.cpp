@@ -134,6 +134,7 @@ Map::Map(World* world) : GameObject(world)
     });
     rigidBody->EnableDebugDraw();
     rigidBody->EnableSimulation();
+    rigidBody->GetRigidBody()->DisableSceneQuery();
   }
 
   // Right
@@ -150,6 +151,7 @@ Map::Map(World* world) : GameObject(world)
     });
     rigidBody->EnableDebugDraw();
     rigidBody->EnableSimulation();
+    rigidBody->GetRigidBody()->DisableSceneQuery();
     wall2->RotateAroundYAxis(XM_PIDIV2);
   }
 
@@ -167,9 +169,10 @@ Map::Map(World* world) : GameObject(world)
     });
     rigidBody->EnableDebugDraw();
     rigidBody->EnableSimulation();
+    rigidBody->GetRigidBody()->DisableSceneQuery();
     wall3->RotateAroundYAxis(XM_PI);
   }
-  
+
   // Left
   GameObject* wall4 = world->CreateGameObject();
   AddChildGameObject(wall4);
@@ -184,6 +187,7 @@ Map::Map(World* world) : GameObject(world)
     });
     rigidBody->EnableDebugDraw();
     rigidBody->EnableSimulation();
+    rigidBody->GetRigidBody()->DisableSceneQuery();
     wall4->RotateAroundYAxis(XM_PI + XM_PIDIV2);
   }
 }
