@@ -8,6 +8,7 @@
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "Contents/UI/InGameUI/RetryButton/RetryButton.h"
 #include "Contents/UI/InGameUI/ApplyButton/ApplyButton.h"
+#include "Contents/UI/InGameUI/GunfireButton/GunfireButton.h"
 
 SubMission::SubMission(World* world, Vector2 pos) : UIPanel(world)
 {
@@ -32,22 +33,24 @@ SubMission::~SubMission() {}
 void SubMission::Update(float dt)
 {
 
-//if (StageIdx == 5)
-//{
-//  if (_map)
-//  {
-//    // 민간인과 대원의 사망자 수의 합이 1 이상이라면
-//    int deadAlliesNum = _map->GetNumDeadAllies();
-//    int deadCiviliansNum = _map->GetNumDeadCivilians();
-//    int totalDeadNum = deadAlliesNum + deadCiviliansNum;
-//
-//    if (totalDeadNum >= 1)
-//    {
-//      // 미션 실패 이미지 컴포넌트 활성화 한다.
-//      _failImg->Activate();
-//    }
-//  }
-//}
+  if (StageIdx == 5)
+  {
+    if (_map)
+    {
+      auto* gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                             ->GetUI<GunfireButton>(L"GunfireBtn");
+
+      if (gunfireBtn)
+      {
+        // gunfireBtn을 사용하지 않았다면
+        if (gunfireBtn->_bGunFireUseFlag == false)
+        {
+          // 미션 실패 이미지 컴포넌트 활성화 한다.
+          _failImg->Activate();
+        }
+      }
+    }
+  }
 
 if (StageIdx == 7)
 {
