@@ -540,10 +540,6 @@ void Character::FindTargetInRange() {
         return;
       }
 
-			// Skip the target that will be assassinated at the start of the game.
-			if (searchTarget == map->assassinationTarget)
-        continue;
-
       // Gunman -> Skip the obstacle
       // Brawler -> Don't attack and return.
       // Slasher -> Don't attack and return.

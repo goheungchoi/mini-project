@@ -39,7 +39,7 @@ Map::Map(World* world) : GameObject(world)
   characterIndicatorModelHandle =
       LoadModel("Models\\Character\\Player\\Player_Alpha\\Player_Alpha.glb");
 
-  civilianModelHandle = LoadModel("Models\\Civilian\\Eliza.glb");
+  civilianModelHandle = LoadModel("Models\\Civilian\\Civilian\\Citizen_001.glb");
   elizaModelHandle = LoadModel("Models\\Civilian\\Eliza.glb");
 
   allyDirectionIndicatorModelHandle = LoadModel(
