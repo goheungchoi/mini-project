@@ -25,7 +25,7 @@ GunfireButton::GunfireButton(World* world) : UIPanel(world)
   _ellizaAnim->SetOpacity("Eliza_Initiative_Gunfire", 1.0f);
   _ellizaAnim->SetCurrentAnimSprite("Eliza_Initiative_Gunfire");
   _ellizaAnim->SetStatus(EStatus_Inactive);
-
+  _ellizaAnim->SetLateRender(true);
   // Image
   _gunfireBtnImgs[0] = CreateUI<UIImage>(L"OrderBtnImg_Act");
   _gunfireBtnImgs[1] = CreateUI<UIImage>(L"OrderBtnImg_Hover");

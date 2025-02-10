@@ -116,10 +116,14 @@ void InGameUI::Update(float dt)
       HideUI(L"RetryBtn");
       HideUI(L"ApplyBtn");
 
-      // Eliza Anim 초기화
-      fadeflag = true;
-      animPos = DefaultPos;
-      elapsedTime = 0.0f;
+      //// Eliza Anim 초기화
+      if (!_map->isActionTriggered)
+      {
+        fadeflag = true;
+        animPos = DefaultPos;
+        elapsedTime = 0.0f;
+      }
+
     }
     else
     {

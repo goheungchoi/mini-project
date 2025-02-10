@@ -63,8 +63,12 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
 
         // 여기서 Eliza Anim이랑 시뮬레이션 Play 순서 바꿔야 함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // 현재는 애니메이션이랑 시뮬레이션 같이 나옴
-
-        _map->TriggerAction();
+        auto* inGameUi = _world->_canvas->GetPanel<InGameUI>(L"InGameUI");
+        //if (inGameUi->animPos.x >= inGameUi->GoalPos.x &&
+        //    inGameUi->fadeflag == false)
+        //{
+          _map->TriggerAction();
+        //}
 
         // GunfireButtonr과 AgentStorage 비활성화 하기.
         auto * agentStorage = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
