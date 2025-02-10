@@ -69,10 +69,10 @@ Character::Character(World* world) : GameObject(world)
 
 Character::~Character() {
   if (inactiveIndicator)
-    delete inactiveIndicator;
+    inactiveIndicator->Destroy();
 
   if (activeIndicator)
-    delete activeIndicator;
+    activeIndicator->Destroy();
 
   UnloadTexture(deathIndicatorHandle);
 }
