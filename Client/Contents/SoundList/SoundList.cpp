@@ -53,6 +53,8 @@ const wchar_t* SoundList::Snipping_Selection = L"SnipingSelect.wav";
 const wchar_t* SoundList::Snipping_Shot = L"SnipingShot.wav";
 const wchar_t* SoundList::Snipping_Voice = L"SnipingVoice.wav";
 
+const wchar_t* SoundList::AudioDrama_Stage_01 = L"Audio_Stage01.wav";
+
 template <typename T, std::size_t N>
 void RegisterSoundArray(std::span<T, N> sp)
 {
@@ -121,5 +123,7 @@ void RegisterSoundList() {
   RegisterSound(Snipping_Selection);
   RegisterSound(Snipping_Shot);
   RegisterSound(Snipping_Voice);
+
+  RegisterSound(AudioDrama_Stage_01);
 
 }

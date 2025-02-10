@@ -40,31 +40,7 @@ void UIText::Render()
 void UIText::Update(float dt)
 {
   UIElement::Update(dt);
- /* if (_bIsTypo)
-  {
-    if (!_typoFormat || wcslen(_format)==0)
-      return;
-    _typoElapsedTimer += dt;
-    if (_typoIdx == 1)
-    {
-      _typoChar = _typoFormat[_typoIdx];
-      _typoFormat[_typoIdx++] = L'\0';
-    }
-    if (_typoElapsedTimer >= _typointerval)
-    {
-      size_t totallength = wcslen(_format);
-      if (_typoIdx < totallength )
-      {
-
-        _typoFormat[_typoIdx - 1] = _typoChar;
-        _typoChar = _typoFormat[_typoIdx];
-        _typoFormat[_typoIdx++] = L'\0';
-        
-      }
-      _typoElapsedTimer=0;
-    }
-
-  }*/
+  Transition(dt);
 
 
 }
@@ -109,6 +85,36 @@ void UIText::SetTextAlignment(TextAlignment textAlignment)
 void UIText::SetParagraphAlignment(ParagraphAlignment paragraphAlignment)
 {
   _textFormatInfo._paragraphAlignment = paragraphAlignment;
+}
+
+void UIText::Fade(float threshold , float start, float end)
+{
+  _transitionThreshold = threshold;
+  _transitionStartOpacity =start;
+  _transitionEndOpacity = end;
+  _transitionFlag = true;
+}
+
+
+void UIText::Transition(float dt)
+{
+  if (_transitionFlag)
+  {
+    _transitionElaspedTimer += dt;
+    if (_transitionElaspedTimer <= _transitionThreshold)
+    {
+      float transitionRatio = _transitionElaspedTimer / _transitionThreshold;
+      _transitionOpacity = _transitionStartOpacity * (1 - transitionRatio) +
+                           _transitionEndOpacity * transitionRatio;
+    }
+    else
+    {
+      _transitionOpacity = _transitionEndOpacity;
+      _transitionFlag = false;
+      _transitionElaspedTimer = 0.f;
+    }
+    SetOpacity(_transitionOpacity);
+  }
 }
 #ifndef NDEBUG
 void UIText::SetDebugDraw(bool debugFlag)

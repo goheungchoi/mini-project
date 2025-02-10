@@ -61,6 +61,8 @@ extern const wchar_t* Snipping_Selection;
 extern const wchar_t* Snipping_Shot;
 extern const wchar_t* Snipping_Voice;
 
+extern const wchar_t* AudioDrama_Stage_01;
+
 };
 
 template <typename T, std::size_t N>
