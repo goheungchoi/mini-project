@@ -40,6 +40,12 @@ public:
   {
     for (GameObject* gameObject : gameObjects)
     {
+      for (auto [type_id, pComp] : gameObject->components)
+      {
+        delete pComp;
+      }
+      gameObject->components.clear();
+
       delete gameObject;
 		}
     gameObjects.clear();

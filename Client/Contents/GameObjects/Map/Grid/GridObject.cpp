@@ -146,6 +146,10 @@ void GridObject::ClearGrid() {
   {
     if (p)
     {
+      if (p->GetGameObjectTag() == "Obstacle")
+      {
+        continue;
+      }
       RemoveChildGameObject(p);
       p = nullptr;
     }
