@@ -41,7 +41,6 @@ public:
     for (auto it = gameObjects.begin(); it != gameObjects.end();)
     {
       GameObject* gameObject = *it;
-      it = gameObjects.erase(it);
       delete gameObject;
 		}
     gameObjects.clear();
