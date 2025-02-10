@@ -31,4 +31,6 @@ private:
   const float animSpeed = 1000.0f;
   float elapsedTime = 0.0f;
   const float stopTime = 1.0f;
+
+  int levelIdx = 0;
 };

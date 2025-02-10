@@ -8,7 +8,7 @@ public:
   virtual ~GunfireButton();
 
   void Update(float dt) override;
-  
+
 public:
   class UIAnim* _ellizaAnim{nullptr};
   bool _bGunFireUseFlag = false;
