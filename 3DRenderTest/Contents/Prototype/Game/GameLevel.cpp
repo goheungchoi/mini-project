@@ -1,5 +1,6 @@
 #include "GameLevel.h"
 #include "Map.h"
+#include "Resource2DManager/Resource2DManager.h"
 
 void GameLevel::PrepareLevel()
 {
@@ -10,6 +11,9 @@ void GameLevel::PrepareLevel()
   handGunHandle = LoadModel("Models\\HandGun\\HandGun.glb");
 
   mapMeshHandle = LoadModel("Models\\Map_001_Bar\\Map_001.glb");
+
+
+
 }
 
 void GameLevel::BeginLevel()

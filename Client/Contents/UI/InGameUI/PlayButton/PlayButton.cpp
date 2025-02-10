@@ -62,6 +62,7 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
         }
 
         // 여기서 Eliza Anim이랑 시뮬레이션 Play 순서 바꿔야 함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // 현재는 애니메이션이랑 시뮬레이션 같이 나옴
 
         _map->TriggerAction();
 
