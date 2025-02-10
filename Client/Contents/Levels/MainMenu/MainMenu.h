@@ -18,7 +18,12 @@ public:
   // virtual void DestroyLevel() override { Level::DestroyLevel(); }
   virtual void CleanupLevel() override;
 
+  void SetEndingFlag(int i);
+
 protected:
+  bool ending1 = false;
+  bool ending2 = false;
+  class MainMenuUI* mainmenuUI;
   virtual void CreateMap();
 
   void TriggerAction();

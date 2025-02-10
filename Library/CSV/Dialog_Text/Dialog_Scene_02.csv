@@ -1,12 +1,12 @@
 2,11,,
-0,1,Eliza_Resistance_Joy,놀라운 성과입니다, 대장. 단 한 명의 희생 없이,\n발키리 협정에 참여하는 주요 인사 리스트를 확보했습니다.
-1,1,Eliza_Resistance_Sad,지켜야 할 사람들이 쓰러졌습니다. \n 우리가 싸우는 이유를 다시 되새겨야 할 때 입니다.
-2,1,Eliza_Resistance_Sad,레온이... 죽었어요. 승리는 했지만, 계속 이렇게 희생을 겪어야 하는 걸까요?,
-3,0,Eliza_Resistance_Despair30,그래, 헛된 희생이 줄겠군.
-4,0,Eliza_Resistance_Despair30,그래, 승기가 더 기울겠군.
-5,1,Eliza_Resistance_Despair30,… 반드시.. 알렌을 위해!
-6,1,Eliza_Resistance_Despair70,주요 인사 리스트를 확인해보죠. 칼트의 총리 …보크.
-7,1,Eliza_Resistance_Despair70,제 아이을 죽인 자가 협정에 참여하네요.
-8,1,Eliza_Resistance_Despair30,대장, 이번엔 저도 전투에 나서겠습니다.직접 끝내야겠어요.
-9,0,Eliza_Resistance_Despair30,전투는 맡길 수 없어, 자네의 역할에 최선을 다하게.
-10,1,Eliza_Resistance_Despair30,지원사격으로 전투의 흐름을 유리하게 바꿔 놓을 수 있을 겁니다. 더는 보고만 있을 순 없어요.
+0 ,1,Eliza_Resistance_Joy,전장을 완벽히 장악하셨군요,적들을 서로 겨누게 하다니… 대단한 전략입니다.
+1 ,1,Eliza_Resistance_Despair30,
+2 ,1,Eliza_Resistance_Despair30,
+3 ,0,Eliza_Resistance_Sad,(희생을 막지 못한다면… 끝없는 전투를 반복할 이유가 없다. 집중하자.)
+4 ,1,Eliza_Resistance_Sad,…다음 임무를 전하겠습니다.
+5 ,0,Eliza_Resistance_Despair30,작전지로 이동하지.
+6 ,0,Eliza_Resistance_Despair30,
+7 ,1,Eliza_Resistance_Despair30,네, 대장. 작전지로 출발합니다. 알렌을 위해!
+8 ,1,Eliza_Resistance_Despair30,칼트 병력이 선술집을 오간다는 정보가 있습니다.
+9 ,1,Eliza_Resistance_Despair30,그동안 쌓아온 지휘 능력을 발휘할 때입니다.
+10,0,Eliza_Resistance_Despair30,(그 날의 전투, 희생...  몇 번을 되돌려도 선명하군.)

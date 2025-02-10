@@ -26,14 +26,42 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
   _AudioScript->SetTextAlignment(TextAlignment::CENTERAlIGN);
   _AudioScript->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
 
-
-
+  OnActivated = [=]() { _elapsedTimer = 0; };
+  OnDeactivated = [=]() {
+    if (isEnding1 || isEnding2)
+    {
+      world->PrepareChangeLevel("Main Menu");
+      world->CommitLevelChange();
+    }
+  };
   _scripts.resize(5);
   _scripts[0].push_back({L"명령 떨어지기 전까지 멋대로 움직이지 마, 제이미."});
   _scripts[0].push_back({L"대장이 신호를 하면,놈들의 머리통을 날려."});
   _scripts[0].push_back({L"네... 하지만 루크 선배, 제가 잘 할 수 있을까요?"});
   _scripts[0].push_back({L"고민만 하다간 죽는다 꼬마야.배운 대로 움직여."});
 
+  _scripts[1].push_back({L"명령 떨어지기 전까지 멋대로 움직이지 마, 제이미."});
+  _scripts[1].push_back({L"대장이 신호를 하면,놈들의 머리통을 날려."});
+  _scripts[1].push_back({L"네... 하지만 루크 선배, 제가 잘 할 수 있을까요?"});
+  _scripts[1].push_back({L"고민만 하다간 죽는다 꼬마야.배운 대로 움직여."});
+
+  _scripts[2].push_back({L"명령 떨어지기 전까지 멋대로 움직이지 마, 제이미."});
+  _scripts[2].push_back({L"대장이 신호를 하면,놈들의 머리통을 날려."});
+  _scripts[2].push_back({L"네... 하지만 루크 선배, 제가 잘 할 수 있을까요?"});
+  _scripts[2].push_back({L"고민만 하다간 죽는다 꼬마야.배운 대로 움직여."});
+
+  _scripts[3].push_back({L"명령 떨어지기 전까지 멋대로 움직이지 마, 제이미."});
+  _scripts[3].push_back({L"대장이 신호를 하면,놈들의 머리통을 날려."});
+  _scripts[3].push_back({L"네... 하지만 루크 선배, 제가 잘 할 수 있을까요?"});
+  _scripts[3].push_back({L"고민만 하다간 죽는다 꼬마야.배운 대로 움직여."});
+
+  _scripts[4].push_back({L"명령 떨어지기 전까지 멋대로 움직이지 마, 제이미."});
+  _scripts[4].push_back({L"대장이 신호를 하면,놈들의 머리통을 날려."});
+  _scripts[4].push_back({L"네... 하지만 루크 선배, 제가 잘 할 수 있을까요?"});
+  _scripts[4].push_back({L"고민만 하다간 죽는다 꼬마야.배운 대로 움직여."});
+
+
+  
 }
 
 void AudioDramaUI::Update(float dt)
@@ -41,6 +69,8 @@ void AudioDramaUI::Update(float dt)
   UIPanel::Update(dt);
 
   RunStage(dt);
+  if (INPUT.IsKeyPress(MouseState::LB))
+    Skip();
 
   if (_elapsedTimer>= _totalTime)
   {
@@ -81,6 +111,8 @@ void AudioDramaUI::PrintText(int stageidx, int scriptidx,float dt,
 
 void AudioDramaUI::Stage1(float dt)
 {
+  isEnding1 = false;
+  isEnding2 = false;
   _elapsedTimer += dt;
   if (_elapsedTimer >= 4.19)
     PrintText(0, 0, dt, 3.96);
@@ -93,6 +125,8 @@ void AudioDramaUI::Stage1(float dt)
 }
 void AudioDramaUI::Stage4(float dt)
 {
+  isEnding1 = false;
+  isEnding2 = false;
   _elapsedTimer += dt;
   if (_elapsedTimer >= 4.19)
     PrintText(1, 0, dt, 3.96);
@@ -105,6 +139,8 @@ void AudioDramaUI::Stage4(float dt)
 }
 void AudioDramaUI::Stage7(float dt)
 {
+  isEnding1 = false;
+  isEnding2 = false;
   _elapsedTimer += dt;
   if (_elapsedTimer >= 4.19)
     PrintText(2, 0, dt, 3.96);
@@ -117,6 +153,8 @@ void AudioDramaUI::Stage7(float dt)
 }
 void AudioDramaUI::EndingStage1(float dt)
 {
+  isEnding1 = true;
+  isEnding2 = false;
   _elapsedTimer += dt;
   if (_elapsedTimer >= 4.19)
     PrintText(3, 0, dt, 3.96);
@@ -130,6 +168,8 @@ void AudioDramaUI::EndingStage1(float dt)
 
 void AudioDramaUI::EndingStage2(float dt)
 {
+  isEnding1 = false;
+  isEnding2 = true;
   _elapsedTimer += dt;
   if (_elapsedTimer >= 4.19)    PrintText(4, 0, dt, 3.96);
   if (_elapsedTimer >= 9.16)    PrintText(4, 1, dt, 3.99);
@@ -144,35 +184,44 @@ void AudioDramaUI::RunStage(float dt)
   case 1:
     if (_elapsedTimer <= 0.f)
       SoundManager::PlaySound(SoundList::AudioDrama_Stage_01);
+    _currentAudio = SoundList::AudioDrama_Stage_01;
     Stage1(dt);
     break;
   case 4:
     if (_elapsedTimer <= 0.f)
       SoundManager::PlaySound(SoundList::AudioDrama_Stage_01);
+    _currentAudio = SoundList::AudioDrama_Stage_01;
     Stage4(dt);
     break;
   case 7:
     if (_elapsedTimer <= 0.f)
       SoundManager::PlaySound(SoundList::AudioDrama_Stage_01);
+    _currentAudio = SoundList::AudioDrama_Stage_01;
     Stage7(dt);
     break;
 
   case 8:
     if (_elapsedTimer <= 0.f)
       SoundManager::PlaySound(SoundList::AudioDrama_Stage_01);
+    _currentAudio = SoundList::AudioDrama_Stage_01;
     EndingStage1(dt);
     break;
 
   case 9:
     if (_elapsedTimer <= 0.f)
       SoundManager::PlaySound(SoundList::AudioDrama_Stage_01);
+    _currentAudio = SoundList::AudioDrama_Stage_01;
     EndingStage2(dt);
     break;
 
   }
 }
 
-
+void AudioDramaUI::Skip()
+{
+  SoundManager::StopSound(_currentAudio);
+  _elapsedTimer = _totalTime;
+}
 
 
 

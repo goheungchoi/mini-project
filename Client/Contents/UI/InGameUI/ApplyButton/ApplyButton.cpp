@@ -1,6 +1,7 @@
 #include "ApplyButton.h"
 #include "Contents/GameObjects/Map/Map.h"
 #include "Contents/Levels/GameLevel.h"
+#include "Contents/UI/AudioDramaUI/AudioDramaUI.h"
 #include "Contents/UI/DialogUI/ResultDialogUI.h"
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
@@ -30,6 +31,9 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
 
     if (_map->IsGameFinished())
     {
+      if (_map->GetNumCivilians()>0 &_map->GetNumDeadCivilians()>0)
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::CivilDeadWin);
       //if (world->GetCurrentLevel()->name == "Level6")
       //{
       //  if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
@@ -105,12 +109,30 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
       }
       else
       {
+        if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx()==8)
+        {
+          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx = 8;
+          _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
+          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->Activate();
+        }
+        if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() == 9)
+        {
+          //오디오 드라마 엔딩에서 바로 시작하는거 고치기
+          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
+              9;
+          _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
+          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->Activate();
+        }
+        else
+        {
+          
         static_cast<GameLevel*>(_world->_currentLevel)
             ->SetBattleResult(static_cast<GameLevel*>(_world->_currentLevel)->GetBattleResult());
         static_cast<GameLevel*>(_world->_currentLevel)
             ->SetStageIdx(static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx());
         world->PrepareChangeLevel("Dialog Level");
         world->CommitLevelChange();
+        }
       }
     }
     

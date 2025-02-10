@@ -11,6 +11,16 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
 
   _LogoImage = CreateUI<UIImage>(L"TitleIMG");
   _LogoImage->SetSprite("Textures\\TitleLogo.png", {556, 362});
+  _hiddenLogoImage = CreateUI<UIImage>(L"hiddenTitleIMG");
+  _hiddenLogoImage->SetSprite("Textures\\StartBtn.png", {556, 362});
+  _hiddenLogoImage->SetOpacity(0.f);
+  SetOnActivatedEvent([=]() {
+    if (ending1)
+    {
+      _LogoImage->FadeOut(5.f);
+      _hiddenLogoImage->FadeIn(5.f);
+    }
+  });
 
   _startBtnImage = CreateUI<UIImage>(L"StartBtnImage");
   _startBtnImage->SetSprite("Textures\\StartBtn.png", {573, 663});
@@ -71,3 +81,11 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
 }
 
 MainMenuUI::~MainMenuUI() {}
+
+void MainMenuUI::SetEndingFlag(int i)
+{
+  if (i == 1)
+    ending1 = true;
+  if (i == 2)
+    ending2 = true;
+}

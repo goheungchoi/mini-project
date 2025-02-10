@@ -27,7 +27,7 @@ void MainMenu::PrepareLevel()
 void MainMenu::BeginLevel()
 {
 #ifdef USED2D
-  world->_canvas->CreatePanel<MainMenuUI>(L"MainMenuUI");
+  mainmenuUI = world->_canvas->CreatePanel<MainMenuUI>(L"MainMenuUI");
 
   transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
   transitionUI->_blackImage->SetOpacity(1.0f);
@@ -36,6 +36,11 @@ void MainMenu::BeginLevel()
 }
 
 void MainMenu::CleanupLevel() {
+}
+
+void MainMenu::SetEndingFlag(int i)
+{
+  mainmenuUI->SetEndingFlag(i);
 }
 
 void MainMenu::CreateMap() {}

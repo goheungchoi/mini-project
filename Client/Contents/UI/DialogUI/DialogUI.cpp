@@ -1,11 +1,11 @@
 ﻿#include "DialogUI.h"
 #include "GameFramework/UI/UIAnim//UIAnim.h"
-#include "GameFramework/UI/UIText/UIText.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
+#include "GameFramework/UI/UIText/UIText.h"
 #include "Shared/Config/Config.h"
 
-//eBattleResult DialogUI::_prevBattleResult = eBattleResult::PerfectWin;
-//int DialogUI::StageIdx = 1;
+// eBattleResult DialogUI::_prevBattleResult = eBattleResult::PerfectWin;
+// int DialogUI::StageIdx = 1;
 DialogUI::DialogUI(class World* world) : UIPanel(world)
 {
   {
@@ -50,13 +50,13 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
   {
     _dialogTextBox = CreateUI<UIImage>(L"DialogTextBox");
     _dialogTextBox->SetSprite("2D\\UI\\UI_Textbox_01.png");
-    _dialogTextBox->SetScale({1.f,0.8f});
+    _dialogTextBox->SetScale({1.f, 0.8f});
     _dialogTextBox->SetSize(_dialogTextBox->GetTextureSize());
     _dialogTextBox->SetCenterPos({960, 900});
     _dialogTextBox->SetOpacity(1.f);
     _dialogText = CreateUI<UIText>(L"DialogText");
-    _dialogText->SetSize(
-        {_dialogTextBox->GetSize().x*0.8f, _dialogTextBox->GetSize().y*0.3f});
+    _dialogText->SetSize({_dialogTextBox->GetSize().x * 0.8f,
+                          _dialogTextBox->GetSize().y * 0.3f});
     _dialogText->SetCenterPos({960, 960});
     _dialogText->SetFont(L"PT Noeul");
     _dialogText->SetFontSize(35.f);
@@ -65,7 +65,7 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _dialogText->SetTextAlignment(TextAlignment::LEFTAlIGN);
     _dialogText->SetParagraphAlignment(ParagraphAlignment::TOPALIGN);
     ParseDialogScript();
-    SetStageDialogIndex();
+    //SetStageDialogIndex();
 
     _dialogBtnImage = CreateUI<UIImage>(L"dialogBtnImage");
     _dialogBtnImage->SetSprite("2D\\UI\\UI_Textbox_Button.png");
@@ -73,18 +73,14 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _dialogButton = CreateUI<UIButton>(L"dialogButton");
     _dialogButton->SetSize(_dialogBtnImage->GetSize());
     _dialogButton->SetCenterPos({1700, 1000});
-    _dialogButton->AddOnClickHandler([=]()
-        {
-      if (!bPlayerSelection)NextStep();
+    _dialogButton->AddOnClickHandler([=]() {
+      if (!bPlayerSelection)
+        NextStep();
     });
-    _dialogButton->AddOnHoveredHandler([=]()
-        {
-      _dialogBtnImage->SetOpacity(0.7f);
-    });
-    _dialogButton->AddOnUnHoveredHandler([=]()
-        {
-      _dialogBtnImage->SetOpacity(1.f);
-    });
+    _dialogButton->AddOnHoveredHandler(
+        [=]() { _dialogBtnImage->SetOpacity(0.7f); });
+    _dialogButton->AddOnUnHoveredHandler(
+        [=]() { _dialogBtnImage->SetOpacity(1.f); });
 
     _speakerNameText = CreateUI<UIText>(L"speakerName");
     _speakerNameText->SetSize({300, 100});
@@ -126,12 +122,10 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
       HideUI(L"playerbuttontext2");
       NextStep();
     });
-    _playerSelectButton1->AddOnHoveredHandler([=]() 
-        { _playerSelectBtnImage1->SetOpacity(0.5f);
-    });
-    _playerSelectButton1->AddOnUnHoveredHandler([=]() 
-        { _playerSelectBtnImage1->SetOpacity(1.f);
-    });
+    _playerSelectButton1->AddOnHoveredHandler(
+        [=]() { _playerSelectBtnImage1->SetOpacity(0.5f); });
+    _playerSelectButton1->AddOnUnHoveredHandler(
+        [=]() { _playerSelectBtnImage1->SetOpacity(1.f); });
 
     _playerSelectBtnText1 = CreateUI<UIText>(L"playerbuttontext1");
     _playerSelectBtnText1->SetSize(_playerSelectBtnImage1->GetSize());
@@ -151,7 +145,7 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _playerSelectBtnImage2->SetOpacity(1.f);
 
     _playerSelectButton2 = CreateUI<UIButton>(L"playerbutton2");
-    _playerSelectButton2->SetSize({_playerSelectBtnImage2->GetSize().x*1.3f,
+    _playerSelectButton2->SetSize({_playerSelectBtnImage2->GetSize().x * 1.3f,
                                    _playerSelectBtnImage2->GetSize().y});
     _playerSelectButton2->SetCenterPos({1550, 700});
     _playerSelectButton2->AddOnClickHandler([=]() {
@@ -163,12 +157,10 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
       HideUI(L"playerbuttontext2");
       NextStep();
     });
-    _playerSelectButton2->AddOnHoveredHandler([=]() {
-          _playerSelectBtnImage2->SetOpacity(0.5f);
-        });
-    _playerSelectButton2->AddOnUnHoveredHandler([=]() {
-          _playerSelectBtnImage2->SetOpacity(1.f);
-        });
+    _playerSelectButton2->AddOnHoveredHandler(
+        [=]() { _playerSelectBtnImage2->SetOpacity(0.5f); });
+    _playerSelectButton2->AddOnUnHoveredHandler(
+        [=]() { _playerSelectBtnImage2->SetOpacity(1.f); });
 
     _playerSelectBtnText2 = CreateUI<UIText>(L"playerbuttontext2");
     _playerSelectBtnText2->SetSize(_playerSelectBtnImage1->GetSize());
@@ -187,11 +179,10 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     HideUI(L"playerbutton2");
     HideUI(L"playerbuttontext2");
 
-    //test
+    // test
     SetPrevBattleResult(eBattleResult::PerfectWin);
   }
   {
-   
   }
 }
 void DialogUI::Update(float dt)
@@ -199,12 +190,11 @@ void DialogUI::Update(float dt)
   UIPanel::Update(dt);
   if (INPUT.IsKeyPress(MouseState::LB) && !bPlayerSelection)
     NextStep();
-      
 
   if (isCurrentActionFinished && _currentActionIndex <= _actionList.size() - 1)
   {
     isCurrentActionFinished = false;
-    if (!_actionList.empty() )
+    if (!_actionList.empty())
       _actionList[_currentActionIndex]();
   }
 }
@@ -259,9 +249,17 @@ void DialogUI::SetStageDialogIndex()
   fs::path p = ns::kDataDir;
   std::string rootpath = p.string();
   _dialogList.clear();
-
+  std::wifstream scriptfile;
   // std::locale::global(std::locale("ko_KR.UTF-8"));
-  std::wifstream scriptfile(rootpath + _csvlist[StageIdx - 1]);
+  if (StageIdx >= 7)
+  {
+    if (_prevBattleResult == eBattleResult::CivilDeadWin)
+      scriptfile.open(rootpath + _csvlist[7]);
+    else
+      scriptfile.open(rootpath + _csvlist[6]);
+  }
+  else
+    scriptfile.open(rootpath + _csvlist[StageIdx - 1]);
   scriptfile.imbue(std::locale("ko_KR")); // UTF-8 강제 적용[3][19]
 
   if (!scriptfile.is_open())
@@ -306,41 +304,101 @@ void DialogUI::SetStageDialogIndex()
   }
 
   _actionList.clear();
-   if (_prevBattleResult == 3)
+
+  /*
+  PerfectWin,
+  CivilDeadWin,
+  AllyDeadWin,
+  BothDeadWin,
+*/
+
+  if (StageIdx != 7)
   {
-    _actionList.push_back([=]() { ElizaDialogStep(1); });
-    _actionList.push_back([=]() { ElizaDialogStep(2); });
+    // 완전 승리
+    if (_prevBattleResult == 0)
+      _actionList.push_back([=]() { ElizaDialogStep(0); });
+
+    // 민간인 희생 승리
+    else if (_prevBattleResult == 1)
+    {
+      if (_dialogList[1].dialogtext.length() > 0)
+        _actionList.push_back([=]() { ElizaDialogStep(1); });
+      if (_dialogList[2].dialogtext.length() > 0)
+        _actionList.push_back([=]() { ElizaDialogStep(2); });
+    }
+    // 대원 희생 승리
+    else if (_prevBattleResult == 2)
+    {
+      if (_dialogList[3].dialogtext.length() > 0)
+        _actionList.push_back([=]() { ElizaDialogStep(3); });
+      if (_dialogList[4].dialogtext.length() > 0)
+        _actionList.push_back([=]() { ElizaDialogStep(4); });
+    }
+    // 민간인/대원 모두 희생
+    else if (_prevBattleResult == 3)
+    {
+      if (_dialogList[1].dialogtext.length() > 0)
+        _actionList.push_back([=]() { ElizaDialogStep(1); });
+      if (_dialogList[2].dialogtext.length() > 0)
+        _actionList.push_back([=]() { ElizaDialogStep(2); });
+      if (_dialogList[3].dialogtext.length() > 0)
+        _actionList.push_back([=]() { ElizaDialogStep(3); });
+      if (_dialogList[4].dialogtext.length() > 0)
+        _actionList.push_back([=]() { ElizaDialogStep(4); });
+    }
+
+    for (int i = 8; i < _dialogList.size(); i++)
+      _actionList.push_back([=]() { ElizaDialogStep(i); });
+
+    _actionList.push_back([=]() { PlayerSelectDialogStep(); });
+    _actionList.push_back([=]() {
+      bPlayerSelection = false;
+      ElizaDialogStep(7);
+    });
+    _actionList.push_back([=]() {
+      _world->PrepareChangeLevel("Level" + to_string(StageIdx + 1));
+      _world->CommitLevelChange();
+    });
   }
   else
-    _actionList.push_back([=]() { ElizaDialogStep(_prevBattleResult); });
-
-  for (int i = 6; i < _dialogList.size(); i++)
-    _actionList.push_back([=]() { ElizaDialogStep(i); });
-
-  _actionList.push_back([=]() {
-    bPlayerSelection = true;
-    PlayerSelectDialogStep();
-  });
-  _actionList.push_back([=]() {
-    bPlayerSelection = false;
-    ElizaDialogStep(5);
-  });
-  _actionList.push_back([=]() {
-    _world->PrepareChangeLevel("Level" + to_string(StageIdx + 1));
-    _world->CommitLevelChange();
-  });
-
-
-
-
+  {
+    if (_prevBattleResult == 1)
+    {
+      _actionList.push_back([=]() { ElizaDialogStep(1); });
+      _actionList.push_back([=]() { ElizaDialogStep(8); });
+      _actionList.push_back([=]() { PlayerSelectDialogStep(); });
+      _actionList.push_back([=]() {
+        bPlayerSelection = false;
+        ElizaDialogStep(7);
+      });
+      _actionList.push_back([=]() {
+        _world->PrepareChangeLevel("Level8");
+        _world->CommitLevelChange();
+      });
+    }
+    else
+    {
+      _actionList.push_back([=]() { ElizaDialogStep(0); });
+      _actionList.push_back([=]() { ElizaDialogStep(8); });
+      _actionList.push_back([=]() { ElizaDialogStep(9); });
+      _actionList.push_back([=]() { PlayerSelectDialogStep(); });
+      _actionList.push_back([=]() {
+        bPlayerSelection = false;
+        ElizaDialogStep(7);
+      });
+      _actionList.push_back([=]() {
+        _world->PrepareChangeLevel("Level8_2");
+        _world->CommitLevelChange();
+      });
+    }
+  }
 }
 void DialogUI::ElizaDialogStep(int idx)
 {
   _dialogText->SetText(_dialogList[idx].dialogtext.c_str());
   _Eliza->SetCurrentAnimSprite(_dialogList[idx].ElizaAnim);
-  _speakerNameText->SetText(_dialogList[idx].IsElizaSpeaking
-                                ? _nameEliza
-                                : _namePlayer);
+  _speakerNameText->SetText(_dialogList[idx].IsElizaSpeaking ? _nameEliza
+                                                             : _namePlayer);
   if (_dialogList[idx].IsElizaSpeaking)
   {
     _speakerNameText->SetTextAlignment(TextAlignment::CENTERAlIGN);
@@ -358,20 +416,25 @@ void DialogUI::ElizaDialogStep(int idx)
 }
 void DialogUI::PlayerSelectDialogStep()
 {
+  if (_dialogList[5].dialogtext.length() <= 0)
+  {
+    return;
+  }
+  bPlayerSelection = true;
   int lastIdx = _dialogList.size() - 1;
   _dialogText->SetText(_dialogList[lastIdx].dialogtext.c_str());
   _Eliza->SetCurrentAnimSprite(_dialogList[lastIdx].ElizaAnim);
   _speakerNameText->SetText(_dialogList[lastIdx].IsElizaSpeaking ? _nameEliza
-                                                             : _namePlayer);
+                                                                 : _namePlayer);
   _speakerNameText->SetTextAlignment(TextAlignment::LEFTAlIGN);
   _speakerClassText->SetOpacity(0.f);
   _Eliza->SetMasking(Color(0.5f, 0.5f, 0.5f, 1));
   _Eliza->SetOpacity(_dialogList[lastIdx].ElizaAnim, 0.8f);
 
-  if (_dialogList[4].dialogtext.length()>0)
+  if (_dialogList[6].dialogtext.length() > 0)
   {
-    _playerSelectBtnText1->SetText(_dialogList[3].dialogtext.c_str());
-    _playerSelectBtnText2->SetText(_dialogList[4].dialogtext.c_str());
+    _playerSelectBtnText1->SetText(_dialogList[5].dialogtext.c_str());
+    _playerSelectBtnText2->SetText(_dialogList[6].dialogtext.c_str());
     ShowUI(L"playerbuttonimage1");
     ShowUI(L"playerbutton1");
     ShowUI(L"playerbuttontext1");
@@ -385,12 +448,9 @@ void DialogUI::PlayerSelectDialogStep()
     _playerSelectButton1->SetCenterPos({1550, 620});
     _playerSelectBtnImage1->SetCenterPos({1600, 620});
 
-    _playerSelectBtnText1->SetText(_dialogList[3].dialogtext.c_str());
+    _playerSelectBtnText1->SetText(_dialogList[5].dialogtext.c_str());
     ShowUI(L"playerbuttonimage1");
     ShowUI(L"playerbutton1");
     ShowUI(L"playerbuttontext1");
   }
-
-
-  
 }

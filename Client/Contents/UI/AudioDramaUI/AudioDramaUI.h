@@ -14,7 +14,7 @@ public:
   class UIText* _AudioScript{nullptr};
 
   void PrintText(int stageidx, int scriptidx, float dt, float duration);
-
+  void Skip();
   void SetTotalTime(float totaltime) { _totalTime = totaltime; };
 
   void Stage1(float dt);
@@ -24,9 +24,13 @@ public:
   void EndingStage2(float dt);
   void RunStage(float dt);
 
+  int stageidx = 1;
 
 private:
-  int stageidx = 1;
+  bool isEnding1 = false;
+  bool isEnding2 = false;
+  std::wstring _currentAudio;
+
   float _elapsedTimer = 0.f;
   float _totalTime = 0.f;
   bool fadeflag = true;

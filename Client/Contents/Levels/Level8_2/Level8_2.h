@@ -15,6 +15,8 @@ public:
   // virtual void DestroyLevel() override { Level::DestroyLevel(); }
   virtual void CleanupLevel() override;
 
+  class AudioDramaUI* _audioDrama;
+
 protected:
   virtual void CreateMap();
 

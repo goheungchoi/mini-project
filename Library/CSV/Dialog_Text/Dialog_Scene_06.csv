@@ -1,12 +1,14 @@
-6,11,,
-0,1,Eliza_Resistance_Joy,놀라운 성과입니다, 대장. 단 한 명의 희생 없이,\n발키리 협정에 참여하는 주요 인사 리스트를 확보했습니다.
-1,1,Eliza_Resistance_Sad,지켜야 할 사람들이 쓰러졌습니다. \n 우리가 싸우는 이유를 다시 되새겨야 할 때 입니다.
-2,1,Eliza_Resistance_Sad,레온이... 죽었어요. 승리는 했지만, 계속 이렇게 희생을 겪어야 하는 걸까요?,
-3,0,Eliza_Resistance_Despair30,그래, 헛된 희생이 줄겠군.
-4,0,Eliza_Resistance_Despair30,그래, 승기가 더 기울겠군.
-5,1,Eliza_Resistance_Despair30,… 반드시.. 알렌을 위해!
-6,1,Eliza_Resistance_Despair70,주요 인사 리스트를 확인해보죠. 칼트의 총리 …보크.
-7,1,Eliza_Resistance_Despair70,제 아이을 죽인 자가 협정에 참여하네요.
-8,1,Eliza_Resistance_Despair30,대장, 이번엔 저도 전투에 나서겠습니다.직접 끝내야겠어요.
-9,0,Eliza_Resistance_Despair30,전투는 맡길 수 없어, 자네의 역할에 최선을 다하게.
-10,1,Eliza_Resistance_Despair30,지원사격으로 전투의 흐름을 유리하게 바꿔 놓을 수 있을 겁니다. 더는 보고만 있을 순 없어요.
+6,13,,
+0,1,Eliza_Resistance_Joy,대체 어떻게 해내신 겁니까? 대장은 정말 미래라도 본 겁니까? 대단합니다.
+1,0,Eliza_Resistance_Sad,(희생을 막지 못한다면… 끝없는 전투를 반복할 이유가 없다. 집중하자.)
+2,1,Eliza_Resistance_Sad,…다음 임무를 전하겠습니다.
+3,1,Eliza_Resistance_Sad,(희생을 막지 못한다면… 끝없는 전투를 반복할 이유가 없다. 집중하자.)
+4,1,Eliza_Resistance_Sad,…다음 임무를 전하겠습니다.
+5,0,Eliza_Noble,그래, 무사히 돌아오도록.
+6,0,Eliza_Noble,이번 임무, 잘 부탁하지.
+7,1,Eliza_Noble,네…알렌을 위해!
+8,1,Eliza_Resistance_Despair30,이로써, 후방 병력이 빠지며, 협정 당일 보안이 허술해졌습니다.
+9,0,Eliza_Resistance_Despair30,연설장에 들어가려면 귀족 초대장이 필요하군, 쉽지 않겠어.
+10,1,Eliza_Noble,제가 귀족으로 위장해서 받아오겠습니다.
+11,0,Eliza_Noble,자네가 직접?
+12,1,Eliza_Noble,네, 대장의 작전을 믿습니다. 저도 무사할거에요.
