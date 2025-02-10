@@ -66,7 +66,8 @@ extern const wchar_t* Snipping_Voice;
 template <typename T, std::size_t N>
 constexpr T GetAny(std::span<T, N> sp)
 {
-  return sp[Random::Get(0ULL, N - 1)];
+  std::size_t n = Random::Get(0ULL, N - 1);
+  return sp[n];
 }
 
 template <typename T, std::size_t N>
