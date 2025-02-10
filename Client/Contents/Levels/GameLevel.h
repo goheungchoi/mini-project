@@ -50,6 +50,9 @@ protected:
 
   class DialogLevel* dialoglevel{nullptr};
 
+  Vector2 AgentPos{1790, 925};
+  float spacing = 180;
+
 public:
   GameLevel(const std::string& name) : Level(name) {}
 

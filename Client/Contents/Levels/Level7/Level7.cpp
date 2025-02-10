@@ -22,10 +22,12 @@ void Level7::BeginLevel()
 
 #ifdef USED2D
   // world->_canvas->CreatePanel<ReconfirmUI>(L"TestReconfirmUI");
-  inGameUI->_agentStorage->SetAgent(kBrawler, {1200, 960});
-  inGameUI->_agentStorage->SetAgent(kSlasher, {1400, 960});
-  inGameUI->_agentStorage->SetAgent(kGunman, {1600, 960});
-  inGameUI->_agentStorage->SetAgent(kGunman, {1800, 960});
+
+  inGameUI->_agentStorage->SetAgent(kBrawler, {AgentPos.x - spacing * 3, AgentPos.y});
+  inGameUI->_agentStorage->SetAgent(kSlasher, {AgentPos.x - spacing * 2, AgentPos.y});
+  inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x - spacing, AgentPos.y});
+  inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
+
   inGameUI->_mainMission->SetText(L"최대한 희생 없이 모든 적 처치");
   inGameUI->_subMission->SetText(L"부관 엘리자 희생");
 #endif

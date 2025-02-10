@@ -36,8 +36,8 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _cursor->SetCursorType(CursorType::DEFAULT);
 
   _gradientIMG = CreateUI<UIImage>(L"GradientIMG");
-  _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1600, 1000});
-  _gradientIMG->SetScale({1.0f, 0.3f});
+  _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1475, 910});
+  _gradientIMG->SetScale({1.0f, 1.0f});
 
 
 }

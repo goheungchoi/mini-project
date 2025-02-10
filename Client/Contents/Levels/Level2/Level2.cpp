@@ -27,9 +27,10 @@ void Level2::BeginLevel()
   inGameUI->HideUI(L"GunfireBtn");
   inGameUI->HideUI(L"SubMission");
 
-  inGameUI->_agentStorage->SetAgent(kBrawler, {1400, 960});
-  inGameUI->_agentStorage->SetAgent(kSlasher, {1600, 960});
-  inGameUI->_agentStorage->SetAgent(kGunman, {1800, 960});
+  inGameUI->_agentStorage->SetAgent(kBrawler, {AgentPos.x - spacing * 2, AgentPos.y});
+  inGameUI->_agentStorage->SetAgent(kSlasher, {AgentPos.x - spacing * 1, AgentPos.y});
+  inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
+
   inGameUI->_mainMission->SetText(L"최대한 희생 없이 모든 적 처치");
 #endif
 }
