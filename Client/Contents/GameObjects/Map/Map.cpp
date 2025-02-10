@@ -11,7 +11,11 @@
 
 #include "Contents/SoundList/SoundList.h"
 #include "SoundSystem/SoundManager.h"
-
+#ifdef _DEBUG
+#include <imgui.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_win32.h>
+#endif
 constexpr float kIndicatorScale{0.7f};
 
 Map::Map(World* world) : GameObject(world)
@@ -120,6 +124,8 @@ Map::Map(World* world) : GameObject(world)
   // NOTE: Sound test.
   /*SoundManager::LoadSound(L"PubBGM.wav", true);
   SoundManager::PlaySound(L"PubBGM.wav");*/
+
+
 }
 
 Map::~Map()
@@ -893,16 +899,19 @@ void Map::Update(float dt)
     // 
   }
 
-  // Rotate this map.
-  if (INPUT.IsKeyPress(Key::Q) || INPUT.IsKeyDown(Key::Q))
-  {
-    parent->RotateAroundYAxis(dt);
-  }
-  if (INPUT.IsKeyPress(Key::E) || INPUT.IsKeyDown(Key::E))
-  {
-    parent->RotateAroundYAxis(-dt);
-  }
-
+  //// Rotate this map.
+  //if (INPUT.IsKeyPress(Key::Q) || INPUT.IsKeyDown(Key::Q))
+  //{
+  //  mapRot -= dt;
+  //}
+  //if (INPUT.IsKeyPress(Key::E) || INPUT.IsKeyDown(Key::E))
+  //{
+  //  mapRot += dt;
+  //}
+  //float oneDegree = XM_PIDIV2 / 90.f;
+  //float maxAngle = oneDegree * 27.2;
+  //mapRot = std::clamp(mapRot, -maxAngle, maxAngle);
+  //parent->SetRotationAroundYAxis(mapRot);
   // Action mode
   if (isActionTriggered)
   {
@@ -1126,6 +1135,20 @@ void Map::Update(float dt)
 void Map::PostUpdate(float dt)
 {
   // hoveredCharacter = nullptr;
+}
+
+void Map::OnRender()
+{
+#ifdef _DEBUG
+  if (ImGui::Begin("mapPos"))
+  {
+    ImGui::SliderFloat3("mapPos", mapPos, -10.f, 10.f);
+  }
+  ImGui::End();
+  XMVECTOR mp = {mapPos[0], mapPos[1], mapPos[2]};
+  SetTranslation(mp);
+ 
+#endif // !_DEBUG
 }
 
 XMVECTOR Map::GetCursorPosition() const

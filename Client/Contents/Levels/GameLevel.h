@@ -35,8 +35,8 @@ protected:
   ModelHandle OBsStoolHandle;
   ModelHandle OBsBox02Handle;
 
-  // CameraObject* testCamera;
-  FixedCamera* testCamera;
+  CameraObject* testCamera;
+  //FixedCamera* testCamera;
   GameObject* pivot{nullptr};
 
   class Map* map{nullptr};

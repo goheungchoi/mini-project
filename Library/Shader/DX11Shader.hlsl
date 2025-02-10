@@ -43,7 +43,7 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     float roughness = deferredMaterial.Sample(samAnisotropy, input.uv).g;
 
     float4 emissive = deferredEmissive.Sample(samAnisotropy, input.uv);
-    
+    normal = normalize(normal);
     //Fresnel reflectance
     float3 F0 = lerp(Fdielectric, albedo, metallic);
     float3 directLighting = 0.f;

@@ -9,7 +9,7 @@
 class Map : public GameObject
 {
 public:
-	// Resource handle
+  // Resource handle
   ModelHandle animTestHandle;
 
   ModelHandle allyDirectionIndicatorModelHandle;
@@ -22,13 +22,13 @@ public:
   TextureHandle gunmanInactiveIndicatorTextureHandle;
   TextureHandle gunmanActiveIndicatorTextureHandle;
 
-	ModelHandle enemyBrawlerModelHandle;
+  ModelHandle enemyBrawlerModelHandle;
   ModelHandle enemyGunmanModelHandle;
 
   ModelHandle civilianModelHandle;
   ModelHandle elizaModelHandle;
 
-	ModelHandle allyBrawlerModelHandle;
+  ModelHandle allyBrawlerModelHandle;
   ModelHandle allySlasherModelHandle;
   ModelHandle allyGunmanModelHandle;
 
@@ -42,7 +42,6 @@ public:
   ModelHandle obstacleVBoxModelHandle;
 
 public:
-
   // Game Objects
   GridObject* grid{nullptr};
 
@@ -52,8 +51,8 @@ public:
 
   std::vector<Character*> civilians;
 
-	// Action trigger
-	bool isActionTriggered{false};
+  // Action trigger
+  bool isActionTriggered{false};
   struct CharacterInfo
   {
     Faction faction;
@@ -63,22 +62,20 @@ public:
   };
   std::vector<CharacterInfo> record;
 
-
-	// Placement mode
-	bool isPlacementModeOn{false};
+  // Placement mode
+  bool isPlacementModeOn{false};
   Character* placeholder{nullptr};
 
-
-	// Selection mode
+  // Selection mode
   bool isHoveredCharacterChanged{false};
   Character* prevHoveredCharacter{nullptr};
   Character* hoveredCharacter{nullptr};
 
-	// Assassination target
+  // Assassination target
   bool isAssassinationMode{false};
   Character* assassinationTarget{nullptr};
 
-  // 
+  //
   std::optional<CharacterInfo> tmp;
 
   CharacterType deleteCharType = kCivilian;
@@ -88,15 +85,14 @@ public:
   std::pair<int, int> indicatorPosition;
 
 public:
-
-	Map(World* world);
+  Map(World* world);
   ~Map();
 
-	void TurnOnPlacementMode(CharacterType type, Direction dir);
+  void TurnOnPlacementMode(CharacterType type, Direction dir);
   void TurnOffPlacementMode();
 
   bool bNeedUpdateAttackRange{true};
-	void ShowHoveredCharacterRange();
+  void ShowHoveredCharacterRange();
   bool bRangeHided{true};
   void HideHoveredCharacterRange();
 
@@ -111,39 +107,45 @@ public:
   int GetNumDeadAllies();
   int GetNumDeadCivilians();
 
-	void TriggerAction();
+  void TriggerAction();
 
-	void ResetGame();
+  void ResetGame();
 
   void PauseGame();
   void ResumeGame();
 
   bool IsGameFinished();
 
-	void CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
+  void CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
                      Direction dir = kNorth);
 
   void CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
                     Direction dir = kNorth);
 
-  void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth, bool isEliza = false);
+  void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth,
+                         bool isEliza = false);
 
-  void CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h, Direction dir = kNorth);
+  void CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h,
+                        Direction dir = kNorth);
 
   void PlaceCharacterIndicatorAt(CharacterType type, uint32_t w, uint32_t h,
                                  Direction dir = kNorth);
 
   void DeleteCharacterFromMap(Character* character);
 
-	void OnAwake() override;
+  void OnAwake() override;
 
-	void Update(float dt) override;
+  void Update(float dt) override;
   void PostUpdate(float dt) override;
+  void OnRender() override;
 
 private:
   XMVECTOR GetCursorPosition() const;
   void TranslatePlaceholder();
 
   void AssassinateTarget();
+
+  float mapPos[3]{-4.5f, 0.f, -4.1f};
+  float mapRot = 0.f;
 };
 

@@ -9,7 +9,7 @@ class FixedCamera : public GameObject
   bool bMouseRightButtonPressed{false};
   Camera* cam{nullptr};
 
-  XMVECTOR focus{};
+  XMVECTOR focus{4.f,-1.5f,4.f};
 
 public:
   FixedCamera(World* world);
@@ -25,6 +25,7 @@ public:
   // Default camera update logic
   virtual void Update(float dt) override;
   virtual void OnRender() override;
-  float cameraPos[3] = {-30.f, 20.f, -30.f};
-  float LookAt[3] = {3.f, 0.f, 3.f};
+  float cameraPos[2] = {-21.f, -21.f};
+  float cameraY = 20.f;
+  float LookAt[3] = {4.f, -1.5f, 4.f};
 };
