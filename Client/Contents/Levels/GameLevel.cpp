@@ -39,6 +39,8 @@ void GameLevel::PrepareLevel()
 
   // UI Resource Load
 #ifdef USED2D
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\gradient.png");
+
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Stage_L.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Stage_S.png");
 
@@ -51,20 +53,32 @@ void GameLevel::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Play_Deact.png");
 
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Retry_Act.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Retry_Hover.png");
+
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Confirm_Act.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Confirm_Hover.png");
 
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Act_Fist.png");
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Deact_Fist.png");
   Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\UI_Storage_Hover_Fist.png");
+
+  Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Act_Rush.png");
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Deact_Rush.png");
   Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\UI_Storage_Hover_Rush.png");
+
+  Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Act_Gun.png");
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\UI_Storage_Deact_Gun.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\UI_Storage_Hover_Gun.png");
+
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\FadeBlack.png");
 
 

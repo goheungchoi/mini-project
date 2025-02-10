@@ -13,7 +13,11 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
   _retryBtnImgs[0] = CreateUI<UIImage>(L"RetryBtnImg_Act");
+  _retryBtnImgs[1] = CreateUI<UIImage>(L"RetryBtnImg_Hover");
+
   _retryBtnImgs[0]->SetSprite("2D\\UI\\UI_Retry_Act.png", {1600, 100});
+  _retryBtnImgs[1]->SetSprite("2D\\UI\\UI_Retry_Hover.png", {1600, 100});
+  _retryBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
 
   // Button
   _retryBtn = CreateUI<UIButton>(L"RetryBtn");
@@ -71,13 +75,13 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
       playBtn->_bPlayflag = false;
     }
 
+    _bHoverFlag = false;
+
   });
 
-  _retryBtn->AddOnHoveredHandler([this]() {
-  });
+  _retryBtn->AddOnHoveredHandler([this]() { _bHoverFlag = true; });
 
-  _retryBtn->AddOnUnHoveredHandler([this]() {
-  });
+  _retryBtn->AddOnUnHoveredHandler([this]() { _bHoverFlag = false; });
 
 }
 
@@ -86,4 +90,15 @@ RetryButton::~RetryButton() {}
 void RetryButton::Update(float dt)
 {
   __super::Update(dt);
+
+  if (!_bHoverFlag)
+  {
+    _retryBtnImgs[0]->SetStatus(EStatus::EStatus_Active);
+    _retryBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+  }
+  else
+  {
+    _retryBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
+    _retryBtnImgs[1]->SetStatus(EStatus::EStatus_Active);
+  }
 }
