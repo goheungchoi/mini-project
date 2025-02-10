@@ -144,7 +144,11 @@ std::pair<float, float> GridObject::GetActualPositionAt(uint32_t w, uint32_t h)
 void GridObject::ClearGrid() {
   for (auto& p : placements)
   {
-    p = nullptr;
+    if (p)
+    {
+      RemoveChildGameObject(p);
+      p = nullptr;
+    }
 	}
 
 	TurnOffSelectionMode();

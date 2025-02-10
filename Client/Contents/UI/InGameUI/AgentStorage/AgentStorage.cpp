@@ -40,6 +40,12 @@ Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
         }
       });
 
+      _AgentBtn->AddOnHoveredHandler(
+          [this]() { _AgentImgs[0]->SetOpacity(0.8f); });
+
+      _AgentBtn->AddOnUnHoveredHandler(
+          [this]() { _AgentImgs[0]->SetOpacity(1.0f); });
+
       break;
     }
 
@@ -68,6 +74,13 @@ Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
           bUseFlag = true;
         }
       });
+      
+      _AgentBtn->AddOnHoveredHandler(
+          [this]() { _AgentImgs[0]->SetOpacity(0.8f); });
+
+      _AgentBtn->AddOnUnHoveredHandler(
+          [this]() { _AgentImgs[0]->SetOpacity(1.0f); });
+
 
       break;
     }
@@ -99,6 +112,12 @@ Agent::Agent(World* world, CharacterType charType, Vector2 pos) : UIPanel(world)
           bUseFlag = true;
         }
       });
+
+      _AgentBtn->AddOnHoveredHandler(
+          [this]() { _AgentImgs[0]->SetOpacity(0.8f); });
+
+      _AgentBtn->AddOnUnHoveredHandler(
+          [this]() { _AgentImgs[0]->SetOpacity(1.0f); });
 
       numGunAgent++;
 

@@ -56,6 +56,11 @@ public:
 
   void AddChildGameObject(GameObject* gameObject)
   {
+    if (gameObject->parent)
+    {
+      gameObject->parent->RemoveChildGameObject(gameObject);
+    }
+
     gameObject->parent = this;
     childrens.push_back(gameObject);
     transform->AddChild(gameObject->transform);

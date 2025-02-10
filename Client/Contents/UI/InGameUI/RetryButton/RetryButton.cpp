@@ -3,6 +3,7 @@
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
+#include "GameFramework/UI/UIAnim//UIAnim.h"
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "Contents/UI/InGameUI/GunfireButton/GunfireButton.h"
 #include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
@@ -39,6 +40,9 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
       {
         child->Activate();
       }
+
+     gunfireBtn->GetUI<UIAnim>(L"ElizaAnim")->Deactivate();
+
     }
 
 
@@ -57,10 +61,11 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
                         ->GetUI<PlayButton>(L"PlayBtn");
     if (playBtn)
     {
-      for (const auto& [childName, child] : playBtn->uiMap)
-      {
-        child->Activate();
-      }
+      playBtn->GetUI<UIImage>(L"PlayBtnImg_Act")->Activate();
+      playBtn->GetUI<UIImage>(L"PlayBtnImg_Hover")->Deactivate();
+      playBtn->GetUI<UIImage>(L"PlayBtnImg_Deact")->Deactivate();
+      playBtn->GetUI<UIButton>(L"PlayBtn")->Activate();
+
       playBtn->Activate();
       playBtn->_bPlayflag = false;
     }
