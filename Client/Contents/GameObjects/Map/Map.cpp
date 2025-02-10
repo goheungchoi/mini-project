@@ -4,6 +4,8 @@
 
 #include "GameFramework/World/World.h"
 
+#include "Contents/GameObjects/Map/Wall/Wall.h"
+
 #include "Contents/GameObjects/Map/Characters/Brawler/Brawler.h"
 #include "Contents/GameObjects/Map/Characters/Civilian/Civilian.h"
 #include "Contents/GameObjects/Map/Characters/Gunman/Gunman.h"
@@ -116,9 +118,37 @@ Map::Map(World* world) : GameObject(world)
   grid->Translate(-0.6f, +0.01f, -0.8f);
   AddChildGameObject(grid);
 
-  // NOTE: Sound test.
-  /*SoundManager::LoadSound(L"PubBGM.wav", true);
-  SoundManager::PlaySound(L"PubBGM.wav");*/
+  // Create walls.
+  GameObject* wall1 = world->CreateGameObject();
+  AddChildGameObject(wall1);
+  wall1->SetGameObjectTag("Wall");
+  {
+    auto* rigidBody = wall1->CreateComponent<RigidbodyComponent>();
+    rigidBody->Initialize({5.f, 0, 10.f}, Quaternion::Identity,
+                          {10.f, 10.f, 1.f}, ColliderShape::eCubeCollider,
+                          false, true, GetWorld()->_phyjixWorld);
+    rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
+      rigidBody->debugColor = Color(0, 1, 1, 1);
+    });
+    rigidBody->EnableDebugDraw();
+    rigidBody->EnableSimulation();
+  }
+
+  GameObject* wall2 = world->CreateGameObject();
+  AddChildGameObject(wall2);
+  wall2->SetGameObjectTag("Wall");
+  {
+    auto* rigidBody = wall2->CreateComponent<RigidbodyComponent>();
+    rigidBody->Initialize({-5.f, 0, 10.f}, Quaternion::Identity,
+                          {10.f, 10.f, 1.f}, ColliderShape::eCubeCollider,
+                          false, true, GetWorld()->_phyjixWorld);
+    rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
+      rigidBody->debugColor = Color(0, 1, 1, 1);
+    });
+    rigidBody->EnableDebugDraw();
+    rigidBody->EnableSimulation();
+    wall2->RotateAroundYAxis(XM_PIDIV2);
+  }
 }
 
 Map::~Map()
@@ -615,8 +645,6 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
     brawler->SetGridLocation(w, h);
     brawler->SetDirection(dir);
     enemies.push_back(brawler);
-
-    AddChildGameObject(brawler);
   }
   break;
   case kGunman: {
@@ -655,8 +683,6 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
     gunman->SetGridLocation(w, h);
     gunman->SetDirection(dir);
     enemies.push_back(gunman);
-
-    AddChildGameObject(gunman);
   }
   break;
   }
@@ -704,8 +730,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     brawler->SetGridLocation(w, h);
     brawler->SetDirection(dir);
     allies.push_back(brawler);
-
-    AddChildGameObject(brawler);
   }
   break;
   case kSlasher: {
@@ -745,8 +769,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     slasher->SetGridLocation(w, h);
     slasher->SetDirection(dir);
     allies.push_back(slasher);
-
-    AddChildGameObject(slasher);
   }
   break;
   case kGunman: {
@@ -785,8 +807,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     gunman->SetGridLocation(w, h);
     gunman->SetDirection(dir);
     allies.push_back(gunman);
-
-    AddChildGameObject(gunman);
   }
   break;
   }
@@ -848,6 +868,13 @@ void Map::CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h,
   obstacle->SetDirection(dir);
 }
 
+void Map::PlaceCharacterIndicatorAt(CharacterType type, uint32_t w, uint32_t h,
+                                    Direction dir)
+{
+
+
+}
+
 void Map::DeleteCharacterFromMap(Character* character)
 {
   grid->RemoveGameObject(character);
@@ -891,15 +918,21 @@ void Map::Update(float dt)
     isHoveredCharacterChanged = false;
   }
 
+  // Transparent indicator.
+  if (characterIndicator)
+  {
+    // 
+  }
+
   // Rotate this map.
-  /*if (INPUT.IsKeyPress(Key::Q))
+  if (INPUT.IsKeyPress(Key::Q))
   {
     parent->RotateAroundYAxis(dt);
   }
   if (INPUT.IsKeyPress(Key::E))
   {
     parent->RotateAroundYAxis(-dt);
-  }*/
+  }
 
   // Action mode
   if (isActionTriggered)

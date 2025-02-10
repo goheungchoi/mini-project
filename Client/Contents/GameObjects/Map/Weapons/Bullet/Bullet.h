@@ -17,6 +17,8 @@ public:
 	
 	void SetDirection(XMVECTOR dir);
 
+	void OnBeginOverlap(GameObject* other) override;
+
 	void OnAwake() override;
 	void Update(float dt) override;
   void PostUpdate(float dt) override;

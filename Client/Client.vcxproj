@@ -213,6 +213,8 @@
 		<ClCompile Include="Contents\GameObjects\Map\Obstacle\Obstacle.cpp" />
 		<ClInclude Include="Contents\GameObjects\Map\Obstacle\Obstacle.h" />
 		<ClInclude Include="Contents\GameObjects\Map\Types.h" />
+		<ClCompile Include="Contents\GameObjects\Map\Wall\Wall.cpp" />
+		<ClInclude Include="Contents\GameObjects\Map\Wall\Wall.h" />
 		<ClCompile Include="Contents\GameObjects\Map\Weapons\Bullet\Bullet.cpp" />
 		<ClInclude Include="Contents\GameObjects\Map\Weapons\Bullet\Bullet.h" />
 		<ClCompile Include="Contents\GameObjects\Map\Weapons\Fist\Fist.cpp" />

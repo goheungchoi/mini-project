@@ -56,6 +56,11 @@ public:
 
   void AddChildGameObject(GameObject* gameObject)
   {
+    if (gameObject->parent)
+    {
+      gameObject->parent->RemoveChildGameObject(gameObject);
+    }
+
     gameObject->parent = this;
     childrens.push_back(gameObject);
     transform->AddChild(gameObject->transform);
@@ -117,6 +122,17 @@ public:
       delete pComp;
     }
     components.clear();
+
+    // Destroy hierarchy.
+    if (parent)
+    {
+      parent->RemoveChildGameObject(this);
+    }
+
+    for (GameObject* child : childrens)
+    {
+      RemoveChildGameObject(child);
+    }
 
 		transform = nullptr;
 	}

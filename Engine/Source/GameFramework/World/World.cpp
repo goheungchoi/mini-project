@@ -788,9 +788,11 @@ void World::CleanupStage()
        it != _currentLevel->GetGameObjectList().end();)
   {
     GameObject* gameObject = *it;
+    
     if (gameObject->status == EStatus_Destroyed)
     {
       it = _currentLevel->gameObjects.erase(it);
+      delete gameObject;
     }
     else
     {

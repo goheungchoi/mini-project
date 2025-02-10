@@ -18,8 +18,6 @@ public:
   GameObjectNameMap gameObjectNameMap;
   std::list<GameObject*> gameObjects;
   
-
-
   Level(const std::string& name) : name{name} {}
   virtual ~Level() {}
 
@@ -40,8 +38,10 @@ public:
 
   virtual void DestroyLevel()
   {
-    for (auto* gameObject : gameObjects)
+    for (auto it = gameObjects.begin(); it != gameObjects.end();)
     {
+      GameObject* gameObject = *it;
+      it = gameObjects.erase(it);
       delete gameObject;
 		}
     gameObjects.clear();

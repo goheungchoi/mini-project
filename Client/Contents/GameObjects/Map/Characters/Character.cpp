@@ -69,10 +69,10 @@ Character::Character(World* world) : GameObject(world)
 
 Character::~Character() {
   if (inactiveIndicator)
-    delete inactiveIndicator;
+    inactiveIndicator->Destroy();
 
   if (activeIndicator)
-    delete activeIndicator;
+    activeIndicator->Destroy();
 
   UnloadTexture(deathIndicatorHandle);
 }
@@ -255,6 +255,9 @@ void Character::Die() {
 }
 
 void Character::OnHover() {
+  if (isActionTriggered)
+    return;
+
   if (auto* rbComp = GetComponent<RigidbodyComponent>(); rbComp)
   {
     rbComp->debugColor = Color(0, 1, 1, 1);
@@ -320,7 +323,7 @@ void Character::OnAwake()
     bodyRigidBody->Initialize({0, 1.0f, 0}, Quaternion::Identity,
                               {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
                               false, true, world->_phyjixWorld);
-    bodyRigidBody->EnableSimulation();
+    bodyRigidBody->DisableSimulation();
     bodyRigidBody->EnableDebugDraw();
   }
 }
@@ -347,6 +350,11 @@ void Character::Update(float dt)
   
   if (isActionTriggered)
   {
+    if (auto* rbComp = GetComponent<RigidbodyComponent>())
+    {
+      rbComp->EnableSimulation();
+    }
+
     if (inactiveIndicator && activeIndicator)
     {
       if (auto bbComp = inactiveIndicator->GetComponent<BillboardComponent>();

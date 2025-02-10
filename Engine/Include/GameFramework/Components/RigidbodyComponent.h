@@ -79,6 +79,8 @@ public:
   XMVECTOR offsetTranslation = {0,0,0};
 
 private:
+  bool isSimulationEnabled{true};
+
   BOOL bIsOverlapping = false;
   BOOL isKinematic = false;
   BOOL isStatic = false;

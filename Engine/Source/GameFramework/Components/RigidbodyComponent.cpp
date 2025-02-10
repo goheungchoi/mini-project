@@ -125,14 +125,22 @@ void RigidbodyComponent::DisableGravity()
 
 void RigidbodyComponent::EnableSimulation()
 {
+  if (isSimulationEnabled)
+    return;
+
   _rigidbody->EnableSimulation();
   isKinematic = true;
+  isSimulationEnabled = true;
 }
 
 void RigidbodyComponent::DisableSimulation()
 {
+  if (!isSimulationEnabled)
+    return;
+
   _rigidbody->DisableSimulation();
   isKinematic = false;
+  isSimulationEnabled = false;
 }
 
 void RigidbodyComponent::UpdateFromTransform()

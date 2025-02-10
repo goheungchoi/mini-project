@@ -8,7 +8,7 @@ const wchar_t* SoundList::Background_Pub_Ambient = L"PubAmbient.WAV";
 const wchar_t* SoundList::Background_Storage = L"StorageBGM.wav";
 const wchar_t* SoundList::Background_Storage_Ambient = L"StorageAmbient.wav";
 const wchar_t* SoundList::Background_ConferenceHall = L"ConferenceHallBGM_01.wav";
-const wchar_t* SoundList::Background_ConferenceHall_Ambient = L"ConferenceHallAmbient.WAV";
+const wchar_t* SoundList::Background_ConferenceHall_Ambient = L"ConferenceHallAmbient.wav";
 
 
 const wchar_t* SoundList::Button_Click = L"ButtonClickSound_01.wav";

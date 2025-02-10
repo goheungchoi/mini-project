@@ -13,12 +13,10 @@ void Bullet::OnAwake()
   GameObject::OnAwake();
 
   auto* rigidBody = CreateComponent<RigidbodyComponent>();
-  auto v = transform->GetGlobalTranslation();
-  transform->SetScaling(XMVectorSet(1.f, 1.f, 1.f, 1.f));
-
   rigidBody->Initialize({0, 0, 0}, Quaternion::Identity, {.1f, .1f, .1f},
                         ColliderShape::eCubeCollider, false, true,
                         GetWorld()->_phyjixWorld);
+  SetScaling(1.f);
   rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
     rigidBody->debugColor = Color(0, 1, 1, 1);
   });
@@ -46,6 +44,15 @@ void Bullet::OnAwake()
 void Bullet::SetDirection(XMVECTOR direction)
 {
   this->direction = direction;
+}
+
+void Bullet::OnBeginOverlap(GameObject* other) {
+  GameObject::OnBeginOverlap(other);
+
+  if (other->GetGameObjectTag() == "Wall")
+  {
+    Destroy();
+  }
 }
 
 void Bullet::Update(float dt)
