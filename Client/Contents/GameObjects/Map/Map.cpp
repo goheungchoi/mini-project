@@ -120,6 +120,7 @@ Map::Map(World* world) : GameObject(world)
   AddChildGameObject(grid);
 
   // Create walls.
+  // Front
   GameObject* wall1 = world->CreateGameObject();
   AddChildGameObject(wall1);
   wall1->SetGameObjectTag("Wall");
@@ -135,6 +136,7 @@ Map::Map(World* world) : GameObject(world)
     rigidBody->EnableSimulation();
   }
 
+  // Right
   GameObject* wall2 = world->CreateGameObject();
   AddChildGameObject(wall2);
   wall2->SetGameObjectTag("Wall");
@@ -149,6 +151,40 @@ Map::Map(World* world) : GameObject(world)
     rigidBody->EnableDebugDraw();
     rigidBody->EnableSimulation();
     wall2->RotateAroundYAxis(XM_PIDIV2);
+  }
+
+  // Back
+  GameObject* wall3 = world->CreateGameObject();
+  AddChildGameObject(wall3);
+  wall3->SetGameObjectTag("Wall");
+  {
+    auto* rigidBody = wall3->CreateComponent<RigidbodyComponent>();
+    rigidBody->Initialize({-5.f, 0, 2.f}, Quaternion::Identity,
+                          {10.f, 10.f, 1.f}, ColliderShape::eCubeCollider,
+                          false, true, GetWorld()->_phyjixWorld);
+    rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
+      rigidBody->debugColor = Color(0, 1, 1, 1);
+    });
+    rigidBody->EnableDebugDraw();
+    rigidBody->EnableSimulation();
+    wall3->RotateAroundYAxis(XM_PI);
+  }
+  
+  // Left
+  GameObject* wall4 = world->CreateGameObject();
+  AddChildGameObject(wall4);
+  wall4->SetGameObjectTag("Wall");
+  {
+    auto* rigidBody = wall4->CreateComponent<RigidbodyComponent>();
+    rigidBody->Initialize({5.f, 0, 2.f}, Quaternion::Identity,
+                          {10.f, 10.f, 1.f}, ColliderShape::eCubeCollider,
+                          false, true, GetWorld()->_phyjixWorld);
+    rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
+      rigidBody->debugColor = Color(0, 1, 1, 1);
+    });
+    rigidBody->EnableDebugDraw();
+    rigidBody->EnableSimulation();
+    wall4->RotateAroundYAxis(XM_PI + XM_PIDIV2);
   }
 }
 
