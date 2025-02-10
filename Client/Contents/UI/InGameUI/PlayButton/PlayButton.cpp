@@ -87,11 +87,11 @@ void PlayButton::Update(float dt)
     _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
     _playBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
   }
-  else
-  {
-    _playBtnImgs[0]->SetStatus(EStatus::EStatus_Active);
-    _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
-    _playBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
-  }
+  //else
+  //{
+  //  _playBtnImgs[0]->SetStatus(EStatus::EStatus_Active);
+  //  _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+  //  _playBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
+  //}
 }
 
