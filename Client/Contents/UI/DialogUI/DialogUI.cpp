@@ -204,7 +204,8 @@ void DialogUI::Update(float dt)
   if (isCurrentActionFinished && _currentActionIndex <= _actionList.size() - 1)
   {
     isCurrentActionFinished = false;
-    _actionList[_currentActionIndex]();
+    if (!_actionList.empty() )
+      _actionList[_currentActionIndex]();
   }
 }
 
