@@ -645,8 +645,6 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
     brawler->SetGridLocation(w, h);
     brawler->SetDirection(dir);
     enemies.push_back(brawler);
-
-    AddChildGameObject(brawler);
   }
   break;
   case kGunman: {
@@ -685,8 +683,6 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
     gunman->SetGridLocation(w, h);
     gunman->SetDirection(dir);
     enemies.push_back(gunman);
-
-    AddChildGameObject(gunman);
   }
   break;
   }
@@ -734,8 +730,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     brawler->SetGridLocation(w, h);
     brawler->SetDirection(dir);
     allies.push_back(brawler);
-
-    AddChildGameObject(brawler);
   }
   break;
   case kSlasher: {
@@ -775,8 +769,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     slasher->SetGridLocation(w, h);
     slasher->SetDirection(dir);
     allies.push_back(slasher);
-
-    AddChildGameObject(slasher);
   }
   break;
   case kGunman: {
@@ -815,8 +807,6 @@ void Map::CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
     gunman->SetGridLocation(w, h);
     gunman->SetDirection(dir);
     allies.push_back(gunman);
-
-    AddChildGameObject(gunman);
   }
   break;
   }
@@ -928,6 +918,7 @@ void Map::Update(float dt)
     isHoveredCharacterChanged = false;
   }
 
+  // Transparent indicator.
   if (characterIndicator)
   {
     // 

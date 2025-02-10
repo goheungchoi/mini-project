@@ -16,6 +16,7 @@ void Bullet::OnAwake()
   rigidBody->Initialize({0, 0, 0}, Quaternion::Identity, {.1f, .1f, .1f},
                         ColliderShape::eCubeCollider, false, true,
                         GetWorld()->_phyjixWorld);
+  SetScaling(1.f);
   rigidBody->SetCollisionEvent(nullptr, eCollisionEventType::eHover, [=]() {
     rigidBody->debugColor = Color(0, 1, 1, 1);
   });

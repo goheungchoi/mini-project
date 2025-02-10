@@ -93,7 +93,6 @@ public:
   // isPlacement mode on
   bool isPlacementModeOn{false};
 
-
 public:
 
   Character(World* world);

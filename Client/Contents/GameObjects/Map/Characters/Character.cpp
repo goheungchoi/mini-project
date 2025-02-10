@@ -323,7 +323,7 @@ void Character::OnAwake()
     bodyRigidBody->Initialize({0, 1.0f, 0}, Quaternion::Identity,
                               {0.2f, 1.f, 0.2f}, ColliderShape::eCubeCollider,
                               false, true, world->_phyjixWorld);
-    bodyRigidBody->EnableSimulation();
+    bodyRigidBody->DisableSimulation();
     bodyRigidBody->EnableDebugDraw();
   }
 }
@@ -350,6 +350,11 @@ void Character::Update(float dt)
   
   if (isActionTriggered)
   {
+    if (auto* rbComp = GetComponent<RigidbodyComponent>())
+    {
+      rbComp->EnableSimulation();
+    }
+
     if (inactiveIndicator && activeIndicator)
     {
       if (auto bbComp = inactiveIndicator->GetComponent<BillboardComponent>();
