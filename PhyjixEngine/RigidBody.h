@@ -41,6 +41,9 @@ public:
   void EnableSimulation() override;
   void DisableSimulation() override;
 
+  void EnableSceneQuery() override;
+  void DisableSceneQuery() override;
+
   void WakeUp() override;
   void Sleep() override;
 

@@ -46,6 +46,8 @@ public:
 
   virtual void EnableSimulation() = 0;
   virtual void DisableSimulation() = 0;
+  virtual void EnableSceneQuery() = 0;
+  virtual void DisableSceneQuery() = 0;
 
   virtual void WakeUp() = 0;
   virtual void Sleep() = 0;
