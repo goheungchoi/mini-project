@@ -25,8 +25,8 @@ public:
 private:
 
   bool fadeflag = true;
-  Vector2 animPos{-200, 300};
-  const Vector2 DefaultPos{-200, 300};
+  Vector2 animPos{-600, 300};
+  const Vector2 DefaultPos{-600, 300};
   const Vector2 GoalPos{70, 300};
   const float animSpeed = 1000.0f;
   float elapsedTime = 0.0f;

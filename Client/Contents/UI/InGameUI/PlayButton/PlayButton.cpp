@@ -50,6 +50,19 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
       if (_map)
       {
         _bPlayflag = true;
+
+        // gunfireBtn 이 있고 gunfireBtn을 사용했을 때, ElizaAnim 출력
+        _gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                          ->GetUI<GunfireButton>(L"GunfireBtn");
+
+        if (_gunfireBtn && _gunfireBtn->_bGunFireUseFlag == true)
+        {
+          _elizaAnim = _gunfireBtn->GetUI<UIAnim>(L"ElizaAnim");
+          _elizaAnim->SetStatus(EStatus::EStatus_Active);
+        }
+
+        // 여기서 Eliza Anim이랑 시뮬레이션 Play 순서 바꿔야 함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         _map->TriggerAction();
 
         // GunfireButtonr과 AgentStorage 비활성화 하기.
@@ -62,16 +75,6 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
         _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
                                ->GetUI<GunfireButton>(L"GunfireBtn")
                                ->_gunfireBtn->Deactivate();
-
-        // gunfireBtn 이 있고 gunfireBtn을 사용했을 때, ElizaAnim 출력
-        _gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
-                               ->GetUI<GunfireButton>(L"GunfireBtn");
-
-        if (_gunfireBtn && _gunfireBtn->_bGunFireUseFlag == true)
-        {
-          _elizaAnim = _gunfireBtn->GetUI<UIAnim>(L"ElizaAnim");
-          _elizaAnim->SetStatus(EStatus::EStatus_Active);
-        }
       }
     });
 }
