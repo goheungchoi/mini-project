@@ -19,5 +19,5 @@ public:
 
 private:
   bool _bHover = false;
-
+  void UpdateButtonState();
 };
