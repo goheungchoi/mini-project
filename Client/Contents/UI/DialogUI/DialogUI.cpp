@@ -4,8 +4,8 @@
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "Shared/Config/Config.h"
 
-eBattleResult DialogUI::_prevBattleResult = eBattleResult::PerfectWin;
-int DialogUI::StageIdx = 1;
+//eBattleResult DialogUI::_prevBattleResult = eBattleResult::PerfectWin;
+//int DialogUI::StageIdx = 1;
 DialogUI::DialogUI(class World* world) : UIPanel(world)
 {
   {

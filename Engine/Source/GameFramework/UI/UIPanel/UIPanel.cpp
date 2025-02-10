@@ -24,22 +24,28 @@ void UIPanel::BeginLevel()
 
 void UIPanel::Update(float dt)
 {
-  for (auto ui : uiList)
+  if (GetStatus() == EStatus_Active)
   {
-    if (ui->GetStatus() == EStatus_Active)
+    for (auto ui : uiList)
     {
-      ui->Update(dt);
+      if (ui->GetStatus() == EStatus_Active)
+      {
+        ui->Update(dt);
+      }
     }
   }
 }
 
 void UIPanel::Render()
 {
-  for (auto ui : uiList)
+  if (GetStatus() == EStatus_Active)
   {
-    if (ui->GetStatus() == EStatus_Active)
+    for (auto ui : uiList)
     {
-      ui->Render();
+      if (ui->GetStatus() == EStatus_Active)
+      {
+        ui->Render();
+      }
     }
   }
 }
