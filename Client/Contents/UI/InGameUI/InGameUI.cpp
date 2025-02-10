@@ -13,6 +13,7 @@
 #include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "GameFramework/UI/UIAnim/UIAnim.h"
+#include "GameFramework/UI/UIImage/UIImage.h"
 
 InGameUI::InGameUI(World* world) : UIPanel(world)
 {
@@ -20,7 +21,7 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
 
   _mainMission = CreateUI<MainMission>(L"MainMission");
   _subMission = CreateUI<SubMission>(L"SubMission");
-  
+
   _playBtn = CreateUI<PlayButton>(L"PlayBtn");
   _retryBtn = CreateUI<RetryButton>(L"RetryBtn");
   _applyBtn = CreateUI<ApplyButton>(L"ApplyBtn");
@@ -32,6 +33,9 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _cursor = _world->_canvas->GetPanel<UICursor>(L"Cursor");
   _cursor->SetCursorType(CursorType::DEFAULT);
 
+  _gradientIMG = CreateUI<UIImage>(L"GradientIMG");
+  _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1600, 1000});
+  _gradientIMG->SetScale({1.0f, 0.3f});
 }
 
 InGameUI::~InGameUI() {}
