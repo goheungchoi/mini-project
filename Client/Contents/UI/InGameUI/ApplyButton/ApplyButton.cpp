@@ -110,6 +110,18 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
       }
     }
   });
+
+
+  _applyBtn->AddOnHoveredHandler(
+      [this]() { 
+      
+      });
+
+  _applyBtn->AddOnUnHoveredHandler(
+      [this]() { 
+      
+      });
+
 }
 
 ApplyButton::~ApplyButton() {}

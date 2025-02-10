@@ -15,6 +15,7 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
   _retryBtnImgs[0] = CreateUI<UIImage>(L"RetryBtnImg_Act");
   _retryBtnImgs[0]->SetSprite("2D\\UI\\UI_Retry_Act.png", {1600, 100});
 
+  // Button
   _retryBtn = CreateUI<UIButton>(L"RetryBtn");
   _retryBtn->SetSize(_retryBtnImgs[0]->GetSize());
   _retryBtn->SetCenterPos({1600, 100});
@@ -70,6 +71,12 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
       playBtn->_bPlayflag = false;
     }
 
+  });
+
+  _retryBtn->AddOnHoveredHandler([this]() {
+  });
+
+  _retryBtn->AddOnUnHoveredHandler([this]() {
   });
 
 }
