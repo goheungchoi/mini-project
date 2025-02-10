@@ -49,6 +49,9 @@ public:
       delete gameObject;
 		}
     gameObjects.clear();
+    gameObjectTagMap.clear();
+    gameObjectTypeMap.clear();
+    gameObjectNameMap.clear();
 	}
   virtual void CleanupLevel() {}
 };

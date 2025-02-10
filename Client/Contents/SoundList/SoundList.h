@@ -30,7 +30,7 @@ extern const wchar_t* Placeholder_Rotation; // DONE
 
 // Character
 extern const wchar_t* Character_Hover;  // DONE
-
+ 
 // Brawler
 extern const wchar_t* Brawler_Ready;  // DONE
 extern const wchar_t* Brawler_Fire;   // DONE
@@ -60,6 +60,8 @@ extern const wchar_t* Civilian_Die[1];      // DONE
 extern const wchar_t* Snipping_Selection;
 extern const wchar_t* Snipping_Shot;
 extern const wchar_t* Snipping_Voice;
+
+extern const wchar_t* AudioDrama_Stage_01;
 
 };
 

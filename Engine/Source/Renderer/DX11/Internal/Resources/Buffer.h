@@ -54,6 +54,13 @@ struct SSAOParames
   float farplane;
   Vector3 padding3;
 };
+
+struct VinetteParames
+{
+  float vinetteRadius;
+  float softness;
+  Vector2 pad;
+};
 } // namespace Constant
 
 struct MeshBuffer

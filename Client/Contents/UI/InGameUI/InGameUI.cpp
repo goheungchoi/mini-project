@@ -48,7 +48,7 @@ void InGameUI::Update(float dt)
 {
   __super::Update(dt);
 
-  if (INPUT.IsKeyDown(Key::F1))
+  /*if (INPUT.IsKeyDown(Key::F1))
   {
 
       _world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")
@@ -68,7 +68,7 @@ void InGameUI::Update(float dt)
         ->SetBattleResult(eBattleResult::AllyDeadLose);
   if (INPUT.IsKeyPress(Key::F6))
     static_cast<GameLevel*>(_world->GetCurrentLevel())
-        ->SetBattleResult(eBattleResult::Lose);
+        ->SetBattleResult(eBattleResult::Lose);*/
 
 
   // ElizaAnim 이 Active상태이면 위치 움직임

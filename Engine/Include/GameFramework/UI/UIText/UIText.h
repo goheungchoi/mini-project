@@ -20,6 +20,13 @@ public:
   void SetParagraphAlignment(ParagraphAlignment paragraphAlignment);
   void SetTypoAnim(bool istypo = false) { _bIsTypo = istypo; };
   void SetTypoInterval(float interval) { _typointerval = interval; };
+
+  void Fade(float threshold, float start, float end);
+  void Transition(float dt);
+
+
+
+
 #ifdef _DEBUG
   void SetDebugDraw(bool debugFlag);
 #endif
@@ -41,4 +48,13 @@ private:
 #ifdef _DEBUG
   bool bDebugDrawFlag = false;
 #endif
+  float _transitionElaspedTimer = 0.f;
+  float _transitionThreshold = 1.f;
+  float _transitionOpacity = 0.f;
+  float _transitionStartOpacity = 0.f;
+  float _transitionEndOpacity = 0.f;
+  bool _transitionFlag = false;
+
+
+
 };

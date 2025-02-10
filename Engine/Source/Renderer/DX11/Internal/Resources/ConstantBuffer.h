@@ -45,17 +45,25 @@ private:
 
 public:
   ComPtr<ID3D11Buffer> _ssaoParams;
-
+  ComPtr<ID3D11Buffer> _vinetteParams;
+  
 public:
   UtilityConstantBuffer(Device* device) : _device{ device }
   {
     _ssaoParams = _device->CreateConstantBuffer<Constant::SSAOParames>();
+    _vinetteParams = _device->CreateConstantBuffer<Constant::VinetteParames>();
   }
 
 public:
   void UpdateSSAOParams(Constant::SSAOParames cb)
   {
     _device->GetImmContext()->UpdateSubresource(_ssaoParams.Get(), 0, nullptr,
+                                                &cb, 0, 0);
+  }
+  void UpdateVinetteParams(Constant::VinetteParames cb)
+  {
+    _device->GetImmContext()->UpdateSubresource(_vinetteParams.Get(), 0,
+                                                nullptr,
                                                 &cb, 0, 0);
   }
 

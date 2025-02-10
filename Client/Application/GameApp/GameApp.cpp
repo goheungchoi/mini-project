@@ -42,13 +42,13 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   Super::Initialize(screenWidth, screenHeight, title);
 
   // 디버그용 콘솔창 생성 *Debug*
-  bool bUseConsole = true; // 이거 true로 바꾸면 콘솔창 뜸.
-  if (bUseConsole)
-  {
-    AllocConsole();
-    FILE* _tempFile;
-    freopen_s(&_tempFile, "CONOUT$", "w", stdout);
-  }
+  //bool bUseConsole = true; // 이거 true로 바꾸면 콘솔창 뜸.
+  //if (bUseConsole)
+  //{
+  //  AllocConsole();
+  //  FILE* _tempFile;
+  //  freopen_s(&_tempFile, "CONOUT$", "w", stdout);
+  //}
 
   RegisterSoundList();
 
@@ -100,7 +100,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _world->AddLevel(level8);
   _world->AddLevel(level8_2);
 
-  _world->PrepareChangeLevel(level4->name);
+  _world->PrepareChangeLevel(level1->name);
   _world->CommitLevelChange();
 }
 

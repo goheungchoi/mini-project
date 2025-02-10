@@ -46,18 +46,35 @@ Character::Character(World* world) : GameObject(world)
 {
   count++;
 
+  // Death indicator.
   deathIndicatorHandle =
       LoadTexture("Textures\\Indicator_Death.png", TextureType::kAlbedo);
 
   deathIndicator = world->CreateGameObject();
-  deathIndicator->SetTranslation(0.f, 1.6f, 0.f);
+  deathIndicator->SetTranslation(0.f, 2.5f, 0.f);
+  {
+    auto* bbComp = deathIndicator->CreateComponent<BillboardComponent>();
+    bbComp->SetTexture(deathIndicatorHandle);
+    bbComp->SetScale({1.f, 1.f, 1.f});
+    AddChildGameObject(deathIndicator);
+    deathIndicator->SetInvisible();
+  }
 
-  auto* bbComp = deathIndicator->CreateComponent<BillboardComponent>();
-  bbComp->SetTexture(deathIndicatorHandle);
-  bbComp->SetScale({1.f, 1.f, 1.f});
-  AddChildGameObject(deathIndicator);
-  deathIndicator->SetInvisible();
-	
+  // Tab Indicator
+  tabIndicatorHandle =
+      LoadTexture("Models\\Indicator\\TabIndicator\\UI_Rotate_01.png",
+                  TextureType::kAlbedo);
+
+  tabIndicator = world->CreateGameObject();
+  tabIndicator->SetTranslation(0.f, 2.5f, 0.f);
+  {
+    auto* bbComp = tabIndicator->CreateComponent<BillboardComponent>();
+    bbComp->SetTexture(tabIndicatorHandle);
+    bbComp->SetScale({-.7f, .7f, 1.f});
+    AddChildGameObject(tabIndicator);
+    tabIndicator->SetInvisible();
+  }
+
 	// Create an Animator component
   animator = CreateComponent<AnimatorComponent>();
   animator->BindSkeleton(playerSkeletonHandle);
@@ -73,6 +90,12 @@ Character::~Character() {
 
   if (activeIndicator)
     activeIndicator->Destroy();
+
+  if (tabIndicator)
+    tabIndicator->Destroy();
+
+  if (deathIndicator)
+    deathIndicator->Destroy();
 
   UnloadTexture(deathIndicatorHandle);
 }
@@ -339,6 +362,10 @@ void Character::OnAwake()
     bodyRigidBody->DisableSimulation();
     bodyRigidBody->EnableDebugDraw();
   }
+  else
+  {
+    tabIndicator->SetVisible();
+  }
 }
 
 void Character::Update(float dt)
@@ -464,6 +491,15 @@ void Character::PostUpdate(float dt) {
       billboard->SetPosition(deathIndicator->transform->GetGlobalTranslation());
     }
   }
+
+  if (tabIndicator)
+  {
+    auto* billboard = tabIndicator->GetComponent<BillboardComponent>();
+    if (billboard)
+    {
+      billboard->SetPosition(tabIndicator->transform->GetGlobalTranslation());
+    }
+  }
 }
 
 void Character::ApplyChangedGridLocation() {
@@ -539,10 +575,6 @@ void Character::FindTargetInRange() {
         isTargetInRange = false;
         return;
       }
-
-			// Skip the target that will be assassinated at the start of the game.
-			if (searchTarget == map->assassinationTarget)
-        continue;
 
       // Gunman -> Skip the obstacle
       // Brawler -> Don't attack and return.
