@@ -57,10 +57,11 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
                         ->GetUI<PlayButton>(L"PlayBtn");
     if (playBtn)
     {
-      for (const auto& [childName, child] : playBtn->uiMap)
-      {
-        child->Activate();
-      }
+      playBtn->GetUI<UIImage>(L"PlayBtnImg_Act")->Activate();
+      playBtn->GetUI<UIImage>(L"PlayBtnImg_Hover")->Deactivate();
+      playBtn->GetUI<UIImage>(L"PlayBtnImg_Deact")->Deactivate();
+      playBtn->GetUI<UIButton>(L"PlayBtn")->Activate();
+
       playBtn->Activate();
       playBtn->_bPlayflag = false;
     }

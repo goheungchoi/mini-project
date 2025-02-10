@@ -9,13 +9,15 @@ public:
 
   void Update(float dt) override;
   
+public:
   class UIAnim* _ellizaAnim{nullptr};
   bool _bGunFireUseFlag = false;
 
-//private:
   class UICursor* _cursor{nullptr};
   class UIButton* _gunfireBtn{nullptr};
   class UIImage* _gunfireBtnImgs[3];
 
+private:
+  bool _bHover = false;
 
 };

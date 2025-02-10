@@ -11,6 +11,7 @@
 GunfireButton::GunfireButton(World* world) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
+  _bHover = false;
 
   // Animation
   _ellizaAnim = CreateUI<UIAnim>(L"ElizaAnim");
@@ -46,15 +47,18 @@ GunfireButton::GunfireButton(World* world) : UIPanel(world)
 #endif // _DEBUG
 
   _gunfireBtn->AddOnHoveredHandler([this]() {
-    _gunfireBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
-    _gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Active);
-    _gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
+    //_gunfireBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
+    //_gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Active);
+    //_gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
+    _bHover = true;
+
   });
 
   _gunfireBtn->AddOnUnHoveredHandler([this]() {
     _gunfireBtnImgs[0]->SetStatus(EStatus::EStatus_Active);
     _gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
     _gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
+    _bHover = false;
   });
 
   _gunfireBtn->AddOnClickHandler([this]() {
@@ -72,20 +76,6 @@ void GunfireButton::Update(float dt)
 {
   __super::Update(dt);
 
-  if (_bGunFireUseFlag)
-  {
-    _gunfireBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
-    _gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
-    _gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
-  }
-  else
-  {
-    _ellizaAnim->SetStatus(EStatus_Inactive);
-    _gunfireBtnImgs[0]->SetStatus(EStatus::EStatus_Active);
-    _gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
-    _gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
-  }
-
   _cursor = _world->_canvas->GetPanel<UICursor>(L"Cursor");
 
   if (_cursor)
@@ -93,6 +83,9 @@ void GunfireButton::Update(float dt)
     if (_map->isAssassinationMode)
     {
       _cursor->SetCursorType(CursorType::SKILL);
+      _gunfireBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
+      _gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+      _gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
     }
 
     if (_bGunFireUseFlag && !(_map->isAssassinationMode))
@@ -100,6 +93,40 @@ void GunfireButton::Update(float dt)
       _cursor->SetCursorType(CursorType::DEFAULT);
     }
   }
+
+  if (!_bGunFireUseFlag)
+  {
+    _ellizaAnim->SetStatus(EStatus_Inactive);
+  }
+  else if (_bGunFireUseFlag)
+  {
+    _gunfireBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
+    _gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+    _gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
+  }
+
+  if (_map -> assassinationTarget)
+  {
+    _gunfireBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
+    _gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+    _gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
+  }
+  else if (!_map->assassinationTarget && !_bHover)
+  {
+    _gunfireBtnImgs[0]->SetStatus(EStatus::EStatus_Active);
+    _gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+    _gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
+  }
+
+  if (_bHover)
+  {
+    _gunfireBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
+    _gunfireBtnImgs[1]->SetStatus(EStatus::EStatus_Active);
+    _gunfireBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
+  }
+
+
+
 
   if (!_map->isAssassinationMode && !_map->assassinationTarget)
   {
