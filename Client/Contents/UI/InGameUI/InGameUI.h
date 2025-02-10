@@ -10,6 +10,8 @@ public:
   void Update(float dt) override;
 
 public:
+  class UIImage* _gradientIMG{nullptr};
+
   class MainMission* _mainMission{nullptr};
   class SubMission* _subMission{nullptr};
   class PlayButton* _playBtn{nullptr};
@@ -29,5 +31,4 @@ private:
   const float animSpeed = 1000.0f;
   float elapsedTime = 0.0f;
   const float stopTime = 1.0f;
-
 };

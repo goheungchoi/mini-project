@@ -11,6 +11,6 @@ public:
 
 private:
   class UIButton* _retryBtn{nullptr};
-  class UIImage* _retryBtnImgs[3];
-  bool _bRetryFlag = false;
+  class UIImage* _retryBtnImgs[2];
+  bool _bHoverFlag = false;
 };
