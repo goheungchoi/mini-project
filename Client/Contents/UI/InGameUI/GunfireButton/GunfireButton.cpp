@@ -6,7 +6,7 @@
 #include "GameFramework/UI/UIImage/UIImage.h"
 #include "GameFramework/UI/UIAnim//UIAnim.h"
 #include "Shared/Config/Config.h"
-
+#include "Contents/Levels/GameLevel.h"
 
 GunfireButton::GunfireButton(World* world) : UIPanel(world)
 {
@@ -55,6 +55,7 @@ GunfireButton::GunfireButton(World* world) : UIPanel(world)
       _bGunFireUseFlag = true;
       _map->TurnOnAssassinationMode();
     }
+    //_bHover = false;
   });
 }
 
@@ -63,6 +64,8 @@ GunfireButton::~GunfireButton() {}
 void GunfireButton::Update(float dt)
 {
   __super::Update(dt);
+
+
 
   _cursor = _world->_canvas->GetPanel<UICursor>(L"Cursor");
 
