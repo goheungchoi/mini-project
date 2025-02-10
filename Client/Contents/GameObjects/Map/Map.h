@@ -32,6 +32,8 @@ public:
   ModelHandle allySlasherModelHandle;
   ModelHandle allyGunmanModelHandle;
 
+  ModelHandle characterIndicatorModelHandle;
+
   ModelHandle obstacleBox01ModelHandle;
   ModelHandle obstacleBox02ModelHandle;
   ModelHandle obstacleDrumModelHandle;
@@ -84,8 +86,9 @@ public:
   CharacterType deleteCharType = kCivilian;
 
   // Transparent indicator.
-  Character* characterIndicator;
   std::pair<int, int> indicatorPosition;
+  Character* characterIndicator{nullptr};
+  GameObject* tempInactiveIndicator{nullptr};
 
 public:
 
@@ -130,8 +133,7 @@ public:
 
   void CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h, Direction dir = kNorth);
 
-  void PlaceCharacterIndicatorAt(CharacterType type, uint32_t w, uint32_t h,
-                                 Direction dir = kNorth);
+  void PlaceCharacterIndicatorAt(uint32_t w, uint32_t h, Direction dir = kNorth);
 
   void DeleteCharacterFromMap(Character* character);
 
@@ -143,6 +145,10 @@ public:
 private:
   XMVECTOR GetCursorPosition() const;
   void TranslatePlaceholder();
+
+  void DetectPlacementAtIndicator();
+  void ShowCharacterIndicator();
+  void HideCharacterIndicator();
 
   void AssassinateTarget();
 };

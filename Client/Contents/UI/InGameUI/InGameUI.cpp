@@ -46,11 +46,21 @@ void InGameUI::Update(float dt)
       _world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")
           ->bIsElizaDead = true;
   }
-  if (INPUT.IsKeyPress(Key::F2)) static_cast<GameLevel*>(_world->GetCurrentLevel())->SetBattleResult(eBattleResult::CivilDeadWin);
-  if (INPUT.IsKeyPress(Key::F3)) static_cast<GameLevel*>(_world->GetCurrentLevel())->SetBattleResult(eBattleResult::AllyDeadWin);
-  if (INPUT.IsKeyPress(Key::F4)) static_cast<GameLevel*>(_world->GetCurrentLevel())->SetBattleResult(eBattleResult::BothDeadWin);
-  if (INPUT.IsKeyPress(Key::F5)) static_cast<GameLevel*>(_world->GetCurrentLevel())->SetBattleResult(eBattleResult::AllyDeadLose);
-  if (INPUT.IsKeyPress(Key::F6)) static_cast<GameLevel*>(_world->GetCurrentLevel())->SetBattleResult(eBattleResult::Lose);
+  if (INPUT.IsKeyPress(Key::F2))
+    static_cast<GameLevel*>(_world->GetCurrentLevel())
+        ->SetBattleResult(eBattleResult::CivilDeadWin);
+  if (INPUT.IsKeyPress(Key::F3))
+    static_cast<GameLevel*>(_world->GetCurrentLevel())
+        ->SetBattleResult(eBattleResult::AllyDeadWin);
+  if (INPUT.IsKeyPress(Key::F4))
+    static_cast<GameLevel*>(_world->GetCurrentLevel())
+        ->SetBattleResult(eBattleResult::BothDeadWin);
+  if (INPUT.IsKeyPress(Key::F5))
+    static_cast<GameLevel*>(_world->GetCurrentLevel())
+        ->SetBattleResult(eBattleResult::AllyDeadLose);
+  if (INPUT.IsKeyPress(Key::F6))
+    static_cast<GameLevel*>(_world->GetCurrentLevel())
+        ->SetBattleResult(eBattleResult::Lose);
 
 
   // ElizaAnim 이 Active상태이면 위치 움직임

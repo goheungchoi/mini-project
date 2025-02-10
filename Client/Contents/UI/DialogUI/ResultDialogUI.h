@@ -8,6 +8,7 @@ public:
   ResultDialogUI(class World* world);
   virtual ~ResultDialogUI() = default;
 
+
   bool bIsElizaDead = false;
 
 };

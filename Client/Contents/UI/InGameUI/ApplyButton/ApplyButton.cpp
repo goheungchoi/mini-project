@@ -92,6 +92,7 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
       //    static_cast<GameLevel*>(world->GetCurrentLevel())
       //        ->SetBattleResult(eBattleResult::PerfectWin);
       //}
+
       if (static_cast<GameLevel*>(world->GetCurrentLevel())
               ->GetBattleResult() != eBattleResult::PerfectWin)
       {

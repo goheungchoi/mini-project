@@ -124,6 +124,9 @@ public:
   void Die();
 
   // Interaction
+  bool bHoverDisabled{false};
+  void DisableHover();
+
   void OnHover();
   virtual void OnLeftClick() {};
   virtual void OnRightClick() {};
