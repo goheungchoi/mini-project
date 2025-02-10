@@ -83,6 +83,10 @@ public:
 
   CharacterType deleteCharType = kCivilian;
 
+  // Transparent indicator.
+  Character* characterIndicator;
+  std::pair<int, int> indicatorPosition;
+
 public:
 
 	Map(World* world);
@@ -125,6 +129,9 @@ public:
   void CreateCivillianAt(uint32_t w, uint32_t h, Direction dir = kNorth, bool isEliza = false);
 
   void CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h, Direction dir = kNorth);
+
+  void PlaceCharacterIndicatorAt(CharacterType type, uint32_t w, uint32_t h,
+                                 Direction dir = kNorth);
 
   void DeleteCharacterFromMap(Character* character);
 

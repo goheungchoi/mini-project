@@ -132,7 +132,7 @@ public:
 	void OnBeginOverlap(GameObject* other);
 
   // Game loop events
-  void OnAwake();
+  void OnAwake() override;
 
   void Update(float dt) override;
 

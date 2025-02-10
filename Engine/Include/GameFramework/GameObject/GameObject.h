@@ -118,6 +118,17 @@ public:
     }
     components.clear();
 
+    // Destroy hierarchy.
+    if (parent)
+    {
+      parent->RemoveChildGameObject(this);
+    }
+
+    for (GameObject* child : childrens)
+    {
+      RemoveChildGameObject(child);
+    }
+
 		transform = nullptr;
 	}
 
