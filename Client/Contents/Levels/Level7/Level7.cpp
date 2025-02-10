@@ -53,7 +53,7 @@ void Level7::CreateMap()
   map->CreateEnemyAt(kGunman, 5, 2, kNorth);
   map->CreateEnemyAt(kGunman, 5, 5, kSouth);
 
-  map->CreateCivillianAt(3, 5, kWest);
+  map->CreateCivillianAt(3, 5, kWest, true);
 
   map->CreateObstacleAt(ObstacleType_Lion, 0, 0, kNorth);
   map->CreateObstacleAt(ObstacleType_Sofa, 2, 1, kSouth);

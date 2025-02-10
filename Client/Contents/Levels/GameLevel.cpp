@@ -115,14 +115,14 @@ void GameLevel::PrepareLevel()
 
 void GameLevel::BeginLevel()
 {
-  testCamera = world->CreateGameObject<CameraObject>();
-  testCamera->InitCamera(kScreenWidth, kScreenHeight, XM_PIDIV4);
-  testCamera->SetAsMainCamera();
-  //testCamera = world->CreateGameObject<FixedCamera>();
-  //
-  //testCamera->SetCameraPosition({-20.f, 20.f, -20.f, 1.f});
-  //testCamera->SetFocus({3.f, 0.f, 3.f, 1.f});
+  //testCamera = world->CreateGameObject<CameraObject>();
+  //testCamera->InitCamera(kScreenWidth, kScreenHeight, XM_PIDIV4);
   //testCamera->SetAsMainCamera();
+  testCamera = world->CreateGameObject<FixedCamera>();
+  
+  testCamera->SetCameraPosition({-20.f, 20.f, -20.f, 1.f});
+  testCamera->SetFocus({3.f, 0.f, 3.f, 1.f});
+  testCamera->SetAsMainCamera();
   // map->Translate(0.6f, -0.01f, 0.8f);
   CreateMap();
 

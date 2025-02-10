@@ -84,6 +84,12 @@ cbuffer SSAOParames : register(b5)
     float3 padding3;
 }
 
+cbuffer VignetteParams : register(b6)
+{
+    float vinetteRadius; // The radius where the vignette starts (0 to 1)
+    float softness; // Controls the smooth transition (higher = smoother)
+    float2 padding4;
+};
 
 struct VS_INPUT
 {

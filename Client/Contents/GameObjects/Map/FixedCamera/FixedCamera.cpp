@@ -60,43 +60,43 @@ void FixedCamera::Update(float dt)
   }*/
 
 
-   XMVECTOR toCamera = XMVectorSubtract(cam->GetPosition(), this->focus);
-   float rotationAngle = cam->GetRotationSpeed() *
-                         XMConvertToRadians(60.0f * dt); // 10 degrees per
-                         //update
+   //XMVECTOR toCamera = XMVectorSubtract(cam->GetPosition(), this->focus);
+   //float rotationAngle = cam->GetRotationSpeed() *
+   //                      XMConvertToRadians(60.0f * dt); // 10 degrees per
+   //                      //update
 
-   if (INPUT.IsKeyPress(Key::Q) || INPUT.IsKeyDown(Key::Q))
-   {
-     // Rotate left: Create a quaternion for rotating around the Y-axis (up)
-     XMVECTOR rotation = XMQuaternionRotationAxis(Camera::UP, rotationAngle);
+   //if (INPUT.IsKeyPress(Key::Q) || INPUT.IsKeyDown(Key::Q))
+   //{
+   //  // Rotate left: Create a quaternion for rotating around the Y-axis (up)
+   //  XMVECTOR rotation = XMQuaternionRotationAxis(Camera::UP, rotationAngle);
 
-     // Apply the rotation to the vector from the focus to the camera
-     toCamera = XMVector3Rotate(toCamera, rotation);
+   //  // Apply the rotation to the vector from the focus to the camera
+   //  toCamera = XMVector3Rotate(toCamera, rotation);
 
-     // Update the camera position
-     cam->SetPosition(XMVectorAdd(this->focus, toCamera));
+   //  // Update the camera position
+   //  cam->SetPosition(XMVectorAdd(this->focus, toCamera));
 
-     // Adjust the yaw to reflect the new rotation
-     cam->RotateAroundYAxis(-XMConvertToDegrees(rotationAngle)); // Left
-     //rotation
-   }
-   if (INPUT.IsKeyPress(Key::E) || INPUT.IsKeyDown(Key::E))
-   {
-     // Rotate right: Create a quaternion for rotating around the Y-axis (up)
-     XMVECTOR rotation = XMQuaternionRotationAxis(Camera::UP, -rotationAngle);
+   //  // Adjust the yaw to reflect the new rotation
+   //  cam->RotateAroundYAxis(-XMConvertToDegrees(rotationAngle)); // Left
+   //  //rotation
+   //}
+   //if (INPUT.IsKeyPress(Key::E) || INPUT.IsKeyDown(Key::E))
+   //{
+   //  // Rotate right: Create a quaternion for rotating around the Y-axis (up)
+   //  XMVECTOR rotation = XMQuaternionRotationAxis(Camera::UP, -rotationAngle);
 
-     // Apply the rotation to the vector from the focus to the camera
-     toCamera = XMVector3Rotate(toCamera, rotation);
+   //  // Apply the rotation to the vector from the focus to the camera
+   //  toCamera = XMVector3Rotate(toCamera, rotation);
 
-     // Update the camera position
-     cam->SetPosition(XMVectorAdd(this->focus, toCamera));
+   //  // Update the camera position
+   //  cam->SetPosition(XMVectorAdd(this->focus, toCamera));
 
-     // Adjust the yaw to reflect the new rotation
-     cam->RotateAroundYAxis(
-         XMConvertToDegrees(rotationAngle)); // Right rotation
-   }
+   //  // Adjust the yaw to reflect the new rotation
+   //  cam->RotateAroundYAxis(
+   //      XMConvertToDegrees(rotationAngle)); // Right rotation
+   //}
 
-   cam->LookAt(focus);
+   //cam->LookAt(focus);
 }
 
 void FixedCamera::OnRender() 

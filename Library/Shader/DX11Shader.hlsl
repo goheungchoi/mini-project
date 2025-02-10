@@ -35,7 +35,7 @@ float4 quad_ps_main(QUAD_PS_INPUT input) : SV_TARGET0
     albedo = pow(albedo, 2.2);
     if (depthColor == 1)
     {
-        return float4(pow(albedo, 1 / 2.2), 1.f);
+        discard;
     }
     //gamma correction
     float3 normal = deferredNormal.Sample(samAnisotropy, input.uv).rgb;
@@ -326,7 +326,8 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
         ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
     }
     
-    ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor;
+    ambientLighting += (IBLdiffuse + specularIBL) * ambientIntencity *
+    (float3) ambientFactor;
 
     float currShadowDepth = input.positionShadow.z / input.positionShadow.w;
     float2 uv = input.positionShadow.xy / input.positionShadow.w;
@@ -689,5 +690,20 @@ float4 trail_ps_main(TRAIL_PS_INPUT input):SV_Target0
     float3 color = albedoFactor.rgb;
     float alpha = input.alpha;
     return float4(color, alpha);
+}
+#endif
+
+#ifdef VINETTE
+float4 vinette_ps_main(QUAD_PS_INPUT input) : SV_Target0
+{
+    // Calculate distance from the center (normalized to 0~1 range)
+    float2 center = float2(0.5, 0.5);
+    float dist = length(input.uv - center);
+
+    // Compute vignette alpha using smoothstep
+    float vignetteAlpha = smoothstep(radius, radius + softness, dist);
+
+    // Output a black color with vignetteAlpha as transparency
+    return float4(0, 0, 0, vignetteAlpha);
 }
 #endif

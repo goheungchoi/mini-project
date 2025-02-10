@@ -153,5 +153,7 @@ private:
 
   float mapPos[3]{-4.5f, 0.f, -4.1f};
   float mapRot = 0.f;
+  //XMVECTOR lightStartPoint = {0.804f,-0.864f,0.615f};
+  XMVECTOR lightStartPoint = {1.f,-1.f,1.f};
 };
 

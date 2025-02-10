@@ -36,7 +36,7 @@ public:
   Rasterizer* _rsWireFrame = nullptr;
   Rasterizer* _rsCullNone = nullptr;
   float _clearColor[4];
-  float _clearColor2[4] = {0.2f, 0.2f, 0.2f, 1.f};
+  float _clearColor2[4] = {0.4078f, 0.38f, 0.36f, 1.f};
 
 public:
   PipeLine(Device* device, SwapChain* swapChain, int width, int height)
@@ -174,7 +174,13 @@ public:
 public:
   void ClearBackBufferRTV()
   {
-
+#ifndef NDEBUG
+    ImGui::Begin("backbuffer");
+    {
+      ImGui::ColorEdit3("backbuffer", _clearColor2);
+    }
+    ImGui::End();
+#endif
     _device->GetImmContext()->ClearRenderTargetView(_backBuffer->mainRTV.Get(),
                                                     _clearColor2);
   }
@@ -207,6 +213,11 @@ public:
   {
     _device->GetImmContext()->OMSetRenderTargets(
         1, _backBuffer->mainRTV.GetAddressOf(), _backBuffer->mainDSV.Get());
+  }
+  void SetMainRenderTart()
+  {
+    _device->GetImmContext()->OMSetRenderTargets(
+        1, _backBuffer->mainRTV.GetAddressOf(), nullptr);
   }
   void SetMainRS()
   {

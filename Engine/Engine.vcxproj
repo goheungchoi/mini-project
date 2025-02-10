@@ -225,6 +225,7 @@
 		<ClCompile Include="Include\Core\Types\Trail.cpp" />
 		<ClInclude Include="Include\Core\Types\Trail.h" />
 		<ClInclude Include="Include\Core\UUID\UUID.h" />
+		<ClInclude Include="Include\Core\Utils\Console.h" />
 		<ClInclude Include="Include\Core\Utils\IOUtils.h" />
 		<ClInclude Include="Include\Core\Utils\RandomGenerator.h" />
 		<ClInclude Include="Include\Core\Utils\ShaderCompiler.h" />
@@ -266,6 +267,7 @@
 		<ClCompile Include="Source\Core\Math\MathUtils.cpp" />
 		<ClCompile Include="Source\Core\Time\TimeSystem.cpp" />
 		<ClCompile Include="Source\Core\UUID\UUID.cpp" />
+		<ClCompile Include="Source\Core\Utils\Console.cpp" />
 		<ClCompile Include="Source\Core\Utils\IOUtils.cpp" />
 		<ClCompile Include="Source\Core\Utils\RandomGenerator.cpp" />
 		<ClCompile Include="Source\Core\Utils\ShaderCompiler.cpp" />
@@ -321,6 +323,7 @@
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\Shader.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShaderModule.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\ShadowPass.h" />
+		<ClInclude Include="Source\Renderer\DX11\Internal\RenderFrameworks\VinettePass.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\ResourceStorage.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\BillboardQuad.h" />
 		<ClInclude Include="Source\Renderer\DX11\Internal\Resources\Buffer.h" />
