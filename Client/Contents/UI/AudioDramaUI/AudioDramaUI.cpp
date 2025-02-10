@@ -39,11 +39,9 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
 void AudioDramaUI::Update(float dt)
 {
   UIPanel::Update(dt);
-  if (_elapsedTimer <= 0.f)
-    SoundManager::PlaySound(SoundList::AudioDrama_Stage_01);
+
   RunStage(dt);
 
-  Stage1(dt);
   if (_elapsedTimer>= _totalTime)
   {
     _Background->FadeOut(1.f);
@@ -137,6 +135,41 @@ void AudioDramaUI::EndingStage2(float dt)
   if (_elapsedTimer >= 9.16)    PrintText(4, 1, dt, 3.99);
   if (_elapsedTimer >= 14.23)   PrintText(4, 2, dt, 3.82);
   if (_elapsedTimer >= 19.08)   PrintText(4, 3, dt, 5.17);
+}
+
+void AudioDramaUI::RunStage(float dt)
+{
+  switch (stageidx)
+  {
+  case 1:
+    if (_elapsedTimer <= 0.f)
+      SoundManager::PlaySound(SoundList::AudioDrama_Stage_01);
+    Stage1(dt);
+    break;
+  case 4:
+    if (_elapsedTimer <= 0.f)
+      SoundManager::PlaySound(SoundList::AudioDrama_Stage_01);
+    Stage4(dt);
+    break;
+  case 7:
+    if (_elapsedTimer <= 0.f)
+      SoundManager::PlaySound(SoundList::AudioDrama_Stage_01);
+    Stage7(dt);
+    break;
+
+  case 8:
+    if (_elapsedTimer <= 0.f)
+      SoundManager::PlaySound(SoundList::AudioDrama_Stage_01);
+    EndingStage1(dt);
+    break;
+
+  case 9:
+    if (_elapsedTimer <= 0.f)
+      SoundManager::PlaySound(SoundList::AudioDrama_Stage_01);
+    EndingStage2(dt);
+    break;
+
+  }
 }
 
 

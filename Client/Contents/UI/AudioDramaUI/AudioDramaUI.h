@@ -26,7 +26,7 @@ public:
 
 
 private:
-  int stageidx;
+  int stageidx = 1;
   float _elapsedTimer = 0.f;
   float _totalTime = 0.f;
   bool fadeflag = true;
