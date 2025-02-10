@@ -1,12 +1,11 @@
-;
 #pragma once
 #include "../Common.h"
 #include "../Device.h"
 #include "../RenderFrameworks/Shader.h"
 #include "../Resources/Buffer.h"
+#include "../Resources/PipeLineState.h"
 #include "../Resources/QuadFrame.h"
 #include "Core/Common.h"
-#include "../Resources/PipeLineState.h"
 using namespace DirectX::SimpleMath;
 using namespace Microsoft::WRL;
 
@@ -70,22 +69,18 @@ public:
 public:
   void Prepare(BackBuffer* backBuffer)
   {
-    #ifndef NDEBUG
-    ImGui::Begin("backbuffer");
-    {
-      ImGui::ColorEdit3("backbuffer", _clearColor);
-    }
-    ImGui::End();
-    #endif
+    _device->GetImmContext()->OMSetRenderTargets(
+        static_cast<UINT>(_renderTargets.size()),
+        _renderTargets.data()->GetAddressOf(), backBuffer->mainDSV.Get());
+  }
+  void ClearRenderTargets()
+  {
+
     std::ranges::for_each(_renderTargets,
                           [&](ComPtr<ID3D11RenderTargetView>& targetView) {
                             _device->GetImmContext()->ClearRenderTargetView(
                                 targetView.Get(), _clearColor);
                           });
-
-    _device->GetImmContext()->OMSetRenderTargets(
-        static_cast<UINT>(_renderTargets.size()),
-        _renderTargets.data()->GetAddressOf(), backBuffer->mainDSV.Get());
   }
   void QuadDraw()
   {
@@ -104,7 +99,7 @@ public:
     _device->GetImmContext()->IASetPrimitiveTopology(
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     _device->GetImmContext()->DrawIndexed(_frame->_indexCount, 0, 0);
-    #ifdef _DEBUG
+#ifdef _DEBUG
     if (ImGui::Begin("Deffered"))
     {
       ImTextureID imgID = (ImTextureID)(uintptr_t)_renderTargetSRVs[0].Get();
@@ -117,17 +112,28 @@ public:
       ImGui::Image(imgID, ImVec2(240, 135));
       imgID = (ImTextureID)(uintptr_t)_renderTargetSRVs[4].Get();
       ImGui::Image(imgID, ImVec2(240, 135));
-
     }
     ImGui::End();
-    #endif
-    
+#endif
   }
-  void ClearRenderTargets()
+  void ClearSrvs()
   {
     ID3D11ShaderResourceView* srvs[6] = {
         nullptr,
     };
-    _device->GetImmContext()->PSSetShaderResources(10,6,srvs);
+    _device->GetImmContext()->PSSetShaderResources(10, 6, srvs);
+  }
+
+  void DrawVinette()
+  {
+    ID3D11DeviceContext* dc = _device->GetImmContext();
+    dc->OMSetRenderTargets(1, _renderTargets[0].GetAddressOf(), nullptr);
+    unsigned int stride = sizeof(Quad::Vertex);
+    unsigned int offset = 0;
+    dc->IASetVertexBuffers(0, 1, _frame->_vertexBuffer.GetAddressOf(), &stride,
+                           &offset);
+    dc->IASetIndexBuffer(_frame->_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+    dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    _device->GetImmContext()->DrawIndexed(_frame->_indexCount, 0, 0);
   }
 };
