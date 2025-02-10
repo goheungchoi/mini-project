@@ -70,43 +70,51 @@ inline void UnloadShader(ShaderHandle handle)
 // Texture
 inline TextureHandle LoadTexture(const std::string& path, TextureType type)
 {
+  std::cout << "Load texture: " << path << std::endl;
   return GetResourceManager()->LoadTexture(path, type);
 }
 
 inline TextureData& AccessTextureData(TextureHandle handle)
 {
+  std::cout << "Access texture: " << handle.index << std::endl;
   return GetResourceManager()->AccessTextureData(handle);
 }
 
 inline void UnloadTexture(TextureHandle handle)
 {
+  std::cout << "Unload texture: " << handle.index << std::endl;
   GetResourceManager()->UnloadTexture(handle);
 }
 
 // Material
 inline MaterialHandle LoadMaterial(const std::string& path)
 {
+  std::cout << "Load material: " << path << std::endl;
   return GetResourceManager()->LoadMaterial(path);
 }
 
 inline MaterialData& AccessMaterialData(MaterialHandle handle)
 {
+  std::cout << "Access material: " << handle.index << std::endl;
   return GetResourceManager()->AccessMaterialData(handle);
 }
 
 inline void UnloadMaterial(MaterialHandle handle)
 {
+  std::cout << "Unload material: " << handle.index << std::endl;
   GetResourceManager()->UnloadMaterial(handle);
 }
 
 // Mesh
 inline MeshHandle LoadMesh(const std::string& path)
 {
+  std::cout << "Load mesh: " << path << std::endl;
   return GetResourceManager()->LoadMesh(path);
 }
 
 inline MeshData& AccessMeshData(MeshHandle handle)
 {
+  std::cout << "Access mesh: " << handle.index << std::endl;
   return GetResourceManager()->AccessMeshData(handle);
 }
 
@@ -116,6 +124,7 @@ inline MeshHandle CloneMesh(MeshHandle handle) {
 
 inline void UnloadMesh(MeshHandle handle)
 {
+  std::cout << "Unload mesh: " << handle.index << std::endl;
   GetResourceManager()->UnloadMesh(handle);
 }
 
@@ -126,11 +135,13 @@ inline void UnloadMesh(MeshHandle handle)
  */
 inline ModelHandle LoadModel(const std::string& path)
 {
+  std::cout << "Load model: " << path << std::endl;
   return GetResourceManager()->LoadModel(path);
 }
 
 inline ModelData& AccessModelData(ModelHandle handle)
 {
+  std::cout << "Access model: " << handle.index << std::endl;
   return GetResourceManager()->AccessModelData(handle);
 }
 
@@ -140,6 +151,7 @@ inline ModelHandle CloneModel(ModelHandle handle) {
 
 inline void UnloadModel(ModelHandle handle)
 {
+  std::cout << "Unload model: " << handle.index << std::endl;
   GetResourceManager()->UnloadModel(handle);
 }
 

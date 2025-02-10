@@ -10,6 +10,7 @@
 void Level8::PrepareLevel()
 {
   __super::PrepareLevel();
+	mapMuseumMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
 }
 
 void Level8::BeginLevel()
@@ -29,7 +30,10 @@ void Level8::BeginLevel()
 #endif
 }
 
-void Level8::CleanupLevel() {}
+void Level8::CleanupLevel() {
+  GameLevel::CleanupLevel();
+  UnloadModel(mapMuseumMeshHandle);
+}
 
 void Level8::CreateMap()
 {

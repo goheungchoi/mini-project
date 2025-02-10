@@ -10,7 +10,6 @@ class Map : public GameObject
 {
 public:
   // Resource handle
-  ModelHandle animTestHandle;
 
   ModelHandle allyDirectionIndicatorModelHandle;
   ModelHandle enemyDirectionIndicatorModelHandle;

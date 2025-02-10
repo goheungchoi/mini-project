@@ -9,6 +9,7 @@
 void Level3::PrepareLevel()
 {
   __super::PrepareLevel();
+	mapBarMeshHandle = LoadModel("Models\\Maps\\Map_001_Bar\\Map_001.glb");
 }
 
 void Level3::BeginLevel()
@@ -27,7 +28,11 @@ void Level3::BeginLevel()
 #endif
 }
 
-void Level3::CleanupLevel() {}
+void Level3::CleanupLevel()
+{
+  GameLevel::CleanupLevel();
+  UnloadModel(mapBarMeshHandle);
+}
 
 void Level3::CreateMap()
 {

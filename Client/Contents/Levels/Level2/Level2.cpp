@@ -17,12 +17,13 @@
 void Level2::PrepareLevel()
 {
   __super::PrepareLevel();
+	mapMuseumMeshHandle = LoadModel("Models\\Maps\\Map_002_Museum\\Map_002.glb");
 }
 
 void Level2::BeginLevel()
 {
   __super::BeginLevel();
-
+	
 #ifdef USED2D
   inGameUI->HideUI(L"GunfireBtn");
   inGameUI->HideUI(L"SubMission");
@@ -35,7 +36,10 @@ void Level2::BeginLevel()
 #endif
 }
 
-void Level2::CleanupLevel() {}
+void Level2::CleanupLevel() {
+  GameLevel::CleanupLevel();
+  UnloadModel(mapMuseumMeshHandle);
+}
 
 void Level2::CreateMap()
 {

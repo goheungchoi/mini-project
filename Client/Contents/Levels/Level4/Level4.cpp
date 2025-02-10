@@ -10,6 +10,8 @@
 void Level4::PrepareLevel()
 {
   __super::PrepareLevel();
+	mapWarehouseMeshHandle =
+      LoadModel("Models\\Maps\\Map_003_Warehouse\\Map_003.glb");
 }
 
 void Level4::BeginLevel()
@@ -29,7 +31,10 @@ void Level4::BeginLevel()
 #endif
 }
 
-void Level4::CleanupLevel() {}
+void Level4::CleanupLevel() {
+  GameLevel::CleanupLevel();
+  UnloadModel(mapWarehouseMeshHandle);
+}
 
 void Level4::CreateMap()
 {

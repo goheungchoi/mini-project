@@ -57,3 +57,10 @@ template <>
 void ResourcePool<SkeletonData>::UnloadImpl(Handle& handle, void* pReserved)
 {
 }
+
+template <>
+Handle ResourcePool<SkeletonData>::DuplicateHandleImpl(const Handle& handle,
+                                                        void* pReserved)
+{
+  return _handleTable.DuplicateHandle(handle);
+}

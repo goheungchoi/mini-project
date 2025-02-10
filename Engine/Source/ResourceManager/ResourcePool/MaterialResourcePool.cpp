@@ -99,6 +99,17 @@ Handle ResourcePool<MaterialData>::LoadImpl(xUUID uuid, void* pUser)
 
 	Handle handle = _handleTable.ClaimHandle(std::move(mat),
                                            (uint16_t)ResourceType::kMaterial);
+  if (!_handleTable.IsValidHandle(handle))
+  {
+    std::cout << uuid.ToString() << "; material loading failed." << std::endl;
+    terminate();
+  }
+  else
+  {
+    std::cout << uuid.ToString()
+              << "; material loading succeeded: " << handle.index << ", "
+              << handle.version << "." << std::endl;
+  }
   _uuidMap[uuid] = handle.index;
   _handleUUIDMap[handle] = uuid;
   return handle;
@@ -109,6 +120,9 @@ void ResourcePool<MaterialData>::UnloadImpl(Handle& handle, void* pReserved)
 {
   ::pools = (Pools*)pReserved;
   ::texturePool = pools->texturePool;
+
+	std::cout << "material unloading succeeded : " << handle.index << ", "
+            << handle.version << "." << std::endl;
 
   MaterialData& data = _handleTable[handle].value();
 
@@ -136,4 +150,45 @@ void ResourcePool<MaterialData>::UnloadImpl(Handle& handle, void* pReserved)
   {
     ::texturePool->Unload(data.emissiveTexture, ::pools);
   }
+}
+
+
+template <>
+Handle ResourcePool<MaterialData>::DuplicateHandleImpl(const Handle& handle,
+                                                    void* pReserved)
+{
+  ::pools = (Pools*)pReserved;
+  ::texturePool = pools->texturePool;
+
+  std::cout << "material unloading succeeded : " << handle.index << ", "
+            << handle.version << "." << std::endl;
+
+  MaterialData& data = _handleTable[handle].value();
+
+  if (::texturePool->IsValidHandle(data.albedoTexture))
+  {
+    ::texturePool->DuplicateHandle(data.albedoTexture, ::pools);
+  }
+
+  if (::texturePool->IsValidHandle(data.metallicRoughnessTexture))
+  {
+    ::texturePool->DuplicateHandle(data.metallicRoughnessTexture, ::pools);
+  }
+
+  if (::texturePool->IsValidHandle(data.normalTexture))
+  {
+    ::texturePool->DuplicateHandle(data.normalTexture, ::pools);
+  }
+
+  if (::texturePool->IsValidHandle(data.occlusionTexture))
+  {
+    ::texturePool->DuplicateHandle(data.occlusionTexture, ::pools);
+  }
+
+  if (::texturePool->IsValidHandle(data.emissiveTexture))
+  {
+    ::texturePool->DuplicateHandle(data.emissiveTexture, ::pools);
+  }
+
+	return _handleTable.DuplicateHandle(handle);
 }

@@ -18,21 +18,24 @@
 template <typename T, size_t GROW_SIZE = 1024>
 class ResourcePool
 {
+  // mutex
+  mutable std::mutex _resourcePoolMutex;
+
   std::unordered_map<xUUID, uint32_t> _uuidMap;
   std::unordered_map<Handle, xUUID> _handleUUIDMap;
 
 	HandleTable<T, GROW_SIZE> _handleTable;
 
-	// mutex
-	mutable std::mutex _resourcePoolMutex;
-
 public:
+
   Handle Load(const char* path, void* pReserved)
   {
     xUUID uuid = GenerateUUIDFromName(path);
 
     if (uuid.IsNil())
     {
+      std::cout << typeid(T).name() << " ResourcePool; path is null."
+                << std::endl;
       return Handle::kInvalidHandle;
     }
 
@@ -50,7 +53,11 @@ public:
       // Duplicate the handle
       uint32_t index = it->second;
       Handle handle = _handleTable[index];
-      return _handleTable.DuplicateHandle(handle);
+
+			std::cout << "Duplicate " << handle.index << ", " << handle.version
+                << ", " << handle.desc << std::endl;
+
+      return DuplicateHandleImpl(handle, pReserved);
     }
 
     return Handle::kInvalidHandle;
@@ -76,8 +83,12 @@ public:
     std::lock_guard<std::mutex> lock(_resourcePoolMutex);
 
     if (!DeadlockFree_IsValidHandle(handle))
+    {
       // TODO: Error message
-      throw std::exception("Invalid handle!");
+      std::cout << typeid(T).name() << "; unloading failed: invalid handle."
+                << std::endl;
+			throw std::exception("Invalid handle!");
+		}
 
     // Temp
     Handle tmp = handle;
@@ -121,12 +132,31 @@ public:
     // Lock the thread for safe multithreading.
     std::lock_guard<std::mutex> lock(_resourcePoolMutex);
 
-    if (!DeadlockFree_IsValidHandle(handle))
+		if (!DeadlockFree_IsValidHandle(handle))
+		{
       // TODO: Error message
+      std::cout << typeid(T).name() << "; access resource data failed." << std::endl;
       throw std::exception("Invalid handle!");
+		}
 
     return _handleTable[handle].value();
   }
+
+	Handle DuplicateHandle(const Handle& handle, void* pReserved)
+  {
+    // Lock the thread for safe multithreading.
+    std::lock_guard<std::mutex> lock(_resourcePoolMutex);
+
+		if (!DeadlockFree_IsValidHandle(handle))
+    {
+      // TODO: Error message
+      std::cout << typeid(T).name() << "; duplicate handle failed."
+                << std::endl;
+      throw std::exception("Invalid handle!");
+    }
+
+    return DuplicateHandleImpl(handle, pReserved);
+	}
 
 private:
   bool DeadlockFree_IsValidHandle(const Handle& handle) const {
@@ -143,6 +173,11 @@ private:
 	void RestoreDetailedDataImpl(Handle& handle, void* pReserved) {}
 
 	void UnloadImpl(Handle& handle, void* pReserved) { return; }
+
+	Handle DuplicateHandleImpl(const Handle& handle, void* pReserved)
+  {
+    return Handle::kInvalidHandle;
+  }
 };
 
 template <>
@@ -174,5 +209,27 @@ template <>
 void ResourcePool<SkeletonData>::UnloadImpl(Handle& handle, void* pReserved);
 template <>
 void ResourcePool<AnimationData>::UnloadImpl(Handle& handle, void* pReserved);
+
+template <>
+Handle ResourcePool<ShaderData>::DuplicateHandleImpl(const Handle& handle,
+                                                     void* pReserved);
+template <>
+Handle ResourcePool<TextureData>::DuplicateHandleImpl(const Handle& handle,
+                                                      void* pReserved);
+template <>
+Handle ResourcePool<MaterialData>::DuplicateHandleImpl(const Handle& handle,
+                                                       void* pReserved);
+template <>
+Handle ResourcePool<MeshData>::DuplicateHandleImpl(const Handle& handle,
+                                                   void* pReserved);
+template <>
+Handle ResourcePool<ModelData>::DuplicateHandleImpl(const Handle& handle,
+                                                    void* pReserved);
+template <>
+Handle ResourcePool<SkeletonData>::DuplicateHandleImpl(const Handle& handle,
+                                                       void* pReserved);
+template <>
+Handle ResourcePool<AnimationData>::DuplicateHandleImpl(const Handle& handle,
+                                                        void* pReserved);
 
 // TODO: Restore and discard detailed data.

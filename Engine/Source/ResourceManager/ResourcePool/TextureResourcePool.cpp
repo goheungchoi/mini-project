@@ -51,6 +51,18 @@ Handle ResourcePool<TextureData>::LoadImpl(xUUID uuid, void* pUser)
 	// Claim the handle and map the UUID.
 	Handle handle = _handleTable.ClaimHandle(
       std::move(data), (uint16_t)ResourceType::kTexture);
+  if (!_handleTable.IsValidHandle(handle))
+  {
+    std::cout << uuid.ToString() << "; texture loading failed." << std::endl;
+    terminate();
+  }
+  else
+  {
+    std::cout << uuid.ToString()
+              << "; texture loading succeeded: " << handle.index << ", "
+              << handle.version << "." << std::endl;
+  }
+
   _uuidMap[uuid] = handle.index;
   _handleUUIDMap[handle] = uuid;
   return handle;
@@ -59,5 +71,13 @@ Handle ResourcePool<TextureData>::LoadImpl(xUUID uuid, void* pUser)
 template<>
 void ResourcePool<TextureData>::UnloadImpl(Handle& handle, void* pReserved)
 {
-  
+  std::cout << "texture unloading succeeded : " << handle.index << ", "
+            << handle.version << "." << std::endl;
+}
+
+template <>
+Handle ResourcePool<TextureData>::DuplicateHandleImpl(const Handle& handle,
+                                                       void* pReserved)
+{
+  return _handleTable.DuplicateHandle(handle);
 }

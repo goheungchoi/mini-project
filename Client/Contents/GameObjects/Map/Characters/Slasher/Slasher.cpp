@@ -68,6 +68,8 @@ Slasher::~Slasher() {
   delete action1;
   delete action2;
   delete actionState;
+
+	UnloadModel(knifeModelHandle);
 }
 
 void Slasher::TriggerAction() {

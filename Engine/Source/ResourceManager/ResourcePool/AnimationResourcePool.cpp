@@ -89,3 +89,11 @@ void ResourcePool<AnimationData>::UnloadImpl(Handle& handle, void* pReserved)
 {
   
 }
+
+
+template <>
+Handle ResourcePool<AnimationData>::DuplicateHandleImpl(const Handle& handle,
+                                                    void* pReserved)
+{
+  return _handleTable.DuplicateHandle(handle);
+}

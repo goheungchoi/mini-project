@@ -140,6 +140,11 @@ public:
 		// Store the object
     _table[i].second = std::forward<T>(obj);
 
+		if (curr.index == 8 && curr.desc == 2)
+		{
+      int i = 0;
+		}
+
 		_refCounts[i] = 1;
 
 		// Push the next empty slot to the stack if available
@@ -182,12 +187,17 @@ public:
     if (!DeadlockFree_IsValidHandle(handle))
       throw std::exception("invalid handle!");
 
+		if (handle.index == 8 && handle.desc == 2)
+    {
+      int i = 0;
+    }
+
     _refCounts[handle.index]--;
 
 		// The reference count reaches the zero
 		if (_refCounts[handle.index] == 0)
     {
-      if (handle.index == 22)
+      if (handle.index == 8 && handle.desc == 2)
       {
         int i = 0;
       }
@@ -199,7 +209,7 @@ public:
 		}
 
 		// Invalidate the inputted handle
-		handle = Handle::kInvalidHandle;
+		// handle = Handle::kInvalidHandle;
 	}
 
 	uint32_t GetReferenceCount(const Handle& handle) const
