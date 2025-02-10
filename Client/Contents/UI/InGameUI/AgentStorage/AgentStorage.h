@@ -12,7 +12,7 @@ public:
 
   class UIButton* _AgentBtn{nullptr};
 private:
-  class UIImage* _AgentImgs[2]{nullptr};
+  class UIImage* _AgentImgs[3]{nullptr};
   bool bUseFlag = false;
   static int numGunAgent;
   static int prevAgentNum;

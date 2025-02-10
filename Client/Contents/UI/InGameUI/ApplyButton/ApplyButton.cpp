@@ -11,7 +11,11 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
   _applyBtnImgs[0] = CreateUI<UIImage>(L"ApplyBtnImg_Act");
+  _applyBtnImgs[1] = CreateUI<UIImage>(L"ApplyBtnImg_Hover");
+
   _applyBtnImgs[0]->SetSprite("2D\\UI\\UI_Confirm_Act.png", {1800, 100});
+  _applyBtnImgs[1]->SetSprite("2D\\UI\\UI_Confirm_Hover.png", {1800, 100});
+  _applyBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
 
   _applyBtn = CreateUI<UIButton>(L"ApplyBtn");
   _applyBtn->SetSize(_applyBtnImgs[0]->GetSize());
@@ -105,18 +109,15 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
         world->CommitLevelChange();
       }
     }
+    
+    _bHoverFlag = false;
+
   });
 
 
-  _applyBtn->AddOnHoveredHandler(
-      [this]() { 
-      
-      });
+  _applyBtn->AddOnHoveredHandler([this]() { _bHoverFlag = true; });
 
-  _applyBtn->AddOnUnHoveredHandler(
-      [this]() { 
-      
-      });
+  _applyBtn->AddOnUnHoveredHandler([this]() { _bHoverFlag = false; });
 
 }
 
@@ -125,4 +126,15 @@ ApplyButton::~ApplyButton() {}
 void ApplyButton::Update(float dt)
 {
   __super::Update(dt);
+
+  if (!_bHoverFlag)
+  {
+    _applyBtnImgs[0]->SetStatus(EStatus::EStatus_Active);
+    _applyBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+  }
+  else
+  {
+    _applyBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
+    _applyBtnImgs[1]->SetStatus(EStatus::EStatus_Active);
+  }
 }
