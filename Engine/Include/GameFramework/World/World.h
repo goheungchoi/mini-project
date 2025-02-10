@@ -281,3 +281,5 @@ private:
   void UpdateGameObjectHierarchy(GameObject* gameObject,
                                  std::function<void(GameObject*)> func);
 };
+
+extern DirectionalLight _mainLight;

@@ -17,7 +17,7 @@
 #include <imgui_impl_win32.h>
 #endif
 constexpr float kIndicatorScale{0.7f};
-
+extern DirectionalLight _mainLight;
 Map::Map(World* world) : GameObject(world)
 {
   record.reserve(32);
@@ -1003,20 +1003,29 @@ void Map::Update(float dt)
   {
     DetectPlacementAtIndicator();
   }
+  
+  // Rotate this map.
+  if (INPUT.IsKeyPress(Key::Q) || INPUT.IsKeyDown(Key::Q))
+  {
+    mapRot -= dt;
+  }
+  if (INPUT.IsKeyPress(Key::E) || INPUT.IsKeyDown(Key::E))
+  {
+    mapRot += dt;
+  }
+  float oneDegree = XM_PIDIV2 / 90.f;
+  float maxAngle = oneDegree * 27.2;
+  mapRot = std::clamp(mapRot, -maxAngle, maxAngle);
+  parent->SetRotationAroundYAxis(mapRot);
 
-  //// Rotate this map.
-  //if (INPUT.IsKeyPress(Key::Q) || INPUT.IsKeyDown(Key::Q))
-  //{
-  //  mapRot -= dt;
-  //}
-  //if (INPUT.IsKeyPress(Key::E) || INPUT.IsKeyDown(Key::E))
-  //{
-  //  mapRot += dt;
-  //}
-  //float oneDegree = XM_PIDIV2 / 90.f;
-  //float maxAngle = oneDegree * 27.2;
-  //mapRot = std::clamp(mapRot, -maxAngle, maxAngle);
-  //parent->SetRotationAroundYAxis(mapRot);
+  // Rotate light direction
+  XMMATRIX rotationMat = XMMatrixRotationY(mapRot);
+  XMVECTOR rotatedPoint = XMVector3Transform(lightStartPoint, rotationMat);
+  float newX = XMVectorGetX(rotatedPoint);
+  float newY = XMVectorGetY(rotatedPoint);
+  float newZ = XMVectorGetZ(rotatedPoint);
+  XMVECTOR newLightPoint = {newX, newY, newZ};
+  _mainLight.direction = newLightPoint;
   // Action mode
   if (isActionTriggered)
   {
@@ -1252,7 +1261,27 @@ void Map::OnRender()
   ImGui::End();
   XMVECTOR mp = {mapPos[0], mapPos[1], mapPos[2]};
   SetTranslation(mp);
- 
+#ifdef _DEBUG
+  if (ImGui::Begin("main Light"))
+  {
+    float _mainLightDir[3] = {_mainLight.direction.x, _mainLight.direction.y,
+                              _mainLight.direction.z};
+    ImGui::SliderFloat3("direction", _mainLightDir, -1.f, 1.f);
+    _mainLight.direction.x = _mainLightDir[0];
+    _mainLight.direction.y = _mainLightDir[1];
+    _mainLight.direction.z = _mainLightDir[2];
+    float _mainLightColor[4] = {_mainLight.radiance.x, _mainLight.radiance.y,
+                                _mainLight.radiance.z, 1.f};
+    ImGui::ColorEdit3("Color", _mainLightColor);
+    float _mainLightIntencity = _mainLight.radiance.w;
+    ImGui::SliderFloat("intencity", &_mainLightIntencity, 0.f, 1.f);
+    _mainLight.radiance.x = _mainLightColor[0];
+    _mainLight.radiance.y = _mainLightColor[1];
+    _mainLight.radiance.z = _mainLightColor[2];
+    _mainLight.radiance.w = _mainLightIntencity;
+  }
+  ImGui::End();
+#endif
 #endif // !_DEBUG
 }
 

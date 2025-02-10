@@ -326,7 +326,8 @@ float4 ps_main(PS_INPUT input) : SV_TARGET0
         ambientFactor = float4(1.f, 1.f, 1.f, 1.f);
     }
     
-    ambientLighting += (IBLdiffuse + specularIBL)*ambientIntencity*ambientFactor;
+    ambientLighting += (IBLdiffuse + specularIBL) * ambientIntencity *
+    (float3) ambientFactor;
 
     float currShadowDepth = input.positionShadow.z / input.positionShadow.w;
     float2 uv = input.positionShadow.xy / input.positionShadow.w;
