@@ -20,7 +20,7 @@ GunfireButton::GunfireButton(World* world) : UIPanel(world)
   std::string gunfire = "\\Eliza_Animation\\Eliza_Initiative_Gunfire.csv";
   _ellizaAnim->LoadAnimSprite("2D\\Animation\\Eliza_Initiative_Gunfire.png",
                               rootpath + gunfire);
-  _ellizaAnim->SetCenterPos("Eliza_Initiative_Gunfire", {0, 300});
+  _ellizaAnim->SetCenterPos("Eliza_Initiative_Gunfire", {-200, 300});
   _ellizaAnim->SetScale("Eliza_Initiative_Gunfire", {.7f, .7f});
   _ellizaAnim->SetOpacity("Eliza_Initiative_Gunfire", 1.0f);
   _ellizaAnim->SetCurrentAnimSprite("Eliza_Initiative_Gunfire");

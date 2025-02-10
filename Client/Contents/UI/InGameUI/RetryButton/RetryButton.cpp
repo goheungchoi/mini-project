@@ -74,11 +74,9 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
   });
 
   _retryBtn->AddOnHoveredHandler([this]() {
-    _retryBtnImgs[0]->SetOpacity(0.8f);
   });
 
   _retryBtn->AddOnUnHoveredHandler([this]() {
-    _retryBtnImgs[0]->SetOpacity(1.0f);
   });
 
 }

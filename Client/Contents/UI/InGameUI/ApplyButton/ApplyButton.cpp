@@ -108,10 +108,14 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
 
 
   _applyBtn->AddOnHoveredHandler(
-      [this]() { _applyBtnImgs[0]->SetOpacity(0.8f); });
+      [this]() { 
+      
+      });
 
   _applyBtn->AddOnUnHoveredHandler(
-      [this]() { _applyBtnImgs[0]->SetOpacity(1.0f); });
+      [this]() { 
+      
+      });
 
 }
 

@@ -19,4 +19,13 @@ public:
   class ApplyButton* _applyBtn{nullptr};
 
   class UICursor* _cursor{nullptr};
+
+private:
+  Vector2 animPos{-200, 300};
+  const Vector2 DefaultPos{-200, 300};
+  const Vector2 GoalPos{70, 300};
+  const float animSpeed = 1000.0f;
+  float elapsedTime = 0.0f;
+  const float stopTime = 1.0f;
+
 };
