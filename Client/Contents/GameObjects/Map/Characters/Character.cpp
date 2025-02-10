@@ -255,6 +255,9 @@ void Character::Die() {
 }
 
 void Character::OnHover() {
+  if (isActionTriggered)
+    return;
+
   if (auto* rbComp = GetComponent<RigidbodyComponent>(); rbComp)
   {
     rbComp->debugColor = Color(0, 1, 1, 1);

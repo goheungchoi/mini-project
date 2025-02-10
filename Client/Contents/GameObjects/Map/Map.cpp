@@ -892,14 +892,14 @@ void Map::Update(float dt)
   }
 
   // Rotate this map.
-  /*if (INPUT.IsKeyPress(Key::Q))
+  if (INPUT.IsKeyPress(Key::Q))
   {
     parent->RotateAroundYAxis(dt);
   }
   if (INPUT.IsKeyPress(Key::E))
   {
     parent->RotateAroundYAxis(-dt);
-  }*/
+  }
 
   // Action mode
   if (isActionTriggered)
