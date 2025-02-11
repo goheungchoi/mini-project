@@ -228,6 +228,8 @@
 		<ClInclude Include="Contents\Levels\GameLevel.h" />
 		<ClCompile Include="Contents\Levels\Level10-1\Level10-1.cpp" />
 		<ClInclude Include="Contents\Levels\Level10-1\Level10-1.h" />
+		<ClCompile Include="Contents\Levels\Level10-2\Level10-2.cpp" />
+		<ClInclude Include="Contents\Levels\Level10-2\Level10-2.h" />
 		<ClCompile Include="Contents\Levels\Level1\Level1.cpp" />
 		<ClInclude Include="Contents\Levels\Level1\Level1.h" />
 		<ClCompile Include="Contents\Levels\Level2\Level2.cpp" />
