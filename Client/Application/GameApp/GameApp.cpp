@@ -100,7 +100,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _world->AddLevel(level8);
   _world->AddLevel(level8_2);
 
-  _world->PrepareChangeLevel(level7->name);
+  _world->PrepareChangeLevel(mainMenuLevel->name);
   _world->CommitLevelChange();
 }
 
@@ -110,8 +110,21 @@ void GameApp::Execute()
 }
 
 void GameApp::Shutdown()
-{
-
+{   
+    delete gameLevel;
+  delete mainMenuLevel;
+    delete dialogLevel;
+  delete level1;
+  delete level2;
+  delete level3;
+  delete level4;
+  delete level5;
+  delete level6;
+  delete level7;
+  delete level8;
+  delete level8_2;
+  _world->Shutdown();
+  delete _world;
   Super::Shutdown();
 }
 

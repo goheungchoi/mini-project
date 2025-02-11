@@ -69,21 +69,74 @@ RigidBody::RigidBody(physx::PxPhysics* physics,
       PhyjixUtil::VecToPxVec(offsetpos), PhyjixUtil::VecToPxQuat(offsetrot)));
   _triggerShape->setLocalPose(physx::PxTransform(
       PhyjixUtil::VecToPxVec(offsetpos), PhyjixUtil::VecToPxQuat(offsetrot)));
+
   _actor->userData = this;
 }
 
 RigidBody::~RigidBody()
 {
   _world->RemoveRigidBody(this);
+
+
   if (_defaultShape)
   {
-    _actor->detachShape(*_defaultShape);
-    _defaultShape = nullptr; 
+
+    // Actor에 존재하는 Shape인지 확인
+    physx::PxU32 numShapes = _actor->getNbShapes();
+    std::vector<physx::PxShape*> shapes(numShapes);
+    _actor->getShapes(shapes.data(), numShapes);
+
+    bool found = false;
+    for (physx::PxShape* s : shapes)
+    {
+      if (s == _defaultShape)
+      {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found)
+      return;
+
+    // detachShape 실행
+    _actor->detachShape(*_defaultShape, true);
+
+    // Exclusive Shape이면 release() 호출
+    if (_defaultShape->isExclusive())
+    {
+      _defaultShape->release();
+    }
   }
+
   if (_triggerShape)
   {
-    _actor->detachShape(*_triggerShape);
-    _triggerShape = nullptr; 
+    // Actor에 존재하는 Shape인지 확인
+    physx::PxU32 numShapes = _actor->getNbShapes();
+    std::vector<physx::PxShape*> shapes(numShapes);
+    _actor->getShapes(shapes.data(), numShapes);
+
+    bool found = false;
+    for (physx::PxShape* s : shapes)
+    {
+      if (s == _triggerShape)
+      {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found)
+      return;
+
+    // detachShape 실행
+    _actor->detachShape(*_triggerShape, true);
+
+    // Exclusive Shape이면 release() 호출
+    if (_triggerShape->isExclusive())
+    {
+      _triggerShape->release();
+    }
   }
   if (!_actor->getScene())
   {
@@ -158,6 +211,11 @@ void RigidBody::OnOverlapEnd(IRigidBody* other)
 {
   if (OverlapEndEventMap.find(other) != OverlapEndEventMap.end())
     OverlapEndEventMap[other]();
+}
+
+physx::PxRigidActor* RigidBody::GetActor()
+{
+  return _actor;
 }
 
 physx::PxRigidDynamic* RigidBody::GetDynamicActor()

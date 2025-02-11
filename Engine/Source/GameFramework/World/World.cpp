@@ -898,3 +898,14 @@ void World::UpdateGameObjectHierarchy(GameObject* gameObject,
     }
   }
 }
+
+void World::Shutdown()
+{
+  _renderer->Cleanup();
+  _phyjixEngine->DestroyWorld(_phyjixWorld);
+  _phyjixEngine->Terminate();
+  delete _canvas;
+  delete _renderer;
+  delete _defaultCamera;
+  delete _phyjixEngine;
+}

@@ -134,7 +134,7 @@ void InGameUI::Update(float dt)
   }
 
   // Lv.5, Lv.7, Lv.8_2(9) 제외 GunfireBtn 비활성화
-  if (levelIdx == 5 || levelIdx == 7 || levelIdx == 9)
+  if (levelIdx == 5 || levelIdx == 6 || levelIdx == 9)
   {
     return;
   }

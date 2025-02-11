@@ -5,7 +5,8 @@
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
 #include "Contents/UI/InGameUI/MainMission/MainMission.h"
-
+#include "GameFramework/UI/Canvas/Canvas.h"
+#include "Contents/UI/AudioDramaUI/AudioDramaUI.h"
 
 void Level4::PrepareLevel()
 {
@@ -29,6 +30,8 @@ void Level4::BeginLevel()
   inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
 
   inGameUI->_mainMission->SetText(L"최대한 희생 없이 모든 적 처치");
+  _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
+  _audioDrama->SetTotalTime(25.f);
 #endif
 }
 

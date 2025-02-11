@@ -52,6 +52,8 @@ void Level3::CreateMap()
   map->CreateEnemyAt(kGunman, 5, 1, kEast);
   map->CreateEnemyAt(kBrawler, 5, 5, kWest);
 
+  map->CreateCivillianAt(1, 5, kSouth, false);
+
   map->CreateObstacleAt(ObstacleType_Stool, 5, 3, kNorth);
 
 }

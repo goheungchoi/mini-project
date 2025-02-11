@@ -32,13 +32,13 @@ bool PhyjixEngine::Initialize()
 
 	_pDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
 
-  physx::PxCudaContextManagerDesc cudacmdesc;
-  _cudaContextManager = PxCreateCudaContextManager(*_pFoundation, cudacmdesc, PxGetProfilerCallback());
-  _particleSystem = _pPhysics->createPBDParticleSystem(*_cudaContextManager, 96);
+  //physx::PxCudaContextManagerDesc cudacmdesc;
+  //_cudaContextManager = PxCreateCudaContextManager(*_pFoundation, cudacmdesc, PxGetProfilerCallback());
+  //_particleSystem = _pPhysics->createPBDParticleSystem(*_cudaContextManager, 96);
 
-  //blood effect test
-  physx::PxPBDMaterial* pbdmat = _pPhysics->createPBDMaterial(0.2f,0.1f,0.1f,5.0f,0.5f,0.07f,0.05f,0.2f,0.8f,0.3f,1.f);
-  const physx::PxU32 particlePhase = _particleSystem->createPhase(pbdmat,physx::PxParticlePhaseFlags(physx::PxParticlePhaseFlag::eParticlePhaseFluid | physx::PxParticlePhaseFlag::eParticlePhaseSelfCollide));
+  ////blood effect test
+  //physx::PxPBDMaterial* pbdmat = _pPhysics->createPBDMaterial(0.2f,0.1f,0.1f,5.0f,0.5f,0.07f,0.05f,0.2f,0.8f,0.3f,1.f);
+  //const physx::PxU32 particlePhase = _particleSystem->createPhase(pbdmat,physx::PxParticlePhaseFlags(physx::PxParticlePhaseFlag::eParticlePhaseFluid | physx::PxParticlePhaseFlag::eParticlePhaseSelfCollide));
 
 
 
@@ -47,9 +47,18 @@ bool PhyjixEngine::Initialize()
 
 void PhyjixEngine::Terminate()
 {
-	if (_pDispatcher) _pDispatcher->release();
-	if (_pPhysics) _pPhysics->release();
-	if (_pFoundation) _pFoundation->release();
+  if (_pDispatcher)
+  {
+	_pDispatcher->release();
+  }
+  if (_pPhysics)
+  {
+    _pPhysics->release();
+  }
+  if (_pFoundation)
+  {
+    _pFoundation->release();
+  }
 }
 
 void PhyjixEngine::Update(float deltaTime)
@@ -67,5 +76,5 @@ IPhyjixWorld* PhyjixEngine::CreateWorld()
 void PhyjixEngine::DestroyWorld(IPhyjixWorld* world)
 {
 	_worlds.erase(std::remove(_worlds.begin(), _worlds.end(), world), _worlds.end());
-	delete world;
+  delete world;
 }
