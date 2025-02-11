@@ -29,10 +29,6 @@ public:
                            bool isKinematic = true) override;
   void RemoveRigidBody(IRigidBody* body) override;
 
-  ICharacterController* CreateCharacterController(
-      const DirectX::SimpleMath::Vector3& position, float radius, float height);
-  void RemoveCharacterController(ICharacterController* controller);
-  void UpdateCharacterControllers(float deltaTime);
 
   void Update(float deltaTime) override;
   IRigidBody* GetGroundActor() override;
@@ -63,8 +59,6 @@ private:
   physx::PxPhysics* _physics = nullptr;
   PhyjixEventHandler* _eventhandler = nullptr;
 
-  physx::PxControllerManager* _controllerManager = nullptr;
-  std::vector<ICharacterController*> _characterControllers;
 
   physx::PxPvdSceneClient* pvdClient = nullptr;
   RigidBody* groundrigidbody = nullptr;

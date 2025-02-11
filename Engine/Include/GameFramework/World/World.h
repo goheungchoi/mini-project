@@ -275,11 +275,14 @@ public:
   void RenderUI();
 
   void CleanupStage();
+  // shutDown
+  void Shutdown();
 
 private:
 	// Utility function to hierarchically update game objects.
   void UpdateGameObjectHierarchy(GameObject* gameObject,
                                  std::function<void(GameObject*)> func);
+
 };
 
 extern DirectionalLight _mainLight;

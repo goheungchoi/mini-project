@@ -169,6 +169,8 @@ public:
     SAFE_RELEASE(_backBuffer);
     SAFE_RELEASE(_om);
     SAFE_RELEASE(_rsDefault);
+    SAFE_RELEASE(_rsCullNone);
+    SAFE_RELEASE(_rsWireFrame);
   }
 
 public:
