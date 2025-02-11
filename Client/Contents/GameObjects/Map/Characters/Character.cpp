@@ -85,6 +85,9 @@ Character::Character(World* world) : GameObject(world)
 }
 
 Character::~Character() {
+  /*if (directionIndicator)
+    directionIndicator->Destroy();
+
   if (inactiveIndicator)
     inactiveIndicator->Destroy();
 
@@ -95,10 +98,10 @@ Character::~Character() {
     tabIndicator->Destroy();
 
   if (deathIndicator)
-    deathIndicator->Destroy();
+    deathIndicator->Destroy();*/
 
-  UnloadTexture(deathIndicatorHandle);
   UnloadTexture(tabIndicatorHandle);
+  UnloadTexture(deathIndicatorHandle);
 }
 
 void Character::TriggerAction()
@@ -244,6 +247,15 @@ void Character::Die() {
     }
 
     if (auto bbComp = activeIndicator->GetComponent<BillboardComponent>();
+        bbComp)
+    {
+      bbComp->isVisible = false;
+    }
+  }
+
+  if (directionIndicator)
+  {
+    if (auto bbComp = inactiveIndicator->GetComponent<BillboardComponent>();
         bbComp)
     {
       bbComp->isVisible = false;

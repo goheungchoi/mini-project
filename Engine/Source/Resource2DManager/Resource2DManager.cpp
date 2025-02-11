@@ -53,3 +53,12 @@ std::shared_ptr<Sprite> Resource2DManager::GetSprite(LPCSTR path)
     throw std::runtime_error("Sprite is not found");
   }
 }
+
+void Resource2DManager::UnloadSprite(LPCSTR path) 
+{
+  auto it = _SpriteMap.find(path);
+  if (it != _SpriteMap.end())
+  {
+    it->second.reset();
+  }
+}

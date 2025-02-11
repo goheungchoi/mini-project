@@ -36,23 +36,7 @@ public:
   virtual void PrepareLevel() {}
   virtual void BeginLevel() {}
 
-  virtual void DestroyLevel()
-  {
-    for (GameObject* gameObject : gameObjects)
-    {
-      for (auto [type_id, pComp] : gameObject->components)
-      {
-        delete pComp;
-      }
-      gameObject->components.clear();
-
-      delete gameObject;
-		}
-    gameObjects.clear();
-    gameObjectTagMap.clear();
-    gameObjectTypeMap.clear();
-    gameObjectNameMap.clear();
-	}
+  virtual void DestroyLevel();
   virtual void CleanupLevel() {}
 };
 

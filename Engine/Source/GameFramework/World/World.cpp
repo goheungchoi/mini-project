@@ -136,7 +136,14 @@ void World::CommitLevelChange()
       _currentLevel->DestroyLevel();
 
       Level* tmp = _currentLevel;
-      async::executor.silent_async([tmp]() { tmp->CleanupLevel(); });
+      // std::string preparingLevelName = _preparingLevel.load()->name;
+      async::executor.silent_async([tmp, this]() { 
+
+        while (bChangingLevel)
+        {
+        }
+        tmp->CleanupLevel(); 
+      });
 
       rigidBodyComponents.clear();
 
