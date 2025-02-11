@@ -111,12 +111,13 @@ void InGameUI::Update(float dt)
 
   if (_map)
   {
-    if (!_map->IsGameFinished())
+    bool flag = _map->IsGameFinished();
+    if (!flag)
     {
       ShowUI(L"PlayBtn");
       HideUI(L"RetryBtn");
       HideUI(L"ApplyBtn");
-
+      _playBtn->_bPlayflag = false;
       //// Eliza Anim ÃÊ±âÈ­
       if (!_map->isActionTriggered)
       {

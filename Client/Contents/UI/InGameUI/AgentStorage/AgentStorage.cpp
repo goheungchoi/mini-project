@@ -209,6 +209,12 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
 
 }
 
+void AgentStorage::Update(float dt)
+{
+  UIPanel::Update(dt);
+
+}
+
 void AgentStorage::BeginLevel()
 {
   UIPanel::BeginLevel();
@@ -250,7 +256,7 @@ void AgentStorage::BeginLevel()
     }
   });
   BrawlerButton->AddOnClickHandler([=]() {
-    if (!IsBrawlerUsing)
+    if (!IsBrawlerUsing && !_map->isPlacementModeOn)
     {
       IsBrawlerUsing = true;
       _map->TurnOnPlacementMode(CharacterType::kBrawler, kWest);
@@ -292,7 +298,7 @@ void AgentStorage::BeginLevel()
     }
   });
   SlasherButton->AddOnClickHandler([=]() {
-    if (!IsSlasherUsing)
+    if (!IsSlasherUsing && !_map->isPlacementModeOn)
     {
       IsSlasherUsing = true;
       _map->TurnOnPlacementMode(CharacterType::kSlasher, kWest);
@@ -334,7 +340,7 @@ void AgentStorage::BeginLevel()
     }
   });
   Gunman1Button->AddOnClickHandler([=]() {
-    if (!IsGunman1Using)
+    if (!IsGunman1Using && !_map->isPlacementModeOn)
     {
       IsGunman1Using = true;
       _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);
@@ -378,7 +384,7 @@ void AgentStorage::BeginLevel()
       }
     });
     Gunman2Button->AddOnClickHandler([=]() {
-      if (!IsGunman2Using)
+      if (!IsGunman2Using && !_map->isPlacementModeOn)
       {
         IsGunman2Using = true;
         _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);

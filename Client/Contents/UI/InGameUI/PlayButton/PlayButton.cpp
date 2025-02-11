@@ -22,6 +22,9 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
     _playBtnImgs[0]->SetSprite("2D\\UI\\UI_Play_Act.png", _pos);
     _playBtnImgs[1]->SetSprite("2D\\UI\\UI_Play_Hover.png", _pos);
     _playBtnImgs[2]->SetSprite("2D\\UI\\UI_Play_Deact.png", _pos);
+    _playBtnImgs[0]->Activate();
+    _playBtnImgs[1]->Activate();
+    _playBtnImgs[2]->Activate();
     _playBtnImgs[0]->SetOpacity(1.f);
     _playBtnImgs[1]->SetOpacity(0.f);
     _playBtnImgs[2]->SetOpacity(0.f);
@@ -83,6 +86,9 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
 
   SetOnActivatedEvent([=]() {
       _playBtn->Activate();
+      _playBtnImgs[0]->Activate();
+      _playBtnImgs[1]->Activate();
+      _playBtnImgs[2]->Activate();
       _playBtnImgs[0]->SetOpacity(1.f);
       _playBtnImgs[1]->SetOpacity(0.f);
       _playBtnImgs[2]->SetOpacity(0.f);

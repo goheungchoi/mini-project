@@ -9,7 +9,12 @@ UIImage::~UIImage() {}
 void UIImage::Update(float dt)
 {
   UIElement::Update(dt);
-  Transition(dt);
+  if (GetStatus() == EStatus_Active)
+  {
+    Transition(dt);
+  }
+
+
 }
 
 void UIImage::Render()
