@@ -381,6 +381,38 @@ void Character::OnAwake()
     if (!isTransparent)
       tabIndicator->SetVisible();
   }
+
+  // Indicator transforms
+  if (activeIndicator && isTargetInRange)
+  {
+    auto* billboard = activeIndicator->GetComponent<BillboardComponent>();
+    billboard->SetPosition(activeIndicator->transform->GetGlobalTranslation());
+  }
+
+  if (inactiveIndicator && !isTargetInRange)
+  {
+    auto* billboard = inactiveIndicator->GetComponent<BillboardComponent>();
+    billboard->SetPosition(
+        inactiveIndicator->transform->GetGlobalTranslation());
+  }
+
+  if (deathIndicator)
+  {
+    auto* billboard = deathIndicator->GetComponent<BillboardComponent>();
+    if (billboard)
+    {
+      billboard->SetPosition(deathIndicator->transform->GetGlobalTranslation());
+    }
+  }
+
+  if (tabIndicator)
+  {
+    auto* billboard = tabIndicator->GetComponent<BillboardComponent>();
+    if (billboard)
+    {
+      billboard->SetPosition(tabIndicator->transform->GetGlobalTranslation());
+    }
+  }
 }
 
 void Character::Update(float dt)

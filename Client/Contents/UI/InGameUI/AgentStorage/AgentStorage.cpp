@@ -198,11 +198,15 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
 
   });
 
+
+#ifdef _DEBUG
   BrawlerButton->SetDebugDraw(true);
   SlasherButton->SetDebugDraw(true);
   Gunman1Button->SetDebugDraw(true);
-  if (static_cast<GameLevel*>(_world->GetCurrentLevel())->GetStageIdx()>3)
+  if (static_cast<GameLevel*>(_world->GetCurrentLevel())->GetStageIdx() > 3)
     Gunman2Button->SetDebugDraw(true);
+#endif // DEBUG
+
 }
 
 void AgentStorage::BeginLevel()

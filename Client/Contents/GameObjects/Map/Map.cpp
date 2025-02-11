@@ -1127,9 +1127,8 @@ void Map::Update(float dt)
       {
         CreateAllyAt(tmp->type, tmp->w, tmp->h, tmp->dir);
         tmp.reset();
-      }
-
-      if (placeholder != nullptr)
+      } 
+      else if (placeholder != nullptr)
       {
         deleteCharType = placeholder->type;
         OnDeleteCharacter();
