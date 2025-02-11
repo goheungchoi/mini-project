@@ -34,7 +34,7 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   _startBtn->SetCenterPos(_btnPos);
 
 #ifdef _DEBUG
-  _startBtn->SetDebugDraw(true);
+  _startBtn->SetDebugDraw(false);
 #endif // _DEBUG
 
   _startBtn->AddOnUnHoveredHandler([this]() {
@@ -72,7 +72,7 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
 
 
 #ifdef _DEBUG
-  _challengeBtn->SetDebugDraw(true);
+  _challengeBtn->SetDebugDraw(false);
 #endif // _DEBUG
 
   _challengeBtn->AddOnUnHoveredHandler([this]() {
@@ -108,7 +108,7 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   _exitBtn->SetCenterPos({_btnPos.x, _btnPos.y + _interval * 2});
 
   #ifdef _DEBUG
-  _exitBtn->SetDebugDraw(true);
+  _exitBtn->SetDebugDraw(false);
 #endif // _DEBUG
 
   _exitBtn->AddOnUnHoveredHandler([this]() {
@@ -125,9 +125,7 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
     _exitImg[1]->SetStatus(EStatus::EStatus_Active);
   });
 
-  _exitBtn->AddOnClickHandler([this]() {
-
-  });
+  _exitBtn->AddOnClickHandler([this]() { PostQuitMessage(0); });
 
   // Cursor
   _cursor = CreateUI<UICursor>(L"Cursor");
