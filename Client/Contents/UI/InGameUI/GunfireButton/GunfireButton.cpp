@@ -7,6 +7,7 @@
 #include "GameFramework/UI/UIAnim//UIAnim.h"
 #include "Shared/Config/Config.h"
 #include "Contents/Levels/GameLevel.h"
+#include "Contents/UI/DialogUI/ResultDialogUI.h"
 
 GunfireButton::GunfireButton(World* world) : UIPanel(world)
 {
@@ -82,6 +83,16 @@ void GunfireButton::Update(float dt)
   _bGunFireUseFlag =
       (_map->isAssassinationMode || _map->assassinationTarget) &&
       !(!_map->isAssassinationMode && !_map->assassinationTarget);
+
+
+  // ResultDialogUI 가 꺼지면 GunfireBtn 활성화
+  //if (_world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")
+  //        ->GetStatus() == EStatus::EStatus_Inactive)
+  //{
+  //  _bGunFireUseFlag = false;
+
+  //  _gunfireBtn->Activate();
+  //}
 }
 
 // 상태 관리 헬퍼 함수

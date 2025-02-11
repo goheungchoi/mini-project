@@ -55,7 +55,7 @@ bool DX11Renderer::Cleanup()
   SAFE_RELEASE(_passMgr);
   SAFE_RELEASE(_device);
 #ifdef _DEBUG
-  //SAFE_RELEASE(_debugLayer);
+  SAFE_RELEASE(_debugLayer);
 #endif
   SAFE_RELEASE(_swapChain);
   SAFE_RELEASE(_storage);

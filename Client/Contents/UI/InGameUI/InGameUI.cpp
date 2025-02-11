@@ -143,5 +143,16 @@ void InGameUI::Update(float dt)
     _gunfireBtn->Deactivate();
   }
 
-
+  // AudioDramaUI, ResultDialogUI
+  for (auto& [name, UIPanel] : _world->_canvas->panelMap)
+  {
+    if (name == L"AudioDramaUI")
+    {
+      if (UIPanel->GetStatus() == EStatus_Active)
+      {
+        this->Deactivate();
+      }
+    }
+  }
+ 
 }

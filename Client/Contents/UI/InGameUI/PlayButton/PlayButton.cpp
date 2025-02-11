@@ -8,6 +8,7 @@
 #include "Contents/UI/InGameUI/GunfireButton/GunfireButton.h"
 #include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
 #include "GameFramework/UI/UIAnim//UIAnim.h"
+#include "Contents/UI/DialogUI/ResultDialogUI.h"
 
 PlayButton::PlayButton(World* world) : UIPanel(world)
 {
@@ -89,11 +90,22 @@ void PlayButton::Update(float dt)
 {
   __super::Update(dt);
 
-  if (_bPlayflag == true)
+  if (_bPlayflag == true || _map->isActionTriggered)
   {
+    _playBtn->Deactivate();
     _playBtnImgs[0]->SetStatus(EStatus::EStatus_Inactive);
     _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
     _playBtnImgs[2]->SetStatus(EStatus::EStatus_Active);
   }
-}
 
+  //if (_world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")
+  //        ->GetStatus() == EStatus::EStatus_Inactive)
+  //{
+  //  _bPlayflag = false;
+
+  //  _playBtn->Activate();
+  //  _playBtnImgs[0]->SetStatus(EStatus::EStatus_Active);
+  //  _playBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+  //  _playBtnImgs[2]->SetStatus(EStatus::EStatus_Inactive);
+  //}
+}

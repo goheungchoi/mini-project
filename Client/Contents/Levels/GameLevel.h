@@ -28,14 +28,45 @@ protected:
   ModelHandle mapMuseumMeshHandle;
   ModelHandle mapWarehouseMeshHandle;
 
-	ModelHandle obstacleBox01;
-	ModelHandle obstacleBox02;
-	ModelHandle obstacleDrum;
-	ModelHandle obstacleDrumOld;
-	ModelHandle obstacleLion;
-	ModelHandle obstacleSofa;
-	ModelHandle obstacleStool;
-	ModelHandle obstacleVBox;
+  ModelHandle defaultCellModelHandle;
+  ModelHandle placementCellModelHandle;
+  ModelHandle rangeCellModelHandle;
+  ModelHandle dashCellModelHandle;
+  ModelHandle damageCellModelHandle;
+
+  TextureHandle deathIndicatorHandle;
+  TextureHandle tabIndicatorHandle;
+
+	ModelHandle allyDirectionIndicatorModelHandle;
+  ModelHandle enemyDirectionIndicatorModelHandle;
+
+  TextureHandle brawlerInactiveIndicatorTextureHandle;
+  TextureHandle brawlerActiveIndicatorTextureHandle;
+  TextureHandle slasherInactiveIndicatorTextureHandle;
+  TextureHandle slasherActiveIndicatorTextureHandle;
+  TextureHandle gunmanInactiveIndicatorTextureHandle;
+  TextureHandle gunmanActiveIndicatorTextureHandle;
+
+  ModelHandle enemyBrawlerModelHandle;
+  ModelHandle enemyGunmanModelHandle;
+
+  ModelHandle civilianModelHandle;
+  ModelHandle elizaModelHandle;
+
+  ModelHandle allyBrawlerModelHandle;
+  ModelHandle allySlasherModelHandle;
+  ModelHandle allyGunmanModelHandle;
+
+  ModelHandle characterIndicatorModelHandle;
+
+  ModelHandle obstacleBox01ModelHandle;
+  ModelHandle obstacleBox02ModelHandle;
+  ModelHandle obstacleDrumModelHandle;
+  ModelHandle obstacleDrumOldModelHandle;
+  ModelHandle obstacleLionModelHandle;
+  ModelHandle obstacleSofaModelHandle;
+  ModelHandle obstacleStoolModelHandle;
+  ModelHandle obstacleVBoxModelHandle;
 
   //CameraObject* testCamera;
   FixedCamera* testCamera;
