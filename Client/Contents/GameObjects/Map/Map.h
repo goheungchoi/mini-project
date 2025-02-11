@@ -136,6 +136,8 @@ public:
 
   void DeleteCharacterFromMap(Character* character);
 
+  std::function<void(void)> OnDeleteCharacter;
+
   void OnAwake() override;
 
   void Update(float dt) override;

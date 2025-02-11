@@ -1085,6 +1085,13 @@ void Map::Update(float dt)
     grid->TurnOffGridHover();
 
     // TODO: Remove a simulating character.
+    if (IsGameFinished())
+    {
+      for (Character* enemy : enemies)
+      {
+        enemy->ShowOutline();
+      }
+    }
 
     if (INPUT.IsKeyPress(Key::R))
     {
@@ -1204,6 +1211,7 @@ void Map::Update(float dt)
           {
             DeleteCharacterFromMap(hoveredCharacter);
             deleteCharType = hoveredCharacter->type;
+            OnDeleteCharacter();
             hoveredCharacter->Destroy();
             hoveredCharacter = nullptr;
           }
