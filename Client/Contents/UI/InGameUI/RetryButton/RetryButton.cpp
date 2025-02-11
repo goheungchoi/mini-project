@@ -30,7 +30,7 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
   _retryBtn->AddOnClickHandler([this]() {
 	  _map->ResetGame();
       
-    // GunfireButtonr과 AgentStorage 활성화 하기.
+    // GunfireButton 활성화
       auto* gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
           ->GetUI<GunfireButton>(L"GunfireBtn");
 
@@ -50,7 +50,9 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
 
     }
 
+    _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->ShowUI(L"GunfireBtn");
 
+    // AgentStorage 활성화
     auto* agentStorage = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
                              ->GetUI<AgentStorage>(L"AgentStorage");
     for (auto* agent : agentStorage->AgentList)
@@ -58,7 +60,6 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
       agent->_AgentBtn->Activate();
     }
 
-    _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->ShowUI(L"GunfireBtn");
     _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->ShowUI(L"AgentStorage");
 
     // PlayBtn 활성화
