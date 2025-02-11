@@ -8,7 +8,8 @@
 #include "Contents/UI/InGameUI/MainMission/MainMission.h"
 #include "Contents/UI/InGameUI/SubMission/SubMission.h"
 #include "Contents/UI/InGameUI/ApplyButton/ApplyButton.h"
-
+#include "GameFramework/UI/Canvas/Canvas.h"
+#include "Contents/UI/AudioDramaUI/AudioDramaUI.h"
 void Level7::PrepareLevel() 
 {
   __super::PrepareLevel();
@@ -30,6 +31,8 @@ void Level7::BeginLevel()
   inGameUI->_mainMission->SetText(L"弥措茄 锐积 绝捞 葛电 利 贸摹");
   inGameUI->_subMission[0]->SetText(L"何包 郡府磊 锐积");
   inGameUI->_subMission[1]->SetText(L"风农客 力捞固 锐积");
+  _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
+  _audioDrama->SetTotalTime(25.f);
 #endif
 
 }
