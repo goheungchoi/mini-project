@@ -1326,8 +1326,6 @@ void Map::OnRender()
     ImGui::SliderFloat3("mapPos", mapPos, -10.f, 10.f);
   }
   ImGui::End();
-  XMVECTOR mp = {mapPos[0], mapPos[1], mapPos[2]};
-  SetTranslation(mp);
 #ifdef _DEBUG
   if (ImGui::Begin("main Light"))
   {
@@ -1350,6 +1348,8 @@ void Map::OnRender()
   ImGui::End();
 #endif
 #endif // !_DEBUG
+  XMVECTOR mp = {mapPos[0], mapPos[1], mapPos[2]};
+  SetTranslation(mp);
 }
 
 XMVECTOR Map::GetCursorPosition() const

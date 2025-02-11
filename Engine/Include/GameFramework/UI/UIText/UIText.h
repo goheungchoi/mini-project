@@ -27,9 +27,8 @@ public:
 
 
 
-#ifdef _DEBUG
   void SetDebugDraw(bool debugFlag);
-#endif
+
 
 private:
   bool _bIsTypo = false;
@@ -45,9 +44,8 @@ private:
   int _typoIdx = 1;
   wchar_t _typoChar;
 
-#ifdef _DEBUG
   bool bDebugDrawFlag = false;
-#endif
+
   float _transitionElaspedTimer = 0.f;
   float _transitionThreshold = 1.f;
   float _transitionOpacity = 0.f;
