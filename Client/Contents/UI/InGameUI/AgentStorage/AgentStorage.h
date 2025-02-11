@@ -2,41 +2,41 @@
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 #include "Contents/GameObjects/Map/Characters/Character.h"
 
-class Agent : public UIPanel
-{
-public:
-  Agent(class World* world, CharacterType charType, Vector2 pos);
-  ~Agent();
-
-  void Update(float dt) override;
-
-  const std::wstring GetName() const { return _name; }
-  void SetName(std::wstring agentName) { _name = agentName; }
-
-  class UIButton* _AgentBtn{nullptr};
-
-private:
-  class UIImage* _AgentImgs[3]{nullptr};
-  bool bUseFlag = false;
-  static int numGunAgent;
-  static int prevAgentNum;
-  CharacterType _charType;
-  std::wstring _name{};
-
-  void GunAgentDeleteLogic();
-};
-
 class AgentStorage : public UIPanel
 {
 public:
   AgentStorage(class World* world);
-  virtual ~AgentStorage();
+  virtual ~AgentStorage() = default;
 
-  void SetAgent(CharacterType charType, Vector2 pos);
+  void BeginLevel() override;
+  void ResetAgent();
 
-  vector<Agent*> AgentList;
-  Agent* Brawler;
-  Agent* Slasher;
-  Agent* Gunman1;
-  Agent* Gunman2;
+
+  class Map* mapptr = nullptr;
+  bool IsAgent3 = false;
+
+  class UIImage* BrawlerDefaultImage{nullptr};
+  class UIImage* BrawlerHoveredImage{nullptr};
+  class UIImage* BrawlerInactiveImage{nullptr};
+  class UIButton* BrawlerButton{nullptr};
+  bool IsBrawlerUsing = false;
+  class UIImage* SlasherDefaultImage{nullptr};
+  class UIImage* SlasherHoveredImage{nullptr};
+  class UIImage* SlasherInactiveImage{nullptr};
+  class UIButton*SlasherButton{nullptr};
+  bool IsSlasherUsing = false;
+
+  class UIImage* Gunman1DefaultImage{nullptr};
+  class UIImage* Gunman1HoveredImage{nullptr};
+  class UIImage* Gunman1InactiveImage{nullptr};
+  class UIButton*Gunman1Button{nullptr};
+  bool IsGunman1Using = false;
+
+  class UIImage* Gunman2DefaultImage{nullptr};
+  class UIImage* Gunman2HoveredImage{nullptr};
+  class UIImage* Gunman2InactiveImage{nullptr};
+  class UIButton*Gunman2Button{nullptr};
+  bool IsGunman2Using = false;
+
+
 };

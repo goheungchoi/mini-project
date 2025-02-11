@@ -36,6 +36,7 @@ void GameLevel::PrepareLevel()
       LoadModel("Models\\Character\\Enemy\\Enemy_Punch\\Enemy_Punch.glb");
   enemyGunmanModelHandle =
       LoadModel("Models\\Character\\Enemy\\Enemy_Gun\\Enemy_Gun.glb");
+  enemyBossModelHandle = LoadModel("Models\\Character\\Enemy\\Enemy_Boss\\Enemy_003.glb");
 
   allyBrawlerModelHandle =
       LoadModel("Models\\Character\\Player\\Player_Punch\\Player_Punch.glb");
@@ -156,10 +157,7 @@ void GameLevel::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Selectbox_02.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Selectbox_03.png");
 
-  // Test용 이미지
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\UI\\UI_Storage_Deact_Gun.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\X_test.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Failed_01.png");
 #endif // USED2D
 }
 
@@ -277,6 +275,7 @@ void GameLevel::CleanupLevel()
   UnloadTexture(gunmanActiveIndicatorTextureHandle);
   UnloadModel(enemyBrawlerModelHandle);
   UnloadModel(enemyGunmanModelHandle);
+  UnloadModel(enemyBossModelHandle);
   UnloadModel(civilianModelHandle);
   UnloadModel(elizaModelHandle);
   UnloadModel(allyBrawlerModelHandle);

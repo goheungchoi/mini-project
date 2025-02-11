@@ -22,14 +22,13 @@ void Level7::BeginLevel()
 #ifdef USED2D
   // world->_canvas->CreatePanel<ReconfirmUI>(L"TestReconfirmUI");
 
-  inGameUI->_agentStorage->SetAgent(kBrawler, {AgentPos.x - spacing * 3, AgentPos.y});
-  inGameUI->_agentStorage->SetAgent(kSlasher, {AgentPos.x - spacing * 2, AgentPos.y});
-  inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x - spacing, AgentPos.y});
-  inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
-
   inGameUI->_mainMission->SetText(L"연설장 잠입 및 초대장 확보");
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
   inGameUI->_subMission[1]->SetText(L"부관 희생 없이 작전 수행");
+  map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
+
+
+
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
   _audioDrama->SetTotalTime(25.f);
 #endif

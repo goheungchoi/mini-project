@@ -22,11 +22,7 @@ void Level8::BeginLevel()
   #ifdef USED2D
   inGameUI->HideUI(L"GunfireBtn");
   inGameUI->HideUI(L"SubMission_2");
-
-  inGameUI->_agentStorage->SetAgent(kBrawler, {AgentPos.x - spacing * 3, AgentPos.y});
-  inGameUI->_agentStorage->SetAgent(kSlasher, {AgentPos.x - spacing * 2, AgentPos.y});
-  inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x - spacing, AgentPos.y});
-  inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
+  map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
 
   inGameUI->_mainMission->SetText(L"총리를 제거하여 협정 저지");
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
@@ -58,10 +54,10 @@ void Level8::CreateMap()
   map->CreateEnemyAt(kGunman, 2, 0, kNorth);
   map->CreateEnemyAt(kGunman, 2, 4, kSouth);
   map->CreateEnemyAt(kGunman, 5, 0, kNorth);
-  map->CreateEnemyAt(kBrawler, 5, 4, kSouth);
+  map->CreateEnemyAt(kBrawler, 5, 4, kSouth, true);
   map->CreateEnemyAt(kGunman, 5, 5, kWest);
 
-  map->CreateObstacleAt(ObstacleType_Sofa, 1, 0, kNorth);
+  map->CreateObstacleAt(ObstacleType_Sofa, 1, 0, kSouth);
   map->CreateObstacleAt(ObstacleType_Sofa, 1, 4, kSouth);
   map->CreateObstacleAt(ObstacleType_Lion, 4, 0, kNorth);
 }

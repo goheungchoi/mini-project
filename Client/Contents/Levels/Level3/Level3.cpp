@@ -20,10 +20,7 @@ void Level3::BeginLevel()
     #ifdef USED2D
   inGameUI->HideUI(L"GunfireBtn");
   inGameUI->HideUI(L"SubMission_2");
-
-  inGameUI->_agentStorage->SetAgent(kBrawler, {AgentPos.x - spacing * 2, AgentPos.y});
-  inGameUI->_agentStorage->SetAgent(kSlasher, {AgentPos.x - spacing * 1, AgentPos.y});
-  inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
+  map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
 
   inGameUI->_mainMission->SetText(L"선술집 내 칼트 병력 제거");
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");

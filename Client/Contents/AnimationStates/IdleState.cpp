@@ -11,15 +11,15 @@ void IdleState::Toggle(AnimatorComponent* animator) {
 
 	if (animator->GetVariable<bool>("triggered"))
   {
-    if (_animation->IsLoop())
+    /*if (_animation->IsLoop())
     {
       _animation->SetLoop(false);
       _animation->Trigger();
     }
     else
     {
-      _animation->SetLoop(true);
+      _animation->SetLoop(true);*/
       animator->SetState(_stateDependency["next"]);
-    }
+    // }
 	}
 }
