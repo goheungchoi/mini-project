@@ -670,7 +670,7 @@ bool Map::IsGameFinished()
 }
 
 void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
-                        Direction dir)
+                        Direction dir, bool isBoss)
 {
   switch (type)
   {
@@ -1089,7 +1089,8 @@ void Map::Update(float dt)
     {
       for (Character* enemy : enemies)
       {
-        enemy->ShowOutline();
+        if (!enemy->isDead)
+          enemy->ShowOutline();
       }
     }
 

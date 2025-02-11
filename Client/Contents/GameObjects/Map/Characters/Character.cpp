@@ -111,6 +111,11 @@ void Character::TriggerAction()
   HideOutline();
   HideDeathIndicator();
 
+  if (directionIndicator)
+  {
+    directionIndicator->SetInvisible();
+  }
+
   if (isTargetInRange)
     animator->SetVariable<bool>("triggered", true, true);
   else
@@ -247,15 +252,6 @@ void Character::Die() {
     }
 
     if (auto bbComp = activeIndicator->GetComponent<BillboardComponent>();
-        bbComp)
-    {
-      bbComp->isVisible = false;
-    }
-  }
-
-  if (directionIndicator)
-  {
-    if (auto bbComp = inactiveIndicator->GetComponent<BillboardComponent>();
         bbComp)
     {
       bbComp->isVisible = false;
