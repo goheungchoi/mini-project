@@ -48,22 +48,19 @@ void Level7::CreateMap()
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
 
-  map->CreateEnemyAt(kGunman, 1, 0, kEast);
-  map->CreateEnemyAt(kGunman, 2, 3, kSouth);
-  map->CreateEnemyAt(kGunman, 2, 5, kEast);
-  map->CreateEnemyAt(kGunman, 3, 0, kWest);
-  map->CreateEnemyAt(kGunman, 3, 1, kNorth);
-  map->CreateEnemyAt(kGunman, 3, 4, kSouth);
-  map->CreateEnemyAt(kGunman, 4, 5, kSouth);
-  map->CreateEnemyAt(kGunman, 5, 2, kNorth);
-  map->CreateEnemyAt(kGunman, 5, 5, kSouth);
+  map->CreateEnemyAt(kGunman, 0, 3, kEast);
+  map->CreateEnemyAt(kGunman, 2, 1, kWest);
+  map->CreateEnemyAt(kGunman, 2, 2, kNorth);
+  map->CreateEnemyAt(kGunman, 2, 4, kSouth);
+  map->CreateEnemyAt(kGunman, 4, 1, kNorth);
+  map->CreateEnemyAt(kGunman, 4, 4, kSouth);
+  map->CreateEnemyAt(kGunman, 5, 3, kWest);
 
-  map->CreateCivillianAt(3, 5, kWest, true);
 
-  map->CreateObstacleAt(ObstacleType_Lion, 0, 0, kNorth);
-  map->CreateObstacleAt(ObstacleType_Sofa, 2, 1, kSouth);
-  map->CreateObstacleAt(ObstacleType_Sofa, 4, 1, kSouth);
-  map->CreateObstacleAt(ObstacleType_Sofa, 5, 1, kSouth);
+  map->CreateCivillianAt(2, 5, kSouth, true);
+
+  map->CreateObstacleAt(ObstacleType_Sofa, 4, 5, kEast);
+  map->CreateObstacleAt(ObstacleType_Sofa, 5, 5, kEast);
 }
 
 void Level7::TriggerAction()
