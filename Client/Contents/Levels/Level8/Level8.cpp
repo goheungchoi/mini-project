@@ -21,7 +21,6 @@ void Level8::BeginLevel()
 
   #ifdef USED2D
   inGameUI->HideUI(L"GunfireBtn");
-  inGameUI->HideUI(L"SubMission");
   inGameUI->HideUI(L"SubMission_2");
 
   inGameUI->_agentStorage->SetAgent(kBrawler, {AgentPos.x - spacing * 3, AgentPos.y});
@@ -29,7 +28,8 @@ void Level8::BeginLevel()
   inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x - spacing, AgentPos.y});
   inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
 
-  inGameUI->_mainMission->SetText(L"최대한 희생 없이 모든 적 처치");
+  inGameUI->_mainMission->SetText(L"총리를 제거하여 협정 저지");
+  inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
 
     _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
   _audioDrama->SetTotalTime(25.f);

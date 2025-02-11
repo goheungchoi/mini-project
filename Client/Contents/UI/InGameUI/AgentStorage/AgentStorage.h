@@ -35,4 +35,8 @@ public:
   void SetAgent(CharacterType charType, Vector2 pos);
 
   vector<Agent*> AgentList;
+  Agent* Brawler;
+  Agent* Slasher;
+  Agent* Gunman1;
+  Agent* Gunman2;
 };

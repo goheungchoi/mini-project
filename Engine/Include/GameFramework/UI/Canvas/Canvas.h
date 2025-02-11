@@ -8,8 +8,10 @@ concept UIPanelType = std::is_base_of<UIPanel, T>::value;
 
 class Canvas
 {
-private:
+public:
   std::map<std::wstring, UIPanel*> panelMap;
+
+private:
   std::vector<class UIPanel*> panelList;
   class World* _world = nullptr;
 
