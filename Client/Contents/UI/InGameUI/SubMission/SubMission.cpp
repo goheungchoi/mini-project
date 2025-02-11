@@ -21,7 +21,8 @@ SubMission::SubMission(World* world, Vector2 pos) : UIPanel(world)
   _subMissionImg->SetScale({1.1f, 1.0f});
 
   _failImg = CreateUI<UIImage>(L"FailImg");
-  _failImg->SetSprite("Textures\\X_test.png", _pos);
+  _failImg->SetSprite("2D\\UI\\UI_Failed_01.png", {_pos.x + 117, _pos.y});
+  _failImg->SetScale({0.65f, 0.9f});
   _failImg->SetLateRender(true);
   _failImg->Deactivate();
 
@@ -52,11 +53,12 @@ void SubMission::Update(float dt)
           sub_ElizaDead->_failImg->Activate();
         }
       }
-      else if (deadAlliesNum >= 1) // 대원 1명 이상 죽으면
+
+      if (deadAlliesNum >= 1) // 대원 1명 이상 죽으면
       {
         // 미션 실패 이미지 컴포넌트 활성화 한다.
         auto* sub_AlliesDead = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
-                                   ->GetUI<SubMission>(L"SubMission_1");
+                                   ->GetUI<SubMission>(L"SubMission");
 
         if (sub_AlliesDead)
         {
@@ -75,7 +77,7 @@ void SubMission::Update(float dt)
       {
         // 미션 실패 이미지 컴포넌트 활성화 한다.
         auto* sub_AlliesDead = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
-                                   ->GetUI<SubMission>(L"SubMission_1");
+                                   ->GetUI<SubMission>(L"SubMission");
 
         if (sub_AlliesDead)
         {
