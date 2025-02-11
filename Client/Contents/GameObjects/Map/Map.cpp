@@ -670,7 +670,7 @@ bool Map::IsGameFinished()
 }
 
 void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
-                        Direction dir)
+                        Direction dir, bool isBoss)
 {
   switch (type)
   {
@@ -1085,6 +1085,14 @@ void Map::Update(float dt)
     grid->TurnOffGridHover();
 
     // TODO: Remove a simulating character.
+    if (IsGameFinished())
+    {
+      for (Character* enemy : enemies)
+      {
+        if (!enemy->isDead)
+          enemy->ShowOutline();
+      }
+    }
 
     if (INPUT.IsKeyPress(Key::R))
     {
@@ -1204,6 +1212,7 @@ void Map::Update(float dt)
           {
             DeleteCharacterFromMap(hoveredCharacter);
             deleteCharType = hoveredCharacter->type;
+            OnDeleteCharacter();
             hoveredCharacter->Destroy();
             hoveredCharacter = nullptr;
           }
