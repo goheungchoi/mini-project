@@ -25,6 +25,7 @@ public:
 
   ModelHandle enemyBrawlerModelHandle;
   ModelHandle enemyGunmanModelHandle;
+  ModelHandle enemyBossModelHandle;
 
   ModelHandle civilianModelHandle;
   ModelHandle elizaModelHandle;

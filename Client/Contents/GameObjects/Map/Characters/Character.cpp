@@ -129,7 +129,8 @@ bool Character::IsFinishedAction()
 
 void Character::BindDirectionIndicator(GameObject* directionIndicator) {
   this->directionIndicator = directionIndicator;
-  directionIndicator->SetTranslation(0.f, 0.f, -.8f);
+  directionIndicator->SetTranslation(0.f, 0.f, -.5f);
+  directionIndicator->SetScaling(.5f);
   AddChildGameObject(directionIndicator);
 }
 
