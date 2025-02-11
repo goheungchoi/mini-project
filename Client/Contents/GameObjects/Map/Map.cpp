@@ -1263,13 +1263,13 @@ void Map::Update(float dt)
       }
     }
 
-    if (INPUT.IsKeyPress(Key::Space))
+    /*if (INPUT.IsKeyPress(Key::Space))
     {
       TriggerAction();
       return;
-    }
+    }*/
 
-    if (INPUT.IsKeyPress(Key::D1))
+    /*if (INPUT.IsKeyPress(Key::D1))
     {
       TurnOnPlacementMode(kBrawler, kNorth);
       return;
@@ -1285,7 +1285,7 @@ void Map::Update(float dt)
     {
       TurnOnPlacementMode(kGunman, kNorth);
       return;
-    }
+    }*/
   }
 
   // Show death indicator.

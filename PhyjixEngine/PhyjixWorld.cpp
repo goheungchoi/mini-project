@@ -61,8 +61,8 @@ PhyjixWorld::PhyjixWorld(physx::PxPhysics* physics, physx::PxDefaultCpuDispatche
 
 PhyjixWorld::~PhyjixWorld()
 {
-  if (groundrigidbody)
-    delete groundrigidbody;
+  /*if (groundrigidbody)
+    delete groundrigidbody;*/
 
   if (_scene)
     _scene->release();

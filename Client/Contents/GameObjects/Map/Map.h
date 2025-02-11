@@ -8,6 +8,8 @@
 
 class Map : public GameObject
 {
+  uint32_t tabCount = 0;
+
 public:
   // Resource handle
 
