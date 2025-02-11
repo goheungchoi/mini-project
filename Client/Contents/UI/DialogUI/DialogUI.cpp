@@ -272,8 +272,12 @@ void DialogUI::SetStageDialogIndex()
     wstringstream ss(line);
     getline(ss, token, L',');
     int stage = _wtoi(token.c_str());
-    if (StageIdx != stage)
-      return;
+    if (StageIdx<7)
+    {
+
+      if (StageIdx != stage)
+        return;
+    }
 
     getline(ss, token, L',');
   }
@@ -413,6 +417,9 @@ void DialogUI::ElizaDialogStep(int idx)
     _Eliza->SetMasking(Color(0.5f, 0.5f, 0.5f, 1));
     _Eliza->SetOpacity(_dialogList[idx].ElizaAnim, 0.8f);
   }
+  if (!_dialogList[idx].IsElizaSpeaking && StageIdx >= 7)
+    _Eliza->SetOpacity(_dialogList[idx].ElizaAnim,0.f);
+
 }
 void DialogUI::PlayerSelectDialogStep()
 {
@@ -430,6 +437,8 @@ void DialogUI::PlayerSelectDialogStep()
   _speakerClassText->SetOpacity(0.f);
   _Eliza->SetMasking(Color(0.5f, 0.5f, 0.5f, 1));
   _Eliza->SetOpacity(_dialogList[lastIdx].ElizaAnim, 0.8f);
+  if (_prevBattleResult == eBattleResult::CivilDeadWin && StageIdx >= 7)
+    _Eliza->SetOpacity(_dialogList[lastIdx].ElizaAnim, 0.f);
 
   if (_dialogList[6].dialogtext.length() > 0)
   {

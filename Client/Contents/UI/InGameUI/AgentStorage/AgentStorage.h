@@ -8,6 +8,7 @@ public:
   AgentStorage(class World* world);
   virtual ~AgentStorage() = default;
 
+  void Update(float dt) override;
   void BeginLevel() override;
   void ResetAgent();
 
