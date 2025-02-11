@@ -36,6 +36,11 @@ static Level8* level8;
 static Level8_2* level8_2;
 static DialogLevel* dialogLevel;
 
+
+// Challenge mode.
+
+
+
 void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
                          const std::wstring& title)
 {
