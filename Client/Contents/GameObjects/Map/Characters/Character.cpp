@@ -150,12 +150,18 @@ void Character::BindActiveIndicator(GameObject* activeIndicator)
 
 void Character::ShowDeathIndicator() {
   if (deathIndicator)
+  {
     deathIndicator->SetVisible();
+    isDeathIndicatorShown = true;
+  }
 }
 
 void Character::HideDeathIndicator() {
   if (deathIndicator)
+  {
     deathIndicator->SetInvisible();
+    isDeathIndicatorShown = false;
+  }
 }
 
 void Character::SetFaction(Faction faction) {
@@ -506,6 +512,15 @@ void Character::Update(float dt)
       }
     }
   }
+
+  if (isDeathIndicatorShown)
+  {
+    if (inactiveIndicator && activeIndicator)
+    {
+      inactiveIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+      activeIndicator->GetComponent<BillboardComponent>()->isVisible = false;
+    }
+  }
 }
 
 void Character::PostUpdate(float dt) {
@@ -534,7 +549,8 @@ void Character::PostUpdate(float dt) {
     auto* billboard = deathIndicator->GetComponent<BillboardComponent>();
     if (billboard)
     {
-      billboard->SetPosition(deathIndicator->transform->GetGlobalTranslation());
+      billboard->SetPosition(deathIndicator->transform->GetGlobalTranslation() +
+                             XMVECTOR{0.f, 0.f, -0.01f});
     }
   }
 
