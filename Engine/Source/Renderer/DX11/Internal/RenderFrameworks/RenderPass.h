@@ -313,6 +313,7 @@ public:
     Vector4 worldPos = quad->position;
     Vector4 viewPos = Vector4::Transform(worldPos, _camera.view);
     float viewZ = viewPos.z;
+    max--;
     _billboards.insert({{viewZ, max}, quad});
   }
   void AddTrail(Trail* trail)
