@@ -56,13 +56,13 @@ bool DX11Renderer::Cleanup()
   SAFE_RELEASE(_device);
 #ifdef _DEBUG
   SAFE_RELEASE(_debugLayer);
-#endif
-  SAFE_RELEASE(_swapChain);
-  SAFE_RELEASE(_storage);
   ImGui_ImplDX11_Shutdown();
   ImGui_ImplWin32_Shutdown();
   ImGui::DestroyContext();
 
+#endif
+  SAFE_RELEASE(_swapChain);
+  SAFE_RELEASE(_storage);
   SAFE_RELEASE(_d2dRenderer);
 
   return false;
