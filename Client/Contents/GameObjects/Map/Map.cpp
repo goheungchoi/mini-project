@@ -30,6 +30,8 @@ Map::Map(World* world) : GameObject(world)
       LoadModel("Models\\Character\\Enemy\\Enemy_Punch\\Enemy_Punch.glb");
   enemyGunmanModelHandle =
       LoadModel("Models\\Character\\Enemy\\Enemy_Gun\\Enemy_Gun.glb");
+  enemyBossModelHandle =
+      LoadModel("Models\\Character\\Enemy\\Enemy_Boss\\Enemy_003.glb");
 
   allyBrawlerModelHandle =
       LoadModel("Models\\Character\\Player\\Player_Punch\\Player_Punch.glb");
@@ -211,6 +213,7 @@ Map::~Map()
   UnloadTexture(gunmanActiveIndicatorTextureHandle);
   UnloadModel(enemyBrawlerModelHandle);
   UnloadModel(enemyGunmanModelHandle);
+  UnloadModel(enemyBossModelHandle);
   UnloadModel(civilianModelHandle);
   UnloadModel(elizaModelHandle);
   UnloadModel(allyBrawlerModelHandle);
@@ -670,15 +673,15 @@ bool Map::IsGameFinished()
 }
 
 void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
-                        Direction dir)
+                        Direction dir, bool isBoss)
 {
   switch (type)
   {
   case kBrawler: {
     std::cout << " + Create Enemy Brawler." << std::endl;
 
-    Brawler* brawler =
-        world->CreateGameObjectFromModel<Brawler>(enemyBrawlerModelHandle);
+    Brawler* brawler = world->CreateGameObjectFromModel<Brawler>(
+        isBoss ? enemyBossModelHandle : enemyBrawlerModelHandle);
 
     // Bind a direction indicator.
     auto* directionIndicator =
@@ -996,6 +999,8 @@ void Map::PlaceCharacterIndicatorAt(uint32_t w, uint32_t h,
   slasher->DisableHover();
   slasher->SetPlacementMode(true);
 
+  slasher->isTransparent = true;
+
   characterIndicator = slasher;
 
   AddChildGameObject(slasher);
@@ -1089,7 +1094,8 @@ void Map::Update(float dt)
     {
       for (Character* enemy : enemies)
       {
-        enemy->ShowOutline();
+        if (!enemy->isDead)
+          enemy->ShowOutline();
       }
     }
 

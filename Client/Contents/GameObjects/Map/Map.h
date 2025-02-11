@@ -25,6 +25,7 @@ public:
 
   ModelHandle enemyBrawlerModelHandle;
   ModelHandle enemyGunmanModelHandle;
+  ModelHandle enemyBossModelHandle;
 
   ModelHandle civilianModelHandle;
   ModelHandle elizaModelHandle;
@@ -121,7 +122,7 @@ public:
   bool IsGameFinished();
 
   void CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
-                     Direction dir = kNorth);
+                     Direction dir = kNorth, bool isBoss = false);
 
   void CreateAllyAt(CharacterType type, uint32_t w, uint32_t h,
                     Direction dir = kNorth);
@@ -136,7 +137,7 @@ public:
 
   void DeleteCharacterFromMap(Character* character);
 
-  std::function<void(void)> OnDeleteCharacter;
+  std::function<void(void)> OnDeleteCharacter = []() {};
 
   void OnAwake() override;
 

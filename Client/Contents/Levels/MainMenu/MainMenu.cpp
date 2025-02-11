@@ -14,11 +14,15 @@ void MainMenu::PrepareLevel()
 {
   // UI Resource Load
 #ifdef USED2D
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\TitleBackGround.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\TitleLogo.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\StartBtn.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\StartBtn_hover.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\StartBtn_click.png");
+  //Resource2DManager::GetInstance()->LoadSprite("Textures\\TitleLogo.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Title\\Title_Background.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Title\\Title_Background2.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Title\\Title_Button_01_Basic.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Title\\Title_Button_01_Hover.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Title\\Title_Button_02_Basic.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Title\\Title_Button_02_Hover.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Title\\Title_Button_03_Basic.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Title\\Title_Button_03_Hover.png");
 
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\FadeBlack.png");
 #endif // USED2D

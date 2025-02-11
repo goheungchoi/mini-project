@@ -53,7 +53,7 @@ void Level8_2::CreateMap()
   map->CreateEnemyAt(kGunman, 1, 1, kEast);
   map->CreateEnemyAt(kGunman, 1, 5, kSouth);
   map->CreateEnemyAt(kGunman, 4, 0, kWest);
-  map->CreateEnemyAt(kGunman, 4, 3, kWest);
+  map->CreateEnemyAt(kBrawler, 4, 3, kWest, true);
   map->CreateEnemyAt(kGunman, 5, 1, kNorth);
   map->CreateEnemyAt(kGunman, 5, 5, kSouth);
 

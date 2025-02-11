@@ -54,10 +54,10 @@ void Level8::CreateMap()
   map->CreateEnemyAt(kGunman, 2, 0, kNorth);
   map->CreateEnemyAt(kGunman, 2, 4, kSouth);
   map->CreateEnemyAt(kGunman, 5, 0, kNorth);
-  map->CreateEnemyAt(kBrawler, 5, 4, kSouth);
+  map->CreateEnemyAt(kBrawler, 5, 4, kSouth, true);
   map->CreateEnemyAt(kGunman, 5, 5, kWest);
 
-  map->CreateObstacleAt(ObstacleType_Sofa, 1, 0, kNorth);
+  map->CreateObstacleAt(ObstacleType_Sofa, 1, 0, kSouth);
   map->CreateObstacleAt(ObstacleType_Sofa, 1, 4, kSouth);
   map->CreateObstacleAt(ObstacleType_Lion, 4, 0, kNorth);
 }

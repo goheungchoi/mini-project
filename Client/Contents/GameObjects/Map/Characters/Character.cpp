@@ -111,6 +111,11 @@ void Character::TriggerAction()
   HideOutline();
   HideDeathIndicator();
 
+  if (directionIndicator)
+  {
+    directionIndicator->SetInvisible();
+  }
+
   if (isTargetInRange)
     animator->SetVariable<bool>("triggered", true, true);
   else
@@ -124,7 +129,8 @@ bool Character::IsFinishedAction()
 
 void Character::BindDirectionIndicator(GameObject* directionIndicator) {
   this->directionIndicator = directionIndicator;
-  directionIndicator->SetTranslation(0.f, 0.f, -.8f);
+  directionIndicator->SetTranslation(0.f, 0.f, -.5f);
+  directionIndicator->SetScaling(.5f);
   AddChildGameObject(directionIndicator);
 }
 
@@ -253,15 +259,6 @@ void Character::Die() {
     }
   }
 
-  if (directionIndicator)
-  {
-    if (auto bbComp = inactiveIndicator->GetComponent<BillboardComponent>();
-        bbComp)
-    {
-      bbComp->isVisible = false;
-    }
-  }
-
   HideDeathIndicator();
 
   // Play sound.
@@ -381,7 +378,8 @@ void Character::OnAwake()
   }
   else
   {
-    tabIndicator->SetVisible();
+    if (!isTransparent)
+      tabIndicator->SetVisible();
   }
 }
 

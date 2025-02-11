@@ -97,6 +97,8 @@ public:
   // isPlacement mode on
   bool isPlacementModeOn{false};
 
+  bool isTransparent{false};
+
 public:
 
   Character(World* world);
