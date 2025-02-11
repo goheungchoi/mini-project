@@ -66,6 +66,8 @@ void Level2::CreateMap()
   map->CreateObstacleAt(ObstacleType_Sofa, 4, 4, kNorth);
   map->CreateObstacleAt(ObstacleType_Lion, 5, 1, kNorth);
   map->CreateObstacleAt(ObstacleType_Sofa, 5, 5, kWest);
+
+  map->PlaceCharacterIndicatorAt(2, 5, kSouth);
 }
 
 void Level2::TriggerAction() {}

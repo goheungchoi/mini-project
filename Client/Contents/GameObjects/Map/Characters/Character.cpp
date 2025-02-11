@@ -378,7 +378,8 @@ void Character::OnAwake()
   }
   else
   {
-    tabIndicator->SetVisible();
+    if (!isTransparent)
+      tabIndicator->SetVisible();
   }
 }
 

@@ -999,6 +999,8 @@ void Map::PlaceCharacterIndicatorAt(uint32_t w, uint32_t h,
   slasher->DisableHover();
   slasher->SetPlacementMode(true);
 
+  slasher->isTransparent = true;
+
   characterIndicator = slasher;
 
   AddChildGameObject(slasher);
