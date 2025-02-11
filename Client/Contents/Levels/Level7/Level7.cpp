@@ -8,7 +8,6 @@
 #include "Contents/UI/InGameUI/MainMission/MainMission.h"
 #include "Contents/UI/InGameUI/SubMission/SubMission.h"
 #include "Contents/UI/InGameUI/ApplyButton/ApplyButton.h"
-#include "GameFramework/UI/Canvas/Canvas.h"
 #include "Contents/UI/AudioDramaUI/AudioDramaUI.h"
 void Level7::PrepareLevel() 
 {
@@ -28,9 +27,9 @@ void Level7::BeginLevel()
   inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x - spacing, AgentPos.y});
   inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
 
-  inGameUI->_mainMission->SetText(L"최대한 희생 없이 모든 적 처치");
-  inGameUI->_subMission[0]->SetText(L"부관 엘리자 희생");
-  inGameUI->_subMission[1]->SetText(L"루크와 제이미 희생");
+  inGameUI->_mainMission->SetText(L"연설장 잠입 및 초대장 확보");
+  inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
+  inGameUI->_subMission[1]->SetText(L"부관 희생 없이 작전 수행");
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
   _audioDrama->SetTotalTime(25.f);
 #endif

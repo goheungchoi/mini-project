@@ -19,7 +19,6 @@ void Level6::BeginLevel()
   __super::BeginLevel();
 
 #ifdef USED2D
-  inGameUI->HideUI(L"SubMission");
   inGameUI->HideUI(L"SubMission_2");
 
   inGameUI->_agentStorage->SetAgent(kBrawler, {AgentPos.x - spacing * 3, AgentPos.y});
@@ -27,7 +26,8 @@ void Level6::BeginLevel()
   inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x - spacing, AgentPos.y});
   inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
 
-  inGameUI->_mainMission->SetText(L"최대한 희생 없이 모든 적 처치");
+  inGameUI->_mainMission->SetText(L"칼트 병력 제거 및 분산");
+  inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
 #endif
 }
 

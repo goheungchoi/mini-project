@@ -8,6 +8,8 @@
 
 class Map : public GameObject
 {
+  uint32_t tabCount = 0;
+
 public:
   // Resource handle
 
@@ -133,6 +135,8 @@ public:
   void PlaceCharacterIndicatorAt(uint32_t w, uint32_t h, Direction dir = kNorth);
 
   void DeleteCharacterFromMap(Character* character);
+
+  std::function<void(void)> OnDeleteCharacter;
 
   void OnAwake() override;
 

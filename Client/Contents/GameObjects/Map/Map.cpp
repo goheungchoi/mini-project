@@ -1085,6 +1085,13 @@ void Map::Update(float dt)
     grid->TurnOffGridHover();
 
     // TODO: Remove a simulating character.
+    if (IsGameFinished())
+    {
+      for (Character* enemy : enemies)
+      {
+        enemy->ShowOutline();
+      }
+    }
 
     if (INPUT.IsKeyPress(Key::R))
     {
@@ -1204,6 +1211,7 @@ void Map::Update(float dt)
           {
             DeleteCharacterFromMap(hoveredCharacter);
             deleteCharType = hoveredCharacter->type;
+            OnDeleteCharacter();
             hoveredCharacter->Destroy();
             hoveredCharacter = nullptr;
           }
@@ -1263,13 +1271,13 @@ void Map::Update(float dt)
       }
     }
 
-    if (INPUT.IsKeyPress(Key::Space))
+    /*if (INPUT.IsKeyPress(Key::Space))
     {
       TriggerAction();
       return;
-    }
+    }*/
 
-    if (INPUT.IsKeyPress(Key::D1))
+    /*if (INPUT.IsKeyPress(Key::D1))
     {
       TurnOnPlacementMode(kBrawler, kNorth);
       return;
@@ -1285,7 +1293,7 @@ void Map::Update(float dt)
     {
       TurnOnPlacementMode(kGunman, kNorth);
       return;
-    }
+    }*/
   }
 
   // Show death indicator.

@@ -18,6 +18,7 @@ SubMission::SubMission(World* world, Vector2 pos) : UIPanel(world)
   // SubMisson
   _subMissionImg = CreateUI<UIImage>(L"SubMissonImg");
   _subMissionImg->SetSprite("2D\\UI\\UI_Stage_S.png", _pos);
+  _subMissionImg->SetScale({1.1f, 1.0f});
 
   _failImg = CreateUI<UIImage>(L"FailImg");
   _failImg->SetSprite("Textures\\X_test.png", _pos);
@@ -33,56 +34,56 @@ SubMission::~SubMission() {}
 void SubMission::Update(float dt)
 {
 
-  if (StageIdx == 5)
+  if (StageIdx == 7 || StageIdx == 9)
   {
     if (_map)
     {
-      auto* gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
-                             ->GetUI<GunfireButton>(L"GunfireBtn");
+      int deadCiviliansNum = _map->GetNumDeadCivilians();
+      int deadAlliesNum = _map->GetNumDeadAllies();
 
-      if (gunfireBtn)
+      if (deadCiviliansNum >= 1) // 부관(엘리자)을 희생시키면
       {
-        // gunfireBtn을 사용하지 않았다면
-        if (gunfireBtn->_bGunFireUseFlag == false)
+        // 미션 실패 이미지 컴포넌트 활성화 한다.
+        auto* sub_ElizaDead = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                                  ->GetUI<SubMission>(L"SubMission_2");
+
+        if (sub_ElizaDead)
         {
-          // 미션 실패 이미지 컴포넌트 활성화 한다.
-          _failImg->Activate();
+          sub_ElizaDead->_failImg->Activate();
+        }
+      }
+      else if (deadAlliesNum >= 1) // 대원 1명 이상 죽으면
+      {
+        // 미션 실패 이미지 컴포넌트 활성화 한다.
+        auto* sub_AlliesDead = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                                   ->GetUI<SubMission>(L"SubMission_1");
+
+        if (sub_AlliesDead)
+        {
+          sub_AlliesDead->_failImg->Activate();
         }
       }
     }
   }
-
-if (StageIdx == 7)
-{
-  if (_map)
+  else
   {
-    int deadCiviliansNum = _map->GetNumDeadCivilians();
-    int deadAlliesNum = _map->GetNumDeadAllies();
-
-    if (deadCiviliansNum >= 1)  // 부관(엘리자)을 희생시키면
+    if (_map)
     {
-      // 미션 실패 이미지 컴포넌트 활성화 한다.
-      auto* sub_ElizaDead = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
-                                 ->GetUI<SubMission>(L"SubMission");
+      int deadAlliesNum = _map->GetNumDeadAllies();
 
-      if (sub_ElizaDead)
+      if (deadAlliesNum >= 1) // 대원 1명 이상 죽으면
       {
-        sub_ElizaDead->_failImg->Activate();
-      }
-    }
-    else if (deadAlliesNum >= 2)  // 대원 2명을 희생시키면
-    {
-      // 미션 실패 이미지 컴포넌트 활성화 한다.
-      auto* sub_AlliesDead = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
-          ->GetUI<SubMission>(L"SubMission_2");
+        // 미션 실패 이미지 컴포넌트 활성화 한다.
+        auto* sub_AlliesDead = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                                   ->GetUI<SubMission>(L"SubMission_1");
 
-      if (sub_AlliesDead)
-      {
-        sub_AlliesDead->_failImg->Activate();
+        if (sub_AlliesDead)
+        {
+          sub_AlliesDead->_failImg->Activate();
+        }
       }
     }
   }
-}
   
 
   // Retry 버튼이 눌렸거나 Apply 버튼이 눌렸다면  _failImg->Deactivate() 해라.

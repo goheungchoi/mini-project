@@ -449,6 +449,37 @@ void Character::Update(float dt)
     ApplyChangedDirection();
 	}
 
+  if (isPlacementModeOn)
+  {
+    if (map)
+    {
+      float myAngle = 0;
+      switch (dir)
+      {
+      case kNorth:
+        myAngle = XM_PI+XM_PIDIV2;
+        break;
+      case kEast:
+        myAngle = 0;
+        break;
+      case kSouth:
+        myAngle = XM_PIDIV2;
+        break;
+      case kWest:
+        myAngle = XM_PI;
+        break;
+      }
+
+      XMVECTOR myQuatRot = XMQuaternionRotationAxis({0.f, 1.f, 0.f}, myAngle);
+      XMVECTOR mapQuatRot =
+          MathUtil::GetQuaternionFromMatrix(map->GetWorldTransform());
+      SetRotationAroundYAxis(XMConvertToDegrees(
+          XMVectorGetY(XMQuaternionMultiply(mapQuatRot, myQuatRot)))); 
+      SetRotationAroundYAxis(myAngle-acosf(XMVectorGetY(mapQuatRot)));
+      
+    }
+  }
+
   if (!isActionTriggered)
   {
     if (!isPlacementModeOn)
