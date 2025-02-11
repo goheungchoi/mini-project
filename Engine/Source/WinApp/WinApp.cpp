@@ -46,7 +46,7 @@ void WinApp::App_CreateWindow(int width, int height)
 
   // 창 스타일 설정 플래그 (타이틀바 / 종료 / 최소화 / 최대화)
   DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION |
-                  WS_SYSMENU; //| WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+                  WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
 
 // CreateWindowW() 함수 사용하여 hWnd 만들어줌.
   _hwnd = CreateWindowEx(0, _className, _className, dwStyle, CW_USEDEFAULT,

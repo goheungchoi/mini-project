@@ -13,7 +13,7 @@ public:
 private:
   class UIImage* _mainMissionImg{nullptr};
   class UIText* _mainMissionTxt{nullptr};
-  //class UIText* _selectTxt{nullptr};
+  class UIText* _defaultTxt{nullptr};
 
   Vector2 _pos = {338, 120};
 };

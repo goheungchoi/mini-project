@@ -33,7 +33,7 @@ void Level1::BeginLevel()
   inGameUI->_agentStorage->SetAgent(kSlasher, {AgentPos.x - spacing * 1, AgentPos.y});
   inGameUI->_agentStorage->SetAgent(kGunman, {AgentPos.x, AgentPos.y});
 
-  inGameUI->_mainMission->SetText(L"칼트 병력 제거");
+  inGameUI->_mainMission->SetText(L"선술집 내 칼트 병력 제거");
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
 
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
