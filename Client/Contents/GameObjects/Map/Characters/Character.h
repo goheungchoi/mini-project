@@ -56,6 +56,8 @@ public:
   TextureHandle deathIndicatorHandle;
   GameObject* deathIndicator{nullptr};
 
+  bool isDeathIndicatorShown{false};
+
   TextureHandle tabIndicatorHandle;
   GameObject* tabIndicator{nullptr};
 
