@@ -75,7 +75,7 @@ private:
   DirectionalLight _mainLight;
   int max = std::numeric_limits<int>::max();
   float ambientIntencity = 0.1f;
-  float emissiveIntencity = 0.523f;
+  float emissiveIntencity = 0.2f;
   float testradius = 0.005f;
   bool testIsSSAO = true;
   float testvinetteRadius = 0.f;
@@ -313,6 +313,7 @@ public:
     Vector4 worldPos = quad->position;
     Vector4 viewPos = Vector4::Transform(worldPos, _camera.view);
     float viewZ = viewPos.z;
+    max--;
     _billboards.insert({{viewZ, max}, quad});
   }
   void AddTrail(Trail* trail)
