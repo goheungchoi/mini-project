@@ -39,6 +39,7 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _gradientIMG = CreateUI<UIImage>(L"GradientIMG");
   _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1475, 910});
   _gradientIMG->SetScale({1.0f, 1.0f});
+  SetOnActivatedEvent([=]() { _playBtn->Activate(); });
 }
 
 InGameUI::~InGameUI() {}

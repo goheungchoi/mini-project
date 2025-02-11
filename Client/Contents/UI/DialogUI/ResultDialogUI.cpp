@@ -142,8 +142,6 @@ ResultDialogUI::ResultDialogUI(class World* world) : DialogUI(world)
         HideUI(_playerSelectBtnImage2->GetName());
         HideUI(_playerSelectButton2->GetName());
         HideUI(_playerSelectBtnText2->GetName());
-
-
       });
       _actionList.push_back([=]() {
         ShowUI(L"playerbuttonimage2");
