@@ -1,5 +1,6 @@
 #include "AgentStorage.h"
 #include "Contents/GameObjects/Map/Map.h"
+#include "Contents/Levels/GameLevel.h"
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
@@ -166,160 +167,303 @@ Agent::~Agent() {}
 
 void Agent::Update(float dt)
 {
-  __super::Update(dt);
+}
 
-  if (_map)
+
+AgentStorage::AgentStorage(World* world) : UIPanel(world)
+{
   {
-      CharacterType type = CharacterType::kCivilian;
-
-    if (_map->isPlacementModeOn)
     {
-      type = _map->placeholder->type;
 
-      if (type == _charType)
-      {
-        _AgentImgs[0]->SetStatus(EStatus::EStatus_Inactive);
-        _AgentImgs[1]->SetStatus(EStatus::EStatus_Active);
-        _AgentImgs[2]->SetStatus(EStatus::EStatus_Inactive);
-      }
-    }
-
-    // 배치모드가 꺼졌을 때
-    //if (!(_map->isPlacementModeOn))
-    //{
-      if (prevAgentNum < _map->GetNumAllies()) // 새로 대원 배치
-      {
-        if (type == _charType)
+      BrawlerDefaultImage = CreateUI<UIImage>(L"BrawlerDefaultImage");
+      BrawlerHoveredImage = CreateUI<UIImage>(L"BrawlerHoveredImage");
+      BrawlerInactiveImage = CreateUI<UIImage>(L"BrawlerInactiveImage");
+      BrawlerButton = CreateUI<UIButton>(L"BrawlerButton");
+      BrawlerDefaultImage->SetSprite("2D\\UI\\UI_Storage_Act_Fist.png");
+      BrawlerHoveredImage->SetSprite("2D\\UI\\UI_Storage_Hover_Fist.png");
+      BrawlerInactiveImage->SetSprite("2D\\UI\\UI_Storage_Deact_Fist.png");
+      BrawlerHoveredImage->SetOpacity(0.f);
+      BrawlerInactiveImage->SetOpacity(0.f);
+      BrawlerButton->SetSize(BrawlerDefaultImage->GetTextureSize());
+      BrawlerButton->AddOnHoveredHandler([=]() {
+        if (!IsBrawlerUsing)
         {
-          bUseFlag = true; // 대원 배치 했어요~~
-
-          _AgentBtn->Deactivate(); // 버튼 비활성화
-
-          _AgentImgs[0]->SetStatus(EStatus::EStatus_Inactive);
-          _AgentImgs[1]->SetStatus(EStatus::EStatus_Active);
-          _AgentImgs[2]->SetStatus(EStatus::EStatus_Inactive);
-        }
-
-      }
-      // 배치된 대원 삭제
-      else if (prevAgentNum > _map->GetNumAllies())
-      {
-        if (_map->deleteCharType != _charType)
-          return;
-
-        if (numGunAgent < 2 && _map->deleteCharType == CharacterType::kGunman)
-        {
-          GunAgentDeleteLogic();
+          BrawlerDefaultImage->SetOpacity(0.f);
+          BrawlerHoveredImage->SetOpacity(1.f);
+          BrawlerInactiveImage->SetOpacity(0.f);
         }
         else
         {
-          bUseFlag = false; // 대원이 사라져서 다시 배치해야해요
-
-          _AgentBtn->Activate(); // 버튼 활성화
-
-          _AgentImgs[0]->SetStatus(EStatus::EStatus_Active);
-          _AgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
-          _AgentImgs[2]->SetStatus(EStatus::EStatus_Inactive);
+          BrawlerDefaultImage->SetOpacity(0.f);
+          BrawlerHoveredImage->SetOpacity(0.f);
+          BrawlerInactiveImage->SetOpacity(1.f);
         }
-      }
-      else if (prevAgentNum ==
-               _map->GetNumAllies()) // 과거 대원 수와 현재 대원 수가 같으면
-      {
-        if (bUseFlag) // 배치된 대원 자리 옮기다가 취소
+      });
+      BrawlerButton->AddOnUnHoveredHandler([=]() {
+        if (!IsBrawlerUsing)
         {
-          _AgentBtn->Deactivate(); // 버튼 비활성화
-          _AgentImgs[0]->SetStatus(EStatus::EStatus_Inactive); // Active 이미지
-          _AgentImgs[1]->SetStatus(EStatus::EStatus_Active); // Deactive 이미지
-          _AgentImgs[2]->SetStatus(EStatus::EStatus_Inactive); // Hover 이미지
+          BrawlerDefaultImage->SetOpacity(1.f);
+          BrawlerHoveredImage->SetOpacity(0.f);
+          BrawlerInactiveImage->SetOpacity(0.f);
         }
-        else // 배치 아직 안된 대원 취소
+        else
         {
-          _AgentBtn->Activate(); // 버튼 계속 활성화
-
-          _AgentImgs[0]->SetStatus(EStatus::EStatus_Active); // Active 이미지
-          _AgentImgs[1]->SetStatus(
-              EStatus::EStatus_Inactive); // Deactive 이미지
-          _AgentImgs[2]->SetStatus(EStatus::EStatus_Inactive); // Hover 이미지
+          BrawlerDefaultImage->SetOpacity(0.f);
+          BrawlerHoveredImage->SetOpacity(0.f);
+          BrawlerInactiveImage->SetOpacity(1.f);
         }
-      //}
+      });
     }
-
-    type = CharacterType::kCivilian;
-    prevAgentNum = _map->GetNumAllies();
-
-  }
-  
-}
-
-void Agent::GunAgentDeleteLogic()
-{
-  // 캐릭터 삭제될때 로직
-  if (_map->deleteCharType ==
-      _charType) // 삭제 되는 CharType이 버튼의 CharType과 같다면
-  {
-    if (numGunAgent >= 2)
     {
-      if (_map->deleteCharType == CharacterType::kGunman)
-      {
-        bUseFlag = false;
-        _AgentImgs[0]->SetStatus(EStatus::EStatus_Active);
-        _AgentImgs[1]->SetStatus(EStatus::EStatus_Inactive);
-        _AgentImgs[2]->SetStatus(EStatus::EStatus_Inactive);
+      SlasherDefaultImage = CreateUI<UIImage>(L"SlasherDefaultImage");
+      SlasherHoveredImage = CreateUI<UIImage>(L"SlasherHoveredImage");
+      SlasherInactiveImage = CreateUI<UIImage>(L"SlasherInactiveImage");
+      SlasherButton = CreateUI<UIButton>(L"SlasherButton");
+      SlasherDefaultImage->SetSprite("2D\\UI\\UI_Storage_Act_Rush.png");
+      SlasherHoveredImage->SetSprite("2D\\UI\\UI_Storage_Hover_Rush.png");
+      SlasherInactiveImage->SetSprite("2D\\UI\\UI_Storage_Deact_Rush.png");
+      SlasherHoveredImage->SetOpacity(0.f);
+      SlasherInactiveImage->SetOpacity(0.f);
+      SlasherButton->SetSize(SlasherDefaultImage->GetTextureSize());
+      SlasherButton->AddOnHoveredHandler([=]() {
+        if (!IsSlasherUsing)
+        {
+          SlasherDefaultImage->SetOpacity(0.f);
+          SlasherHoveredImage->SetOpacity(1.f);
+          SlasherInactiveImage->SetOpacity(0.f);
+        }
+        else
+        {
+          SlasherDefaultImage->SetOpacity(0.f);
+          SlasherHoveredImage->SetOpacity(0.f);
+          SlasherInactiveImage->SetOpacity(1.f);
+        }
+      });
+      SlasherButton->AddOnUnHoveredHandler([=]() {
+        if (!IsSlasherUsing)
+        {
+          SlasherDefaultImage->SetOpacity(1.f);
+          SlasherHoveredImage->SetOpacity(0.f);
+          SlasherInactiveImage->SetOpacity(0.f);
+        }
+        else
+        {
+          SlasherDefaultImage->SetOpacity(0.f);
+          SlasherHoveredImage->SetOpacity(0.f);
+          SlasherInactiveImage->SetOpacity(1.f);
+        }
+      });
+    }
+    {
+      Gunman1DefaultImage = CreateUI<UIImage>(L"Gunman1DefaultImage");
+      Gunman1HoveredImage = CreateUI<UIImage>(L"Gunman1HoveredImage");
+      Gunman1InactiveImage = CreateUI<UIImage>(L"Gunman1InactiveImage");
+      Gunman1Button = CreateUI<UIButton>(L"Gunman1Button");
+      Gunman1DefaultImage->SetSprite("2D\\UI\\UI_Storage_Act_Gun.png");
+      Gunman1HoveredImage->SetSprite("2D\\UI\\UI_Storage_Hover_Gun.png");
+      Gunman1InactiveImage->SetSprite("2D\\UI\\UI_Storage_Deact_Gun.png");
+      Gunman1HoveredImage->SetOpacity(0.f);
+      Gunman1InactiveImage->SetOpacity(0.f);
+      Gunman1Button->SetSize(Gunman1DefaultImage->GetTextureSize());
+      Gunman1Button->AddOnHoveredHandler([=]() {
+        if (!IsGunman1Using)
+        {
+          Gunman1DefaultImage->SetOpacity(0.f);
+          Gunman1HoveredImage->SetOpacity(1.f);
+          Gunman1InactiveImage->SetOpacity(0.f);
+        }
+        else
+        {
+          Gunman1DefaultImage->SetOpacity(0.f);
+          Gunman1HoveredImage->SetOpacity(0.f);
+          Gunman1InactiveImage->SetOpacity(1.f);
+        }
+      });
+      Gunman1Button->AddOnUnHoveredHandler([=]() {
+        if (!IsGunman1Using)
+        {
+          Gunman1DefaultImage->SetOpacity(1.f);
+          Gunman1HoveredImage->SetOpacity(0.f);
+          Gunman1InactiveImage->SetOpacity(0.f);
+        }
+        else
+        {
+          Gunman1DefaultImage->SetOpacity(0.f);
+          Gunman1HoveredImage->SetOpacity(0.f);
+          Gunman1InactiveImage->SetOpacity(1.f);
+        }
+      });
+    }
+    if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
+    {
+      Gunman2DefaultImage = CreateUI<UIImage>(L"Gunman2DefaultImage");
+      Gunman2HoveredImage = CreateUI<UIImage>(L"Gunman2HoveredImage");
+      Gunman2InactiveImage = CreateUI<UIImage>(L"Gunman2InactiveImage");
+      Gunman2Button = CreateUI<UIButton>(L"Gunman2Button");
+      Gunman2DefaultImage->SetSprite("2D\\UI\\UI_Storage_Act_Gun.png");
+      Gunman2HoveredImage->SetSprite("2D\\UI\\UI_Storage_Hover_Gun.png");
+      Gunman2InactiveImage->SetSprite("2D\\UI\\UI_Storage_Deact_Gun.png");
+      Gunman2HoveredImage->SetOpacity(0.f);
+      Gunman2InactiveImage->SetOpacity(0.f);
+      Gunman2Button->SetSize(Gunman2DefaultImage->GetTextureSize());
+      Gunman2Button->AddOnHoveredHandler([=]() {
+        if (!IsGunman1Using)
+        {
+          Gunman2DefaultImage->SetOpacity(0.f);
+          Gunman2HoveredImage->SetOpacity(1.f);
+          Gunman2InactiveImage->SetOpacity(0.f);
+        }
+        else
+        {
+          Gunman2DefaultImage->SetOpacity(0.f);
+          Gunman2HoveredImage->SetOpacity(0.f);
+          Gunman2InactiveImage->SetOpacity(1.f);
+        }
+      });
+      Gunman2Button->AddOnUnHoveredHandler([=]() {
+        if (!IsGunman1Using)
+        {
+          Gunman2DefaultImage->SetOpacity(1.f);
+          Gunman2HoveredImage->SetOpacity(0.f);
+          Gunman2InactiveImage->SetOpacity(0.f);
+        }
+        else
+        {
+          Gunman2DefaultImage->SetOpacity(0.f);
+          Gunman2HoveredImage->SetOpacity(0.f);
+          Gunman2InactiveImage->SetOpacity(1.f);
+        }
+      });
 
-        _AgentBtn->Activate(); // 버튼 계속 활성화
+
+
+    }
+  }
+
+  if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3) //4명
+  {
+
+    BrawlerDefaultImage->SetCenterPos({1250, 925});
+    BrawlerHoveredImage->SetCenterPos({1250, 925});
+    BrawlerInactiveImage->SetCenterPos({1250, 925});
+    BrawlerButton->SetCenterPos({1250, 925});
+    SlasherDefaultImage->SetCenterPos({1430, 925});
+    SlasherHoveredImage->SetCenterPos({1430, 925});
+    SlasherInactiveImage->SetCenterPos({1430, 925});
+    SlasherButton->SetCenterPos({1430, 925});
+    Gunman1DefaultImage->SetCenterPos({1610, 925});
+    Gunman1HoveredImage->SetCenterPos({1610, 925});
+    Gunman1InactiveImage->SetCenterPos({1610, 925});
+    Gunman1Button->SetCenterPos({1610, 925});
+    Gunman2DefaultImage->SetCenterPos({1790, 925});
+    Gunman2HoveredImage->SetCenterPos({1790, 925});
+    Gunman2InactiveImage->SetCenterPos({1790, 925});
+    Gunman2Button->SetCenterPos({1790, 925});
+  }
+  else
+  {
+    BrawlerDefaultImage->SetCenterPos({1430, 925});
+    BrawlerHoveredImage->SetCenterPos({1430, 925});
+    BrawlerInactiveImage->SetCenterPos({1430, 925});
+    BrawlerButton->SetCenterPos({1430, 925});
+    SlasherDefaultImage->SetCenterPos({1610, 925});
+    SlasherHoveredImage->SetCenterPos({1610, 925});
+    SlasherInactiveImage->SetCenterPos({1610, 925});
+    SlasherButton->SetCenterPos({1610, 925});
+    Gunman1DefaultImage->SetCenterPos({1790, 925});
+    Gunman1HoveredImage->SetCenterPos({1790, 925});
+    Gunman1InactiveImage->SetCenterPos({1790, 925});
+    Gunman1Button->SetCenterPos({1790, 925});
+  }
+  SetOnActivatedEvent([=]() {
+
+    BrawlerDefaultImage->SetOpacity(1.f);
+    BrawlerHoveredImage->SetOpacity(0.f);
+    BrawlerInactiveImage->SetOpacity(0.f);
+    SlasherDefaultImage->SetOpacity(1.f);
+    SlasherHoveredImage->SetOpacity(0.f);
+    SlasherInactiveImage->SetOpacity(0.f);
+    Gunman1DefaultImage->SetOpacity(1.f);
+    Gunman1HoveredImage->SetOpacity(0.f);
+    Gunman1InactiveImage->SetOpacity(0.f);
+    if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
+    {
+      Gunman2DefaultImage->SetOpacity(1.f);
+      Gunman2HoveredImage->SetOpacity(0.f);
+      Gunman2InactiveImage->SetOpacity(0.f);
+    }
+    IsBrawlerUsing = false;
+    IsSlasherUsing = false;
+    IsGunman1Using = false;
+    IsGunman2Using = false;
+    {
+      if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() >
+          3) // 4명
+      {
+
+        BrawlerDefaultImage->SetCenterPos({1250, 925});
+        BrawlerHoveredImage->SetCenterPos({1250, 925});
+        BrawlerInactiveImage->SetCenterPos({1250, 925});
+        BrawlerButton->SetCenterPos({1250, 925});
+        SlasherDefaultImage->SetCenterPos({1430, 925});
+        SlasherHoveredImage->SetCenterPos({1430, 925});
+        SlasherInactiveImage->SetCenterPos({1430, 925});
+        SlasherButton->SetCenterPos({1430, 925});
+        Gunman1DefaultImage->SetCenterPos({1610, 925});
+        Gunman1HoveredImage->SetCenterPos({1610, 925});
+        Gunman1InactiveImage->SetCenterPos({1610, 925});
+        Gunman1Button->SetCenterPos({1610, 925});
+        Gunman2DefaultImage->SetCenterPos({1790, 925});
+        Gunman2HoveredImage->SetCenterPos({1790, 925});
+        Gunman2InactiveImage->SetCenterPos({1790, 925});
+        Gunman2Button->SetCenterPos({1790, 925});
       }
       else
       {
-        auto* agentStorage = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
-                                 ->GetUI<AgentStorage>(L"AgentStorage");
-
-        if (agentStorage)
-        {
-          if (agentStorage->GetUI<Agent>(L"Agent2")->bUseFlag == false)
-          {
-            agentStorage->GetUI<Agent>(L"Agent3")->bUseFlag = false;
-            agentStorage->GetUI<Agent>(L"Agent3")->_AgentImgs[0]->SetStatus(
-                EStatus::EStatus_Active);
-            agentStorage->GetUI<Agent>(L"Agent3")->_AgentImgs[1]->SetStatus(
-                EStatus::EStatus_Inactive);
-            agentStorage->GetUI<Agent>(L"Agent3")->_AgentImgs[2]->SetStatus(
-                EStatus::EStatus_Inactive);
-          }
-          else if (agentStorage->GetUI<Agent>(L"Agent2")->bUseFlag == true)
-          {
-            agentStorage->GetUI<Agent>(L"Agent2")->bUseFlag = false;
-            agentStorage->GetUI<Agent>(L"Agent2")->_AgentImgs[0]->SetStatus(
-                EStatus::EStatus_Active);
-            agentStorage->GetUI<Agent>(L"Agent2")->_AgentImgs[1]->SetStatus(
-                EStatus::EStatus_Inactive);
-            agentStorage->GetUI<Agent>(L"Agent2")->_AgentImgs[2]->SetStatus(
-                EStatus::EStatus_Inactive);
-          }
-        }
+        BrawlerDefaultImage->SetCenterPos({1430, 925});
+        BrawlerHoveredImage->SetCenterPos({1430, 925});
+        BrawlerInactiveImage->SetCenterPos({1430, 925});
+        BrawlerButton->SetCenterPos({1430, 925});
+        SlasherDefaultImage->SetCenterPos({1610, 925});
+        SlasherHoveredImage->SetCenterPos({1610, 925});
+        SlasherInactiveImage->SetCenterPos({1610, 925});
+        SlasherButton->SetCenterPos({1610, 925});
+        Gunman1DefaultImage->SetCenterPos({1790, 925});
+        Gunman1HoveredImage->SetCenterPos({1790, 925});
+        Gunman1InactiveImage->SetCenterPos({1790, 925});
+        Gunman1Button->SetCenterPos({1790, 925});
       }
     }
 
-    _map->deleteCharType = CharacterType::kCivilian;
-  }
+    BrawlerButton->AddOnClickHandler([=]() {
+      IsBrawlerUsing = true;
+      _map->TurnOnPlacementMode(CharacterType::kBrawler, kWest);
+    });
+    SlasherButton->AddOnClickHandler([=]() {
+      IsSlasherUsing = true;
+      _map->TurnOnPlacementMode(CharacterType::kBrawler, kWest);
+
+    });
+    Gunman1Button->AddOnClickHandler([=]() {
+      IsGunman1Using = true;
+      _map->TurnOnPlacementMode(CharacterType::kBrawler, kWest);
+    });
+    if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
+      Gunman2Button->AddOnClickHandler([=]() {
+        IsGunman2Using = true;
+        _map->TurnOnPlacementMode(CharacterType::kBrawler, kWest);
+      });
+
+
+
+  });
+
+
+
 }
 
-AgentStorage::AgentStorage(World* world) : UIPanel(world) {}
-
-AgentStorage::~AgentStorage()
+void AgentStorage::ResetAgent()
 {
-  for (auto& agent : AgentList)
-  {
-    agent->BeginDestroy();
-    agent->Destroy();
-    agent->FinishDestroy();
-  }
-  AgentList.clear();
+  
 }
 
-void AgentStorage::SetAgent(CharacterType charType, Vector2 pos)
-{
-  std::wstring name = L"Agent" + std::to_wstring(AgentList.size());
-  Agent* newAgent = CreateUI<Agent>(name, charType, pos);
-  newAgent->SetName(name);
-  AgentList.push_back(newAgent);
-}
