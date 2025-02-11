@@ -1,6 +1,8 @@
 #include "AudioDramaUI.h"
 
 #include "Contents/SoundList/SoundList.h"
+#include "Contents/UI/InGameUI/InGameUI.h"
+#include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 #include "GameFramework/UI/UIText/UIText.h"
 #include "Shared/Config/Config.h"
@@ -26,13 +28,20 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
   _AudioScript->SetTextAlignment(TextAlignment::CENTERAlIGN);
   _AudioScript->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
 
-  OnActivated = [=]() { _elapsedTimer = 0; };
+  OnActivated = [=]() {
+    _elapsedTimer = 0;
+    _AudioScript->Activate();
+    _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
+  };
   OnDeactivated = [=]() {
+
     if (isEnding1 || isEnding2)
     {
       world->PrepareChangeLevel("Main Menu");
       world->CommitLevelChange();
     }
+    else 
+    _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Activate();
   };
   _scripts.resize(5);
   _scripts[0].push_back({L"명령 떨어지기 전까지 멋대로 움직이지 마, 제이미."});
@@ -165,7 +174,6 @@ void AudioDramaUI::EndingStage1(float dt)
   if (_elapsedTimer >= 19.08)
     PrintText(3, 3, dt, 5.17);
 }
-
 void AudioDramaUI::EndingStage2(float dt)
 {
   isEnding1 = false;
@@ -220,6 +228,7 @@ void AudioDramaUI::RunStage(float dt)
 void AudioDramaUI::Skip()
 {
   SoundManager::StopSound(_currentAudio);
+  _AudioScript->Deactivate();
   _elapsedTimer = _totalTime;
 }
 
