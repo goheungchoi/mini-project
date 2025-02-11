@@ -36,8 +36,8 @@ public:
   void ClearUnHoverHandler() { onUnHoveredHandlers.clear(); }
   void ClearPressHandler() { onPressedHandlers.clear(); }
   void Render() override;
-#ifdef _DEBUG
   void SetDebugDraw(bool debugFlag);
+#ifdef _DEBUG
 #endif
 
 private:

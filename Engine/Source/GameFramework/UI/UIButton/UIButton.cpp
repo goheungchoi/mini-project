@@ -78,12 +78,12 @@ void UIButton::Render()
   }
   #endif
 }
-#ifdef _DEBUG
 void UIButton::SetDebugDraw(bool debugFlag)
 {
+#ifdef _DEBUG
   bDebugDrawFlag = debugFlag;
-}
 #endif
+}
 
 void UIButton::OnClicked()
 {

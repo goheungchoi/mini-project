@@ -116,9 +116,9 @@ void UIText::Transition(float dt)
     SetOpacity(_transitionOpacity);
   }
 }
-#ifndef NDEBUG
 void UIText::SetDebugDraw(bool debugFlag)
 {
+#ifndef NDEBUG
   bDebugDrawFlag = debugFlag;
-}
 #endif
+}

@@ -20,6 +20,7 @@
 #include "Contents/Levels/Level8/Level8.h"
 #include "Contents/Levels/Level8_2/Level8_2.h"
 #include "Contents/Levels/DialogLevel/DialogLevel.h"
+#include "Contents/Levels/Level10-1/Level10-1.h"
 
 #include "Contents/SoundList/SoundList.h"
 
@@ -34,6 +35,7 @@ static Level6* level6;
 static Level7* level7;
 static Level8* level8;
 static Level8_2* level8_2;
+static Level10_1* level10_1;
 static DialogLevel* dialogLevel;
 
 
@@ -80,6 +82,8 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   level8->BindDialogLevel(dialogLevel);
   level8_2 = new Level8_2("Level8_2");
   level8_2->BindDialogLevel(dialogLevel);
+  level10_1 = new Level10_1("Level10_1");
+  level10_1->BindDialogLevel(dialogLevel);
 
   level1->SetStageIdx(1);
   level2->SetStageIdx(2);
@@ -104,6 +108,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _world->AddLevel(level7);
   _world->AddLevel(level8);
   _world->AddLevel(level8_2);
+  _world->AddLevel(level10_1);
 
   _world->PrepareChangeLevel(mainMenuLevel->name);
   _world->CommitLevelChange();
