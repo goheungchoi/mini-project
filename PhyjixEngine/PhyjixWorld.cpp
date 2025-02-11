@@ -43,7 +43,6 @@ PhyjixWorld::PhyjixWorld(physx::PxPhysics* physics, physx::PxDefaultCpuDispatche
 
   _scene = physics->createScene(sceneDesc);
   _physics = physics;
-  _controllerManager = PxCreateControllerManager(*_scene);
 
   pvdClient = _scene->getScenePvdClient();
   if (pvdClient)
@@ -62,12 +61,14 @@ PhyjixWorld::PhyjixWorld(physx::PxPhysics* physics, physx::PxDefaultCpuDispatche
 
 PhyjixWorld::~PhyjixWorld()
 {
+  if (groundrigidbody)
+    delete groundrigidbody;
+
   if (_scene)
     _scene->release();
-  if (_physics)
-    _physics->release();
-  if (_controllerManager)
-    _controllerManager->release();
+  if (_eventhandler)
+    delete _eventhandler;
+  
 }
 
 IRigidBody* PhyjixWorld::AddRigidBody(
@@ -93,43 +94,43 @@ void PhyjixWorld::RemoveRigidBody(IRigidBody* body)
   _scene->removeActor(*physxBody->_actor);
 }
 
-ICharacterController* PhyjixWorld::CreateCharacterController(
-    const DirectX::SimpleMath::Vector3& position, float radius, float height)
-{
-  physx::PxCapsuleControllerDesc desc;
-  desc.position = physx::PxExtendedVec3(position.x, position.y, position.z);
-  desc.radius = radius;
-  desc.height = height;
-  desc.material = mMaterial;
-
-  auto controller = new CharacterController();
-  controller->Initialize(_controllerManager, desc);
-  CharacterController* rawPtr = controller;
-  _characterControllers.push_back(std::move(controller));
-  return rawPtr;
-}
-
-void PhyjixWorld::RemoveCharacterController(ICharacterController* controller)
-{
-  auto it =
-      std::find_if(_characterControllers.begin(), _characterControllers.end(),
-                   [controller](const ICharacterController* ptr) {
-                     return ptr == controller;
-                   });
-
-  if (it != _characterControllers.end())
-  {
-    _characterControllers.erase(it);
-  }
-}
-
-void PhyjixWorld::UpdateCharacterControllers(float deltaTime)
-{
-  for (auto controls : _characterControllers)
-  {
-    controls->Update(deltaTime);
-  }
-}
+//ICharacterController* PhyjixWorld::CreateCharacterController(
+//    const DirectX::SimpleMath::Vector3& position, float radius, float height)
+//{
+//  physx::PxCapsuleControllerDesc desc;
+//  desc.position = physx::PxExtendedVec3(position.x, position.y, position.z);
+//  desc.radius = radius;
+//  desc.height = height;
+//  desc.material = mMaterial;
+//
+//  auto controller = new CharacterController();
+//  controller->Initialize(_controllerManager, desc);
+//  CharacterController* rawPtr = controller;
+//  _characterControllers.push_back(std::move(controller));
+//  return rawPtr;
+//}
+//
+//void PhyjixWorld::RemoveCharacterController(ICharacterController* controller)
+//{
+//  auto it =
+//      std::find_if(_characterControllers.begin(), _characterControllers.end(),
+//                   [controller](const ICharacterController* ptr) {
+//                     return ptr == controller;
+//                   });
+//
+//  if (it != _characterControllers.end())
+//  {
+//    _characterControllers.erase(it);
+//  }
+//}
+//
+//void PhyjixWorld::UpdateCharacterControllers(float deltaTime)
+//{
+//  for (auto controls : _characterControllers)
+//  {
+//    controls->Update(deltaTime);
+//  }
+//}
 
 void PhyjixWorld::Update(float deltaTime)
 {
@@ -220,7 +221,10 @@ void PhyjixWorld::CreateDefaultGround()
       new RigidBody(_physics, {0, 0, 0}, {0, 0, 0, 1}, {0, 0, 0}, {0, 0, 0, 1},
                     {1, 1, 1},
                     ColliderShape::eCubeCollider, true, false, this);
+
+
   groundPlane->userData = groundrigidbody;
+  groundrigidbody->_actor->release();
   groundrigidbody->_actor = groundPlane;
   _scene->addActor(*groundrigidbody->_actor);
 

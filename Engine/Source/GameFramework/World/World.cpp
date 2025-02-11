@@ -136,7 +136,14 @@ void World::CommitLevelChange()
       _currentLevel->DestroyLevel();
 
       Level* tmp = _currentLevel;
-      async::executor.silent_async([tmp]() { tmp->CleanupLevel(); });
+      // std::string preparingLevelName = _preparingLevel.load()->name;
+      async::executor.silent_async([tmp, this]() { 
+
+        while (bChangingLevel)
+        {
+        }
+        tmp->CleanupLevel(); 
+      });
 
       rigidBodyComponents.clear();
 
@@ -890,4 +897,15 @@ void World::UpdateGameObjectHierarchy(GameObject* gameObject,
       st.push(child);
     }
   }
+}
+
+void World::Shutdown()
+{
+  _renderer->Cleanup();
+  _phyjixEngine->DestroyWorld(_phyjixWorld);
+  _phyjixEngine->Terminate();
+  delete _canvas;
+  delete _renderer;
+  delete _defaultCamera;
+  delete _phyjixEngine;
 }

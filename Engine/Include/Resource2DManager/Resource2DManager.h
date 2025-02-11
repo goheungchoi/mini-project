@@ -23,6 +23,8 @@ public:
   bool LoadSprite(LPCSTR path);
   std::shared_ptr<Sprite> GetSprite(LPCSTR path);
 
+  void UnloadSprite(LPCSTR path);
+
   //bool LoadAnim2DAsset(LPCSTR spritePath, LPCSTR animCSV);
   //std::shared_ptr<Anim2DAsset> GetAnim2DAsset(std::wstring animAssetName);
 

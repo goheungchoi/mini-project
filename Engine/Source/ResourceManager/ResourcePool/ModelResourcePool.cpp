@@ -259,11 +259,6 @@ Handle ResourcePool<ModelData>::DuplicateHandleImpl(const Handle& handle,
   // Duplicate the handle
   ModelData& model = _handleTable[handle].value();
 
-  if (model.nodes[0].name == "Lion.001")
-  {
-    int i = 0;
-  }
-
   for (MeshHandle mesh : model.meshes)
   {
     if (::meshPool->IsValidHandle(mesh))

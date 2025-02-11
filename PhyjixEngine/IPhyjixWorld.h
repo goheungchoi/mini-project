@@ -25,12 +25,6 @@ public:
 
   virtual void RemoveRigidBody(IRigidBody* body) = 0;
 
-  virtual ICharacterController* CreateCharacterController(
-      const DirectX::SimpleMath::Vector3& position, float radius,
-      float height) = 0;
-  virtual void RemoveCharacterController(ICharacterController* controller) = 0;
-  virtual void UpdateCharacterControllers(float deltaTime) = 0;
-
   virtual void CreateDefaultGround() = 0;
   virtual IRigidBody* GetGroundActor() = 0;
   // physics update

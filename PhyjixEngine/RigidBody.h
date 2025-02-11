@@ -72,6 +72,9 @@ public:
 
   physx::PxRigidActor* _actor = nullptr;
 
+  physx::PxRigidActor* GetActor();
+
+
 private:
   bool isStatic = false;
   bool bIsKinematic = false;

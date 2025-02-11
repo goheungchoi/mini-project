@@ -29,11 +29,11 @@ CellObject::CellObject(World* world) : GameObject(world)
 
 CellObject::~CellObject()
 {
-  UnloadModel(defaultCellModelHandle);
-  UnloadModel(placementCellModelHandle);
-  UnloadModel(rangeCellModelHandle);
-  UnloadModel(dashCellModelHandle);
   UnloadModel(damageCellModelHandle);
+  UnloadModel(dashCellModelHandle);
+  UnloadModel(rangeCellModelHandle);
+  UnloadModel(placementCellModelHandle);
+  UnloadModel(defaultCellModelHandle);
 }
 
 void CellObject::SetInvisible()
