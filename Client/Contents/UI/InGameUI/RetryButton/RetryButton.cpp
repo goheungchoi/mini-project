@@ -55,11 +55,6 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
     // AgentStorage 활성화
     auto* agentStorage = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
                              ->GetUI<AgentStorage>(L"AgentStorage");
-    for (auto* agent : agentStorage->AgentList)
-    {
-      agent->_AgentBtn->Activate();
-    }
-
     _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->ShowUI(L"AgentStorage");
 
     // PlayBtn 활성화

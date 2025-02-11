@@ -2,38 +2,17 @@
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 #include "Contents/GameObjects/Map/Characters/Character.h"
 
-class Agent : public UIPanel
-{
-public:
-  Agent(class World* world, CharacterType charType, Vector2 pos);
-  ~Agent();
-
-  void Update(float dt) override;
-
-  const std::wstring GetName() const { return _name; }
-  void SetName(std::wstring agentName) { _name = agentName; }
-
-  class UIButton* _AgentBtn{nullptr};
-
-private:
-  class UIImage* _AgentImgs[3]{nullptr};
-  bool bUseFlag = false;
-  static int numGunAgent;
-  static int prevAgentNum;
-  CharacterType _charType;
-  std::wstring _name{};
-
-  void GunAgentDeleteLogic();
-};
-
 class AgentStorage : public UIPanel
 {
 public:
   AgentStorage(class World* world);
   virtual ~AgentStorage() = default;
 
+  void BeginLevel() override;
   void ResetAgent();
 
+
+  class Map* mapptr = nullptr;
   bool IsAgent3 = false;
 
   class UIImage* BrawlerDefaultImage{nullptr};

@@ -71,10 +71,6 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
         auto * agentStorage = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
             ->GetUI<AgentStorage>(L"AgentStorage");
 
-        for (auto* agent : agentStorage->AgentList)
-        {
-          agent->_AgentBtn->Deactivate();
-        }
 
         // GunfireButton 비활성화
         _world->_canvas->GetPanel<InGameUI>(L"InGameUI")

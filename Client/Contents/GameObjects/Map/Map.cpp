@@ -1126,6 +1126,7 @@ void Map::Update(float dt)
       if (placeholder != nullptr)
       {
         deleteCharType = placeholder->type;
+        OnDeleteCharacter();
       }
 
       TurnOffPlacementMode();
