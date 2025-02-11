@@ -154,7 +154,7 @@ private:
 
   void AssassinateTarget();
 
-  float mapPos[3]{-4.5f, 1.f, -4.1f};
+  float mapPos[3]{-4.5f, 0.8f, -4.1f};
   float mapRot = 0.f;
   //XMVECTOR lightStartPoint = {0.804f,-0.864f,0.615f};
   XMVECTOR lightStartPoint = {1.f,-1.f,1.f};

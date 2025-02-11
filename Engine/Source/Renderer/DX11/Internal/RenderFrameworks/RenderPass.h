@@ -76,7 +76,7 @@ private:
   int max = std::numeric_limits<int>::max();
   float ambientIntencity = 0.1f;
   float emissiveIntencity = 0.523f;
-  float testradius = 0.008f;
+  float testradius = 0.005f;
   bool testIsSSAO = true;
   float testvinetteRadius = 0.f;
   float testvinetteSoftNess = 1.005f;
