@@ -157,10 +157,7 @@ void GameLevel::PrepareLevel()
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Selectbox_02.png");
   Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Selectbox_03.png");
 
-  // Test용 이미지
-  Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\UI\\UI_Storage_Deact_Gun.png");
-  Resource2DManager::GetInstance()->LoadSprite("Textures\\X_test.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\UI_Failed_01.png");
 #endif // USED2D
 }
 
