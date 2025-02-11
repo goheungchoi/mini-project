@@ -11,6 +11,7 @@
 
 #include "Contents/SoundList/SoundList.h"
 #include "SoundSystem/SoundManager.h"
+
 #ifdef _DEBUG
 #include <imgui.h>
 #include <imgui_impl_dx11.h>
@@ -1026,6 +1027,42 @@ void Map::DeleteCharacterFromMap(Character* character)
     civilians.erase(it, civilians.end());
   }
   break;
+  }
+}
+
+void Map::PlayBackgroundAudio(BackgroundAudio audio) {
+  switch (audio)
+  {
+  case kBar:
+    SoundManager::PlaySound(SoundList::Background_Pub_Ambient);
+    SoundManager::PlaySound(SoundList::Background_Pub);
+    break;
+  case kMuseum:
+    SoundManager::PlaySound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::PlaySound(SoundList::Background_ConferenceHall);
+    break;
+  case kWarehouse:
+    SoundManager::PlaySound(SoundList::Background_Storage_Ambient);
+    SoundManager::PlaySound(SoundList::Background_Storage);
+    break;
+  }
+}
+
+void Map::StopBackgroundAudio(BackgroundAudio audio) {
+  switch (audio)
+  {
+  case kBar:
+    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+    SoundManager::StopSound(SoundList::Background_Pub);
+    break;
+  case kMuseum:
+    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall);
+    break;
+  case kWarehouse:
+    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+    SoundManager::StopSound(SoundList::Background_Storage);
+    break;
   }
 }
 

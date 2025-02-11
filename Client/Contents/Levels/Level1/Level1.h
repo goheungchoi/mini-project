@@ -20,7 +20,7 @@ public:
 
   virtual void BeginLevel() override;
 
-  // virtual void DestroyLevel() override { Level::DestroyLevel(); }
+  virtual void DestroyLevel() override;
 
 	virtual void CleanupLevel() override;
 

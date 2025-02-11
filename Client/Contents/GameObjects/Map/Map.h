@@ -6,6 +6,13 @@
 #include "Contents/GameObjects/Map/Characters/Character.h"
 #include "Contents/GameObjects/Map/Obstacle/Obstacle.h"
 
+enum BackgroundAudio
+{
+  kBar,
+  kMuseum,
+  kWarehouse
+};
+
 class Map : public GameObject
 {
   uint32_t tabCount = 0;
@@ -136,6 +143,9 @@ public:
   void PlaceCharacterIndicatorAt(uint32_t w, uint32_t h, Direction dir = kNorth);
 
   void DeleteCharacterFromMap(Character* character);
+
+  void PlayBackgroundAudio(BackgroundAudio audio);
+  void StopBackgroundAudio(BackgroundAudio audio);
 
   std::function<void(void)> OnDeleteCharacter = []() {};
 
