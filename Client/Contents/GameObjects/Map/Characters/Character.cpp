@@ -312,8 +312,8 @@ void Character::OnBeginOverlap(GameObject* other) {
   GameObject::OnBeginOverlap(other);
 
 	// Prevent invalid memory access.
-	if (((uint64_t)other & 0xf000000000000000) != 0)
-    return;
+	/*if (((uint64_t)other & 0xf000000000000000) != 0)
+    return;*/
 
   if (isPlacementModeOn)
   {

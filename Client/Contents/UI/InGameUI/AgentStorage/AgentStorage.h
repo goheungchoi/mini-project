@@ -10,13 +10,20 @@ public:
 
   void Update(float dt) override;
 
+  const std::wstring GetName() const { return _name; }
+  void SetName(std::wstring agentName) { _name = agentName; }
+
   class UIButton* _AgentBtn{nullptr};
+
 private:
   class UIImage* _AgentImgs[3]{nullptr};
   bool bUseFlag = false;
   static int numGunAgent;
   static int prevAgentNum;
   CharacterType _charType;
+  std::wstring _name{};
+
+  void GunAgentDeleteLogic();
 };
 
 class AgentStorage : public UIPanel

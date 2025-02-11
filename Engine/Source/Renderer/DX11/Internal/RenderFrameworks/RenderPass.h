@@ -144,10 +144,13 @@ public:
     SAFE_RELEASE(_deffered);
     SAFE_RELEASE(_shadow);
     SAFE_RELEASE(_ssao);
+    SAFE_RELEASE(_outLine);
+    SAFE_RELEASE(_vinettes);
     SAFE_RELEASE(_pso);
     SAFE_RELEASE(_skyBox);
     SAFE_RELEASE(_geometry);
   }
+
 
 public:
   void SetCamera(Vector4 eye, Matrix view, Matrix projection)

@@ -89,6 +89,7 @@ IRigidBody* PhyjixWorld::AddRigidBody(
 void PhyjixWorld::RemoveRigidBody(IRigidBody* body)
 {
   auto* physxBody = static_cast<RigidBody*>(body);
+  physxBody->_actor->userData = nullptr;
   _scene->removeActor(*physxBody->_actor);
 }
 

@@ -9,10 +9,6 @@
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 #include "Resource2DManager/Resource2DManager.h"
-#include "Contents/UI/InGameUI/InGameUI.h"
-#include "Contents/UI/DialogUI/ResultDialogUI.h"
-#include "Contents/UI/TransitionUI/TransitionUI.h"
-#include "GameFramework/UI/UIImage/UIImage.h"
 
 void GameLevel::PrepareLevel()
 {

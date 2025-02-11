@@ -409,13 +409,15 @@ void World::UnregisterRigidBodyComponent(RigidbodyComponent* rigidBody)
 {
   rigidBody->DisableSimulation();
   rigidBody->GetRigidBody()->DisableSceneQuery();
+
   auto it = std::remove(rigidBodyComponents.begin(), rigidBodyComponents.end(),
                         rigidBody);
   rigidBodyComponents.erase(it, rigidBodyComponents.end());
-  //for (auto rigidbody : rigidBodyComponents)
-  //{
-  //  rigidbody->RemoveCollisionEvent(rigidBody->GetRigidBody());
-  //}
+
+  for (auto rigidbody : rigidBodyComponents)
+  {
+    rigidbody->RemoveCollisionEvent(rigidBody->GetRigidBody());
+  }
 
   //_phyjixWorld->RemoveRigidBody(rigidBody->GetRigidBody());
 }
