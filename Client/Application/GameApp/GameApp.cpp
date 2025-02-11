@@ -110,7 +110,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _world->AddLevel(level8_2);
   _world->AddLevel(level10_1);
 
-  _world->PrepareChangeLevel(level10_1->name);
+  _world->PrepareChangeLevel(mainMenuLevel->name);
   _world->CommitLevelChange();
 }
 
