@@ -70,22 +70,22 @@ void RegisterSoundArray(T(&arr)[N])
   RegisterSoundArray(std::span{arr});
 }
 
-void RegisterSound(const wchar_t* sound)
+void RegisterSound(const wchar_t* sound, float isLoop = false)
 {
-  SoundManager::LoadSound(sound);
+  SoundManager::LoadSound(sound, isLoop);
 }
 
 void RegisterSoundList() {
   
   using namespace SoundList;
 
-  RegisterSound(Background_Title);
-  RegisterSound(Background_Pub);
-  RegisterSound(Background_Pub_Ambient);
-  RegisterSound(Background_Storage);
-  RegisterSound(Background_Storage_Ambient);
-  RegisterSound(Background_ConferenceHall);
-  RegisterSound(Background_ConferenceHall_Ambient);
+  RegisterSound(Background_Title, true);
+  RegisterSound(Background_Pub, true);
+  RegisterSound(Background_Pub_Ambient, true);
+  RegisterSound(Background_Storage, true);
+  RegisterSound(Background_Storage_Ambient, true);
+  RegisterSound(Background_ConferenceHall, true);
+  RegisterSound(Background_ConferenceHall_Ambient, true);
 
   RegisterSound(Button_Click);
   RegisterSound(Button_Hover);

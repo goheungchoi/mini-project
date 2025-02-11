@@ -10,6 +10,7 @@
 #include "DialogLevel/DialogLevel.h"
 
 #include "Contents/GameObjects/Map/FixedCamera/FixedCamera.h"
+
 enum eBattleResult
 {
   PerfectWin,

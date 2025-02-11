@@ -12,6 +12,7 @@
 #include "Contents/UI/InGameUI/MainMission/MainMission.h"
 #include "Contents/UI/InGameUI/SubMission/SubMission.h"
 
+// TODO: Sound
 
 void Level1::PrepareLevel()
 {
@@ -41,18 +42,22 @@ void Level1::BeginLevel()
   #endif
 }
 
+void Level1::DestroyLevel()
+{
+  Level::DestroyLevel();
+}
+
 void Level1::CleanupLevel() {
   GameLevel::CleanupLevel();
   UnloadModel(mapBarMeshHandle);
 }
-
-
 
 void Level1::CreateMap()
 {
   pivot = world->CreateGameObject();
 
   map = world->CreateGameObjectFromModel<Map>(mapBarMeshHandle);
+  map->PlayBackgroundAudio(kBar);
  
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
