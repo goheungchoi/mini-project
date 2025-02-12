@@ -28,7 +28,6 @@ void Level8_2::BeginLevel()
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
   _audioDrama->PlayFlag = false;
   _audioDrama->Deactivate();
-
 #endif
 }
 

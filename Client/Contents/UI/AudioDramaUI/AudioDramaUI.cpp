@@ -1,7 +1,9 @@
 #include "AudioDramaUI.h"
 
+#include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/SoundList/SoundList.h"
 #include "Contents/UI/InGameUI/InGameUI.h"
+#include "Contents/UI/MainMenuUI/MainMenuUI.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 #include "GameFramework/UI/UIText/UIText.h"
@@ -29,28 +31,28 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
   _AudioScript->SetColor(Color(1, 1, 1, 1));
   _AudioScript->SetTextAlignment(TextAlignment::CENTERAlIGN);
   _AudioScript->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
-
-  OnActivated = [=]() {
+  SetOnActivatedEvent([=]() {
     _elapsedTimer = 0;
     _Background->Activate();
     _Background->FadeIn(2.f);
     _AudioScript->Activate();
 
     _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
-  };
-  OnDeactivated = [=]() {
+  });
+  SetOnDeactivatedEvent([=]() {
     _Background->FadeOut(1.f);
     //_world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Activate();
     if (isEnding1 || isEnding2)
     {
-      world->PrepareChangeLevel("Main Menu");
-      world->CommitLevelChange();
+      _world->PrepareChangeLevel("Main Menu");
+      _world->CommitLevelChange();
     }
     else
     {
       _map->ResumeGame();
     }
-  };
+  });
+
   _scripts.resize(5);
   _scripts[0].push_back({L"1970년 2월 13일 칼트,\n적국 선전 방송 "});
   _scripts[0].push_back({L"오늘 우리는 알렌의 반란에 대해 이야기하겠습니다.	"});
@@ -111,6 +113,12 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
   
 }
 
+void AudioDramaUI::BeginLevel()
+{
+  UIPanel::BeginLevel();
+
+}
+
 void AudioDramaUI::Update(float dt)
 {
   UIPanel::Update(dt);
@@ -130,7 +138,14 @@ void AudioDramaUI::Update(float dt)
     {
       PlayFlag = false;
     _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Activate();
-      Deactivate();
+      if (isEnding1 || isEnding2)
+      {
+        GameManager::endingflag = true;
+        _world->PrepareChangeLevel("Main Menu");
+        _world->CommitLevelChange();
+      }
+      else
+        Deactivate();
     }
   }
     //_world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Activate();

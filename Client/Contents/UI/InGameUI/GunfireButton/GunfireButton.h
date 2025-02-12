@@ -6,7 +6,7 @@ class GunfireButton : public UIPanel
 public:
   GunfireButton(class World* world);
   virtual ~GunfireButton();
-
+  void BeginLevel() override;
   void Update(float dt) override;
 
 public:

@@ -1,7 +1,7 @@
 #include "Contents/GameObjects/GameManager/GameManager.h"
 
 #include "GameFramework/World/World.h"
-
+bool GameManager::endingflag = false;
 GameManager::GameManager(World* world) : GameObject(world) {
 
 }

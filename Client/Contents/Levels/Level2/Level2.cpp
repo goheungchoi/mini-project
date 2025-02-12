@@ -26,7 +26,6 @@ void Level2::BeginLevel()
   __super::BeginLevel();
 	
 #ifdef USED2D
-  inGameUI->Activate();
   inGameUI->HideUI(L"GunfireBtn");
   inGameUI->HideUI(L"SubMission_2");
 

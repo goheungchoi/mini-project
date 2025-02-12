@@ -21,6 +21,7 @@
 #include <imgui_impl_win32.h>
 #endif
 
+#include "../../../../Client/Contents/SoundList/SoundList.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "SoundSystem/SoundManager.h"
 
@@ -509,52 +510,174 @@ void World::ProcessInput(float dt)
 
 
     if (INPUT.IsKeyPress(Key::F12))
-  {
+
+    {
+      SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+      SoundManager::StopSound(SoundList::Background_Pub);
+      SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+      SoundManager::StopSound(SoundList::Background_ConferenceHall);
+      SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+      SoundManager::StopSound(SoundList::Background_Storage);
+      SoundManager::StopSound(SoundList::Background_Dialog);
+      SoundManager::StopSound(SoundList::AudioDrama_Stage_01);
+      SoundManager::StopSound(SoundList::AudioDrama_Stage_04);
+      SoundManager::StopSound(SoundList::AudioDrama_Stage_07);
+      SoundManager::StopSound(SoundList::AudioDrama_BadEnding);
+      SoundManager::StopSound(SoundList::AudioDrama_GoodEnding);
       PrepareChangeLevel("Main Menu");
-    CommitLevelChange();
+      CommitLevelChange();
   }
   else if (INPUT.IsKeyPress(Key::F1))
   {
+    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+    SoundManager::StopSound(SoundList::Background_Pub);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall);
+    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+    SoundManager::StopSound(SoundList::Background_Storage);
+    SoundManager::StopSound(SoundList::Background_Dialog);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_01);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_04);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_07);
+    SoundManager::StopSound(SoundList::AudioDrama_BadEnding);
+    SoundManager::StopSound(SoundList::AudioDrama_GoodEnding);
     PrepareChangeLevel("Level1");
     CommitLevelChange();
   }
   else if (INPUT.IsKeyPress(Key::F2))
   {
+    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+    SoundManager::StopSound(SoundList::Background_Pub);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall);
+    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+    SoundManager::StopSound(SoundList::Background_Storage);
+    SoundManager::StopSound(SoundList::Background_Dialog);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_01);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_04);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_07);
+    SoundManager::StopSound(SoundList::AudioDrama_BadEnding);
+    SoundManager::StopSound(SoundList::AudioDrama_GoodEnding);
     PrepareChangeLevel("Level2");
     CommitLevelChange();
   }
   else if (INPUT.IsKeyPress(Key::F3))
   {
+    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+    SoundManager::StopSound(SoundList::Background_Pub);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall);
+    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+    SoundManager::StopSound(SoundList::Background_Storage);
+    SoundManager::StopSound(SoundList::Background_Dialog);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_01);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_04);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_07);
+    SoundManager::StopSound(SoundList::AudioDrama_BadEnding);
+    SoundManager::StopSound(SoundList::AudioDrama_GoodEnding);
     PrepareChangeLevel("Level3");
     CommitLevelChange();
   }
   else if (INPUT.IsKeyPress(Key::F4))
   {
+    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+    SoundManager::StopSound(SoundList::Background_Pub);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall);
+    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+    SoundManager::StopSound(SoundList::Background_Storage);
+    SoundManager::StopSound(SoundList::Background_Dialog);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_01);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_04);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_07);
+    SoundManager::StopSound(SoundList::AudioDrama_BadEnding);
+    SoundManager::StopSound(SoundList::AudioDrama_GoodEnding);
     PrepareChangeLevel("Level4");
     CommitLevelChange();
   }
   else if (INPUT.IsKeyPress(Key::F5))
   {
+    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+    SoundManager::StopSound(SoundList::Background_Pub);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall);
+    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+    SoundManager::StopSound(SoundList::Background_Storage);
+    SoundManager::StopSound(SoundList::Background_Dialog);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_01);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_04);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_07);
+    SoundManager::StopSound(SoundList::AudioDrama_BadEnding);
+    SoundManager::StopSound(SoundList::AudioDrama_GoodEnding);
     PrepareChangeLevel("Level5");
     CommitLevelChange();
   }
   else if (INPUT.IsKeyPress(Key::F6))
   {
+    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+    SoundManager::StopSound(SoundList::Background_Pub);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall);
+    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+    SoundManager::StopSound(SoundList::Background_Storage);
+    SoundManager::StopSound(SoundList::Background_Dialog);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_01);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_04);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_07);
+    SoundManager::StopSound(SoundList::AudioDrama_BadEnding);
+    SoundManager::StopSound(SoundList::AudioDrama_GoodEnding);
     PrepareChangeLevel("Level6");
     CommitLevelChange();
   }
   else if (INPUT.IsKeyPress(Key::F7))
   {
+    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+    SoundManager::StopSound(SoundList::Background_Pub);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall);
+    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+    SoundManager::StopSound(SoundList::Background_Storage);
+    SoundManager::StopSound(SoundList::Background_Dialog);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_01);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_04);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_07);
+    SoundManager::StopSound(SoundList::AudioDrama_BadEnding);
+    SoundManager::StopSound(SoundList::AudioDrama_GoodEnding);
     PrepareChangeLevel("Level7");
     CommitLevelChange();
   }
   else if (INPUT.IsKeyPress(Key::F8))
   {
+    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+    SoundManager::StopSound(SoundList::Background_Pub);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall);
+    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+    SoundManager::StopSound(SoundList::Background_Storage);
+    SoundManager::StopSound(SoundList::Background_Dialog);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_01);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_04);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_07);
+    SoundManager::StopSound(SoundList::AudioDrama_BadEnding);
+    SoundManager::StopSound(SoundList::AudioDrama_GoodEnding);
     PrepareChangeLevel("Level8");
     CommitLevelChange();
   }
   else if (INPUT.IsKeyPress(Key::F9))
   {
+    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+    SoundManager::StopSound(SoundList::Background_Pub);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall);
+    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+    SoundManager::StopSound(SoundList::Background_Storage);
+    SoundManager::StopSound(SoundList::Background_Dialog);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_01);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_04);
+    SoundManager::StopSound(SoundList::AudioDrama_Stage_07);
+    SoundManager::StopSound(SoundList::AudioDrama_BadEnding);
+    SoundManager::StopSound(SoundList::AudioDrama_GoodEnding);
+    
     PrepareChangeLevel("Level8_2");
     CommitLevelChange();
   }

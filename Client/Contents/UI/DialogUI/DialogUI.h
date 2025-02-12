@@ -32,7 +32,7 @@ public:
   class UIText* _playerSelectBtnText2{nullptr};
 
   bool bPlayerSelection = false;
-
+  bool _bHoverFlag = false;
   virtual void Update(float dt) override;
 
   virtual void NextStep();

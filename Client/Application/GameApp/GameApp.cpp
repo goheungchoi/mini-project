@@ -29,6 +29,7 @@
 #include "Contents/Levels/Level10_7/Level10_7.h"
 #include "Contents/Levels/ChallengeMode/ChallengeMode.h"
 #include "Contents/SoundList/SoundList.h"
+#include "Contents/UI/AudioDramaUI/AudioDramaUI.h"
 
 static GameLevel* gameLevel;
 static MainMenu* mainMenuLevel;

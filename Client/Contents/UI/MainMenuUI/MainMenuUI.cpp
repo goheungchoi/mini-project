@@ -1,4 +1,6 @@
 #include "MainMenuUI.h"
+
+#include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UICursor/UICursor.h"
@@ -14,22 +16,11 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
 {
   _backGroundImg = CreateUI<UIImage>(L"BackGoundIMG");
   _backGroundImg->SetSprite("2D\\UI\\Title\\Title_Background.png", {960, 540});
-
+  _hiddenBackGroundImg = CreateUI<UIImage>(L"hiddenBackGoundIMG");
+  _hiddenBackGroundImg->SetSprite("2D\\UI\\Title\\Title_Background2.png", {960, 540});
+  _hiddenBackGroundImg->SetOpacity(0.f);
   SoundManager::PlaySound(SoundList::Background_Title);
 
-
-  //_LogoImage = CreateUI<UIImage>(L"TitleIMG");
-  //_LogoImage->SetSprite("Textures\\TitleLogo.png", {556, 362});
-  //_hiddenLogoImage = CreateUI<UIImage>(L"hiddenTitleIMG");
-  //_hiddenLogoImage->SetSprite("Textures\\StartBtn.png", {556, 362});
-  //_hiddenLogoImage->SetOpacity(0.f);
-  //SetOnActivatedEvent([=]() {
-  //  if (ending1)
-  //  {
-  //    _LogoImage->FadeOut(5.f);
-  //    _hiddenLogoImage->FadeIn(5.f);
-  //  }
-  //});
 
   // Start Button
   _startImg[0] = CreateUI<UIImage>(L"StartIMG_Default");
@@ -180,9 +171,35 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   // Cursor
   _cursor = CreateUI<UICursor>(L"Cursor");
   _cursor->SetCursorType(CursorType::DEFAULT);
+
+  SetOnActivatedEvent([=]() {
+    
+  });
+
+
+
+
 }
 
 MainMenuUI::~MainMenuUI() {}
+
+void MainMenuUI::BeginLevel()
+{
+  UIPanel::BeginLevel();
+  if (GameManager::endingflag)
+  {
+    _backGroundImg->FadeOut(7.f);
+    _hiddenBackGroundImg->FadeIn(7.f);
+    
+  }
+}
+
+void MainMenuUI::Update(float dt)
+{
+  UIPanel::Update(dt);
+
+
+}
 
 void MainMenuUI::SetEndingFlag(int i)
 {

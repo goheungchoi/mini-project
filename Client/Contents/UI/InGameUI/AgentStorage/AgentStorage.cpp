@@ -64,48 +64,7 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       Gunman2HoveredImage->SetOpacity(0.f);
       Gunman2InactiveImage->SetOpacity(0.f);
       Gunman2Button->SetSize(Gunman2DefaultImage->GetTextureSize());
-      Gunman2Button->AddOnHoveredHandler([=]() {
-        if (!_bHoverFlag)
-        {
-          SoundManager::PlaySound(SoundList::Button_Hover);
-          _bHoverFlag = true;
-        }
-
-        bool isNotSimulating = !_map->isAssassinationMode &&
-                            !_map->isPlacementModeOn &&
-                            !_map->isHoveredCharacterChanged;
-        if (isNotSimulating)
-        {
-          if (!IsGunman1Using)
-          {
-            Gunman2DefaultImage->SetOpacity(0.f);
-            Gunman2HoveredImage->SetOpacity(1.f);
-            Gunman2InactiveImage->SetOpacity(0.f);
-          }
-          else
-          {
-            Gunman2DefaultImage->SetOpacity(0.f);
-            Gunman2HoveredImage->SetOpacity(0.f);
-            Gunman2InactiveImage->SetOpacity(1.f);
-          }
-        }
-      });
-      Gunman2Button->AddOnUnHoveredHandler([=]() {
-        _bHoverFlag = false;
-
-        if (!IsGunman2Using)
-        {
-          Gunman2DefaultImage->SetOpacity(1.f);
-          Gunman2HoveredImage->SetOpacity(0.f);
-          Gunman2InactiveImage->SetOpacity(0.f);
-        }
-        else
-        {
-          Gunman2DefaultImage->SetOpacity(0.f);
-          Gunman2HoveredImage->SetOpacity(0.f);
-          Gunman2InactiveImage->SetOpacity(1.f);
-        }
-      });
+  
     }
   }
   BrawlerDefaultImage->SetScale({0.8f, 0.8f});
@@ -210,6 +169,11 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
                            !_map->isHoveredCharacterChanged;
 
     BrawlerButton->AddOnHoveredHandler([=]() {
+      if (!_bHoverFlag)
+      {
+        SoundManager::PlaySound(SoundList::Button_Hover);
+        _bHoverFlag = true;
+      }
       if (isNotSimulating)
       {
         if (!IsBrawlerUsing)
@@ -227,6 +191,7 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       }
     });
     BrawlerButton->AddOnUnHoveredHandler([=]() {
+       _bHoverFlag = true;
       if (!IsBrawlerUsing)
       {
         BrawlerDefaultImage->SetOpacity(1.f);
@@ -241,6 +206,8 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       }
     });
     BrawlerButton->AddOnClickHandler([=]() {
+      SoundManager::PlaySound(SoundList::Button_Click);
+
       if (!IsBrawlerUsing && !_map->isPlacementModeOn)
       {
         IsBrawlerUsing = true;
@@ -252,6 +219,11 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       }
     });
     SlasherButton->AddOnHoveredHandler([=]() {
+      if (!_bHoverFlag)
+      {
+        SoundManager::PlaySound(SoundList::Button_Hover);
+        _bHoverFlag = true;
+      }
       if (isNotSimulating)
       {
         if (!IsSlasherUsing)
@@ -269,6 +241,7 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       }
     });
     SlasherButton->AddOnUnHoveredHandler([=]() {
+      _bHoverFlag = false;
       if (!IsSlasherUsing)
       {
         SlasherDefaultImage->SetOpacity(1.f);
@@ -283,6 +256,8 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       }
     });
     SlasherButton->AddOnClickHandler([=]() {
+      SoundManager::PlaySound(SoundList::Button_Click);
+
       if (!IsSlasherUsing && !_map->isPlacementModeOn)
       {
         IsSlasherUsing = true;
@@ -294,6 +269,11 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       }
     });
     Gunman1Button->AddOnHoveredHandler([=]() {
+      if (!_bHoverFlag)
+      {
+        SoundManager::PlaySound(SoundList::Button_Hover);
+        _bHoverFlag = true;
+      }
       if (isNotSimulating)
       {
         if (!IsGunman1Using)
@@ -325,6 +305,8 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       }
     });
     Gunman1Button->AddOnClickHandler([=]() {
+      SoundManager::PlaySound(SoundList::Button_Click);
+
       if (!IsGunman1Using && !_map->isPlacementModeOn)
       {
         IsGunman1Using = true;
@@ -338,6 +320,11 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
     if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
     {
       Gunman2Button->AddOnHoveredHandler([=]() {
+        if (!_bHoverFlag)
+        {
+          SoundManager::PlaySound(SoundList::Button_Hover);
+          _bHoverFlag = true;
+        }
         if (isNotSimulating)
         {
           if (!IsGunman2Using)
@@ -369,6 +356,8 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
         }
       });
       Gunman2Button->AddOnClickHandler([=]() {
+        SoundManager::PlaySound(SoundList::Button_Click);
+
         if (!IsGunman2Using && !_map->isPlacementModeOn)
         {
           IsGunman2Using = true;

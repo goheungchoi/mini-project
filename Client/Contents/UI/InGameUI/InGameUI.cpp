@@ -48,6 +48,7 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
     _playBtn->Activate();
     _retryBtn->Activate();
     _mainMission->Activate();
+    _gunfireBtn->Activate();
     if (_subMission[0]->_subMissionTxt->GetText().length() > 0)
       _subMission[0]->Activate();
     if (_subMission[1]->_subMissionTxt->GetText().length() > 0)

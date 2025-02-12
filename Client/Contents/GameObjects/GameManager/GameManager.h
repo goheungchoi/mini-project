@@ -6,9 +6,11 @@
 
 class GameManager : public GameObject
 {
+
   Map* map;
 
 public:
+  static bool endingflag;
   GameManager(World* world);
 
   void Pause() { map->Deactivate(); }

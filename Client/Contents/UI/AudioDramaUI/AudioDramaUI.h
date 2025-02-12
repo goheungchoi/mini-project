@@ -8,6 +8,8 @@ public:
   AudioDramaUI(class World* world);
   virtual ~AudioDramaUI() = default;
 
+  void BeginLevel() override;
+
   void Update(float dt) override;
   void Render() override;
 
@@ -30,6 +32,8 @@ public:
 
   bool PlayFlag = true;
 
+
+  class MainMenuUI* mainmenuiptr{nullptr};
 
 private:
   bool isEnding1 = false;
