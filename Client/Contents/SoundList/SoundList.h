@@ -62,6 +62,9 @@ extern const wchar_t* Snipping_Shot;
 extern const wchar_t* Snipping_Voice;
 
 extern const wchar_t* AudioDrama_Stage_01;
+extern const wchar_t* AudioDrama_Stage_04;
+extern const wchar_t* AudioDrama_Stage_07;
+extern const wchar_t* AudioDrama_BadEnding;
 
 };
 
