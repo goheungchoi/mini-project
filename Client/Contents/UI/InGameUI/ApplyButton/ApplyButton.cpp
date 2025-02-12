@@ -21,6 +21,13 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
   _applyBtn = CreateUI<UIButton>(L"ApplyBtn");
   _applyBtn->SetSize(_applyBtnImgs[0]->GetSize());
   _applyBtn->SetCenterPos({1780, 140});
+
+  SetOnActivatedEvent([=]() {
+    _applyBtn->Activate();
+    _applyBtnImgs[0]->Activate();
+    _applyBtnImgs[1]->Activate();
+  });
+
 #ifdef _DEBUG
   _applyBtn->SetDebugDraw(true);
 #endif // _DEBUG
@@ -58,10 +65,43 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
         {
           world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")
               ->bIsElizaDead = true;
+          if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::Lose);
+          else if (_map->GetNumDeadAllies() >= 3)
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::AllyDeadLose);
+          else if (_map->GetNumDeadCivilians() > 0 &&
+                   _map->GetNumDeadAllies() < 2)
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::CivilDeadWin);
+
+          else if (_map->GetNumDeadCivilians() <= 0 &&
+                   _map->GetNumDeadAllies() >= 2)
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::AllyDeadWin);
         }
         else if (world->GetCurrentLevel()->name == "Level8_2")
         {
-          
+          world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")
+              ->bIsElizaDead = false;
+          if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::Lose);
+          else if (_map->GetNumDeadAllies() >= 3)
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::AllyDeadLose);
+          else if (_map->GetNumDeadCivilians() > 0 &&
+                   _map->GetNumDeadAllies() < 2)
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::CivilDeadWin);
+
+          else if (_map->GetNumDeadCivilians() <= 0 &&
+                   _map->GetNumDeadAllies() >= 2)
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::AllyDeadWin);
+
+
         }
 
         else
@@ -129,9 +169,11 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
           {
             _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
                 8;
-            _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
             _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->PlayFlag =
                 true;
+            _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
+            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")
+                ->Activate();
           }
           else if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() ==
               9)
@@ -142,6 +184,8 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
             _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->PlayFlag =
                 true;
             _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
+            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")
+                ->Activate();
           }
           else
           {

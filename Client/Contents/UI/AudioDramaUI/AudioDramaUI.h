@@ -9,6 +9,7 @@ public:
   virtual ~AudioDramaUI() = default;
 
   void Update(float dt) override;
+  void Render() override;
 
   class UIImage* _Background{nullptr};
   class UIText* _AudioScript{nullptr};

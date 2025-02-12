@@ -1,6 +1,7 @@
 #include "InGameUI.h"
 #include "Contents/GameObjects/Map/Map.h"
 #include "Contents/Levels/GameLevel.h"
+#include "Contents/UI/AudioDramaUI/AudioDramaUI.h"
 #include "Contents/UI/DialogUI/ResultDialogUI.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 
@@ -14,6 +15,7 @@
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "GameFramework/UI/UIAnim/UIAnim.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
+#include "GameFramework/UI/UIText/UIText.h"
 
 InGameUI::InGameUI(World* world) : UIPanel(world)
 {
@@ -39,7 +41,17 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _gradientIMG = CreateUI<UIImage>(L"GradientIMG");
   _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1800, 980});
   _gradientIMG->SetScale({0.7f, 0.7f});
-  SetOnActivatedEvent([=]() { _playBtn->Activate(); });
+  SetOnActivatedEvent([=]() {
+    _playBtn->Activate();
+    _retryBtn->Activate();
+    _mainMission->Activate();
+    if (_subMission[0]->_subMissionTxt->GetText().length() > 0)
+      _subMission[0]->Activate();
+    if (_subMission[1]->_subMissionTxt->GetText().length() > 0)
+      _subMission[1]->Activate();
+    _applyBtn->Activate();
+    _agentStorage->Activate();
+  });
 
   
 }
@@ -49,34 +61,7 @@ InGameUI::~InGameUI() {}
 void InGameUI::Update(float dt)
 {
   __super::Update(dt);
-  //_agentStorage->SetStatus(EStatus_Active);
-  //_mainMission->SetStatus(EStatus_Active);
-  //_subMission[0]->SetStatus(EStatus_Active);
 
-
-  
-  /*if (INPUT.IsKeyDown(Key::F1))
-  {
-
-      _world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")
-          ->bIsElizaDead = true;
-  }
-  if (INPUT.IsKeyPress(Key::F2))
-    static_cast<GameLevel*>(_world->GetCurrentLevel())
-        ->SetBattleResult(eBattleResult::CivilDeadWin);
-  if (INPUT.IsKeyPress(Key::F3))
-    static_cast<GameLevel*>(_world->GetCurrentLevel())
-        ->SetBattleResult(eBattleResult::AllyDead
-        Win);
-  if (INPUT.IsKeyPress(Key::F4))
-    static_cast<GameLevel*>(_world->GetCurrentLevel())
-        ->SetBattleResult(eBattleResult::BothDeadWin);
-  if (INPUT.IsKeyPress(Key::F5))
-    static_cast<GameLevel*>(_world->GetCurrentLevel())
-        ->SetBattleResult(eBattleResult::AllyDeadLose);
-  if (INPUT.IsKeyPress(Key::F6))
-    static_cast<GameLevel*>(_world->GetCurrentLevel())
-        ->SetBattleResult(eBattleResult::Lose);*/
   if (INPUT.IsKeyPress(Key::P))
     _applyBtn->perfectwinflag = true;
 
@@ -160,9 +145,9 @@ void InGameUI::Update(float dt)
   {
     if (name == L"AudioDramaUI")
     {
-      if (UIPanel->GetStatus() == EStatus_Active)
+      if (static_cast<AudioDramaUI*>(UIPanel)->PlayFlag)
       {
-        this->Deactivate();
+        //this->Deactivate();
         _map->StopBackgroundAudio();
       }
     }

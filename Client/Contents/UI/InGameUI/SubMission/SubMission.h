@@ -13,13 +13,13 @@ public:
   void SetText(std::wstring text);
   void SetOpacity(float opacity);
 
-private:
   class UIImage* _subMissionImg{nullptr};
   class UIImage* _failImg{nullptr};
   class UIText* _subMissionTxt{nullptr};
   class UIText* _selectTxt{nullptr};
 
   class RetryButton* RetryBtn{nullptr};
+private:
   Vector2 _pos = {208, 252};
   int StageIdx = 0;
 };

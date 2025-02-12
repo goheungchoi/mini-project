@@ -57,7 +57,8 @@ const wchar_t* SoundList::Snipping_Voice = L"SnipingVoice.wav";
 const wchar_t* SoundList::AudioDrama_Stage_01 = L"AudioDrama\\AD_Stage1.wav";
 const wchar_t* SoundList::AudioDrama_Stage_04 = L"AudioDrama\\AD_Stage4.wav";
 const wchar_t* SoundList::AudioDrama_Stage_07 = L"AudioDrama\\AD_Stage7.wav";
-const wchar_t* SoundList::AudioDrama_BadEnding = L"AudioDrama\\AD_BadEnding.wav";
+const wchar_t* SoundList::AudioDrama_BadEnding = L"AudioDrama\\AD_BadEnding_08.wav";
+const wchar_t* SoundList::AudioDrama_GoodEnding = L"AudioDrama\\AD_GoodEnding_09.wav";
 
 template <typename T, std::size_t N>
 static void RegisterSound(std::span<T, N> sp)
@@ -133,5 +134,6 @@ void RegisterSoundList() {
   RegisterSound(AudioDrama_Stage_04);
   RegisterSound(AudioDrama_Stage_07);
   RegisterSound(AudioDrama_BadEnding);
+  RegisterSound(AudioDrama_GoodEnding);
 
 }

@@ -79,6 +79,14 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
 
   _retryBtn->AddOnUnHoveredHandler([this]() { _bHoverFlag = false; });
 
+
+  SetOnActivatedEvent([=]() {
+    _retryBtnImgs[0]->SetStatus(EStatus::EStatus_Active);
+    _retryBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
+    _retryBtn->Activate();
+  });
+
+
 }
 
 RetryButton::~RetryButton() {}

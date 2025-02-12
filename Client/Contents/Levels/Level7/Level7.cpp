@@ -9,6 +9,8 @@
 #include "Contents/UI/InGameUI/SubMission/SubMission.h"
 #include "Contents/UI/InGameUI/ApplyButton/ApplyButton.h"
 #include "Contents/UI/AudioDramaUI/AudioDramaUI.h"
+#include "GameFramework/UI/UIImage/UIImage.h"
+
 void Level7::PrepareLevel() 
 {
   __super::PrepareLevel();
@@ -27,10 +29,13 @@ void Level7::BeginLevel()
   inGameUI->_subMission[1]->SetText(L"부관 희생 없이 작전 수행");
   map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
 
-  inGameUI->_subMission[0]->SetOpacity(0.f);
+  //inGameUI->_subMission[0]->SetOpacity(0.f);
 
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
-  _audioDrama->SetTotalTime(25.f);
+  _audioDrama->_Background->SetOpacity(1.f);
+  _audioDrama->PlayFlag = true;
+  inGameUI->Deactivate();
+
 #endif
 
 }

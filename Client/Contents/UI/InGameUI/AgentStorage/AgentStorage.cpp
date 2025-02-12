@@ -64,7 +64,9 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       Gunman2InactiveImage->SetOpacity(0.f);
       Gunman2Button->SetSize(Gunman2DefaultImage->GetTextureSize());
       Gunman2Button->AddOnHoveredHandler([=]() {
-        bool isNotSimulating = !_map->isAssassinationMode &&
+        bool isNotSimulating = false;
+        if (_map)
+        isNotSimulating = !_map->isAssassinationMode&&
                             !_map->isPlacementModeOn &&
                             !_map->isHoveredCharacterChanged;
         if (isNotSimulating)
@@ -156,63 +158,225 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
   }
   SetOnActivatedEvent([=]() {
 
-    //BrawlerDefaultImage->SetOpacity(1.f);
-    //BrawlerHoveredImage->SetOpacity(0.f);
-    //BrawlerInactiveImage->SetOpacity(0.f);
-    //SlasherDefaultImage->SetOpacity(1.f);
-    //SlasherHoveredImage->SetOpacity(0.f);
-    //SlasherInactiveImage->SetOpacity(0.f);
-    //Gunman1DefaultImage->SetOpacity(1.f);
-    //Gunman1HoveredImage->SetOpacity(0.f);
-    //Gunman1InactiveImage->SetOpacity(0.f);
-    //if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
-    //{
-    //  Gunman2DefaultImage->SetOpacity(1.f);
-    //  Gunman2HoveredImage->SetOpacity(0.f);
-    //  Gunman2InactiveImage->SetOpacity(0.f);
-    //}
-    //IsBrawlerUsing = false;
-    //IsSlasherUsing = false;
-    //IsGunman1Using = false;
-    //IsGunman2Using = false;
-    //{
-    //  if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() >
-    //      3) // 4Έν
-    //  {
+    BrawlerDefaultImage->Activate();
+    BrawlerHoveredImage->Activate();
+    BrawlerInactiveImage->Activate();
+    BrawlerButton->Activate();
+    SlasherDefaultImage->Activate();
+    SlasherHoveredImage->Activate();
+    SlasherInactiveImage->Activate();
+    SlasherButton->Activate();
+    Gunman1DefaultImage->Activate();
+    Gunman1HoveredImage->Activate();
+    Gunman1InactiveImage->Activate();
+    Gunman1Button->Activate();
+    if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
+    {
+      Gunman2DefaultImage->Activate();
+      Gunman2HoveredImage->Activate();
+      Gunman2InactiveImage->Activate();
+      Gunman2Button->Activate();
+    }
 
-    //    BrawlerDefaultImage->SetCenterPos({1250, 925});
-    //    BrawlerHoveredImage->SetCenterPos({1250, 925});
-    //    BrawlerInactiveImage->SetCenterPos({1250, 925});
-    //    BrawlerButton->SetCenterPos({1250, 925});
-    //    SlasherDefaultImage->SetCenterPos({1430, 925});
-    //    SlasherHoveredImage->SetCenterPos({1430, 925});
-    //    SlasherInactiveImage->SetCenterPos({1430, 925});
-    //    SlasherButton->SetCenterPos({1430, 925});
-    //    Gunman1DefaultImage->SetCenterPos({1610, 925});
-    //    Gunman1HoveredImage->SetCenterPos({1610, 925});
-    //    Gunman1InactiveImage->SetCenterPos({1610, 925});
-    //    Gunman1Button->SetCenterPos({1610, 925});
-    //    Gunman2DefaultImage->SetCenterPos({1790, 925});
-    //    Gunman2HoveredImage->SetCenterPos({1790, 925});
-    //    Gunman2InactiveImage->SetCenterPos({1790, 925});
-    //    Gunman2Button->SetCenterPos({1790, 925});
-    //  }
-    //  else
-    //  {
-    //    BrawlerDefaultImage->SetCenterPos({1430, 925});
-    //    BrawlerHoveredImage->SetCenterPos({1430, 925});
-    //    BrawlerInactiveImage->SetCenterPos({1430, 925});
-    //    BrawlerButton->SetCenterPos({1430, 925});
-    //    SlasherDefaultImage->SetCenterPos({1610, 925});
-    //    SlasherHoveredImage->SetCenterPos({1610, 925});
-    //    SlasherInactiveImage->SetCenterPos({1610, 925});
-    //    SlasherButton->SetCenterPos({1610, 925});
-    //    Gunman1DefaultImage->SetCenterPos({1790, 925});
-    //    Gunman1HoveredImage->SetCenterPos({1790, 925});
-    //    Gunman1InactiveImage->SetCenterPos({1790, 925});
-    //    Gunman1Button->SetCenterPos({1790, 925});
-    //  }
-    //}
+    BrawlerDefaultImage->SetOpacity(1.f);
+    BrawlerHoveredImage->SetOpacity(0.f);
+    BrawlerInactiveImage->SetOpacity(0.f);
+    SlasherDefaultImage->SetOpacity(1.f);
+    SlasherHoveredImage->SetOpacity(0.f);
+    SlasherInactiveImage->SetOpacity(0.f);
+    Gunman1DefaultImage->SetOpacity(1.f);
+    Gunman1HoveredImage->SetOpacity(0.f);
+    Gunman1InactiveImage->SetOpacity(0.f);
+    if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
+    {
+      Gunman2DefaultImage->SetOpacity(1.f);
+      Gunman2HoveredImage->SetOpacity(0.f);
+      Gunman2InactiveImage->SetOpacity(0.f);
+    }
+    IsBrawlerUsing = false;
+    IsSlasherUsing = false;
+    IsGunman1Using = false;
+    IsGunman2Using = false;
+
+      _map = _world->FindGameObjectByType<Map>();
+    bool isNotSimulating = !_map->isAssassinationMode &&
+                           !_map->isPlacementModeOn &&
+                           !_map->isHoveredCharacterChanged;
+
+    BrawlerButton->AddOnHoveredHandler([=]() {
+      if (isNotSimulating)
+      {
+        if (!IsBrawlerUsing)
+        {
+          BrawlerDefaultImage->SetOpacity(0.f);
+          BrawlerHoveredImage->SetOpacity(1.f);
+          BrawlerInactiveImage->SetOpacity(0.f);
+        }
+        else
+        {
+          BrawlerDefaultImage->SetOpacity(0.f);
+          BrawlerHoveredImage->SetOpacity(0.f);
+          BrawlerInactiveImage->SetOpacity(1.f);
+        }
+      }
+    });
+    BrawlerButton->AddOnUnHoveredHandler([=]() {
+      if (!IsBrawlerUsing)
+      {
+        BrawlerDefaultImage->SetOpacity(1.f);
+        BrawlerHoveredImage->SetOpacity(0.f);
+        BrawlerInactiveImage->SetOpacity(0.f);
+      }
+      else
+      {
+        BrawlerDefaultImage->SetOpacity(0.f);
+        BrawlerHoveredImage->SetOpacity(0.f);
+        BrawlerInactiveImage->SetOpacity(1.f);
+      }
+    });
+    BrawlerButton->AddOnClickHandler([=]() {
+      if (!IsBrawlerUsing && !_map->isPlacementModeOn)
+      {
+        IsBrawlerUsing = true;
+        _map->TurnOnPlacementMode(CharacterType::kBrawler, kWest);
+        BrawlerDefaultImage->SetOpacity(0.f);
+        BrawlerHoveredImage->SetOpacity(0.f);
+        BrawlerInactiveImage->SetOpacity(1.f);
+        BrawlerButton->Deactivate();
+      }
+    });
+    SlasherButton->AddOnHoveredHandler([=]() {
+      if (isNotSimulating)
+      {
+        if (!IsSlasherUsing)
+        {
+          SlasherDefaultImage->SetOpacity(0.f);
+          SlasherHoveredImage->SetOpacity(1.f);
+          SlasherInactiveImage->SetOpacity(0.f);
+        }
+        else
+        {
+          SlasherDefaultImage->SetOpacity(0.f);
+          SlasherHoveredImage->SetOpacity(0.f);
+          SlasherInactiveImage->SetOpacity(1.f);
+        }
+      }
+    });
+    SlasherButton->AddOnUnHoveredHandler([=]() {
+      if (!IsSlasherUsing)
+      {
+        SlasherDefaultImage->SetOpacity(1.f);
+        SlasherHoveredImage->SetOpacity(0.f);
+        SlasherInactiveImage->SetOpacity(0.f);
+      }
+      else
+      {
+        SlasherDefaultImage->SetOpacity(0.f);
+        SlasherHoveredImage->SetOpacity(0.f);
+        SlasherInactiveImage->SetOpacity(1.f);
+      }
+    });
+    SlasherButton->AddOnClickHandler([=]() {
+      if (!IsSlasherUsing && !_map->isPlacementModeOn)
+      {
+        IsSlasherUsing = true;
+        _map->TurnOnPlacementMode(CharacterType::kSlasher, kWest);
+        SlasherDefaultImage->SetOpacity(0.f);
+        SlasherHoveredImage->SetOpacity(0.f);
+        SlasherInactiveImage->SetOpacity(1.f);
+        SlasherButton->Deactivate();
+      }
+    });
+    Gunman1Button->AddOnHoveredHandler([=]() {
+      if (isNotSimulating)
+      {
+        if (!IsGunman1Using)
+        {
+          Gunman1DefaultImage->SetOpacity(0.f);
+          Gunman1HoveredImage->SetOpacity(1.f);
+          Gunman1InactiveImage->SetOpacity(0.f);
+        }
+        else
+        {
+          Gunman1DefaultImage->SetOpacity(0.f);
+          Gunman1HoveredImage->SetOpacity(0.f);
+          Gunman1InactiveImage->SetOpacity(1.f);
+        }
+      }
+    });
+    Gunman1Button->AddOnUnHoveredHandler([=]() {
+      if (!IsGunman1Using)
+      {
+        Gunman1DefaultImage->SetOpacity(1.f);
+        Gunman1HoveredImage->SetOpacity(0.f);
+        Gunman1InactiveImage->SetOpacity(0.f);
+      }
+      else
+      {
+        Gunman1DefaultImage->SetOpacity(0.f);
+        Gunman1HoveredImage->SetOpacity(0.f);
+        Gunman1InactiveImage->SetOpacity(1.f);
+      }
+    });
+    Gunman1Button->AddOnClickHandler([=]() {
+      if (!IsGunman1Using && !_map->isPlacementModeOn)
+      {
+        IsGunman1Using = true;
+        _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);
+        Gunman1DefaultImage->SetOpacity(0.f);
+        Gunman1HoveredImage->SetOpacity(0.f);
+        Gunman1InactiveImage->SetOpacity(1.f);
+        Gunman1Button->Deactivate();
+      }
+    });
+    if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
+    {
+      Gunman2Button->AddOnHoveredHandler([=]() {
+        if (isNotSimulating)
+        {
+          if (!IsGunman2Using)
+          {
+            Gunman2DefaultImage->SetOpacity(0.f);
+            Gunman2HoveredImage->SetOpacity(1.f);
+            Gunman2InactiveImage->SetOpacity(0.f);
+          }
+          else
+          {
+            Gunman2DefaultImage->SetOpacity(0.f);
+            Gunman2HoveredImage->SetOpacity(0.f);
+            Gunman2InactiveImage->SetOpacity(1.f);
+          }
+        }
+      });
+      Gunman2Button->AddOnUnHoveredHandler([=]() {
+        if (!IsGunman2Using)
+        {
+          Gunman2DefaultImage->SetOpacity(1.f);
+          Gunman2HoveredImage->SetOpacity(0.f);
+          Gunman2InactiveImage->SetOpacity(0.f);
+        }
+        else
+        {
+          Gunman2DefaultImage->SetOpacity(0.f);
+          Gunman2HoveredImage->SetOpacity(0.f);
+          Gunman2InactiveImage->SetOpacity(1.f);
+        }
+      });
+      Gunman2Button->AddOnClickHandler([=]() {
+        if (!IsGunman2Using && !_map->isPlacementModeOn)
+        {
+          IsGunman2Using = true;
+          _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);
+          Gunman2DefaultImage->SetOpacity(0.f);
+          Gunman2HoveredImage->SetOpacity(0.f);
+          Gunman2InactiveImage->SetOpacity(1.f);
+          Gunman2Button->Deactivate();
+        }
+      });
+    }
+
+
+
 
 
   });

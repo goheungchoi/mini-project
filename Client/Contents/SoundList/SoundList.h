@@ -67,6 +67,7 @@ extern const wchar_t* AudioDrama_Stage_01;
 extern const wchar_t* AudioDrama_Stage_04;
 extern const wchar_t* AudioDrama_Stage_07;
 extern const wchar_t* AudioDrama_BadEnding;
+extern const wchar_t* AudioDrama_GoodEnding;
 
 };
 

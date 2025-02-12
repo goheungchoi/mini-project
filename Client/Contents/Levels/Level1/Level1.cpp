@@ -38,7 +38,8 @@ void Level1::BeginLevel()
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
 
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
-  _audioDrama->SetTotalTime(25.f);
+  inGameUI->Deactivate();
+
   #endif
 }
 

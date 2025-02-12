@@ -182,8 +182,6 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     // test
     SetPrevBattleResult(eBattleResult::PerfectWin);
   }
-  {
-  }
 }
 void DialogUI::Update(float dt)
 {
