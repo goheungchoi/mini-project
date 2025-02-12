@@ -18,6 +18,30 @@ void ChallengeMode::PrepareLevel()
       "2D\\UI\\StageNum\\StageNum_Hover_01.png");
   Resource2DManager::GetInstance()->LoadSprite(
       "2D\\UI\\StageNum\\StageNum_Act_01.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_02.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_02.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_03.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_03.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_04.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_04.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_05.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_05.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_06.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_06.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_07.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_07.png");
 #endif // USED2D
 }
 
