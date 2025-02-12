@@ -614,6 +614,11 @@ void Map::ResetGame()
   mapRot = 0.f;
 
   bStartAction = false;
+  actualSnippingDelay = 0.f;
+  snippingElapsedTime = 0.f;
+
+  actualDelay = 0.f;
+  elapsedTime = 0.f;
 
   // Restore the record.
   for (auto& info : record)
@@ -1159,6 +1164,15 @@ void Map::Update(float dt)
       {
         bRotateBack = true;
         bStartAction = true;
+
+        if (assassinationTarget)
+        {
+          bTempCondition = true;
+        }
+        else
+        {
+          bTempCondition = false;
+        }
       }
       // Keep lerping the angle.
       else
@@ -1174,26 +1188,53 @@ void Map::Update(float dt)
     {
       if (bStartAction)
       {
-        // TODO: Execute the assassination target.
-        if (assassinationTarget)
-          assassinationTarget->Die();
-
-        for (Character* enemy : enemies)
+        if (bTempCondition)
         {
-          enemy->TriggerAction();
+          actualSnippingDelay = snippingDelay;
+          bTempCondition = false;
         }
-
-        for (Character* ally : allies)
+        else
         {
-          ally->TriggerAction();
-        }
+          if (actualSnippingDelay <= snippingElapsedTime)
+          {
+            // TODO: Execute the assassination target.
+            if (assassinationTarget)
+            {
+              AssassinateTarget();
+              actualDelay = assassinationDelay;
+            }
+            else
+            {
+              if (actualDelay <= elapsedTime)
+              {
+                for (Character* enemy : enemies)
+                {
+                  enemy->TriggerAction();
+                }
 
-        for (Character* civilian : civilians)
-        {
-          civilian->TriggerAction();
-        }
+                for (Character* ally : allies)
+                {
+                  ally->TriggerAction();
+                }
 
-        bStartAction = false;
+                for (Character* civilian : civilians)
+                {
+                  civilian->TriggerAction();
+                }
+
+                bStartAction = false;
+              }
+              else
+              {
+                elapsedTime += dt;
+              }
+            }
+          }
+          else
+          {
+            snippingElapsedTime += dt;
+          }
+        }
       }
 
       // TODO: Remove a simulating character.
@@ -1206,10 +1247,10 @@ void Map::Update(float dt)
         }
       }
 
-      if (INPUT.IsKeyPress(Key::R))
+      /*if (INPUT.IsKeyPress(Key::R))
       {
         ResetGame();
-      }
+      }*/
     }
   }
   // Placement mode
@@ -1553,6 +1594,8 @@ void Map::AssassinateTarget()
 {
   if (assassinationTarget)
   {
+    SoundManager::PlaySound(SoundList::Snipping_Shot);
+    // SoundManager::PlaySound(SoundList::Snipping_Voice);
     assassinationTarget->Die();
     assassinationTarget = nullptr;
   }

@@ -106,6 +106,18 @@ public:
 
   bool bStartAction{false};
 
+  bool bTempCondition{false};
+
+  // Snipping delay
+  const float snippingDelay{1.f};
+  float actualSnippingDelay{0.f};
+  float snippingElapsedTime{0.f};
+
+  // Delay
+  const float assassinationDelay{0.5f};
+  float actualDelay{0.f};
+  float elapsedTime{0.f};
+
 public:
   Map(World* world);
   ~Map();

@@ -98,8 +98,13 @@ void GunfireButton::Update(float dt)
 // 상태 관리 헬퍼 함수
 void GunfireButton::UpdateButtonState()
 {
-  const bool activeCondition = _map->isAssassinationMode || _bGunFireUseFlag ||
-                               _map->assassinationTarget;
+  static bool activeCondition{false};
+
+  if (!_map->isActionTriggered)
+  {
+    activeCondition = _map->isAssassinationMode || _bGunFireUseFlag ||
+                      _map->assassinationTarget;
+  }
 
   if (activeCondition)
   {

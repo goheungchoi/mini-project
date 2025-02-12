@@ -75,7 +75,6 @@ void InGameUI::Update(float dt)
 
   // ElizaAnim 이 Active상태이면 위치 움직임
   UIAnim* _elizaAnim = _gunfireBtn->GetUI<UIAnim>(L"ElizaAnim");
-
   if (_elizaAnim)
   {
     if (_elizaAnim->GetStatus() == EStatus_Active)
@@ -83,34 +82,48 @@ void InGameUI::Update(float dt)
       _elizaAnim->SetCenterPos({animPos.x, 300});
 
       // 복귀 동작 (Fade Out 으로 사라짐)
-      if (elapsedTime >= stopTime)
+      if (isActionStarted)
       {
-        if (fadeflag)
+        if (elapsedTime <= stopTime)
         {
-          _elizaAnim->FadeOut(1.0f);
-          fadeflag = false;
+          if (animPos.x < GoalPos.x)
+          {
+            _elizaAnim->FadeIn(.2f);
+
+            // _elizaAnim->SetOpacity("Eliza_Initiative_Gunfire", 1.0f);
+            animPos.x += dt * animSpeed;
+            if (animPos.x > GoalPos.x)
+              animPos.x = GoalPos.x;
+
+            fadeflag = true;
+            elapsedTime = 0.f;
+          }
+          else
+          {
+            if ((delayTime <= delayElapsedTime) && fadeflag)
+            {
+              _elizaAnim->FadeOut(1.0f);
+              fadeflag = false;
+            }
+            else
+            {
+              delayElapsedTime += dt;
+            }
+
+            elapsedTime += dt;
+          }
         }
-      }
-      // 이동 & 대기 단계
-      else if (animPos.x < GoalPos.x)
-      {
-        // 1단계: 전진 이동
-        _elizaAnim->SetOpacity("Eliza_Initiative_Gunfire", 1.0f);
-        animPos.x += dt * animSpeed;
-        if (animPos.x > GoalPos.x)
-          animPos.x = GoalPos.x;
-        elapsedTime = 0; // 이동 시 타이머 초기화
-      }
-      else
-      {
-        // 2단계: 대기 시간 누적
-        elapsedTime += dt;
+        else
+        {
+          if (!_elizaAnim->_transitionFlag)
+          {
+            isActionStarted = false;
+          }
+        }
       }
     }
   }
  
-
-
   if (_map)
   {
     bool flag = _map->IsGameFinished();
@@ -121,13 +134,13 @@ void InGameUI::Update(float dt)
       HideUI(L"ApplyBtn");
       _playBtn->_bPlayflag = false;
       //// Eliza Anim 초기화
-      if (!_map->isActionTriggered)
+      if (_map->bTempCondition)
       {
-        fadeflag = true;
         animPos = DefaultPos;
         elapsedTime = 0.0f;
+        delayElapsedTime = 0.f;
+        isActionStarted = true;
       }
-
     }
     else
     {
