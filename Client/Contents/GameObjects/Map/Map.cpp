@@ -1329,6 +1329,12 @@ void Map::Update(float dt)
       {
         SoundManager::PlaySound(SoundList::Grid_Placement_Click);
 
+        // Reset the tmp
+        if (tmp)
+        {
+          tmp.reset();
+        } 
+
         // Detect which grid cell is pointed.
         auto [w, h] = grid->selectedCell->GetCellPosition();
 
