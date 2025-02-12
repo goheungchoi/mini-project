@@ -163,7 +163,8 @@ public:
   void CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h,
                         Direction dir = kNorth);
 
-  void PlaceCharacterIndicatorAt(uint32_t w, uint32_t h, Direction dir = kNorth);
+  void PlaceCharacterIndicatorAt(CharacterType type, uint32_t w, uint32_t h,
+                                 Direction dir = kNorth);
 
   void DeleteCharacterFromMap(Character* character);
 
