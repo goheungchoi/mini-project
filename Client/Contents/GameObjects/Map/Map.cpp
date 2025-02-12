@@ -548,6 +548,9 @@ int Map::GetNumDeadCivilians()
 
 void Map::TriggerAction()
 {
+  if (isActionTriggered)
+    return;
+
   isActionTriggered = true;
 
   // Record the roster.
