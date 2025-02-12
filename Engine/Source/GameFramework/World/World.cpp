@@ -107,12 +107,6 @@ bool World::IsLevelChangeReady()
 
 void World::CommitLevelChange()
 {
-  if (bCommitLevelCalled)
-  {
-    return;
-  }
-  bCommitLevelCalled = true;
-
 	if (bChangingLevel)
 	{
     std::cout
@@ -128,6 +122,12 @@ void World::CommitLevelChange()
     return;
     // throw std::runtime_error("There no prepared level exists!");
   }
+
+  if (bCommitLevelCalled)
+  {
+    return;
+  }
+  bCommitLevelCalled = true;
 
   async::executor.silent_async("commit level change", [this]() {
     // Wait until the level asset loading is done.
