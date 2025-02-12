@@ -31,6 +31,7 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
   _AudioScript->SetColor(Color(1, 1, 1, 1));
   _AudioScript->SetTextAlignment(TextAlignment::CENTERAlIGN);
   _AudioScript->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
+  _AudioScript->SetDebugDraw(true);
   SetOnActivatedEvent([=]() {
     _elapsedTimer = 0;
     _Background->Activate();
