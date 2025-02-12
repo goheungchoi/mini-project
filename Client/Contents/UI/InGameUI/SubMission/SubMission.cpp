@@ -61,7 +61,7 @@ SubMission::SubMission(World* world, Vector2 pos) : UIPanel(world)
   StageIdx = static_cast<GameLevel*>(_world->GetCurrentLevel())->GetStageIdx();
   SetOnActivatedEvent([=]() {
     _subMissionImg->Activate();
-    _failImg->Activate();
+    //_failImg->Activate();
     _subMissionTxt->Activate();
     _selectTxt->Activate();
   });

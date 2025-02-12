@@ -296,7 +296,7 @@ void DialogUI::SetStageDialogIndex()
   // std::locale::global(std::locale("ko_KR.UTF-8"));
   if (StageIdx >= 7)
   {
-    if (_prevBattleResult == eBattleResult::CivilDeadWin)
+    if (_prevBattleResult == CivilDeadWin || _prevBattleResult == BothDeadWin)
       scriptfile.open(rootpath + _csvlist[6]);
     else
       scriptfile.open(rootpath + _csvlist[7]);
@@ -414,7 +414,7 @@ void DialogUI::SetStageDialogIndex()
   }
   else
   {
-    if (_prevBattleResult == 1)
+    if (_prevBattleResult == CivilDeadWin || _prevBattleResult == BothDeadWin )
     {
       _actionList.push_back([=]() { ElizaDialogStep(1); });
       _actionList.push_back([=]() { ElizaDialogStep(8); });
@@ -467,6 +467,9 @@ void DialogUI::ElizaDialogStep(int idx)
     _speakerClassText->SetOpacity(1.f);
     _Eliza->SetMasking(Color(1, 1, 1, 1));
     _Eliza->SetOpacity(_dialogList[idx].ElizaAnim, 1.f);
+    if (_prevBattleResult == eBattleResult::CivilDeadWin && StageIdx >= 7)
+      _Eliza->SetOpacity(_dialogList[idx].ElizaAnim, 0.f);
+
   }
   else
   {
@@ -475,7 +478,7 @@ void DialogUI::ElizaDialogStep(int idx)
     _Eliza->SetMasking(Color(0.5f, 0.5f, 0.5f, 1));
     _Eliza->SetOpacity(_dialogList[idx].ElizaAnim, 0.8f);
   }
-  if (!_dialogList[idx].IsElizaSpeaking && StageIdx >= 7)
+  if ((_prevBattleResult == BothDeadWin || _prevBattleResult == CivilDeadWin) &&StageIdx == 7)
     _Eliza->SetOpacity(_dialogList[idx].ElizaAnim,0.f);
 
 }
@@ -495,7 +498,7 @@ void DialogUI::PlayerSelectDialogStep()
   _speakerClassText->SetOpacity(0.f);
   _Eliza->SetMasking(Color(0.5f, 0.5f, 0.5f, 1));
   _Eliza->SetOpacity(_dialogList[lastIdx].ElizaAnim, 0.8f);
-  if (_prevBattleResult == eBattleResult::CivilDeadWin && StageIdx >= 7)
+  if ((_prevBattleResult == BothDeadWin || _prevBattleResult == CivilDeadWin) &&  StageIdx >= 7)
     _Eliza->SetOpacity(_dialogList[lastIdx].ElizaAnim, 0.f);
 
   if (_dialogList[6].dialogtext.length() > 0)

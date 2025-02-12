@@ -23,7 +23,7 @@ void Level8_2::BeginLevel()
 #ifdef USED2D
   inGameUI->_mainMission->SetText(L"총리를 제거하여 협정 저지");
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
-  inGameUI->_subMission[1]->SetText(L"부관 희생 없이 작전 수행");
+  inGameUI->_subMission[1]->SetText(L"민간인 희생 없이 작전 수행");
   map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
   _audioDrama->PlayFlag = false;

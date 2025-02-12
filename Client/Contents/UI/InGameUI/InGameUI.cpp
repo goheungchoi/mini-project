@@ -54,7 +54,6 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
       _gunfireBtn->Activate();
 
 
-    if (_subMission[0]->_subMissionTxt->GetText().length() > 0)
       _subMission[0]->Activate();
     if (_subMission[1]->_subMissionTxt->GetText().length() > 0)
       _subMission[1]->Activate();
@@ -70,6 +69,29 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
 
 InGameUI::~InGameUI() {}
 
+void InGameUI::BeginLevel()
+{
+  UIPanel::BeginLevel();
+  SetOnActivatedEvent([=]() {
+    _map = _world->FindGameObjectByType<Map>();
+    SetBGM();
+
+    _playBtn->Activate();
+    _retryBtn->Activate();
+    _mainMission->Activate();
+
+    if ((levelIdx == 5 || levelIdx == 6 || levelIdx == 9 || levelIdx == 12 ||
+         levelIdx == 13 || levelIdx == 14 || levelIdx == 15 || levelIdx == 16))
+      _gunfireBtn->Activate();
+
+    _subMission[0]->Activate();
+    if (_subMission[1]->_subMissionTxt->GetText().length() > 0)
+      _subMission[1]->Activate();
+    _applyBtn->Activate();
+    _agentStorage->Activate();
+  });
+}
+
 void InGameUI::Update(float dt)
 {
   __super::Update(dt);
@@ -77,6 +99,8 @@ void InGameUI::Update(float dt)
   if (INPUT.IsKeyPress(Key::P))
     _applyBtn->perfectwinflag = true;
 
+  if (_subMission[1]->_subMissionTxt->GetText().length() > 0)
+    _subMission[1]->Activate();
   // ElizaAnim 이 Active상태이면 위치 움직임
   UIAnim* _elizaAnim = _gunfireBtn->GetUI<UIAnim>(L"ElizaAnim");
   if (_elizaAnim)

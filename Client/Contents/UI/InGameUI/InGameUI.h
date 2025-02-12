@@ -7,6 +7,9 @@ public:
   InGameUI(class World* world);
   virtual ~InGameUI();
 
+  void BeginLevel() override;
+
+
   void Update(float dt) override;
 
 public:
