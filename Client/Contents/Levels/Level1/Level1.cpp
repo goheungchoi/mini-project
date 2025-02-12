@@ -55,11 +55,11 @@ void Level1::BeginLevel()
   inGameUI->_mainMission->SetText(L"선술집 내 칼트 병력 제거");
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
 
+  _tutorialUI = world->_canvas->CreatePanel<TutorialUI>(L"TutorialUI");
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
 
 
-  _tutorialUI = world->_canvas->CreatePanel<TutorialUI>(L"TutorialUI");
-  _tutorialUI->Deactivate();
+  //_tutorialUI->Deactivate();
 
   // Audio Drama 나오고 나서 Tutorial 나오고 게임 시작 해야함
   #endif
