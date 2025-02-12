@@ -4,6 +4,9 @@
 #include "GameFramework/UI/UIText/UIText.h"
 #include "Shared/Config/Config.h"
 
+#include "Contents/UI/TransitionUI/TransitionUI.h"
+#include "GameFramework/UI/Canvas/Canvas.h"
+
 // eBattleResult DialogUI::_prevBattleResult = eBattleResult::PerfectWin;
 // int DialogUI::StageIdx = 1;
 DialogUI::DialogUI(class World* world) : UIPanel(world)
@@ -361,7 +364,12 @@ void DialogUI::SetStageDialogIndex()
     });
     _actionList.push_back([=]() {
       _world->PrepareChangeLevel("Level" + to_string(StageIdx + 1));
-      _world->CommitLevelChange();
+      TransitionUI* transitionUI =
+          _world->_canvas->GetPanel<TransitionUI>(L"FadeTransition");
+      if (transitionUI)
+      {
+        transitionUI->FadeOut(1.f);
+      }
     });
   }
   else
@@ -377,7 +385,12 @@ void DialogUI::SetStageDialogIndex()
       });
       _actionList.push_back([=]() {
         _world->PrepareChangeLevel("Level8");
-        _world->CommitLevelChange();
+        TransitionUI* transitionUI =
+            _world->_canvas->GetPanel<TransitionUI>(L"FadeTransition");
+        if (transitionUI)
+        {
+          transitionUI->FadeOut(1.f);
+        }
       });
     }
     else
@@ -392,7 +405,12 @@ void DialogUI::SetStageDialogIndex()
       });
       _actionList.push_back([=]() {
         _world->PrepareChangeLevel("Level8_2");
-        _world->CommitLevelChange();
+        TransitionUI* transitionUI =
+            _world->_canvas->GetPanel<TransitionUI>(L"FadeTransition");
+        if (transitionUI)
+        {
+          transitionUI->FadeOut(1.f);
+        }
       });
     }
   }
