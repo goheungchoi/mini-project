@@ -106,9 +106,6 @@ Character::~Character() {
 
 void Character::TriggerAction()
 {
-  if (isActionTriggered)
-    return;
-
   isActionTriggered = true;
 
   HideOutline();
