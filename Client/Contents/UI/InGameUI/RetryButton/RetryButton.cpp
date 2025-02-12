@@ -32,6 +32,7 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
 #endif // _DEBUG
 
   _retryBtn->AddOnClickHandler([this]() {
+    if (_map->isPlacementModeOn)
     SoundManager::PlaySound(SoundList::Button_Click);
     int levelIdx =
         static_cast<GameLevel*>(_world->GetCurrentLevel())->GetStageIdx();

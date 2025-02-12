@@ -77,22 +77,26 @@ ResultDialogUI::ResultDialogUI(class World* world) : DialogUI(world)
         {
           _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
               8;
+          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->PlayFlag =
+                true;
           _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
           _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->Activate();
           Deactivate();
         }
         if (StageIdx == 9)
-          {
-            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
-                9;
-            _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
-            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")
-                ->Activate();
-            Deactivate();
-          }
+        {
 
-          else
-          {
+          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
+              9;
+          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->PlayFlag =
+              true;
+          _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
+          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->Activate();
+          Deactivate();
+        }
+
+        else
+        {
           static_cast<GameLevel*>(_world->_currentLevel)
               ->SetBattleResult(_prevBattleResult);
           static_cast<GameLevel*>(_world->_currentLevel)->SetStageIdx(StageIdx);

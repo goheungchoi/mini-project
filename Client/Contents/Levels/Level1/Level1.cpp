@@ -56,9 +56,9 @@ void Level1::BeginLevel()
 
   _tutorialUI = world->_canvas->CreatePanel<TutorialUI>(L"TutorialUI");
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
+  _audioDrama->stageidx = 1;
+  inGameUI->Deactivate();
 
-
-  //_tutorialUI->Deactivate();
 
   // Audio Drama 나오고 나서 Tutorial 나오고 게임 시작 해야함
   #endif

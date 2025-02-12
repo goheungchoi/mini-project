@@ -21,12 +21,12 @@ void Level4::BeginLevel()
   __super::BeginLevel();
 
 #ifdef USED2D
+  inGameUI->_mainMission->SetText(L"협정 참가자 명단 확보");
+  inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
   inGameUI->HideUI(L"SubMission_2");
   map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
   map->PauseGame();
 
-  inGameUI->_mainMission->SetText(L"협정 참가자 명단 확보");
-  inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
 
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
   _audioDrama->stageidx = 4;

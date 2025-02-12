@@ -67,6 +67,28 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
   
     }
   }
+  {
+    BrawlerDefaultImage->Activate();
+    BrawlerHoveredImage->Activate();
+    BrawlerInactiveImage->Activate();
+    BrawlerButton->Activate();
+    SlasherDefaultImage->Activate();
+    SlasherHoveredImage->Activate();
+    SlasherInactiveImage->Activate();
+    SlasherButton->Activate();
+    Gunman1DefaultImage->Activate();
+    Gunman1HoveredImage->Activate();
+    Gunman1InactiveImage->Activate();
+    Gunman1Button->Activate();
+    if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
+    {
+      Gunman2DefaultImage->Activate();
+      Gunman2HoveredImage->Activate();
+      Gunman2InactiveImage->Activate();
+      Gunman2Button->Activate();
+    }
+
+  }
   BrawlerDefaultImage->SetScale({0.8f, 0.8f});
   BrawlerHoveredImage->SetScale({0.8f, 0.8f});
   BrawlerInactiveImage->SetScale({0.8f, 0.8f});
@@ -126,44 +148,24 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
     BrawlerDefaultImage->Activate();
     BrawlerHoveredImage->Activate();
     BrawlerInactiveImage->Activate();
-    BrawlerButton->Activate();
+    //BrawlerButton->Activate();
     SlasherDefaultImage->Activate();
     SlasherHoveredImage->Activate();
     SlasherInactiveImage->Activate();
-    SlasherButton->Activate();
+   //SlasherButton->Activate();
     Gunman1DefaultImage->Activate();
     Gunman1HoveredImage->Activate();
     Gunman1InactiveImage->Activate();
-    Gunman1Button->Activate();
+    //Gunman1Button->Activate();
     if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
     {
       Gunman2DefaultImage->Activate();
       Gunman2HoveredImage->Activate();
       Gunman2InactiveImage->Activate();
-      Gunman2Button->Activate();
+      //Gunman2Button->Activate();
     }
 
-    BrawlerDefaultImage->SetOpacity(1.f);
-    BrawlerHoveredImage->SetOpacity(0.f);
-    BrawlerInactiveImage->SetOpacity(0.f);
-    SlasherDefaultImage->SetOpacity(1.f);
-    SlasherHoveredImage->SetOpacity(0.f);
-    SlasherInactiveImage->SetOpacity(0.f);
-    Gunman1DefaultImage->SetOpacity(1.f);
-    Gunman1HoveredImage->SetOpacity(0.f);
-    Gunman1InactiveImage->SetOpacity(0.f);
-    if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
-    {
-      Gunman2DefaultImage->SetOpacity(1.f);
-      Gunman2HoveredImage->SetOpacity(0.f);
-      Gunman2InactiveImage->SetOpacity(0.f);
-    }
-    IsBrawlerUsing = false;
-    IsSlasherUsing = false;
-    IsGunman1Using = false;
-    IsGunman2Using = false;
-
-      _map = _world->FindGameObjectByType<Map>();
+       _map = _world->FindGameObjectByType<Map>();
     bool isNotSimulating = !_map->isAssassinationMode &&
                            !_map->isPlacementModeOn &&
                            !_map->isHoveredCharacterChanged;

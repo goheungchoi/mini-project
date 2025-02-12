@@ -635,7 +635,7 @@ void Map::ResetGame()
       CreateAllyAt(info.type, info.w, info.h, info.dir);
       break;
     case kEnemy:
-      CreateEnemyAt(info.type, info.w, info.h, info.dir);
+      CreateEnemyAt(info.type, info.w, info.h, info.dir, info.type == kBoss);
       break;
     case kNeutral:
       CreateCivillianAt(info.w, info.h, info.dir, info.type == kEliza);
@@ -679,11 +679,17 @@ void Map::CreateEnemyAt(CharacterType type, uint32_t w, uint32_t h,
 {
   switch (type)
   {
+  case kBoss:
   case kBrawler: {
     std::cout << " + Create Enemy Brawler." << std::endl;
 
     Brawler* brawler = world->CreateGameObjectFromModel<Brawler>(
         isBoss ? enemyBossModelHandle : enemyBrawlerModelHandle);
+
+    if (isBoss)
+    {
+      brawler->type = kBoss;
+    }
 
     // Bind a direction indicator.
     auto* directionIndicator =
@@ -1061,7 +1067,7 @@ void Map::PlayBackgroundAudio(BackgroundAudio audio) {
     SoundManager::PlaySound(SoundList::Background_Pub);
     break;
   case kMuseum:
-    SoundManager::PlaySound(SoundList::Background_ConferenceHall_Ambient);
+    //SoundManager::PlaySound(SoundList::Background_ConferenceHall_Ambient);
     SoundManager::PlaySound(SoundList::Background_ConferenceHall);
     break;
   case kWarehouse:

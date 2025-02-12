@@ -193,6 +193,7 @@ void GameLevel::BeginLevel()
 
 void GameLevel::DestroyLevel()
 {
+  map->StopBackgroundAudio();
   transitionUI->FadeOut(2.f);
   Level::DestroyLevel();
 }
