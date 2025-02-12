@@ -88,7 +88,7 @@ public:
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
     std::wstring filename = L"/DX11Shader.hlsl";
-    std::wstring shaderPath = L"../Library/Shader/DX11Shader.hlsl";
+    std::wstring shaderPath =
         //Utility::convertToUTF16(ns::kShaderDir) + filename;
 
     // **Shader Compile**
