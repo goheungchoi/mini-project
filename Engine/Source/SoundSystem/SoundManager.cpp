@@ -31,7 +31,7 @@ static std::vector<float> channelVolumes(kNumSoundChannels, 1.f);
 
 static std::unordered_map<std::wstring, FMOD::Sound*> pathSoundDataMap;
 
-static std::list<std::pair<std::wstring, FMOD::Channel**>> soundChannelMap;
+static std::unordered_map<std::wstring, FMOD::Channel**> soundChannelMap;
 
 bool SoundManager::LoadSound(const std::wstring& path, bool loop)
 {
@@ -89,7 +89,7 @@ int SoundManager::PlaySound(const std::wstring& path)
     throw std::runtime_error("fmod playing sound failed: "s +
                              FMOD_ErrorString(res));
   }
-  soundChannelMap.push_back({path, &channels[i]});
+  soundChannelMap[path] = &channels[i];
   channels[i]->setVolume(channelVolumes[i]);
   return i;
 }
@@ -104,17 +104,12 @@ void SoundManager::PlaySound(int channel, const std::wstring& path)
     throw std::runtime_error("fmod playing sound failed: "s +
                              FMOD_ErrorString(res));
   }
-  soundChannelMap.push_back({path, &channels[channel]});
+  soundChannelMap[path] = &channels[channel];
   channels[channel]->setVolume(channelVolumes[channel]);
 }
 
 void SoundManager::StopSound(const std::wstring& path) {
-  auto it = std::find_if(
-      std::begin(soundChannelMap), std::end(soundChannelMap),
-      [&path](const std::pair<std::wstring, FMOD::Channel**>& soundChannel) {
-        return soundChannel.first == path;
-      });
-  
+  auto it = soundChannelMap.find(path);
   if (it != soundChannelMap.end())
   {
     if (it->second)
@@ -158,11 +153,7 @@ bool SoundManager::IsPlaying(int channel)
 
 bool SoundManager::IsPlaying(const std::wstring& path)
 {
-  auto it = std::find_if(
-      std::begin(soundChannelMap), std::end(soundChannelMap),
-      [&path](const std::pair<std::wstring, FMOD::Channel**>& soundChannel) {
-        return soundChannel.first == path;
-      });
+  auto it = soundChannelMap.find(path);
   if (it != soundChannelMap.end())
   {
     if (it->second)
