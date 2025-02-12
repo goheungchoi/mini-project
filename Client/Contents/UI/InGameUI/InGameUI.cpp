@@ -42,6 +42,9 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1800, 980});
   _gradientIMG->SetScale({0.7f, 0.7f});
   SetOnActivatedEvent([=]() {
+    _map = _world->FindGameObjectByType<Map>();
+    SetBGM();
+
     _playBtn->Activate();
     _retryBtn->Activate();
     _mainMission->Activate();
@@ -52,6 +55,7 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
     _applyBtn->Activate();
     _agentStorage->Activate();
   });
+  SetOnDeactivatedEvent([=]() { _map->StopBackgroundAudio(); });
 
   
 }
@@ -160,26 +164,17 @@ void InGameUI::Update(float dt)
     {
       if (static_cast<AudioDramaUI*>(UIPanel)->PlayFlag)
       {
-        //this->Deactivate();
-        _map->StopBackgroundAudio();
+        this->Deactivate();
       }
     }
   }
 
-  if (_status == EStatus_Active)
-  {
-    SetBGM();
-  }
 }
 
 void InGameUI::SetBGM()
 {
-
-  if (prevLevelIdx == levelIdx)
-  {
+  if (!_map)
     return;
-  }
-
   if (levelIdx == 1 || levelIdx == 3 || levelIdx == 10 || levelIdx == 13 ||
       levelIdx == 15)
   {

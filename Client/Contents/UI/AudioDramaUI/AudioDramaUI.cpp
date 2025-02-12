@@ -46,6 +46,10 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
       world->PrepareChangeLevel("Main Menu");
       world->CommitLevelChange();
     }
+    else
+    {
+      _map->ResumeGame();
+    }
   };
   _scripts.resize(5);
   _scripts[0].push_back({L"1970년 2월 13일 칼트,\n적국 선전 방송 "});

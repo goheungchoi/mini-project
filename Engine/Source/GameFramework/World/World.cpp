@@ -22,6 +22,7 @@
 #endif
 
 #include "GameFramework/UI/Canvas/Canvas.h"
+#include "SoundSystem/SoundManager.h"
 
 void World::Initialize(HWND hwnd, const std::wstring& title)
 {
