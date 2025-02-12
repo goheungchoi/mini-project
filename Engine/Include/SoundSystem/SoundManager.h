@@ -20,5 +20,7 @@ void SetVolume(int channel, float volume);
 
 bool IsPlaying(int channel);
 
+bool IsPlaying(const std::wstring& path);
+
 }; // namespace SoundManager
 
