@@ -88,8 +88,8 @@ public:
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
     std::wstring filename = L"/DX11Shader.hlsl";
-    std::wstring shaderPath =
-        Utility::convertToUTF16(ns::kShaderDir) + filename;
+    std::wstring shaderPath = L"../Library/Shader/DX11Shader.hlsl";
+        //Utility::convertToUTF16(ns::kShaderDir) + filename;
 
     // **Shader Compile**
     HRESULT hr = D3DCompileFromFile(
@@ -99,7 +99,7 @@ public:
     if (FAILED(hr))
     {
       std::ofstream o("exception_info.txt");
-
+      
       // 에러 메시지가 있으면 기록
       if (errorBlob)
       {
@@ -163,8 +163,8 @@ public:
     shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
     std::wstring filename = L"/DX11Shader.hlsl";
-    std::wstring shaderPath =
-        Utility::convertToUTF16(ns::kShaderDir) + filename;
+    std::wstring shaderPath = L"../Library/Shader/DX11Shader.hlsl";
+        //Utility::convertToUTF16(ns::kShaderDir) + filename;
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
     HR_T(D3DCompileFromFile(shaderPath.c_str(), macros.data(),
