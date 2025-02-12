@@ -222,6 +222,8 @@
 		<ClCompile Include="Contents\GameObjects\Map\Weapons\Knife\Knife.cpp" />
 		<ClInclude Include="Contents\GameObjects\Map\Weapons\Knife\Knife.h" />
 		<ClInclude Include="Contents\GameObjects\TestGameObject.h" />
+		<ClCompile Include="Contents\Levels\ChallengeMode\ChallengeMode.cpp" />
+		<ClInclude Include="Contents\Levels\ChallengeMode\ChallengeMode.h" />
 		<ClCompile Include="Contents\Levels\DialogLevel\DialogLevel.cpp" />
 		<ClInclude Include="Contents\Levels\DialogLevel\DialogLevel.h" />
 		<ClCompile Include="Contents\Levels\GameLevel.cpp" />
@@ -293,6 +295,7 @@
 		<ClInclude Include="Contents\UI\TransitionUI\TransitionUI.h" />
 		<ClCompile Include="TutorialUI.cpp" />
 		<ClInclude Include="TutorialUI.h" />
+		<None Include="exception_info.txt" />
 		<None Include="fmod_vc.lib" />
 		<None Include="imgui.ini" />
 	</ItemGroup>

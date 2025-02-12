@@ -133,6 +133,7 @@ public:
 
   void ResetGame();
 
+  bool pause{false};
   void PauseGame();
   void ResumeGame();
 

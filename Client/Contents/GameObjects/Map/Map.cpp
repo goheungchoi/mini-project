@@ -636,12 +636,14 @@ void Map::ResetGame()
 
 void Map::PauseGame()
 {
-  this->Deactivate();
+  // this->Deactivate();
+  pause = true;
 }
 
 void Map::ResumeGame()
 {
-  this->Activate();
+  // this->Activate();
+  pause = false;
 }
 
 bool Map::IsGameFinished()
@@ -1061,6 +1063,10 @@ void Map::OnAwake()
 
 void Map::Update(float dt)
 {
+  // Pause
+  if (pause)
+    return;
+
   // Detect hovered character changes.
   if (hoveredCharacter)
   {
