@@ -21,5 +21,6 @@ public:
   Vector2 _btnPos{960, 1000};
 
   bool _bHoverFlag = false;
+  int curTutorialIdx = 0;
 
 };

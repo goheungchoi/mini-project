@@ -18,10 +18,56 @@ TutorialUI::TutorialUI(World* world) : UIPanel(world)
   _tutorialIMG[2]->SetSprite("2D\\UI\\Tuto\\PopupUI_03.png", {960, 540});
   _tutorialIMG[3]->SetSprite("2D\\UI\\Tuto\\PopupUI_04.png", {960, 540});
   
+  _tutorialIMG[0]->Activate();
+  _tutorialIMG[1]->Activate();
+  _tutorialIMG[2]->Activate();
+  _tutorialIMG[3]->Activate();
+
   _tutorialIMG[0]->SetOpacity(1.0f);
   _tutorialIMG[1]->SetOpacity(0.0f);
   _tutorialIMG[2]->SetOpacity(0.0f);
   _tutorialIMG[3]->SetOpacity(0.0f);
+
+
+  // CloseButton
+  _closeIMG[0] = CreateUI<UIImage>(L"CloseIMG_Default");
+  _closeIMG[1] = CreateUI<UIImage>(L"CloseIMG_Hover");
+
+  _closeIMG[0]->SetSprite("2D\\UI\\Tuto\\PopupButton2_default.png", _btnPos);
+  _closeIMG[1]->SetSprite("2D\\UI\\Tuto\\PopupButton2_hover.png", _btnPos);
+
+  _closeIMG[0]->Activate();
+  _closeIMG[1]->Activate();
+
+  _closeIMG[0]->SetOpacity(1.0f);
+  _closeIMG[1]->SetOpacity(0.0f);
+
+  _closeBtn = CreateUI<UIButton>(L"CloseButton");
+  _closeBtn->SetSize(_closeIMG[0]->GetSize());
+  _closeBtn->SetCenterPos(_btnPos);
+  _closeBtn->Deactivate();
+
+#ifdef _DEBUG
+  _closeBtn->SetDebugDraw(true);
+#endif // _DEBUG
+
+  _closeBtn->AddOnHoveredHandler([this]() {
+    _closeIMG[0]->SetOpacity(0.0f);
+    _closeIMG[1]->SetOpacity(1.0f);
+    if (!_bHoverFlag)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverFlag = true;
+    }
+  });
+
+  _closeBtn->AddOnUnHoveredHandler([this]() {
+    _bHoverFlag = false;
+    _closeIMG[0]->SetOpacity(1.0f);
+    _closeIMG[1]->SetOpacity(0.0f);
+      });
+
+  _closeBtn->AddOnClickHandler([this]() { Deactivate(); });
 
 
   // NextButton
@@ -30,6 +76,9 @@ TutorialUI::TutorialUI(World* world) : UIPanel(world)
 
   _nextIMG[0]->SetSprite("2D\\UI\\Tuto\\PopupButton_default.png", _btnPos);
   _nextIMG[1]->SetSprite("2D\\UI\\Tuto\\PopupButton_hover.png", _btnPos);
+
+  _nextIMG[0]->Activate();
+  _nextIMG[1]->Activate();
 
   _nextIMG[0]->SetOpacity(1.0f);
   _nextIMG[1]->SetOpacity(0.0f);
@@ -48,41 +97,49 @@ TutorialUI::TutorialUI(World* world) : UIPanel(world)
       SoundManager::PlaySound(SoundList::Button_Hover);
       _bHoverFlag = true;
     }
+    _nextIMG[0]->SetOpacity(0.0f);
+    _nextIMG[1]->SetOpacity(1.0f);
   });
-  _nextBtn->AddOnUnHoveredHandler([this]() { _bHoverFlag = false; });
-  _nextBtn->AddOnClickHandler([this]() {});
 
+  _nextBtn->AddOnUnHoveredHandler([this]() {
+    _bHoverFlag = false;
+    _nextIMG[0]->SetOpacity(1.0f);
+    _nextIMG[1]->SetOpacity(0.0f);
+  });
 
-  // CloseButton
-  _closeIMG[0] = CreateUI<UIImage>(L"CloseIMG_Default");
-  _closeIMG[1] = CreateUI<UIImage>(L"CloseIMG_Hover");
-
-  _closeIMG[0]->SetSprite("2D\\UI\\Tuto\\PopupButton2_default.png", _btnPos);
-  _closeIMG[1]->SetSprite("2D\\UI\\Tuto\\PopupButton2_hover.png", _btnPos);
-
-  _closeIMG[0]->SetOpacity(1.0f);
-  _closeIMG[1]->SetOpacity(0.0f);
-
-  _closeBtn = CreateUI<UIButton>(L"CloseButton");
-  _closeBtn->SetSize(_closeIMG[0]->GetSize());
-  _closeBtn->SetCenterPos({_btnPos.x + 100, _btnPos.y});
-
-#ifdef _DEBUG
-  _closeBtn->SetDebugDraw(true);
-#endif // _DEBUG
-
-  _closeBtn->AddOnHoveredHandler([this]() {
-    if (!_bHoverFlag)
+  _nextBtn->AddOnClickHandler([this]() {
+    if (curTutorialIdx < 3)
     {
-      SoundManager::PlaySound(SoundList::Button_Hover);
-      _bHoverFlag = true;
+      ++curTutorialIdx;
     }
-      });
-  _closeBtn->AddOnUnHoveredHandler([this]() { _bHoverFlag = false; });
-  _closeBtn->AddOnClickHandler([this]() {});
+
+    for (int i = 0; i < 4; ++i)
+    {
+      _tutorialIMG[i]->SetOpacity(i == curTutorialIdx ? 1.0f : 0.0f);
+    }
+
+    if (curTutorialIdx == 3)
+    {
+      _nextIMG[0]->SetOpacity(0.0f);
+      _nextIMG[1]->SetOpacity(0.0f);
+      _closeBtn->Activate();
+    }
+  });
 
 }
 
 TutorialUI::~TutorialUI() {}
 
-void TutorialUI::Update(float dt) {}
+void TutorialUI::Update(float dt)
+{
+  __super::Update(dt);
+
+  if (_tutorialIMG[3]->GetOpacity()==1.0f)
+  {
+    _nextIMG[0]->SetOpacity(0.0f);
+    _nextIMG[1]->SetOpacity(0.0f);
+    _nextBtn->Deactivate();
+
+    _closeBtn->Activate();
+  }
+}
