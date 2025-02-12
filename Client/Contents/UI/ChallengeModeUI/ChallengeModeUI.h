@@ -10,6 +10,8 @@ public:
   void BeginLevel() override;
 
 private:
+  bool _bHoverBtn = false;
+
   class World* _world;
   class UIImage* _backGroundImg{nullptr};
 

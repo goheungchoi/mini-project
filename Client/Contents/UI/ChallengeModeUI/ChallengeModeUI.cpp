@@ -125,11 +125,19 @@ ChallengeModeUI::~ChallengeModeUI()
 void ChallengeModeUI::BeginLevel() 
 {
   UIPanel::BeginLevel();
+  //1
   _stage1Button->AddOnHoveredHandler([=]() {
+    if (!_bHoverBtn)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverBtn = true;
+    }
+    
     _stage1Acitve->SetOpacity(1.f);
     _stage1DeAcitve->SetOpacity(0.f);
   });
   _stage1Button->AddOnUnHoveredHandler([=]() {
+    _bHoverBtn = false;
     _stage1Acitve->SetOpacity(0.f);
     _stage1DeAcitve->SetOpacity(1.f);
   });
@@ -143,12 +151,19 @@ void ChallengeModeUI::BeginLevel()
     }
   });
 
-
+  //2
   _stage2Button->AddOnHoveredHandler([=]() {
+    if (!_bHoverBtn)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverBtn = true;
+    }
+
     _stage2Acitve->SetOpacity(1.f);
     _stage2DeAcitve->SetOpacity(0.f);
   });
   _stage2Button->AddOnUnHoveredHandler([=]() {
+    _bHoverBtn = false;
     _stage2Acitve->SetOpacity(0.f);
     _stage2DeAcitve->SetOpacity(1.f);
   });
@@ -161,12 +176,19 @@ void ChallengeModeUI::BeginLevel()
       transitionUI->FadeOut(3.0f);
     }
   });
-
+  //3
     _stage3Button->AddOnHoveredHandler([=]() {
+    if (!_bHoverBtn)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverBtn = true;
+    }
+
     _stage3Acitve->SetOpacity(1.f);
     _stage3DeAcitve->SetOpacity(0.f);
   });
   _stage3Button->AddOnUnHoveredHandler([=]() {
+      _bHoverBtn = false;
     _stage3Acitve->SetOpacity(0.f);
     _stage3DeAcitve->SetOpacity(1.f);
   });
@@ -179,12 +201,19 @@ void ChallengeModeUI::BeginLevel()
       transitionUI->FadeOut(3.0f);
     }
   });
-
+  //4
     _stage4Button->AddOnHoveredHandler([=]() {
+    if (!_bHoverBtn)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverBtn = true;
+    }
+
     _stage4Acitve->SetOpacity(1.f);
     _stage4DeAcitve->SetOpacity(0.f);
   });
   _stage4Button->AddOnUnHoveredHandler([=]() {
+      _bHoverBtn = false;
     _stage4Acitve->SetOpacity(0.f);
     _stage4DeAcitve->SetOpacity(1.f);
   });
@@ -197,12 +226,19 @@ void ChallengeModeUI::BeginLevel()
       transitionUI->FadeOut(3.0f);
     }
   });
-
+  //5
   _stage5Button->AddOnHoveredHandler([=]() {
+    if (!_bHoverBtn)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverBtn = true;
+    }
+
     _stage5Acitve->SetOpacity(1.f);
     _stage5DeAcitve->SetOpacity(0.f);
   });
   _stage5Button->AddOnUnHoveredHandler([=]() {
+    _bHoverBtn = false;
     _stage5Acitve->SetOpacity(0.f);
     _stage5DeAcitve->SetOpacity(1.f);
   });
@@ -215,12 +251,19 @@ void ChallengeModeUI::BeginLevel()
       transitionUI->FadeOut(3.0f);
     }
   });
-
+  //6
   _stage6Button->AddOnHoveredHandler([=]() {
+    if (!_bHoverBtn)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverBtn = true;
+    }
+
     _stage6Acitve->SetOpacity(1.f);
     _stage6DeAcitve->SetOpacity(0.f);
   });
   _stage6Button->AddOnUnHoveredHandler([=]() {
+    _bHoverBtn = false;
     _stage6Acitve->SetOpacity(0.f);
     _stage6DeAcitve->SetOpacity(1.f);
   });
@@ -233,12 +276,20 @@ void ChallengeModeUI::BeginLevel()
       transitionUI->FadeOut(3.0f);
     }
   });
-
+  //7
   _stage7Button->AddOnHoveredHandler([=]() {
+
+    if (!_bHoverBtn)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverBtn = true;
+    }
+
     _stage7Acitve->SetOpacity(1.f);
     _stage7DeAcitve->SetOpacity(0.f);
   });
   _stage7Button->AddOnUnHoveredHandler([=]() {
+    _bHoverBtn = false;
     _stage7Acitve->SetOpacity(0.f);
     _stage7DeAcitve->SetOpacity(1.f);
   });
