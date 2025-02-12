@@ -43,7 +43,6 @@ void Level1::BeginLevel()
 
   #ifdef USED2D
 
-  inGameUI->HideUI(L"GunfireBtn");
   inGameUI->HideUI(L"SubMission_2");
 
   map->OnDeleteCharacter = [=]() {

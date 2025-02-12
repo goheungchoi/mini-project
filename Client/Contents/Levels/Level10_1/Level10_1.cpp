@@ -16,7 +16,6 @@ void Level10_1::BeginLevel()
 {
   __super::BeginLevel();
 #ifdef USED2D
-  inGameUI->HideUI(L"GunfireBtn");
   inGameUI->HideUI(L"SubMission");
   inGameUI->HideUI(L"SubMission_2");
   map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };

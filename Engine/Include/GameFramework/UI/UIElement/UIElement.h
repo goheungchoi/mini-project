@@ -53,6 +53,7 @@ public:
   {
     if (_status == EStatus_Active)
     {
+      OnActivated();
       return;
     }
     else

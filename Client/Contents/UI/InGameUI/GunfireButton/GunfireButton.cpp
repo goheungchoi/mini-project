@@ -78,6 +78,31 @@ void GunfireButton::BeginLevel()
 {
   UIPanel::BeginLevel();
 
+  SetOnActivatedEvent([=]() {
+    _gunfireBtn->AddOnHoveredHandler([this]() {
+      if (!_bHover)
+      {
+        SoundManager::PlaySound(SoundList::Button_Hover);
+        _bHover = true;
+      }
+    });
+
+    _gunfireBtn->AddOnUnHoveredHandler([this]() { _bHover = false; });
+
+    _gunfireBtn->AddOnClickHandler([this]() {
+      SoundManager::PlaySound(SoundList::Button_Click);
+
+      if (!_bGunFireUseFlag)
+      {
+        _bGunFireUseFlag = true;
+        _map->TurnOnAssassinationMode();
+      }
+      //_bHover = false;
+    });
+    _gunfireBtn->Activate();
+    _gunfireBtn->SetDebugDraw(true);
+  });
+
 }
 
 void GunfireButton::Update(float dt)

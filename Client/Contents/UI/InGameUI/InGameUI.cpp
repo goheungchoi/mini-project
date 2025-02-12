@@ -48,7 +48,12 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
     _playBtn->Activate();
     _retryBtn->Activate();
     _mainMission->Activate();
-    _gunfireBtn->Activate();
+
+    if ((levelIdx == 5 || levelIdx == 6 || levelIdx == 9 || levelIdx == 12 ||
+          levelIdx == 13 || levelIdx == 14 || levelIdx == 15 || levelIdx == 16))
+      _gunfireBtn->Activate();
+
+
     if (_subMission[0]->_subMissionTxt->GetText().length() > 0)
       _subMission[0]->Activate();
     if (_subMission[1]->_subMissionTxt->GetText().length() > 0)
@@ -56,7 +61,9 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
     _applyBtn->Activate();
     _agentStorage->Activate();
   });
-  SetOnDeactivatedEvent([=]() { _map->StopBackgroundAudio(); });
+  SetOnDeactivatedEvent([=]() {
+    //_map->StopBackgroundAudio(); 
+      });
 
   
 }
@@ -147,16 +154,6 @@ void InGameUI::Update(float dt)
     }
   }
 
-  // Lv.5, Lv.7, Lv.8_2(9) 제외 GunfireBtn 비활성화
-  if (levelIdx == 5 || levelIdx == 6 || levelIdx == 9 || levelIdx == 12 ||
-      levelIdx == 13 || levelIdx == 14 || levelIdx == 15 || levelIdx == 16)
-  {
-    return;
-  }
-  else
-  {
-    _gunfireBtn->Deactivate();
-  }
 
   // AudioDramaUI, ResultDialogUI
   for (auto& [name, UIPanel] : _world->_canvas->panelMap)
