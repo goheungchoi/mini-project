@@ -210,12 +210,15 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
 
       if (!IsBrawlerUsing && !_map->isPlacementModeOn)
       {
-        IsBrawlerUsing = true;
-        _map->TurnOnPlacementMode(CharacterType::kBrawler, kWest);
-        BrawlerDefaultImage->SetOpacity(0.f);
-        BrawlerHoveredImage->SetOpacity(0.f);
-        BrawlerInactiveImage->SetOpacity(1.f);
-        BrawlerButton->Deactivate();
+        if (!_map->isActionTriggered)
+        {
+          IsBrawlerUsing = true;
+          _map->TurnOnPlacementMode(CharacterType::kBrawler, kWest);
+          BrawlerDefaultImage->SetOpacity(0.f);
+          BrawlerHoveredImage->SetOpacity(0.f);
+          BrawlerInactiveImage->SetOpacity(1.f);
+          BrawlerButton->Deactivate();
+        }
       }
     });
     SlasherButton->AddOnHoveredHandler([=]() {
@@ -260,12 +263,15 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
 
       if (!IsSlasherUsing && !_map->isPlacementModeOn)
       {
-        IsSlasherUsing = true;
-        _map->TurnOnPlacementMode(CharacterType::kSlasher, kWest);
-        SlasherDefaultImage->SetOpacity(0.f);
-        SlasherHoveredImage->SetOpacity(0.f);
-        SlasherInactiveImage->SetOpacity(1.f);
-        SlasherButton->Deactivate();
+        if (!_map->isActionTriggered)
+        {
+          IsSlasherUsing = true;
+          _map->TurnOnPlacementMode(CharacterType::kSlasher, kWest);
+          SlasherDefaultImage->SetOpacity(0.f);
+          SlasherHoveredImage->SetOpacity(0.f);
+          SlasherInactiveImage->SetOpacity(1.f);
+          SlasherButton->Deactivate();
+        }
       }
     });
     Gunman1Button->AddOnHoveredHandler([=]() {
@@ -309,12 +315,15 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
 
       if (!IsGunman1Using && !_map->isPlacementModeOn)
       {
-        IsGunman1Using = true;
-        _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);
-        Gunman1DefaultImage->SetOpacity(0.f);
-        Gunman1HoveredImage->SetOpacity(0.f);
-        Gunman1InactiveImage->SetOpacity(1.f);
-        Gunman1Button->Deactivate();
+        if (!_map->isActionTriggered)
+        {
+          IsGunman1Using = true;
+          _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);
+          Gunman1DefaultImage->SetOpacity(0.f);
+          Gunman1HoveredImage->SetOpacity(0.f);
+          Gunman1InactiveImage->SetOpacity(1.f);
+          Gunman1Button->Deactivate();
+        }
       }
     });
     if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
@@ -360,12 +369,15 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
 
         if (!IsGunman2Using && !_map->isPlacementModeOn)
         {
-          IsGunman2Using = true;
-          _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);
-          Gunman2DefaultImage->SetOpacity(0.f);
-          Gunman2HoveredImage->SetOpacity(0.f);
-          Gunman2InactiveImage->SetOpacity(1.f);
-          Gunman2Button->Deactivate();
+          if (!_map->isActionTriggered)
+          {
+            IsGunman2Using = true;
+            _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);
+            Gunman2DefaultImage->SetOpacity(0.f);
+            Gunman2HoveredImage->SetOpacity(0.f);
+            Gunman2InactiveImage->SetOpacity(1.f);
+            Gunman2Button->Deactivate();
+          }
         }
       });
     }
@@ -446,12 +458,15 @@ void AgentStorage::BeginLevel()
 
     if (!IsBrawlerUsing && !_map->isPlacementModeOn)
     {
-      IsBrawlerUsing = true;
-      _map->TurnOnPlacementMode(CharacterType::kBrawler, kWest);
-      BrawlerDefaultImage->SetOpacity(0.f);
-      BrawlerHoveredImage->SetOpacity(0.f);
-      BrawlerInactiveImage->SetOpacity(1.f);
-      BrawlerButton->Deactivate();
+      if (!_map->isActionTriggered)
+      {
+        IsBrawlerUsing = true;
+        _map->TurnOnPlacementMode(CharacterType::kBrawler, kWest);
+        BrawlerDefaultImage->SetOpacity(0.f);
+        BrawlerHoveredImage->SetOpacity(0.f);
+        BrawlerInactiveImage->SetOpacity(1.f);
+        BrawlerButton->Deactivate();
+      }
     }
   });
   SlasherButton->AddOnHoveredHandler([=]() {
@@ -498,12 +513,15 @@ void AgentStorage::BeginLevel()
 
     if (!IsSlasherUsing && !_map->isPlacementModeOn)
     {
-      IsSlasherUsing = true;
-      _map->TurnOnPlacementMode(CharacterType::kSlasher, kWest);
-      SlasherDefaultImage->SetOpacity(0.f);
-      SlasherHoveredImage->SetOpacity(0.f);
-      SlasherInactiveImage->SetOpacity(1.f);
-      SlasherButton->Deactivate();
+      if (!_map->isActionTriggered)
+      {
+        IsSlasherUsing = true;
+        _map->TurnOnPlacementMode(CharacterType::kSlasher, kWest);
+        SlasherDefaultImage->SetOpacity(0.f);
+        SlasherHoveredImage->SetOpacity(0.f);
+        SlasherInactiveImage->SetOpacity(1.f);
+        SlasherButton->Deactivate();
+      }
     }
   });
   Gunman1Button->AddOnHoveredHandler([=]() {
@@ -550,12 +568,15 @@ void AgentStorage::BeginLevel()
 
     if (!IsGunman1Using && !_map->isPlacementModeOn)
     {
-      IsGunman1Using = true;
-      _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);
-      Gunman1DefaultImage->SetOpacity(0.f);
-      Gunman1HoveredImage->SetOpacity(0.f);
-      Gunman1InactiveImage->SetOpacity(1.f);
-      Gunman1Button->Deactivate();
+      if (!_map->isActionTriggered)
+      {
+        IsGunman1Using = true;
+        _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);
+        Gunman1DefaultImage->SetOpacity(0.f);
+        Gunman1HoveredImage->SetOpacity(0.f);
+        Gunman1InactiveImage->SetOpacity(1.f);
+        Gunman1Button->Deactivate();
+      }
     }
   });
   if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
@@ -604,12 +625,15 @@ void AgentStorage::BeginLevel()
 
       if (!IsGunman2Using && !_map->isPlacementModeOn)
       {
-        IsGunman2Using = true;
-        _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);
-        Gunman2DefaultImage->SetOpacity(0.f);
-        Gunman2HoveredImage->SetOpacity(0.f);
-        Gunman2InactiveImage->SetOpacity(1.f);
-        Gunman2Button->Deactivate();
+        if (!_map->isActionTriggered)
+        {
+          IsGunman2Using = true;
+          _map->TurnOnPlacementMode(CharacterType::kGunman, kWest);
+          Gunman2DefaultImage->SetOpacity(0.f);
+          Gunman2HoveredImage->SetOpacity(0.f);
+          Gunman2InactiveImage->SetOpacity(1.f);
+          Gunman2Button->Deactivate();
+        }
       }
     });
   }

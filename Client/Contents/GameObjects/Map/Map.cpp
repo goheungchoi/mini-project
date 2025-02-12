@@ -233,6 +233,9 @@ Map::~Map()
 
 void Map::TurnOnPlacementMode(CharacterType type, Direction dir)
 {
+  if (isActionTriggered)
+    return;
+
   if (isPlacementModeOn)
   {
     return;
