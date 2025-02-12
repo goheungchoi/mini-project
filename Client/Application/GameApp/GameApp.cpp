@@ -29,6 +29,7 @@
 #include "Contents/Levels/Level10_6/Level10_6.h"
 #include "Contents/Levels/Level10_7/Level10_7.h"
 #include "Contents/Levels/ChallengeMode/ChallengeMode.h"
+#include "Contents/Levels/EndingCredit/EndingCredit.h"
 #include "Contents/SoundList/SoundList.h"
 #include "SoundSystem/SoundManager.h"
 #include "Contents/UI/AudioDramaUI/AudioDramaUI.h"
@@ -53,6 +54,7 @@ static Level10_6* level10_6;
 static Level10_7* level10_7;
 static DialogLevel* dialogLevel;
 static ChallengeMode* challengeLevel;
+static EndingCredit* endingCreditLevel;
 
 
 // Challenge mode.
@@ -81,6 +83,8 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   mainMenuLevel = new MainMenu("Main Menu");
   dialogLevel = new DialogLevel("Dialog Level");
   challengeLevel = new ChallengeMode("Challenge Level");
+  endingCreditLevel = new EndingCredit("EndingCredit Level");
+
   level1 = new Level1("Level1");
   level1->BindDialogLevel(dialogLevel);
   level2 = new Level2("Level2");
@@ -134,6 +138,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _world->AddLevel(gameLevel);
   _world->AddLevel(mainMenuLevel);
   _world->AddLevel(dialogLevel);
+  _world->AddLevel(endingCreditLevel);
   _world->AddLevel(level1);
   _world->AddLevel(level2);
   _world->AddLevel(level3);
@@ -152,7 +157,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _world->AddLevel(level10_6);
   _world->AddLevel(level10_7);
 
-  _world->PrepareChangeLevel(mainMenuLevel->name);
+  _world->PrepareChangeLevel(level8->name);
   _world->CommitLevelChange();
 }
 
@@ -167,6 +172,7 @@ void GameApp::Shutdown()
   delete mainMenuLevel;
   delete dialogLevel;
   delete challengeLevel;
+  delete endingCreditLevel;
   delete level1;
   delete level2;
   delete level3;
