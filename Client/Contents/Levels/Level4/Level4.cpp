@@ -24,6 +24,7 @@ void Level4::BeginLevel()
   inGameUI->HideUI(L"GunfireBtn");
   inGameUI->HideUI(L"SubMission_2");
   map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
+  map->PauseGame();
 
   inGameUI->_mainMission->SetText(L"협정 참가자 명단 확보");
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
