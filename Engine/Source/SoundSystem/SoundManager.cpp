@@ -150,3 +150,35 @@ bool SoundManager::IsPlaying(int channel)
   channels[channel]->isPlaying(&res);
   return res;
 }
+
+bool SoundManager::IsPlaying(const std::wstring& path)
+{
+  auto it = soundChannelMap.find(path);
+  if (it != soundChannelMap.end())
+  {
+    if (it->second)
+    {
+      bool res{false};
+      (*it->second)->isPlaying(&res);
+      if (res)
+      {
+        return true;
+      }
+      else
+      {
+        soundChannelMap.erase(it);
+        return false;
+      }
+    }
+    else
+    {
+      soundChannelMap.erase(it);
+      return false;
+    }
+  }
+  else
+  {
+    return false;
+  }
+
+}

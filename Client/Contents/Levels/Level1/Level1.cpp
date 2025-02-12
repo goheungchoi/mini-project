@@ -58,8 +58,10 @@ void Level1::BeginLevel()
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
 
 
-  //_tutorialUI = world->_canvas->CreatePanel<TutorialUI>(L"TutorialUI");
-  //_tutorialUI->Deactivate();
+  _tutorialUI = world->_canvas->CreatePanel<TutorialUI>(L"TutorialUI");
+  _tutorialUI->Deactivate();
+
+  // Audio Drama 나오고 나서 Tutorial 나오고 게임 시작 해야함
   #endif
 }
 
@@ -92,6 +94,8 @@ void Level1::CreateMap()
   map->CreateObstacleAt(ObstacleType_Stool, 5, 1, kNorth);
   map->CreateObstacleAt(ObstacleType_Stool, 5, 2, kNorth);
   map->CreateObstacleAt(ObstacleType_Box02, 5, 5, kWest);
+
+  map->PlaceCharacterIndicatorAt(kGunman, 5, 0);
 }
 
 void Level1::TriggerAction() {}

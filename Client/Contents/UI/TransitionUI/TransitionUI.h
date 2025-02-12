@@ -23,6 +23,11 @@ public:
   void Transition(float dt);
   void Update(float dt) override;
   void Render() override;
-private:
 
+  std::function<void(void)> OnFadeOutDone = []() {};
+  std::function<void(void)> OnFadeInDone = []() {};
+
+private:
+  bool isFadeIn{false};
+  bool isFadeOut{false};
 };

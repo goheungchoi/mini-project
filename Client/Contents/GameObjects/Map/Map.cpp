@@ -962,7 +962,7 @@ void Map::CreateObstacleAt(ObstacleType type, uint32_t w, uint32_t h,
   obstacle->SetDirection(dir);
 }
 
-void Map::PlaceCharacterIndicatorAt(uint32_t w, uint32_t h,
+void Map::PlaceCharacterIndicatorAt(CharacterType type, uint32_t w, uint32_t h,
                                     Direction dir)
 {
   // TODO: 
@@ -970,6 +970,8 @@ void Map::PlaceCharacterIndicatorAt(uint32_t w, uint32_t h,
       world->CreateGameObjectFromModel<Slasher>(characterIndicatorModelHandle);
 
   slasher->animator->PauseAnimation();
+  slasher->SetFaction(kAlly);
+  slasher->ShowOutline();
 
   indicatorPosition = {w, h};
 
@@ -978,15 +980,31 @@ void Map::PlaceCharacterIndicatorAt(uint32_t w, uint32_t h,
   // Apply global transformation
   XMVECTOR pos{pos_x - 0.6f, 0.f, pos_z - 0.8f, 1.f};
 
+
   // Bind an inactive indicator.
   tempInactiveIndicator = world->CreateGameObject();
-  if (auto* bbComp =
-          tempInactiveIndicator->CreateComponent<BillboardComponent>();
-      bbComp)
+  switch (type)
   {
-    bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
-    bbComp->SetTexture(slasherInactiveIndicatorTextureHandle);
+  case kSlasher:
+    if (auto* bbComp =
+            tempInactiveIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
+    {
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
+      bbComp->SetTexture(slasherInactiveIndicatorTextureHandle);
+    }
+    break;
+  case kGunman:
+    if (auto* bbComp =
+            tempInactiveIndicator->CreateComponent<BillboardComponent>();
+        bbComp)
+    {
+      bbComp->SetScale({kIndicatorScale, kIndicatorScale, kIndicatorScale});
+      bbComp->SetTexture(gunmanInactiveIndicatorTextureHandle);
+    }
+    break;
   }
+
   slasher->BindInactiveIndicator(tempInactiveIndicator);
   tempInactiveIndicator->SetVisible();
 

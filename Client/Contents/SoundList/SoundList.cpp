@@ -11,6 +11,8 @@ const wchar_t* SoundList::Background_ConferenceHall = L"ConferenceHallBGM_01.wav
 const wchar_t* SoundList::Background_ConferenceHall_Ambient = L"ConferenceHallAmbient.wav";
 const wchar_t* SoundList::Background_Dialog = L"DialogueBGM.wav";
 
+const wchar_t* SoundList::Button_MainMenuStart = L"MainMenuButtonImpact.wav";
+
 const wchar_t* SoundList::Button_Click = L"ButtonClickSound_01.wav";
 const wchar_t* SoundList::Button_Hover = L"ButtonHoverSound_01.wav";
 
@@ -92,6 +94,8 @@ void RegisterSoundList() {
   RegisterSound(Background_ConferenceHall, true);
   RegisterSound(Background_ConferenceHall_Ambient, true);
   RegisterSound(Background_Dialog, true);
+
+  RegisterSound(Button_MainMenuStart);
 
   RegisterSound(Button_Click);
   RegisterSound(Button_Hover);

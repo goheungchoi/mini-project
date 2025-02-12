@@ -4,6 +4,9 @@
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 
+#include "GameFramework/UI/Canvas/Canvas.h"
+#include "Contents/UI/TransitionUI/TransitionUI.h"
+
 #include "Contents/SoundList/SoundList.h"
 #include "SoundSystem/SoundManager.h"
 
@@ -65,11 +68,17 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   });
 
   _startBtn->AddOnClickHandler([this]() {
+    _startBtn->Deactivate();
+    _challengeBtn->Deactivate();
 
-    SoundManager::PlaySound(SoundList::Button_Click);
+    SoundManager::PlaySound(SoundList::Button_MainMenuStart);
     SoundManager::StopSound(SoundList::Background_Title);
     _world->PrepareChangeLevel("Level1");
-    _world->CommitLevelChange();
+    TransitionUI* transitionUI = _world->_canvas->GetPanel<TransitionUI>(L"FadeTransition");
+    if (transitionUI)
+    {
+      transitionUI->FadeOut(3.f);
+    }
   });
 
 
@@ -112,10 +121,18 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   });
 
   _challengeBtn->AddOnClickHandler([this]() {
-      
+    _startBtn->Deactivate();
+    _challengeBtn->Deactivate();
+
+    SoundManager::PlaySound(SoundList::Button_MainMenuStart);
     SoundManager::StopSound(SoundList::Background_Title);
     _world->PrepareChangeLevel("Challenge Level");
-    _world->CommitLevelChange();
+    TransitionUI* transitionUI =
+        _world->_canvas->GetPanel<TransitionUI>(L"FadeTransition");
+    if (transitionUI)
+    {
+      transitionUI->FadeOut(3.f);
+    }
   });
 
 

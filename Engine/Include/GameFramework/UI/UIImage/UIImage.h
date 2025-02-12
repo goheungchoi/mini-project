@@ -16,6 +16,7 @@ public:
   void SetSprite(class Sprite* sprite) { _sprite = sprite; }
 
   void SetOpacity(float opacity);
+  float GetOpacity() { return _opacity; }
 
   void SetLateRender(bool flag) { bLateRender = flag; }
 
