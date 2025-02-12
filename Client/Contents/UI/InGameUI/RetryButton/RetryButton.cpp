@@ -32,7 +32,7 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
 
   _retryBtn->AddOnClickHandler([this]() {
     SoundManager::PlaySound(SoundList::Button_Click);
-
+    //_world->_canvas->GetPanel<InGameUI>(L"InGameUI")->once = true;
 	  _map->ResetGame();
       
     // GunfireButton È°¼ºÈ­

@@ -31,6 +31,7 @@ public:
 
   bool isActionStarted{false};
   void SetBGM();
+  bool once = true;
 
 private:
   const Vector2 DefaultPos{-600, 300};
