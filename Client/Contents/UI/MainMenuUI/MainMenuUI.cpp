@@ -135,7 +135,6 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
     }
   });
 
-
   // Exit Button
   _exitImg[0] = CreateUI<UIImage>(L"ChallengeIMG_Default");
   _exitImg[1] = CreateUI<UIImage>(L"ChallengeIMG_Hover");
