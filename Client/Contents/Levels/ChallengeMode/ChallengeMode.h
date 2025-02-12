@@ -19,7 +19,8 @@ public:
 
 
 protected:
+  class ChallengeModeUI* challengeModeUI;
   virtual void CreateMap();
-
+  
   void TriggerAction();
 };

@@ -267,6 +267,8 @@
 		<ClInclude Include="Contents\SoundList\SoundList.h" />
 		<ClCompile Include="Contents\UI\AudioDramaUI\AudioDramaUI.cpp" />
 		<ClInclude Include="Contents\UI\AudioDramaUI\AudioDramaUI.h" />
+		<ClCompile Include="Contents\UI\ChallengeModeUI\ChallengeModeUI.cpp" />
+		<ClInclude Include="Contents\UI\ChallengeModeUI\ChallengeModeUI.h" />
 		<ClCompile Include="Contents\UI\DialogUI\DialogUI.cpp" />
 		<ClInclude Include="Contents\UI\DialogUI\DialogUI.h" />
 		<ClCompile Include="Contents\UI\DialogUI\ResultDialogUI.cpp" />
