@@ -26,7 +26,7 @@ void Level7::BeginLevel()
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
   inGameUI->_subMission[1]->SetText(L"부관 희생 없이 작전 수행");
   map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
-
+  map->PauseGame();
 
 
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");

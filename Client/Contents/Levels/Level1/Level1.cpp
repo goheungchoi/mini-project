@@ -50,6 +50,8 @@ void Level1::BeginLevel()
         inGameUI->_agentStorage->ResetAgent();
       };
 
+  map->PauseGame();
+
   inGameUI->_mainMission->SetText(L"선술집 내 칼트 병력 제거");
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
 
