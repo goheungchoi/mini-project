@@ -125,6 +125,7 @@ void AudioDramaUI::Update(float dt)
   UIPanel::Update(dt);
   if (PlayFlag)
   {
+    _map->StopBackgroundAudio();
     _Background->SetOpacity(1.f);
     RunStage(dt);
     if (INPUT.IsKeyPress(Key::Escape))
