@@ -291,6 +291,8 @@
 		<ClInclude Include="Contents\UI\ReconfirmUI\ReconfirmUI.h" />
 		<ClCompile Include="Contents\UI\TransitionUI\TransitionUI.cpp" />
 		<ClInclude Include="Contents\UI\TransitionUI\TransitionUI.h" />
+		<ClCompile Include="TutorialUI.cpp" />
+		<ClInclude Include="TutorialUI.h" />
 		<None Include="fmod_vc.lib" />
 		<None Include="imgui.ini" />
 	</ItemGroup>
