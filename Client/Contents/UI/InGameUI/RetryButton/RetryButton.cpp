@@ -9,6 +9,9 @@
 #include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
 #include "Contents/UI/InGameUI/PlayButton/PlayButton.h"
 
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
+
 RetryButton::RetryButton(World* world) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
@@ -28,6 +31,8 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
 #endif // _DEBUG
 
   _retryBtn->AddOnClickHandler([this]() {
+    SoundManager::PlaySound(SoundList::Button_Click);
+
 	  _map->ResetGame();
       
     // GunfireButton È°¼ºÈ­
@@ -75,7 +80,13 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
 
   });
 
-  _retryBtn->AddOnHoveredHandler([this]() { _bHoverFlag = true; });
+  _retryBtn->AddOnHoveredHandler([this]() { 
+    if (!_bHoverFlag)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverFlag = true;
+    }
+  });
 
   _retryBtn->AddOnUnHoveredHandler([this]() { _bHoverFlag = false; });
 

@@ -16,6 +16,8 @@ public:
   class Map* mapptr = nullptr;
   bool IsAgent3 = false;
 
+  bool _bHoverFlag = false;
+
   class UIImage* BrawlerDefaultImage{nullptr};
   class UIImage* BrawlerHoveredImage{nullptr};
   class UIImage* BrawlerInactiveImage{nullptr};

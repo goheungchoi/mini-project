@@ -8,7 +8,6 @@ public:
   virtual ~InGameUI();
 
   void Update(float dt) override;
-  void SetBGM();
 
 public:
   class UIImage* _gradientIMG{nullptr};
@@ -34,5 +33,4 @@ private:
   const float stopTime = 1.0f;
 
   int levelIdx = 0;
-  int prevLevelIdx = 0;
 };

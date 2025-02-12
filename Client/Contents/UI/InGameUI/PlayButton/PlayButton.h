@@ -18,4 +18,6 @@ private:
   class GunfireButton* _gunfireBtn{nullptr};
   class UIAnim* _elizaAnim{nullptr};
   Vector2 _pos = {1780, 140};
+
+  bool _bHoverflag = false;
 };

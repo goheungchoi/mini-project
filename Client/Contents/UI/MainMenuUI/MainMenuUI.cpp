@@ -1,13 +1,19 @@
 #include "MainMenuUI.h"
+#include "Contents/GameObjects/Map/Map.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UICursor/UICursor.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
+
 MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
 {
-
   _backGroundImg = CreateUI<UIImage>(L"BackGoundIMG");
   _backGroundImg->SetSprite("2D\\UI\\Title\\Title_Background.png", {960, 540});
+
+  SoundManager::PlaySound(SoundList::Background_Title);
+
 
   //_LogoImage = CreateUI<UIImage>(L"TitleIMG");
   //_LogoImage->SetSprite("Textures\\TitleLogo.png", {556, 362});
@@ -33,15 +39,22 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   _startBtn->SetSize(_startImg[0]->GetSize());
   _startBtn->SetCenterPos(_btnPos);
 
+
 #ifdef _DEBUG
   _startBtn->SetDebugDraw(false);
 #endif // _DEBUG
 
   _startBtn->AddOnUnHoveredHandler([this]() {
+    _bHoverBtn = false;
       _startImg[0]->SetStatus(EStatus::EStatus_Active);
       _startImg[1]->SetStatus(EStatus::EStatus_Inactive);
   });
   _startBtn->AddOnHoveredHandler([this]() {
+    if (!_bHoverBtn)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverBtn = true;
+    }
       _startImg[0]->SetStatus(EStatus::EStatus_Inactive);
       _startImg[1]->SetStatus(EStatus::EStatus_Active);
   });
@@ -52,6 +65,9 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   });
 
   _startBtn->AddOnClickHandler([this]() {
+
+    SoundManager::PlaySound(SoundList::Button_Click);
+    SoundManager::StopSound(SoundList::Background_Title);
     _world->PrepareChangeLevel("Level1");
     _world->CommitLevelChange();
   });
@@ -76,10 +92,16 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
 #endif // _DEBUG
 
   _challengeBtn->AddOnUnHoveredHandler([this]() {
+    _bHoverBtn = false;
     _challengeImg[0]->SetStatus(EStatus::EStatus_Active);
     _challengeImg[1]->SetStatus(EStatus::EStatus_Inactive);
   });
   _challengeBtn->AddOnHoveredHandler([this]() {
+    if (!_bHoverBtn)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverBtn = true;
+    }
     _challengeImg[0]->SetStatus(EStatus::EStatus_Inactive);
     _challengeImg[1]->SetStatus(EStatus::EStatus_Active);
   });
@@ -90,6 +112,8 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   });
 
   _challengeBtn->AddOnClickHandler([this]() {
+      
+    SoundManager::StopSound(SoundList::Background_Title);
     _world->PrepareChangeLevel("Level10_1");
     _world->CommitLevelChange();
   });
@@ -113,10 +137,16 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
 #endif // _DEBUG
 
   _exitBtn->AddOnUnHoveredHandler([this]() {
+    _bHoverBtn = false;
     _exitImg[0]->SetStatus(EStatus::EStatus_Active);
     _exitImg[1]->SetStatus(EStatus::EStatus_Inactive);
   });
   _exitBtn->AddOnHoveredHandler([this]() {
+    if (!_bHoverBtn)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverBtn = true;
+    }
     _exitImg[0]->SetStatus(EStatus::EStatus_Inactive);
     _exitImg[1]->SetStatus(EStatus::EStatus_Active);
   });
@@ -126,7 +156,9 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
     _exitImg[1]->SetStatus(EStatus::EStatus_Active);
   });
 
-  _exitBtn->AddOnClickHandler([this]() { PostQuitMessage(0); });
+  _exitBtn->AddOnClickHandler([this]() {
+    SoundManager::StopSound(SoundList::Background_Title);
+      PostQuitMessage(0); });
 
   // Cursor
   _cursor = CreateUI<UICursor>(L"Cursor");
