@@ -107,6 +107,12 @@ bool World::IsLevelChangeReady()
 
 void World::CommitLevelChange()
 {
+  if (bCommitLevelCalled)
+  {
+    return;
+  }
+  bCommitLevelCalled = true;
+
 	if (bChangingLevel)
 	{
     std::cout
@@ -129,10 +135,6 @@ void World::CommitLevelChange()
     {
     }
 
-    if (bChangingLevel)
-    {
-      return;
-    }
     bChangingLevel = true;
 
     if (_currentLevel)
@@ -180,6 +182,7 @@ void World::CommitLevelChange()
         Vector2(kScreenWidth, kScreenHeight));
 
     bChangingLevel = false;
+    bCommitLevelCalled = false;
   });
 }
 
