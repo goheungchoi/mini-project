@@ -14,6 +14,6 @@ private:
   class UIImage* _endingIMG{nullptr};
   class UIImage* _backIMG{nullptr};
   class UIImage* _vignetteIMG{nullptr};
-  Vector2 _IMGpos{960, 1400};
-  float _speed = 100.0f;
+  Vector2 _IMGpos{960, 1500};
+  float _speed = 130.0f;
 };

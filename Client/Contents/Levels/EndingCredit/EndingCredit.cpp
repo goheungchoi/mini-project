@@ -33,14 +33,14 @@ void EndingCredit::BeginLevel()
 
   _transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
   _transitionUI->_blackImage->SetOpacity(1.0f);
-  _transitionUI->FadeIn(2.f);
+  _transitionUI->FadeIn(3.0f);
 
   _transitionUI->OnFadeOutDone = [this]() { world->CommitLevelChange(); };
 }
 
 void EndingCredit::DestroyLevel()
 {
-  _transitionUI->FadeOut(1.0f);
+  _transitionUI->FadeOut(3.0f);
 	Level::DestroyLevel();
 }
 

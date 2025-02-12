@@ -154,16 +154,6 @@ void TutorialUI::Update(float dt)
 {
   __super::Update(dt);
 
-  if (_tutorialIMG[3]->GetOpacity()==1.0f)
-  {
-    _nextIMG[0]->SetOpacity(0.0f);
-    _nextIMG[1]->SetOpacity(0.0f);
-    _nextBtn->Deactivate();
-
-    _closeBtn->Activate();
-  }
-
-  
 
   for (auto& [name, UIPanel] : _world->_canvas->panelMap)
   {
@@ -191,8 +181,30 @@ void TutorialUI::Update(float dt)
     }
   }
 
+
   if (curTutorialIdx >= 1)
   {
     _tutorialIMG[0]->SetOpacity(0.0f);
+  }
+
+  if (_tutorialIMG[0]->GetOpacity() == 0.0f)
+  {
+    _nextBtn->Deactivate();
+  }
+  
+  if (_tutorialIMG[0]->GetOpacity() == 1.0f ||
+      _tutorialIMG[1]->GetOpacity() == 1.0f ||
+      _tutorialIMG[2]->GetOpacity() == 1.0f)
+  {
+    _nextBtn->Activate();
+  }
+
+  if (_tutorialIMG[3]->GetOpacity() == 1.0f)
+  {
+    _nextIMG[0]->SetOpacity(0.0f);
+    _nextIMG[1]->SetOpacity(0.0f);
+    _nextBtn->Deactivate();
+
+    _closeBtn->Activate();
   }
 }
