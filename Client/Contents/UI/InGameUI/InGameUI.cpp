@@ -133,24 +133,33 @@ void InGameUI::Update(float dt)
     bool flag = _map->IsGameFinished();
     if (!flag)
     {
-      ShowUI(L"PlayBtn");
-      HideUI(L"RetryBtn");
-      HideUI(L"ApplyBtn");
-      _playBtn->_bPlayflag = false;
-      //// Eliza Anim 초기화
-      if (_map->bTempCondition)
+      if (once)
       {
-        animPos = DefaultPos;
-        elapsedTime = 0.0f;
-        delayElapsedTime = 0.f;
-        isActionStarted = true;
+
+        ShowUI(L"PlayBtn");
+        HideUI(L"RetryBtn");
+        HideUI(L"ApplyBtn");
+        _playBtn->_bPlayflag = false;
+        //// Eliza Anim 초기화
+        if (_map->bTempCondition)
+        {
+          animPos = DefaultPos;
+          elapsedTime = 0.0f;
+          delayElapsedTime = 0.f;
+          isActionStarted = true;
+        }
+        once = false;
       }
     }
     else
     {
-      HideUI(L"PlayBtn");
-      ShowUI(L"RetryBtn");
-      ShowUI(L"ApplyBtn");
+      if (!once)
+      {
+        HideUI(L"PlayBtn");
+        ShowUI(L"RetryBtn");
+        ShowUI(L"ApplyBtn");
+        once = true;
+      }
     }
   }
 

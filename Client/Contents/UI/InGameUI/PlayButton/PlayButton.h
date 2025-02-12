@@ -7,6 +7,7 @@ public:
   PlayButton(class World* world);
   virtual ~PlayButton();
 
+  void BeginLevel() override;
   void Update(float dt) override;
 
   bool _bPlayflag = false;

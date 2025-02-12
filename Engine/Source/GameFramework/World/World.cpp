@@ -129,6 +129,10 @@ void World::CommitLevelChange()
     {
     }
 
+    if (bChangingLevel)
+    {
+      return;
+    }
     bChangingLevel = true;
 
     if (_currentLevel)
