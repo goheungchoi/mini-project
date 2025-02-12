@@ -94,6 +94,8 @@ void Level1::CreateMap()
   map->CreateObstacleAt(ObstacleType_Stool, 5, 1, kNorth);
   map->CreateObstacleAt(ObstacleType_Stool, 5, 2, kNorth);
   map->CreateObstacleAt(ObstacleType_Box02, 5, 5, kWest);
+
+  map->PlaceCharacterIndicatorAt(kGunman, 5, 0);
 }
 
 void Level1::TriggerAction() {}

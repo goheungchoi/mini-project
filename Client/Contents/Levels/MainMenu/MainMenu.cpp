@@ -36,6 +36,8 @@ void MainMenu::BeginLevel()
   transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
   transitionUI->_blackImage->SetOpacity(1.0f);
   transitionUI->FadeIn(2.f);
+
+  transitionUI->OnFadeOutDone = [this]() { world->CommitLevelChange(); };
 #endif // USED2D
 }
 

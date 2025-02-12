@@ -24,6 +24,9 @@ void TransitionUI::FadeOut(float threshold)
   _transitionStartOpacity = 0.f;
   _transitionEndOpacity = 1.f;
   _transitionFlag = true;
+
+  isFadeIn = false;
+  isFadeOut = true;
 }
 void TransitionUI::FadeIn(float threshold)
 {
@@ -31,6 +34,9 @@ void TransitionUI::FadeIn(float threshold)
   _transitionStartOpacity = 1.f;
   _transitionEndOpacity = 0.f;
   _transitionFlag = true;
+
+  isFadeIn = true;
+  isFadeOut = false;
 }
 
 void TransitionUI::Transition(float dt)
@@ -50,6 +56,18 @@ void TransitionUI::Transition(float dt)
       _transitionOpacity = _transitionEndOpacity;
       _transitionFlag = false;
       _transitionElaspedTimer = 0.f;
+
+      if (isFadeIn)
+      {
+        OnFadeInDone();
+      }
+      if (isFadeOut)
+      {
+        OnFadeOutDone();
+      }
+
+      isFadeIn = false;
+      isFadeOut = false;
     }
   }
 

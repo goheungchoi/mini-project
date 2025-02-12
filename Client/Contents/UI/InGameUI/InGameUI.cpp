@@ -40,8 +40,6 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1800, 980});
   _gradientIMG->SetScale({0.7f, 0.7f});
   SetOnActivatedEvent([=]() { _playBtn->Activate(); });
-
-  
 }
 
 InGameUI::~InGameUI() {}
