@@ -16,6 +16,8 @@ extern const wchar_t* Background_Storage_Ambient;
 extern const wchar_t* Background_ConferenceHall;
 extern const wchar_t* Background_ConferenceHall_Ambient;
 
+extern const wchar_t* Background_Dialog;
+
 // Button
 extern const wchar_t* Button_Click;
 extern const wchar_t* Button_Hover;
