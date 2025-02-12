@@ -141,14 +141,14 @@ void InGameUI::Update(float dt)
         HideUI(L"ApplyBtn");
         _playBtn->_bPlayflag = false;
         //// Eliza Anim ÃÊ±âÈ­
-        if (_map->bTempCondition)
-        {
-          animPos = DefaultPos;
-          elapsedTime = 0.0f;
-          delayElapsedTime = 0.f;
-          isActionStarted = true;
-        }
         once = false;
+      }
+      if (_map->bTempCondition)
+      {
+        animPos = DefaultPos;
+        elapsedTime = 0.0f;
+        delayElapsedTime = 0.f;
+        isActionStarted = true;
       }
     }
     else

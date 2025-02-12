@@ -1067,7 +1067,7 @@ void Map::PlayBackgroundAudio(BackgroundAudio audio) {
     SoundManager::PlaySound(SoundList::Background_Pub);
     break;
   case kMuseum:
-    SoundManager::PlaySound(SoundList::Background_ConferenceHall_Ambient);
+    //SoundManager::PlaySound(SoundList::Background_ConferenceHall_Ambient);
     SoundManager::PlaySound(SoundList::Background_ConferenceHall);
     break;
   case kWarehouse:
