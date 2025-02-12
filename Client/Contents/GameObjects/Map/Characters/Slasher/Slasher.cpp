@@ -183,13 +183,6 @@ void Slasher::Update(float dt) {
   if (interval.first <= currActionAnimation->GetCurrentAnimationTime() &&
       currActionAnimation->GetCurrentAnimationTime() <= interval.second)
   {
-    if (!bStab)
-    {
-      SoundManager::StopSound(SoundList::Slasher_Rush);
-      SoundManager::PlaySound(SoundList::Slasher_Fire);
-      bStab = true;
-    }
-
     if (!knife->isCollsionOn)
       knife->TurnOnCollision();
   }
@@ -197,6 +190,13 @@ void Slasher::Update(float dt) {
   {
     if (knife->isCollsionOn)
       knife->TurnOffCollision();
+  }
+
+  if (!bStab && (interval.first <= currActionAnimation->GetCurrentAnimationTime()))
+  {
+    SoundManager::StopSound(SoundList::Slasher_Rush);
+    SoundManager::PlaySound(SoundList::Slasher_Fire);
+    bStab = true;
   }
 
   /*if (!isMoved && currActionAnimation->GetCurrentAnimationTime() >= 0.75)
