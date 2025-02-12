@@ -30,6 +30,7 @@
 #include "Contents/Levels/Level10_7/Level10_7.h"
 #include "Contents/Levels/ChallengeMode/ChallengeMode.h"
 #include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
 #include "Contents/UI/AudioDramaUI/AudioDramaUI.h"
 
 static GameLevel* gameLevel;
@@ -206,7 +207,16 @@ void GameApp::Update(float dt)
 
   if (INPUT.IsKeyDown(Key::PageUp))
   {
+    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+    SoundManager::StopSound(SoundList::Background_Pub);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+    SoundManager::StopSound(SoundList::Background_ConferenceHall);
+    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+    SoundManager::StopSound(SoundList::Background_Storage);
+    SoundManager::StopSound(SoundList::Background_Dialog);
+    
     GameManager::endingflag = false;
+
     _world->PrepareChangeLevel(mainMenuLevel->name);
     _world->CommitLevelChange();
   }

@@ -9,6 +9,8 @@
 
 #include "Contents/UI/TransitionUI/TransitionUI.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
 
 void MainMenu::PrepareLevel()
 {
@@ -42,6 +44,7 @@ void MainMenu::BeginLevel()
 }
 
 void MainMenu::CleanupLevel() {
+  SoundManager::StopSound(SoundList::Background_Title);
 }
 
 void MainMenu::SetEndingFlag(int i)
