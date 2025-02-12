@@ -10,7 +10,8 @@ enum BackgroundAudio
 {
   kBar,
   kMuseum,
-  kWarehouse
+  kWarehouse,
+  kDialogue
 };
 
 class Map : public GameObject
@@ -154,7 +155,7 @@ public:
   void DeleteCharacterFromMap(Character* character);
 
   void PlayBackgroundAudio(BackgroundAudio audio);
-  void StopBackgroundAudio(BackgroundAudio audio);
+  void StopBackgroundAudio();
 
   std::function<void(void)> OnDeleteCharacter = []() {};
 
