@@ -1,12 +1,21 @@
 #include "TutorialUI.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
-
+#include "Contents/UI/AudioDramaUI/AudioDramaUI.h"
 #include "Contents/SoundList/SoundList.h"
 #include "SoundSystem/SoundManager.h"
+#include "Contents/GameObjects/Map/Map.h"
+#include "GameFramework/UI/Canvas/Canvas.h"
 
 TutorialUI::TutorialUI(World* world) : UIPanel(world)
 {
+  _world = world;
+
+  if (_map)
+  {
+    _map = _world->FindGameObjectByType<Map>();
+  }
+
   // TutorialIMG
   _tutorialIMG[0] = CreateUI<UIImage>(L"TutorialIMG_01");
   _tutorialIMG[1] = CreateUI<UIImage>(L"TutorialIMG_02");
@@ -23,6 +32,11 @@ TutorialUI::TutorialUI(World* world) : UIPanel(world)
   _tutorialIMG[2]->Activate();
   _tutorialIMG[3]->Activate();
 
+  _tutorialIMG[0]->SetLateRender(true);
+  _tutorialIMG[1]->SetLateRender(true);
+  _tutorialIMG[2]->SetLateRender(true);
+  _tutorialIMG[3]->SetLateRender(true);
+
   _tutorialIMG[0]->SetOpacity(1.0f);
   _tutorialIMG[1]->SetOpacity(0.0f);
   _tutorialIMG[2]->SetOpacity(0.0f);
@@ -38,6 +52,9 @@ TutorialUI::TutorialUI(World* world) : UIPanel(world)
 
   _closeIMG[0]->Activate();
   _closeIMG[1]->Activate();
+
+  _closeIMG[0]->SetLateRender(true);
+  _closeIMG[1]->SetLateRender(true);
 
   _closeIMG[0]->SetOpacity(1.0f);
   _closeIMG[1]->SetOpacity(0.0f);
@@ -79,6 +96,9 @@ TutorialUI::TutorialUI(World* world) : UIPanel(world)
 
   _nextIMG[0]->Activate();
   _nextIMG[1]->Activate();
+
+  _nextIMG[0]->SetLateRender(true);
+  _nextIMG[1]->SetLateRender(true);
 
   _nextIMG[0]->SetOpacity(1.0f);
   _nextIMG[1]->SetOpacity(0.0f);
@@ -141,5 +161,31 @@ void TutorialUI::Update(float dt)
     _nextBtn->Deactivate();
 
     _closeBtn->Activate();
+  }
+
+  for (auto& [name, UIPanel] : _world->_canvas->panelMap)
+  {
+    if (name == L"AudioDramaUI")
+    {
+      if (static_cast<AudioDramaUI*>(UIPanel)->PlayFlag)
+      {
+        _tutorialIMG[0]->SetOpacity(0.0f);
+        _tutorialIMG[1]->SetOpacity(0.0f);
+        _tutorialIMG[2]->SetOpacity(0.0f);
+        _tutorialIMG[3]->SetOpacity(0.0f);
+
+        _nextIMG[0]->SetOpacity(0.0f);
+        _nextIMG[1]->SetOpacity(0.0f);
+
+        _closeIMG[0]->SetOpacity(0.0f);
+        _closeIMG[1]->SetOpacity(0.0f);
+      }
+      else
+      {
+        _tutorialIMG[0]->SetOpacity(1.0f);
+        _closeIMG[0]->SetOpacity(1.0f);
+        _nextIMG[0]->SetOpacity(1.0f);
+      }
+    }
   }
 }
