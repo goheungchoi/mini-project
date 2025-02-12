@@ -34,7 +34,8 @@ const wchar_t* SoundList::Slasher_Fire = L"Rush_ATK_003.wav";
 const wchar_t* SoundList::Gunman_Ready1 = L"Gun_ATK_001.wav";
 const wchar_t* SoundList::Gunman_Ready2 = L"Gun_ATK_002.wav";
 const wchar_t* SoundList::Gunman_Ready3 = L"Gun_ATK_003.wav";
-const wchar_t* SoundList::Gunman_Fire = L"Gun_ATK_004.wav";
+const wchar_t* SoundList::Gunman_Fire[3] = {
+    L"Gun_ATK_004.wav", L"Gun_ATK_004_1.wav", L"Gun_ATK_004_2.wav"};
 
 
 const wchar_t* SoundList::Enemy_Die[5] = {
@@ -56,7 +57,7 @@ const wchar_t* SoundList::Snipping_Voice = L"SnipingVoice.wav";
 const wchar_t* SoundList::AudioDrama_Stage_01 = L"Audio_Stage01.wav";
 
 template <typename T, std::size_t N>
-void RegisterSoundArray(std::span<T, N> sp)
+static void RegisterSound(std::span<T, N> sp)
 {
   for (T sound : sp)
   {
@@ -65,12 +66,12 @@ void RegisterSoundArray(std::span<T, N> sp)
 }
 
 template <typename T, std::size_t N>
-void RegisterSoundArray(T(&arr)[N])
+static void RegisterSound(T(&arr)[N])
 {
   RegisterSoundArray(std::span{arr});
 }
 
-void RegisterSound(const wchar_t* sound, float isLoop = false)
+static void RegisterSound(const wchar_t* sound, float isLoop = false)
 {
   SoundManager::LoadSound(sound, isLoop);
 }
@@ -112,13 +113,13 @@ void RegisterSoundList() {
   RegisterSound(Gunman_Ready3);
   RegisterSound(Gunman_Fire);
 
-  RegisterSoundArray(Enemy_Die);
+  RegisterSound(Enemy_Die);
 
-  RegisterSoundArray(Ally_Brawler_Die);
+  RegisterSound(Ally_Brawler_Die);
 
-  RegisterSoundArray(Ally_Slasher_Die);
-  RegisterSoundArray(Ally_Gunman_Die);
-  RegisterSoundArray(Civilian_Die);
+  RegisterSound(Ally_Slasher_Die);
+  RegisterSound(Ally_Gunman_Die);
+  RegisterSound(Civilian_Die);
 
   RegisterSound(Snipping_Selection);
   RegisterSound(Snipping_Shot);

@@ -130,7 +130,7 @@ void Gunman::Update(float dt) {
     bullet->SetDirection(-this->GetGlobalFront());
     bullet->SetScaling(10.f, 10.f, 10.f);
 
-    SoundManager::PlaySound(SoundList::Gunman_Fire);
+    SoundManager::PlaySound(GetAny(SoundList::Gunman_Fire));
 
 		bFireBullet = true;
 	}

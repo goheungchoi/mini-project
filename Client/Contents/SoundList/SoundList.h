@@ -45,7 +45,7 @@ extern const wchar_t* Slasher_Fire;       // DONE
 extern const wchar_t* Gunman_Ready1;      // DONE
 extern const wchar_t* Gunman_Ready2;      // DONE
 extern const wchar_t* Gunman_Ready3;      // DONE
-extern const wchar_t* Gunman_Fire;        // DONE
+extern const wchar_t* Gunman_Fire[3];        // DONE
 
 // Death
 extern const wchar_t* Enemy_Die[5];       // DONE
