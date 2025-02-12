@@ -23,4 +23,5 @@ public:
   bool _bHoverFlag = false;
   int curTutorialIdx = 0;
 
+  class World* _world = nullptr;
 };
