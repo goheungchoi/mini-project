@@ -12,7 +12,36 @@ void ChallengeMode::PrepareLevel()
 {
 #ifdef USED2D
   Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\UI\\Title\\Title_Background2.png");
+      "2D\\UI\\StageNum\\ChallengeBG.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\FadeBlack.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_01.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_01.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_02.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_02.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_03.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_03.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_04.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_04.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_05.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_05.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_06.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_06.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Hover_07.png");
+  Resource2DManager::GetInstance()->LoadSprite(
+      "2D\\UI\\StageNum\\StageNum_Act_07.png");
 #endif // USED2D
 }
 
@@ -21,6 +50,10 @@ void ChallengeMode::BeginLevel()
 #ifdef USED2D
   challengeModeUI =
       world->_canvas->CreatePanel<ChallengeModeUI>(L"ChallengeModeUI");
+  transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
+  transitionUI->_blackImage->SetOpacity(1.0f);
+  transitionUI->FadeIn(2.f);
+  transitionUI->OnFadeOutDone = [this]() { world->CommitLevelChange(); };
 #endif
 }
 

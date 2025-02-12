@@ -46,7 +46,7 @@ void DialogLevel::BeginLevel()
   transitionUI->_blackImage->SetOpacity(1.0f);
   transitionUI->FadeIn(2.f);
 
-
+  transitionUI->OnFadeOutDone = [this]() { world->CommitLevelChange(); };
 #endif // USED2D
 }
 

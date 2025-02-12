@@ -202,6 +202,12 @@ void GameApp::Update(float dt)
   _world->AnimationUpdate(dt);
   _world->Update(dt);
   _world->PostUpdate(dt);
+
+  if (INPUT.IsKeyDown(Key::PageUp))
+  {
+    _world->PrepareChangeLevel(mainMenuLevel->name);
+    _world->CommitLevelChange();
+  }
 }
 
 void GameApp::Render()
