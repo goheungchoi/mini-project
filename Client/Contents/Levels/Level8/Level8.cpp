@@ -20,16 +20,12 @@ void Level8::BeginLevel()
   __super::BeginLevel();
 
   #ifdef USED2D
-  inGameUI->HideUI(L"GunfireBtn");
-  inGameUI->HideUI(L"SubMission_2");
-  map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
-
   inGameUI->_mainMission->SetText(L"총리를 제거하여 협정 저지");
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
-
-    _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
-  _audioDrama->SetTotalTime(25.f);
-      _audioDrama->Deactivate();
+  map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
+  _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
+  _audioDrama->PlayFlag = false;
+  _audioDrama->Deactivate();
 
 #endif
 }

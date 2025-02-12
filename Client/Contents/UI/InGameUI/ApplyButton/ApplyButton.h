@@ -9,6 +9,8 @@ public:
 
   void Update(float dt) override;
 
+  bool perfectwinflag = false;
+
 private:
   class UIButton* _applyBtn{nullptr};
   class UIImage* _applyBtnImgs[2];

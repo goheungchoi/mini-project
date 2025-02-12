@@ -20,10 +20,10 @@ public:
 
   void SetEndingFlag(int i);
 
+  class MainMenuUI* mainmenuUI;
 protected:
   bool ending1 = false;
   bool ending2 = false;
-  class MainMenuUI* mainmenuUI;
   virtual void CreateMap();
 
   void TriggerAction();

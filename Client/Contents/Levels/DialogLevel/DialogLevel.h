@@ -11,7 +11,7 @@ public:
   void PrepareLevel() override;
   void BeginLevel() override;
   void CleanupLevel() override;
-
+  void DestroyLevel() override;
   void SetStageIdx(int stageIdx);
   void SetBattleResult(eBattleResult battleresult);
 

@@ -182,6 +182,7 @@ void GameLevel::BeginLevel()
   resultDialogUI =
       world->_canvas->CreatePanel<ResultDialogUI>(L"ResultDialogUI");
   inGameUI = world->_canvas->CreatePanel<InGameUI>(L"InGameUI");
+  inGameUI->Activate();
   world->_canvas->HidePanel(L"ResultDialogUI");
   transitionUI = world->_canvas->CreatePanel<TransitionUI>(L"FadeTransition");
   transitionUI->_blackImage->SetOpacity(1.0f);
@@ -190,9 +191,14 @@ void GameLevel::BeginLevel()
 #endif // USED2D
 }
 
-void GameLevel::CleanupLevel()
+void GameLevel::DestroyLevel()
 {
   transitionUI->FadeOut(2.f);
+  Level::DestroyLevel();
+}
+
+void GameLevel::CleanupLevel()
+{
 
 //  #ifdef USED2D
 //  Resource2DManager::GetInstance()->UnloadSprite("2D\\UI\\gradient.png");

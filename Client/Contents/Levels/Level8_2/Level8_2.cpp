@@ -25,11 +25,9 @@ void Level8_2::BeginLevel()
   inGameUI->_subMission[0]->SetText(L"전투원 희생 없이 작전 수행");
   inGameUI->_subMission[1]->SetText(L"부관 희생 없이 작전 수행");
   map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
-
-    _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
-  _audioDrama->SetTotalTime(25.f);
-    _audioDrama->Deactivate();
-
+  _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
+  _audioDrama->PlayFlag = false;
+  _audioDrama->Deactivate();
 #endif
 }
 

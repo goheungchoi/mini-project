@@ -53,7 +53,13 @@ void DialogLevel::BeginLevel()
 void DialogLevel::CleanupLevel()
 {
   Level::CleanupLevel();
+}
+
+void DialogLevel::DestroyLevel()
+{
+
   transitionUI->FadeOut(2.f);
+  Level::DestroyLevel();
 }
 
 void DialogLevel::SetStageIdx(int stageIdx)

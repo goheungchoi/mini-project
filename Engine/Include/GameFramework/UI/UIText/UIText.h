@@ -24,7 +24,7 @@ public:
   void Fade(float threshold, float start, float end);
   void Transition(float dt);
 
-
+  std::wstring GetText() { return _format; }
 
 
   void SetDebugDraw(bool debugFlag);
@@ -33,8 +33,8 @@ public:
 private:
   bool _bIsTypo = false;
   TextFormatInfo _textFormatInfo;
-  wstring _format;
-  wstring _typoFormat;
+  std::wstring _format;
+  std::wstring _typoFormat;
   Vector4 _rect;
   Color _color;
   float _opacity;

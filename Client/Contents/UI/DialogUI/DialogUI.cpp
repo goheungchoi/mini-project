@@ -1,8 +1,11 @@
 ﻿#include "DialogUI.h"
+
+#include "Contents/SoundList/SoundList.h"
 #include "GameFramework/UI/UIAnim//UIAnim.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIText/UIText.h"
 #include "Shared/Config/Config.h"
+#include "SoundSystem/SoundManager.h"
 
 #include "Contents/UI/TransitionUI/TransitionUI.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
@@ -77,13 +80,23 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     _dialogButton->SetSize(_dialogBtnImage->GetSize());
     _dialogButton->SetCenterPos({1700, 1000});
     _dialogButton->AddOnClickHandler([=]() {
-      if (!bPlayerSelection)
-        NextStep();
+      //if (!bPlayerSelection)
+      //  NextStep();
     });
     _dialogButton->AddOnHoveredHandler(
-        [=]() { _dialogBtnImage->SetOpacity(0.7f); });
+        [=]() {
+          _dialogBtnImage->SetOpacity(0.7f);
+      if (!_bHoverFlag)
+      {
+        SoundManager::PlaySound(SoundList::Button_Hover);
+        _bHoverFlag = true;
+      }
+        });
     _dialogButton->AddOnUnHoveredHandler(
-        [=]() { _dialogBtnImage->SetOpacity(1.f); });
+        [=]() {
+      _bHoverFlag = false;
+          _dialogBtnImage->SetOpacity(1.f);
+        });
 
     _speakerNameText = CreateUI<UIText>(L"speakerName");
     _speakerNameText->SetSize({300, 100});
@@ -117,6 +130,8 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
                                    _playerSelectBtnImage1->GetSize().y});
     _playerSelectButton1->SetCenterPos({1550, 540});
     _playerSelectButton1->AddOnClickHandler([=]() {
+      SoundManager::PlaySound(SoundList::Button_Click);
+
       HideUI(L"playerbuttonimage1");
       HideUI(L"playerbutton1");
       HideUI(L"playerbuttontext1");
@@ -126,9 +141,22 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
       NextStep();
     });
     _playerSelectButton1->AddOnHoveredHandler(
-        [=]() { _playerSelectBtnImage1->SetOpacity(0.5f); });
+        [=]() {
+
+        if (!_bHoverFlag)
+        {
+          SoundManager::PlaySound(SoundList::Button_Hover);
+          _bHoverFlag = true;
+        }
+
+        _playerSelectBtnImage1->SetOpacity(0.5f);
+      
+        });
     _playerSelectButton1->AddOnUnHoveredHandler(
-        [=]() { _playerSelectBtnImage1->SetOpacity(1.f); });
+        [=]() {
+      _bHoverFlag = false;
+          _playerSelectBtnImage1->SetOpacity(1.f);
+        });
 
     _playerSelectBtnText1 = CreateUI<UIText>(L"playerbuttontext1");
     _playerSelectBtnText1->SetSize(_playerSelectBtnImage1->GetSize());
@@ -152,6 +180,8 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
                                    _playerSelectBtnImage2->GetSize().y});
     _playerSelectButton2->SetCenterPos({1550, 700});
     _playerSelectButton2->AddOnClickHandler([=]() {
+      SoundManager::PlaySound(SoundList::Button_Click);
+
       HideUI(L"playerbuttonimage1");
       HideUI(L"playerbutton1");
       HideUI(L"playerbuttontext1");
@@ -161,9 +191,19 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
       NextStep();
     });
     _playerSelectButton2->AddOnHoveredHandler(
-        [=]() { _playerSelectBtnImage2->SetOpacity(0.5f); });
-    _playerSelectButton2->AddOnUnHoveredHandler(
-        [=]() { _playerSelectBtnImage2->SetOpacity(1.f); });
+        [=]() {
+      if (!_bHoverFlag)
+      {
+        SoundManager::PlaySound(SoundList::Button_Hover);
+        _bHoverFlag = true;
+      }
+
+          _playerSelectBtnImage2->SetOpacity(0.5f);
+        });
+    _playerSelectButton2->AddOnUnHoveredHandler([=]() {
+      _bHoverFlag = false;
+          _playerSelectBtnImage2->SetOpacity(1.f);
+        });
 
     _playerSelectBtnText2 = CreateUI<UIText>(L"playerbuttontext2");
     _playerSelectBtnText2->SetSize(_playerSelectBtnImage1->GetSize());
@@ -185,8 +225,6 @@ DialogUI::DialogUI(class World* world) : UIPanel(world)
     // test
     SetPrevBattleResult(eBattleResult::PerfectWin);
   }
-  {
-  }
 }
 void DialogUI::Update(float dt)
 {
@@ -204,6 +242,8 @@ void DialogUI::Update(float dt)
 
 void DialogUI::NextStep()
 {
+  SoundManager::PlaySound(SoundList::Button_Click);
+
   _currentActionIndex++;
   if (_currentActionIndex >= _actionList.size())
     _currentActionIndex = _actionList.size() - 1;
@@ -257,9 +297,9 @@ void DialogUI::SetStageDialogIndex()
   if (StageIdx >= 7)
   {
     if (_prevBattleResult == eBattleResult::CivilDeadWin)
-      scriptfile.open(rootpath + _csvlist[7]);
-    else
       scriptfile.open(rootpath + _csvlist[6]);
+    else
+      scriptfile.open(rootpath + _csvlist[7]);
   }
   else
     scriptfile.open(rootpath + _csvlist[StageIdx - 1]);

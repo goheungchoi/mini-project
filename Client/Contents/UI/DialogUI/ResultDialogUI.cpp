@@ -2,6 +2,8 @@
 
 #include "Contents/GameObjects/Map/Map.h"
 #include "Contents/Levels/DialogLevel/DialogLevel.h"
+#include "Contents/UI/AudioDramaUI/AudioDramaUI.h"
+#include "Contents/UI/InGameUI/InGameUI.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIAnim//UIAnim.h"
 #include "GameFramework/UI/UIText/UIText.h"
@@ -71,11 +73,32 @@ ResultDialogUI::ResultDialogUI(class World* world) : DialogUI(world)
       _playerSelectBtnText1->SetText(L"이대로 명령한다");
       _playerSelectBtnText2->SetText(L"다시 생각한다");
       _playerSelectButton1->AddOnClickHandler([=]() {
-        static_cast<GameLevel*>(_world->_currentLevel)
-            ->SetBattleResult(_prevBattleResult);
-        static_cast<GameLevel*>(_world->_currentLevel)->SetStageIdx(StageIdx);
-        _world->PrepareChangeLevel("Dialog Level");
-        _world->CommitLevelChange();
+        if (StageIdx == 8)
+        {
+          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
+              8;
+          _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
+          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->Activate();
+          Deactivate();
+        }
+        if (StageIdx == 9)
+          {
+            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
+                9;
+            _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
+            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")
+                ->Activate();
+            Deactivate();
+          }
+
+          else
+          {
+          static_cast<GameLevel*>(_world->_currentLevel)
+              ->SetBattleResult(_prevBattleResult);
+          static_cast<GameLevel*>(_world->_currentLevel)->SetStageIdx(StageIdx);
+          _world->PrepareChangeLevel("Dialog Level");
+          _world->CommitLevelChange();
+        }
       });
       _playerSelectButton2->AddOnClickHandler([=]() {
         HideUI(_playerSelectBtnImage1->GetName());

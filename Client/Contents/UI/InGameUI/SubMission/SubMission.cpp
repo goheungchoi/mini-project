@@ -26,7 +26,45 @@ SubMission::SubMission(World* world, Vector2 pos) : UIPanel(world)
   _failImg->SetLateRender(true);
   _failImg->Deactivate();
 
+    Vector2 textPos = {_pos.x + 140, _pos.y + 57};
+
+  _subMissionTxt = CreateUI<UIText>(L"SubMissionTxt");
+  _subMissionTxt->SetCenterPos({textPos});
+  _subMissionTxt->SetSize(
+      {_subMissionImg->GetSize().x, _subMissionImg->GetSize().y});
+  _subMissionTxt->SetTextAlignment(TextAlignment::LEFTAlIGN);
+  _subMissionTxt->SetFont(L"PT Noeul");
+  _subMissionTxt->SetFontSize(21.0f);
+  _subMissionTxt->SetFontWeight(FontWeight::NORMAL);
+  _subMissionTxt->SetOpacity(1.0f);
+#ifdef _DEBUG
+  _subMissionTxt->SetDebugDraw(false);
+#endif // _DEBUG
+
+  _selectTxt = CreateUI<UIText>(L"SubSelectTxt");
+  _selectTxt->SetCenterPos({textPos.x - 60, textPos.y});
+  _selectTxt->SetSize(
+      {_subMissionImg->GetSize().x, _subMissionImg->GetSize().y});
+  _selectTxt->SetTextAlignment(TextAlignment::LEFTAlIGN);
+  _selectTxt->SetFont(L"PT Noeul");
+  _selectTxt->SetFontSize(21.0f);
+  _selectTxt->SetFontWeight(FontWeight::NORMAL);
+  _selectTxt->SetColor({0.302, 0.024, 0.08, 1});
+  _selectTxt->SetText(L"(선택)");
+  _selectTxt->SetOpacity(1.0f);
+#ifdef _DEBUG
+  _selectTxt->SetDebugDraw(false);
+#endif // _DEBUG
+
+
+
   StageIdx = static_cast<GameLevel*>(_world->GetCurrentLevel())->GetStageIdx();
+  SetOnActivatedEvent([=]() {
+    _subMissionImg->Activate();
+    _failImg->Activate();
+    _subMissionTxt->Activate();
+    _selectTxt->Activate();
+  });
 
 }
 
@@ -108,34 +146,11 @@ void SubMission::Update(float dt)
 
 void SubMission::SetText(std::wstring text)
 {
-  Vector2 textPos = {_pos.x + 140, _pos.y + 57};
-
-  _subMissionTxt = CreateUI<UIText>(L"SubMissionTxt");
-  _subMissionTxt->SetCenterPos({textPos});
-  _subMissionTxt->SetSize(
-      {_subMissionImg->GetSize().x, _subMissionImg->GetSize().y});
-  _subMissionTxt->SetTextAlignment(TextAlignment::LEFTAlIGN);
-  _subMissionTxt->SetFont(L"PT Noeul");
-  _subMissionTxt->SetFontSize(21.0f);
-  _subMissionTxt->SetFontWeight(FontWeight::NORMAL);
   _subMissionTxt->SetText(text.c_str());
-  _subMissionTxt->SetOpacity(1.0f);
-#ifdef _DEBUG
-  _subMissionTxt->SetDebugDraw(false);
-#endif // _DEBUG
+}
 
-  _selectTxt = CreateUI<UIText>(L"SubSelectTxt");
-  _selectTxt->SetCenterPos({textPos.x - 60, textPos.y});
-  _selectTxt->SetSize(
-      {_subMissionImg->GetSize().x, _subMissionImg->GetSize().y});
-  _selectTxt->SetTextAlignment(TextAlignment::LEFTAlIGN);
-  _selectTxt->SetFont(L"PT Noeul");
-  _selectTxt->SetFontSize(21.0f);
-  _selectTxt->SetFontWeight(FontWeight::NORMAL);
-  _selectTxt->SetColor({0.302, 0.024, 0.08, 1});
-  _selectTxt->SetText(L"(선택)");
-  _selectTxt->SetOpacity(1.0f);
-#ifdef _DEBUG
-  _selectTxt->SetDebugDraw(false);
-#endif // _DEBUG
+void SubMission::SetOpacity(float opacity)
+{
+  _selectTxt->SetOpacity(opacity);
+  _subMissionTxt->SetOpacity(opacity);
 }

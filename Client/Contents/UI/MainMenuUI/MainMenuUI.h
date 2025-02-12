@@ -6,11 +6,13 @@ class MainMenuUI : public UIPanel
 public:
   MainMenuUI(class World* world);
   virtual ~MainMenuUI();
-
+  void BeginLevel() override;
+  virtual void Update(float dt) override;
   void SetEndingFlag(int i);
 
 private:
   class UIImage* _backGroundImg{nullptr};
+  class UIImage* _hiddenBackGroundImg{nullptr};
 
   class UIImage* _LogoImage{nullptr};
   class UIImage* _hiddenLogoImage{nullptr};

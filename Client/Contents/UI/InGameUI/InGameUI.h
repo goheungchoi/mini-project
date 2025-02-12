@@ -30,6 +30,7 @@ public:
   float delayElapsedTime{0.f};
 
   bool isActionStarted{false};
+  void SetBGM();
 
 private:
   const Vector2 DefaultPos{-600, 300};

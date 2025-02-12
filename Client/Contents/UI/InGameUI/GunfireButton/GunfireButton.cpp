@@ -69,9 +69,16 @@ GunfireButton::GunfireButton(World* world) : UIPanel(world)
     }
     //_bHover = false;
   });
+  SetOnActivatedEvent([=]() { _gunfireBtn->Activate(); });
 }
 
 GunfireButton::~GunfireButton() {}
+
+void GunfireButton::BeginLevel()
+{
+  UIPanel::BeginLevel();
+
+}
 
 void GunfireButton::Update(float dt)
 {

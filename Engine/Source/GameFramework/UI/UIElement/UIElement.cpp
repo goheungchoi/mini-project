@@ -6,9 +6,15 @@ void UIElement::BeginLevel()
   _status = EStatus_Active;
 }
 
-void UIElement::Update(float dt) {}
+void UIElement::Update(float dt)
+{
+  
+}
 
-void UIElement::Render() {}
+void UIElement::Render()
+{
+  
+}
 
 // pos = center position
 void UIElement::SetDefaultPos(Vector2 pos)
