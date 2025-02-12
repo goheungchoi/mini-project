@@ -22,8 +22,8 @@ extern const wchar_t* Background_Dialog;
 extern const wchar_t* Button_Click;
 extern const wchar_t* Button_Hover;
 
-extern const wchar_t* Button_Start;
-extern const wchar_t* Button_Retry;
+extern const wchar_t* Button_Start;	// DONE
+extern const wchar_t* Button_Retry; // X
 
 // Grid interaction
 extern const wchar_t* Grid_Placement_Click; // DONE
