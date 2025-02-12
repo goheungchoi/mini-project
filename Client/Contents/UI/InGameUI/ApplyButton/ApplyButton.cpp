@@ -27,114 +27,122 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
 
   _applyBtn->AddOnClickHandler([=]() {
     //_bApplyflag = true;
-    _world->_canvas->HidePanel(L"InGameUI");
-
-    if (_map->IsGameFinished())
+    if (!_map->isPlacementModeOn)
     {
-      if (world->GetCurrentLevel()->name == "Level7")
+      _world->_canvas->HidePanel(L"InGameUI");
+
+      if (_map->IsGameFinished())
       {
-        world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")->bIsElizaDead = true;
-           
-        if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::Lose);
-        else if (_map->GetNumDeadAllies() >= 3)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::AllyDeadLose);
-        else if (_map->GetNumDeadCivilians() > 0 &&
-                 _map->GetNumDeadAllies() < 2)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::CivilDeadWin);
-
-        else if (_map->GetNumDeadCivilians() <= 0 &&
-                 _map->GetNumDeadAllies() >= 2)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::AllyDeadWin);
-      }
-      else
-      {
-        if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::Lose);
-
-        else if (_map->GetNumDeadAllies() >= 3)
-          static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::AllyDeadLose);
-
-        else if (_map->GetNumCivilians()>0)
+        if (world->GetCurrentLevel()->name == "Level7")
         {
-          if (_map->GetNumDeadAllies() > 0 && _map->GetNumDeadCivilians() > 0)
-            static_cast<GameLevel*>(world->GetCurrentLevel())
-                ->SetBattleResult(eBattleResult::BothDeadWin);
-          else if (_map->GetNumDeadAllies() <= 0 &&
-                   _map->GetNumDeadCivilians() > 0)
-            static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::CivilDeadWin);
+          world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")
+              ->bIsElizaDead = true;
 
-          else if (_map->GetNumDeadAllies() > 0 &&
-                   _map->GetNumDeadCivilians() <= 0)
+          if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
             static_cast<GameLevel*>(world->GetCurrentLevel())
-                ->SetBattleResult(eBattleResult::AllyDeadWin);
-          else
-            static_cast<GameLevel*>(world->GetCurrentLevel())
-                ->SetBattleResult(eBattleResult::PerfectWin);
-
-        }
-
-        else if (_map->GetNumCivilians()<=0)
-        {
-
-          if (_map->GetNumDeadAllies()>=3)
+                ->SetBattleResult(eBattleResult::Lose);
+          else if (_map->GetNumDeadAllies() >= 3)
             static_cast<GameLevel*>(world->GetCurrentLevel())
                 ->SetBattleResult(eBattleResult::AllyDeadLose);
+          else if (_map->GetNumDeadCivilians() > 0 &&
+                   _map->GetNumDeadAllies() < 2)
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::CivilDeadWin);
 
-          else if (_map->GetNumDeadAllies() > 0)
+          else if (_map->GetNumDeadCivilians() <= 0 &&
+                   _map->GetNumDeadAllies() >= 2)
             static_cast<GameLevel*>(world->GetCurrentLevel())
                 ->SetBattleResult(eBattleResult::AllyDeadWin);
-
-          else
-            static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->SetBattleResult(eBattleResult::PerfectWin);
-        }
-      }
-
-      if (static_cast<GameLevel*>(world->GetCurrentLevel())
-              ->GetBattleResult() != eBattleResult::PerfectWin)
-      {
-        _world->_canvas->ShowPanel(L"ResultDialogUI");
-        
-      }
-      else
-      {
-        if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx()==8)
-        {
-          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx = 8;
-          _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
-          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->Activate();
-        }
-        if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() == 9)
-        {
-          //오디오 드라마 엔딩에서 바로 시작하는거 고치기
-          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
-              9;
-          _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
-          _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->Activate();
         }
         else
         {
-          
-        static_cast<GameLevel*>(_world->_currentLevel)
-            ->SetBattleResult(static_cast<GameLevel*>(_world->_currentLevel)->GetBattleResult());
-        static_cast<GameLevel*>(_world->_currentLevel)
-            ->SetStageIdx(static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx());
-        world->PrepareChangeLevel("Dialog Level");
-        world->CommitLevelChange();
+          if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::Lose);
+
+          else if (_map->GetNumDeadAllies() >= 3)
+            static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->SetBattleResult(eBattleResult::AllyDeadLose);
+
+          else if (_map->GetNumCivilians() > 0)
+          {
+            if (_map->GetNumDeadAllies() > 0 && _map->GetNumDeadCivilians() > 0)
+              static_cast<GameLevel*>(world->GetCurrentLevel())
+                  ->SetBattleResult(eBattleResult::BothDeadWin);
+            else if (_map->GetNumDeadAllies() <= 0 &&
+                     _map->GetNumDeadCivilians() > 0)
+              static_cast<GameLevel*>(world->GetCurrentLevel())
+                  ->SetBattleResult(eBattleResult::CivilDeadWin);
+
+            else if (_map->GetNumDeadAllies() > 0 &&
+                     _map->GetNumDeadCivilians() <= 0)
+              static_cast<GameLevel*>(world->GetCurrentLevel())
+                  ->SetBattleResult(eBattleResult::AllyDeadWin);
+            else
+              static_cast<GameLevel*>(world->GetCurrentLevel())
+                  ->SetBattleResult(eBattleResult::PerfectWin);
+          }
+
+          else if (_map->GetNumCivilians() <= 0)
+          {
+
+            if (_map->GetNumDeadAllies() >= 3)
+              static_cast<GameLevel*>(world->GetCurrentLevel())
+                  ->SetBattleResult(eBattleResult::AllyDeadLose);
+
+            else if (_map->GetNumDeadAllies() > 0)
+              static_cast<GameLevel*>(world->GetCurrentLevel())
+                  ->SetBattleResult(eBattleResult::AllyDeadWin);
+
+            else
+              static_cast<GameLevel*>(world->GetCurrentLevel())
+                  ->SetBattleResult(eBattleResult::PerfectWin);
+          }
+        }
+
+        if (static_cast<GameLevel*>(world->GetCurrentLevel())
+                ->GetBattleResult() != eBattleResult::PerfectWin)
+        {
+          _world->_canvas->ShowPanel(L"ResultDialogUI");
+        }
+        else
+        {
+          if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() ==
+              8)
+          {
+            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
+                8;
+            _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
+            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")
+                ->Activate();
+          }
+          if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() ==
+              9)
+          {
+            // 오디오 드라마 엔딩에서 바로 시작하는거 고치기
+            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
+                9;
+            _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
+            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")
+                ->Activate();
+          }
+          else
+          {
+
+            static_cast<GameLevel*>(_world->_currentLevel)
+                ->SetBattleResult(static_cast<GameLevel*>(_world->_currentLevel)
+                                      ->GetBattleResult());
+            static_cast<GameLevel*>(_world->_currentLevel)
+                ->SetStageIdx(static_cast<GameLevel*>(_world->_currentLevel)
+                                  ->GetStageIdx());
+            world->PrepareChangeLevel("Dialog Level");
+            world->CommitLevelChange();
+          }
         }
       }
-    }
-    
-    _bHoverFlag = false;
 
+      _bHoverFlag = false;
+    }
   });
 
 

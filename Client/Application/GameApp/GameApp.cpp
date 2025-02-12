@@ -20,8 +20,13 @@
 #include "Contents/Levels/Level8/Level8.h"
 #include "Contents/Levels/Level8_2/Level8_2.h"
 #include "Contents/Levels/DialogLevel/DialogLevel.h"
-#include "Contents/Levels/Level10-1/Level10-1.h"
-#include "Contents/Levels/Level10-2/Level10-2.h"
+#include "Contents/Levels/Level10_1/Level10_1.h"
+#include "Contents/Levels/Level10_2/Level10_2.h"
+#include "Contents/Levels/Level10_3/Level10_3.h"
+#include "Contents/Levels/Level10_4/Level10_4.h"
+#include "Contents/Levels/Level10_5/Level10_5.h"
+#include "Contents/Levels/Level10_6/Level10_6.h"
+#include "Contents/Levels/Level10_7/Level10_7.h"
 
 #include "Contents/SoundList/SoundList.h"
 
@@ -38,6 +43,11 @@ static Level8* level8;
 static Level8_2* level8_2;
 static Level10_1* level10_1;
 static Level10_2* level10_2;
+static Level10_3* level10_3;
+static Level10_4* level10_4;
+static Level10_5* level10_5;
+static Level10_6* level10_6;
+static Level10_7* level10_7;
 static DialogLevel* dialogLevel;
 
 
@@ -88,6 +98,16 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   level10_1->BindDialogLevel(dialogLevel);
   level10_2 = new Level10_2("Level10_2");
   level10_2->BindDialogLevel(dialogLevel);
+  level10_3 = new Level10_3("Level10_3");
+  level10_3->BindDialogLevel(dialogLevel);
+  level10_4 = new Level10_4("Level10_4");
+  level10_4->BindDialogLevel(dialogLevel);
+  level10_5 = new Level10_5("Level10_5");
+  level10_5->BindDialogLevel(dialogLevel);
+  level10_6 = new Level10_6("Level10_6");
+  level10_6->BindDialogLevel(dialogLevel);
+  level10_7 = new Level10_7("Level10_7");
+  level10_7->BindDialogLevel(dialogLevel);
   level1->SetStageIdx(1);
   level2->SetStageIdx(2);
   level3->SetStageIdx(3);
@@ -99,6 +119,11 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   level8_2->SetStageIdx(9);
   level10_1->SetStageIdx(10);
   level10_2->SetStageIdx(11);
+  level10_3->SetStageIdx(12);
+  level10_4->SetStageIdx(13);
+  level10_5->SetStageIdx(14);
+  level10_6->SetStageIdx(15);
+  level10_7->SetStageIdx(16);
 
 
   _world->AddLevel(gameLevel);
@@ -115,8 +140,13 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _world->AddLevel(level8_2);
   _world->AddLevel(level10_1);
   _world->AddLevel(level10_2);
+  _world->AddLevel(level10_3);
+  _world->AddLevel(level10_4);
+  _world->AddLevel(level10_5);
+  _world->AddLevel(level10_6);
+  _world->AddLevel(level10_7);
 
-  _world->PrepareChangeLevel(level10_2->name);
+  _world->PrepareChangeLevel(mainMenuLevel->name);
   _world->CommitLevelChange();
 }
 
@@ -141,6 +171,11 @@ void GameApp::Shutdown()
   delete level8_2;
   delete level10_1;
   delete level10_2;
+  delete level10_3;
+  delete level10_4;
+  delete level10_5;
+  delete level10_6;
+  delete level10_7;
   _world->Shutdown();
   delete _world;
   Super::Shutdown();

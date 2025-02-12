@@ -47,7 +47,7 @@ void Level3::CreateMap()
   map->CreateEnemyAt(kGunman, 3, 3, kWest);
   map->CreateEnemyAt(kBrawler, 4, 3, kSouth);
   map->CreateEnemyAt(kGunman, 4, 5, kSouth);
-  map->CreateEnemyAt(kGunman, 5, 1, kEast);
+  map->CreateEnemyAt(kGunman, 5, 1, kWest);
   map->CreateEnemyAt(kBrawler, 5, 5, kWest);
 
   map->CreateCivillianAt(1, 5, kSouth, false);
