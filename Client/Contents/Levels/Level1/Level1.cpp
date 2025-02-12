@@ -11,6 +11,7 @@
 #include "Contents/UI/InGameUI/AgentStorage/AgentStorage.h"
 #include "Contents/UI/InGameUI/MainMission/MainMission.h"
 #include "Contents/UI/InGameUI/SubMission/SubMission.h"
+#include "Contents/UI/TutorialUI/TutorialUI.h"
 
 // TODO: Sound
 
@@ -19,6 +20,21 @@ void Level1::PrepareLevel()
   __super::PrepareLevel();
 
 	mapBarMeshHandle = LoadModel("Models\\Maps\\Map_001_Bar\\Map_001.glb");
+
+    // UI Resource Load
+#ifdef USED2D
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Tuto\\PopupUI_01.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Tuto\\PopupUI_02.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Tuto\\PopupUI_03.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Tuto\\PopupUI_04.png");
+
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Tuto\\PopupButton_default.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Tuto\\PopupButton_hover.png");
+
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Tuto\\PopupButton2_default.png");
+  Resource2DManager::GetInstance()->LoadSprite("2D\\UI\\Tuto\\PopupButton2_hover.png");
+#endif // USED2D
+
 }
 
 void Level1::BeginLevel()
@@ -39,6 +55,9 @@ void Level1::BeginLevel()
 
   _audioDrama = world->_canvas->CreatePanel<AudioDramaUI>(L"AudioDramaUI");
   _audioDrama->SetTotalTime(25.f);
+
+  _tutorialUI = world->_canvas->CreatePanel<TutorialUI>(L"TutorialUI");
+  //_tutorialUI->Deactivate();
   #endif
 }
 

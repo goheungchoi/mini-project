@@ -34,8 +34,8 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
 
   _playBtn = CreateUI<UIButton>(L"PlayBtn");
   _playBtn->SetSize(_playBtnImgs[0]->GetSize());
-  _playBtn->SetDebugDraw(true);
   _playBtn->SetCenterPos(_pos);
+
 #ifdef _DEBUG
   _playBtn->SetDebugDraw(true);
 #endif // _DEBUG
