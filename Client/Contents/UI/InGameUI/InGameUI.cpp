@@ -169,39 +169,7 @@ void InGameUI::Update(float dt)
       if (UIPanel->GetStatus() == EStatus_Active)
       {
         this->Deactivate();
-        _map->StopBackgroundAudio();
       }
     }
   }
-
-  if (_status == EStatus_Active)
-  {
-    SetBGM();
-  }
-}
-
-void InGameUI::SetBGM()
-{
-
-  if (prevLevelIdx == levelIdx)
-  {
-    return;
-  }
-
-  if (levelIdx == 1 || levelIdx == 3 || levelIdx == 10 || levelIdx == 13 ||
-      levelIdx == 15)
-  {
-      _map->PlayBackgroundAudio(kBar);
-  }
-  else if (levelIdx == 2 || levelIdx == 5 || levelIdx == 7 || levelIdx == 8 ||
-              levelIdx == 9 || levelIdx == 12 || levelIdx == 14)
-  {
-      _map->PlayBackgroundAudio(kMuseum);
-  }
-  else if (levelIdx == 4 || levelIdx == 6 || levelIdx == 11 || levelIdx == 16)
-  {
-      _map->PlayBackgroundAudio(kWarehouse);
-  }
-
-  prevLevelIdx++;
 }

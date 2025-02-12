@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "GameFramework/Level/Level.h"
 #include "GameFramework/World/World.h"
@@ -19,7 +19,8 @@ public:
 
 
 protected:
+  class ChallengeModeUI* challengeModeUI;
   virtual void CreateMap();
-
+  
   void TriggerAction();
 };

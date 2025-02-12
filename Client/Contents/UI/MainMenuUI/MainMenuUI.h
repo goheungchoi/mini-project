@@ -31,4 +31,5 @@ private:
 
   Vector2 _btnPos{440, 620};
   float _interval = 146.0f;
+  bool _bHoverBtn = false;
 };
