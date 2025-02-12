@@ -267,6 +267,8 @@
 		<ClInclude Include="Contents\SoundList\SoundList.h" />
 		<ClCompile Include="Contents\UI\AudioDramaUI\AudioDramaUI.cpp" />
 		<ClInclude Include="Contents\UI\AudioDramaUI\AudioDramaUI.h" />
+		<ClCompile Include="Contents\UI\ChallengeModeUI\ChallengeModeUI.cpp" />
+		<ClInclude Include="Contents\UI\ChallengeModeUI\ChallengeModeUI.h" />
 		<ClCompile Include="Contents\UI\DialogUI\DialogUI.cpp" />
 		<ClInclude Include="Contents\UI\DialogUI\DialogUI.h" />
 		<ClCompile Include="Contents\UI\DialogUI\ResultDialogUI.cpp" />
@@ -295,7 +297,6 @@
 		<ClInclude Include="Contents\UI\TransitionUI\TransitionUI.h" />
 		<ClCompile Include="TutorialUI.cpp" />
 		<ClInclude Include="TutorialUI.h" />
-		<None Include="exception_info.txt" />
 		<None Include="fmod_vc.lib" />
 		<None Include="imgui.ini" />
 	</ItemGroup>
