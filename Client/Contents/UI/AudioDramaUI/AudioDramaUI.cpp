@@ -22,6 +22,21 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
   _Background->SetOpacity(1.f);
   _Background->SetCenterPos({960, 540});
 
+  _test.resize(32);
+  for (int i = 0; i <32;i++)
+  {
+  _test[i] = CreateUI<UIText>(L"testtext"+to_wstring(i));
+  _test[i]->SetSize({1920, 500});
+  _test[i]->SetCenterPos({float(1920/32*i), 540});
+  _test[i]->SetDebugDraw(true);
+  _test[i]->SetFont(L"PT Noeul");
+  _test[i]->SetColor(Color(1, 1, 1, 1));
+  _test[i]->SetTextAlignment(TextAlignment::CENTERAlIGN);
+  _test[i]->SetParagraphAlignment(ParagraphAlignment::MIDALIGN);
+  }
+
+
+
   _AudioScript = CreateUI<UIText>(L"AudioScript");
   _AudioScript->SetSize({1920, 500});
   _AudioScript->SetCenterPos({960, 540});
@@ -55,8 +70,8 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
   });
 
   _scripts.resize(5);
-  _scripts[0].push_back({L"1970년 2월 13일 칼트,\n적국 선전 방송 "});
-  _scripts[0].push_back({L"오늘 우리는 알렌의 반란에 대해 이야기하겠습니다.	"});
+  _scripts[0].push_back({L"1970년 2월 13일 칼트,\n적국 선전 방송"});
+  _scripts[0].push_back({L"     오늘 우리는 알렌의 반란에 대해 이야기하겠습니다.	"});
   _scripts[0].push_back({L"뻔한 결과였죠, 반란은 실패로 끝났고, 결국 칼트가 알렌을 지배했습니다."});
   _scripts[0].push_back({L"무의미한 민간인 피해도 상당했어요."});
   _scripts[0].push_back({L"그런데 말입니다, 만약 그 협정이 저지되었다면?"});
@@ -64,9 +79,9 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
   _scripts[0].push_back({L"그들이 외치던 '혁명'이 되었을지도 모르겠군요."});
   _scripts[0].push_back({L"이번에도… 결국 반란으로 기록됐군."});
   _scripts[0].push_back({L"다시 1940년으로 돌아간다."});
-  _scripts[0].push_back({L"이번에는 반드시, 희생 없는 진정한 혁명을 이루겠다.	"});
+  _scripts[0].push_back({L"   이번에는 반드시, 희생 없는 진정한 혁명을 이루겠다.	"});
 
-  _scripts[1].push_back({L" 1970년 2월 13일 칼트,\n 적국 선전 방송"});
+  _scripts[1].push_back({L"1970년 2월 13일 칼트,\n적국 선전 방송"});
   _scripts[1].push_back({L"알렌 레지스탕스의 반란에 대해 이야기하겠습니다."});
   _scripts[1].push_back({L"흠, 반란치곤 꽤 정교하더군요. 끈질기기도 했고."});
   _scripts[1].push_back({L"희생을 최소화하며 목표를 노렸습니다."});
@@ -76,7 +91,7 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
   _scripts[1].push_back({L"뻔한 결과라고?"});
   _scripts[1].push_back({L"내가 뒤집어주지."});
 
-  _scripts[2].push_back({L" 1970년 2월 13일 칼트,\n 적국 선전 방송"});
+  _scripts[2].push_back({L"1970년 2월 13일 칼트,\n적국 선전 방송"});
   _scripts[2].push_back({L"알렌 반란이 가장 위험했던 순간을 돌아보겠습니다.	"});
   _scripts[2].push_back({L"협정 습격 사건, 그때가 저항이 극에 달했었죠."});
   _scripts[2].push_back({L"맞습니다. 그래서 우리도 총력을 다해서 결국 진압했죠.	"});
@@ -86,29 +101,29 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
   _scripts[2].push_back({L"거의 다왔다."});
   _scripts[2].push_back({L"칼트의 시대는 끝난다."});
 
-  _scripts[3].push_back({L" 1970년 2월 13일 칼트,\n 적국 선전 방송"});
-  _scripts[3].push_back({L"오늘은 알렌 혁명을 결정지은 순간을 돌아보겠습니다.	"});
-  _scripts[3].push_back({L"협정 저지 작전, 바로 이때 알렌의 운명이 바뀌었죠.	"});
-  _scripts[3].push_back({L"그 덕에 알렌은 칼트의 지배에서 벗어났습니다.	"});
-  _scripts[3].push_back({L"말 그대로, 기적 같은 혁명이었죠.	"});
-  _scripts[3].push_back({L"그리고 그 중심에 한 사람이 있었습니다.	"});
+  _scripts[3].push_back({L"1970년 2월 13일 칼트,\n적국 선전 방송"});
+  _scripts[3].push_back({L"오늘은 알렌 혁명을 결정지은 순간을 돌아보겠습니다."});
+  _scripts[3].push_back({L"협정 저지 작전, 바로 이때 알렌의 운명이 바뀌었죠."});
+  _scripts[3].push_back({L"그 덕에 알렌은 칼트의 지배에서 벗어났습니다."});
+  _scripts[3].push_back({L"말 그대로, 기적 같은 혁명이었죠."});
+  _scripts[3].push_back({L"그리고 그 중심에 한 사람이 있었습니다."});
   _scripts[3].push_back({L"레지스탕스의 영웅, 엘리자.	"});
-  _scripts[3].push_back({L"대장과 함께 전장을 지휘하며 알렌을 승리로 이끌었고,	"});
-  _scripts[3].push_back({L"반란이라 기록될 역사를 혁명으로 바꿨습니다.	"});
-  _scripts[3].push_back({L"마침내,	"});
-  _scripts[3].push_back({L"해냈다.	"});
+  _scripts[3].push_back({L"대장과 함께 전장을 지휘하며 알렌을 승리로 이끌었고,"});
+  _scripts[3].push_back({L"반란이라 기록될 역사를 혁명으로 바꿨습니다."});
+  _scripts[3].push_back({L"마침내,"});
+  _scripts[3].push_back({L"해냈다."});
 
   _scripts[4].push_back({L" 1970년 2월 13일 칼트,\n 적국 선전 방송"});
-  _scripts[4].push_back({L"오늘은 알렌 혁명을 결정지은 순간을 돌아보겠습니다.	"});
-  _scripts[4].push_back({L"협정 저지 작전, 바로 이때 알렌의 운명이 바뀌었죠.	"});
-  _scripts[4].push_back({L"그 덕에 알렌은 칼트의 지배에서 벗어났습니다.	"});
+  _scripts[4].push_back({L"오늘은 알렌 혁명을 결정지은 순간을 돌아보겠습니다."});
+  _scripts[4].push_back({L"협정 저지 작전, 바로 이때 알렌의 운명이 바뀌었죠."});
+  _scripts[4].push_back({L"그 덕에 알렌은 칼트의 지배에서 벗어났습니다."});
   _scripts[4].push_back({L"무의미한 희생 없이 이루어진, 기적 같은 혁명이었죠.	"});
-  _scripts[4].push_back({L"그리고 그 중심에 그들이 있었습니다.	"});
+  _scripts[4].push_back({L"그리고 그 중심에 그들이 있었습니다."});
   _scripts[4].push_back({L"알렌의 영웅, 레지스탕스.	"});
-  _scripts[4].push_back({L"대장과 함께 전장을 지휘하며 알렌을 승리로 이끌었고,	"});
-  _scripts[4].push_back({L"반란이라 기록될 역사를 혁명으로 바꿨습니다.	"});
-  _scripts[4].push_back({L"마침내,	"});
-  _scripts[4].push_back({L"해냈다.	"});
+  _scripts[4].push_back({L"대장과 함께 전장을 지휘하며 알렌을 승리로 이끌었고,"});
+  _scripts[4].push_back({L"반란이라 기록될 역사를 혁명으로 바꿨습니다."});
+  _scripts[4].push_back({L"마침내,"});
+  _scripts[4].push_back({L"해냈다."});
 
 
   

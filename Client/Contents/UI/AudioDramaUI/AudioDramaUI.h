@@ -15,6 +15,7 @@ public:
 
   class UIImage* _Background{nullptr};
   class UIText* _AudioScript{nullptr};
+  std::vector<class UIText*> _test;
 
   void PrintText(int stageidx, int scriptidx, float dt, float duration);
   void Skip();
