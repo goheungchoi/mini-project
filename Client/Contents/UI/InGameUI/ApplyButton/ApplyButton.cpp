@@ -39,6 +39,22 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
     
     SoundManager::PlaySound(SoundList::Button_Click);
 
+    // Challenge 모드 일 때, 예외처리
+    int curLevelIdx =
+        static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx();
+
+    if (curLevelIdx == 10 || curLevelIdx == 11 || curLevelIdx == 12 ||
+        curLevelIdx == 13 || curLevelIdx == 14 || curLevelIdx == 15 ||
+        curLevelIdx == 16)
+    {
+      world->PrepareChangeLevel("Challenge Level");
+      world->CommitLevelChange();
+
+      _bHoverFlag = false;
+
+      return;
+    }
+
     if (!_map->isPlacementModeOn)
     {
       _world->_canvas->HidePanel(L"InGameUI");
