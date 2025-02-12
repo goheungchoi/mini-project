@@ -45,7 +45,7 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
     //_world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Activate();
     if (isEnding1 || isEnding2)
     {
-      _world->PrepareChangeLevel("Main Menu");
+      _world->PrepareChangeLevel("EndingCredit Level");
       _world->CommitLevelChange();
     }
     else
@@ -142,7 +142,7 @@ void AudioDramaUI::Update(float dt)
       if (isEnding1 || isEnding2)
       {
         GameManager::endingflag = true;
-        _world->PrepareChangeLevel("Main Menu");
+        _world->PrepareChangeLevel("EndingCredit Level");
         _world->CommitLevelChange();
       }
       else
