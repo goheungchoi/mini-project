@@ -163,6 +163,8 @@ void TutorialUI::Update(float dt)
     _closeBtn->Activate();
   }
 
+  
+
   for (auto& [name, UIPanel] : _world->_canvas->panelMap)
   {
     if (name == L"AudioDramaUI")
@@ -187,5 +189,10 @@ void TutorialUI::Update(float dt)
         _nextIMG[0]->SetOpacity(1.0f);
       }
     }
+  }
+
+  if (curTutorialIdx >= 1)
+  {
+    _tutorialIMG[0]->SetOpacity(0.0f);
   }
 }

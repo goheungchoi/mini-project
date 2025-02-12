@@ -102,10 +102,135 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
     _playBtnImgs[0]->SetOpacity(1.f);
     _playBtnImgs[1]->SetOpacity(0.f);
     _playBtnImgs[2]->SetOpacity(0.f);
+    _playBtn->ClearHoverHandler();
+    _playBtn->ClearUnHoverHandler();
+    _playBtn->ClearClickHandler();
+    _playBtn->AddOnHoveredHandler([this]() {
+      if (!_bHoverflag)
+      {
+        SoundManager::PlaySound(SoundList::Button_Hover);
+        _bHoverflag = true;
+      }
+      _playBtnImgs[0]->SetOpacity(0.f);
+      _playBtnImgs[1]->SetOpacity(1.f);
+      _playBtnImgs[2]->SetOpacity(0.f);
+    });
+
+    _playBtn->AddOnUnHoveredHandler([this]() {
+      _bHoverflag = false;
+      _playBtnImgs[0]->SetOpacity(1.f);
+      _playBtnImgs[1]->SetOpacity(0.f);
+      _playBtnImgs[2]->SetOpacity(0.f);
+    });
+
+    _playBtn->AddOnClickHandler([this]() {
+      SoundManager::PlaySound(SoundList::Button_Start);
+      if (!_map->isPlacementModeOn)
+      {
+        _playBtn->Deactivate();
+
+        if (_map)
+        {
+          _bPlayflag = true;
+
+          // gunfireBtn 이 있고 gunfireBtn을 사용했을 때, ElizaAnim 출력
+          _gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                            ->GetUI<GunfireButton>(L"GunfireBtn");
+
+          if (_gunfireBtn && _gunfireBtn->_bGunFireUseFlag == true)
+          {
+            _elizaAnim = _gunfireBtn->GetUI<UIAnim>(L"ElizaAnim");
+            _elizaAnim->SetStatus(EStatus::EStatus_Active);
+          }
+
+          auto* inGameUi = _world->_canvas->GetPanel<InGameUI>(L"InGameUI");
+
+          _map->TriggerAction();
+
+          // AgentStorage 비활성화
+          auto* agentStorage = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                                   ->GetUI<AgentStorage>(L"AgentStorage");
+
+          // GunfireButton 비활성화
+          _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+              ->GetUI<GunfireButton>(L"GunfireBtn")
+              ->_gunfireBtn->Deactivate();
+        }
+      }
+    });
   });
 }
 
 PlayButton::~PlayButton() {}
+
+void PlayButton::BeginLevel()
+{
+  UIPanel::BeginLevel();
+  SetOnActivatedEvent([=]() {
+
+    _playBtnImgs[0]->SetOpacity(1.f);
+    _playBtnImgs[1]->SetOpacity(0.f);
+    _playBtnImgs[2]->SetOpacity(0.f);
+    _playBtn->AddOnHoveredHandler([this]() {
+      if (!_bHoverflag)
+      {
+        SoundManager::PlaySound(SoundList::Button_Hover);
+        _bHoverflag = true;
+      }
+      _playBtnImgs[0]->SetOpacity(0.f);
+      _playBtnImgs[1]->SetOpacity(1.f);
+      _playBtnImgs[2]->SetOpacity(0.f);
+    });
+
+    _playBtn->AddOnUnHoveredHandler([this]() {
+      _bHoverflag = false;
+      _playBtnImgs[0]->SetOpacity(1.f);
+      _playBtnImgs[1]->SetOpacity(0.f);
+      _playBtnImgs[2]->SetOpacity(0.f);
+    });
+
+    _playBtn->AddOnClickHandler([this]() {
+      SoundManager::PlaySound(SoundList::Button_Start);
+      if (!_map->isPlacementModeOn)
+      {
+        _playBtn->Deactivate();
+
+        if (_map)
+        {
+          _bPlayflag = true;
+
+          // gunfireBtn 이 있고 gunfireBtn을 사용했을 때, ElizaAnim 출력
+          _gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                            ->GetUI<GunfireButton>(L"GunfireBtn");
+
+          if (_gunfireBtn && _gunfireBtn->_bGunFireUseFlag == true)
+          {
+            _elizaAnim = _gunfireBtn->GetUI<UIAnim>(L"ElizaAnim");
+            _elizaAnim->SetStatus(EStatus::EStatus_Active);
+          }
+
+          auto* inGameUi = _world->_canvas->GetPanel<InGameUI>(L"InGameUI");
+
+          _map->TriggerAction();
+
+          // AgentStorage 비활성화
+          auto* agentStorage = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                                   ->GetUI<AgentStorage>(L"AgentStorage");
+
+          // GunfireButton 비활성화
+          _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+              ->GetUI<GunfireButton>(L"GunfireBtn")
+              ->_gunfireBtn->Deactivate();
+        }
+      }
+    });
+
+        _playBtn->Activate();
+    _playBtnImgs[0]->Activate();
+    _playBtnImgs[1]->Activate();
+    _playBtnImgs[2]->Activate();
+  });
+}
 
 void PlayButton::Update(float dt)
 {
@@ -113,10 +238,10 @@ void PlayButton::Update(float dt)
 
   if (_bPlayflag == true || _map->isActionTriggered)
   {
-    _playBtn->Deactivate();
     _playBtnImgs[0]->SetOpacity(0.f);
     _playBtnImgs[1]->SetOpacity(0.f);
     _playBtnImgs[2]->SetOpacity(1.f);
+    _playBtn->Deactivate();
   }
 
   // if (_world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")
