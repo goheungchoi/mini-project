@@ -71,7 +71,7 @@ static void RegisterSound(std::span<T, N> sp)
 template <typename T, std::size_t N>
 static void RegisterSound(T(&arr)[N])
 {
-  RegisterSoundArray(std::span{arr});
+  RegisterSound(std::span{arr});
 }
 
 static void RegisterSound(const wchar_t* sound, float isLoop = false)
