@@ -233,6 +233,9 @@ Map::~Map()
 
 void Map::TurnOnPlacementMode(CharacterType type, Direction dir)
 {
+  if (isActionTriggered)
+    return;
+
   if (isPlacementModeOn)
   {
     return;
@@ -1403,6 +1406,8 @@ void Map::Update(float dt)
         // Left click
         else if (INPUT.IsKeyPress(MouseState::LB))
         {
+          HideHoveredCharacterRange();
+
           // Character selection -> Placement mode.
           // Find if any "ally character" is selected.
           if (hoveredCharacter->faction == Faction::kAlly)
