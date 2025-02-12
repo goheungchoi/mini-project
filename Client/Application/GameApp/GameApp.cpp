@@ -27,7 +27,7 @@
 #include "Contents/Levels/Level10_5/Level10_5.h"
 #include "Contents/Levels/Level10_6/Level10_6.h"
 #include "Contents/Levels/Level10_7/Level10_7.h"
-
+#include "Contents/Levels/ChallengeMode/ChallengeMode.h"
 #include "Contents/SoundList/SoundList.h"
 
 static GameLevel* gameLevel;
@@ -49,6 +49,7 @@ static Level10_5* level10_5;
 static Level10_6* level10_6;
 static Level10_7* level10_7;
 static DialogLevel* dialogLevel;
+static ChallengeMode* challengeLevel;
 
 
 // Challenge mode.
@@ -76,6 +77,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   gameLevel = new GameLevel("Game Level");
   mainMenuLevel = new MainMenu("Main Menu");
   dialogLevel = new DialogLevel("Dialog Level");
+  challengeLevel = new ChallengeMode("Dialog Level");
   level1 = new Level1("Level1");
   level1->BindDialogLevel(dialogLevel);
   level2 = new Level2("Level2");

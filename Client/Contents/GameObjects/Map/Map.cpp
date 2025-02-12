@@ -568,25 +568,6 @@ void Map::TriggerAction()
                        civilian->grid_w, civilian->grid_h};
     record.push_back(info);
   }
-
-  // TODO: Execute the assassination target.
-  if (assassinationTarget)
-    assassinationTarget->Die();
-
-  for (Character* enemy : enemies)
-  {
-    enemy->TriggerAction();
-  }
-
-  for (Character* ally : allies)
-  {
-    ally->TriggerAction();
-  }
-
-  for (Character* civilian : civilians)
-  {
-    civilian->TriggerAction();
-  }
 }
 
 void Map::ResetGame()
@@ -626,6 +607,13 @@ void Map::ResetGame()
   bRangeHided = true;
   isAssassinationMode = false;
   assassinationTarget = nullptr;
+
+  bRotateBack = false;
+  bRotating = false;
+  rotationElapsedTime = 0.f;
+  mapRot = 0.f;
+
+  bStartAction = false;
 
   // Restore the record.
   for (auto& info : record)
@@ -1031,6 +1019,10 @@ void Map::DeleteCharacterFromMap(Character* character)
 }
 
 void Map::PlayBackgroundAudio(BackgroundAudio audio) {
+  // Stop the currently playing audio.
+  StopBackgroundAudio();
+
+  // Play the new audio.
   switch (audio)
   {
   case kBar:
@@ -1045,25 +1037,21 @@ void Map::PlayBackgroundAudio(BackgroundAudio audio) {
     SoundManager::PlaySound(SoundList::Background_Storage_Ambient);
     SoundManager::PlaySound(SoundList::Background_Storage);
     break;
+  case kDialogue:
+    SoundManager::PlaySound(SoundList::Background_Dialog);
+    break;
   }
 }
 
-void Map::StopBackgroundAudio(BackgroundAudio audio) {
-  switch (audio)
-  {
-  case kBar:
-    SoundManager::StopSound(SoundList::Background_Pub_Ambient);
-    SoundManager::StopSound(SoundList::Background_Pub);
-    break;
-  case kMuseum:
-    SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
-    SoundManager::StopSound(SoundList::Background_ConferenceHall);
-    break;
-  case kWarehouse:
-    SoundManager::StopSound(SoundList::Background_Storage_Ambient);
-    SoundManager::StopSound(SoundList::Background_Storage);
-    break;
-  }
+void Map::StopBackgroundAudio() {
+  // Stop all playing audio.
+  SoundManager::StopSound(SoundList::Background_Pub_Ambient);
+  SoundManager::StopSound(SoundList::Background_Pub);
+  SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
+  SoundManager::StopSound(SoundList::Background_ConferenceHall);
+  SoundManager::StopSound(SoundList::Background_Storage_Ambient);
+  SoundManager::StopSound(SoundList::Background_Storage);
+  SoundManager::StopSound(SoundList::Background_Dialog);
 }
 
 void Map::OnAwake()
@@ -1097,20 +1085,23 @@ void Map::Update(float dt)
   {
     DetectPlacementAtIndicator();
   }
-  
-  // Rotate this map.
-  if (INPUT.IsKeyPress(Key::Q) || INPUT.IsKeyDown(Key::Q))
+  if (!isActionTriggered)
   {
-    mapRot -= dt;
+    // Rotate this map.
+    if (INPUT.IsKeyPress(Key::Q) || INPUT.IsKeyDown(Key::Q))
+    {
+      mapRot -= dt;
+    }
+    if (INPUT.IsKeyPress(Key::E) || INPUT.IsKeyDown(Key::E))
+    {
+      mapRot += dt;
+    }
+
+    float oneDegree = XM_PIDIV2 / 90.f;
+    float maxAngle = oneDegree * 27.2;
+    mapRot = std::clamp(mapRot, -maxAngle, maxAngle);
+    parent->SetRotationAroundYAxis(mapRot);
   }
-  if (INPUT.IsKeyPress(Key::E) || INPUT.IsKeyDown(Key::E))
-  {
-    mapRot += dt;
-  }
-  float oneDegree = XM_PIDIV2 / 90.f;
-  float maxAngle = oneDegree * 27.2;
-  mapRot = std::clamp(mapRot, -maxAngle, maxAngle);
-  parent->SetRotationAroundYAxis(mapRot);
 
   // Rotate light direction
   XMMATRIX rotationMat = XMMatrixRotationY(mapRot);
@@ -1120,25 +1111,99 @@ void Map::Update(float dt)
   float newZ = XMVectorGetZ(rotatedPoint);
   XMVECTOR newLightPoint = {newX, newY, newZ};
   _mainLight.direction = newLightPoint;
+
   // Action mode
   if (isActionTriggered)
   {
     grid->TurnOffSelectionMode();
     grid->TurnOffGridHover();
 
-    // TODO: Remove a simulating character.
-    if (IsGameFinished())
+    // Rotate the map back to 0 degree.
+    if (!bRotateBack)
     {
-      for (Character* enemy : enemies)
+      // Accumulate the elapsed time for lerping.
+      rotationElapsedTime += dt;
+
+      // Current map rotation angle.
+      float mapAngle = std::acosf(XMVectorGetW(parent->transform->quaterion)) * 2.f;
+      float sign;
+      XMVECTOR up =
+          XMVector3Cross(parent->transform->GetGlobalFront(), MathUtil::kFront);
+
+      if (XMVectorGetY(up) >= 0.f)
       {
-        if (!enemy->isDead)
-          enemy->ShowOutline();
+        sign = -1.f;
+      }
+      else
+      {
+        sign = 1.f;
+      }
+
+      mapAngle *= sign;
+
+      // Remember the last map rotation angle.
+      if (!bRotating)
+      {
+        lastMapAngle = mapAngle;
+        bRotating = true;
+      }
+
+      // If mapAngle is close to 0. Stop rotation.
+      if (-MathUtil::kEpsilon_f <= mapAngle && mapAngle <= MathUtil::kEpsilon_f)
+      {
+        bRotateBack = true;
+        bStartAction = true;
+      }
+      // Keep lerping the angle.
+      else
+      {
+        float linearlizedTime = rotationElapsedTime / rotationTime;
+        linearlizedTime = std::clamp(linearlizedTime, 0.f, 1.f);
+        float t = MathUtil::bezier::ease_in_out.operator()(linearlizedTime);
+        float angle = std::lerp(lastMapAngle, 0.0, t);
+        parent->SetRotationAroundYAxis(angle);
       }
     }
-
-    if (INPUT.IsKeyPress(Key::R))
+    else
     {
-      ResetGame();
+      if (bStartAction)
+      {
+        // TODO: Execute the assassination target.
+        if (assassinationTarget)
+          assassinationTarget->Die();
+
+        for (Character* enemy : enemies)
+        {
+          enemy->TriggerAction();
+        }
+
+        for (Character* ally : allies)
+        {
+          ally->TriggerAction();
+        }
+
+        for (Character* civilian : civilians)
+        {
+          civilian->TriggerAction();
+        }
+
+        bStartAction = false;
+      }
+
+      // TODO: Remove a simulating character.
+      if (IsGameFinished())
+      {
+        for (Character* enemy : enemies)
+        {
+          if (!enemy->isDead)
+            enemy->ShowOutline();
+        }
+      }
+
+      if (INPUT.IsKeyPress(Key::R))
+      {
+        ResetGame();
+      }
     }
   }
   // Placement mode

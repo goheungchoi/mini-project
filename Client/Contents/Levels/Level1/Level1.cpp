@@ -57,7 +57,6 @@ void Level1::CreateMap()
   pivot = world->CreateGameObject();
 
   map = world->CreateGameObjectFromModel<Map>(mapBarMeshHandle);
-  map->PlayBackgroundAudio(kBar);
  
   pivot->AddChildGameObject(map);
   map->Translate(-4, 0, -4);
