@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 
 class ChallengeModeUI : public UIPanel
@@ -9,5 +9,5 @@ public:
 
 private:
   class UIImage* _backGroundImg{nullptr};
-
+  class UICursor* _cursor{nullptr};
 };

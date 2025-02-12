@@ -1,4 +1,4 @@
-#include "Contents/GameObjects/GameManager/GameManager.h"
+﻿#include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Contents/GameObjects/Map/Map.h"
 #include "ChallengeMode.h"
 #include "Resource2DManager/Resource2DManager.h"
@@ -12,7 +12,7 @@ void ChallengeMode::PrepareLevel()
 {
 #ifdef USED2D
   Resource2DManager::GetInstance()->LoadSprite(
-      "2D\\UI\\Title\\Challenge_BackGround.png");
+      "2D\\UI\\Title\\Title_Background2.png");
 #endif // USED2D
 }
 

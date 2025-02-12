@@ -77,7 +77,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   gameLevel = new GameLevel("Game Level");
   mainMenuLevel = new MainMenu("Main Menu");
   dialogLevel = new DialogLevel("Dialog Level");
-  challengeLevel = new ChallengeMode("Dialog Level");
+  challengeLevel = new ChallengeMode("Challenge Level");
   level1 = new Level1("Level1");
   level1->BindDialogLevel(dialogLevel);
   level2 = new Level2("Level2");
@@ -140,6 +140,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _world->AddLevel(level7);
   _world->AddLevel(level8);
   _world->AddLevel(level8_2);
+  _world->AddLevel(challengeLevel);
   _world->AddLevel(level10_1);
   _world->AddLevel(level10_2);
   _world->AddLevel(level10_3);
@@ -148,7 +149,7 @@ void GameApp::Initialize(UINT screenWidth, UINT screenHeight,
   _world->AddLevel(level10_6);
   _world->AddLevel(level10_7);
 
-  _world->PrepareChangeLevel(level1->name);
+  _world->PrepareChangeLevel(challengeLevel->name);
   _world->CommitLevelChange();
 }
 

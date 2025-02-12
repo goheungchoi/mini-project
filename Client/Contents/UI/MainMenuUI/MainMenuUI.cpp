@@ -114,7 +114,7 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   _challengeBtn->AddOnClickHandler([this]() {
       
     SoundManager::StopSound(SoundList::Background_Title);
-    _world->PrepareChangeLevel("Level10_1");
+    _world->PrepareChangeLevel("Challenge Level");
     _world->CommitLevelChange();
   });
 
