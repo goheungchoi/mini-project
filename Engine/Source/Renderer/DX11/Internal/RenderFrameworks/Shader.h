@@ -3,6 +3,9 @@
 #include "../Device.h"
 #include "Core/Common.h"
 #include "Shared/Config/Config.h"
+
+#include <fstream>
+
 struct VertexShader
 {
   ComPtr<ID3D11VertexShader> shader;
@@ -42,14 +45,34 @@ public:
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
     std::wstring filename = L"/DX11Shader.hlsl";
-    std::wstring shaderPath =
-        Utility::convertToUTF16(ns::kShaderDir) + filename;
-    HR_T(D3DCompileFromFile(shaderPath.c_str(), macros.data(),
-                            D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint,
-                            "vs_5_0", shaderFlags, 0, &shaderBlob, &errorBlob));
-    HR_T(_device->GetDevice()->CreateVertexShader(
-        shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
-        pShader->shader.GetAddressOf()));
+    std::wstring shaderPath = L"../Library/Shader/DX11Shader.hlsl";
+
+    try
+    {
+      HR_T(D3DCompileFromFile(
+          shaderPath.c_str(), macros.data(), D3D_COMPILE_STANDARD_FILE_INCLUDE,
+          entryPoint, "vs_5_0", shaderFlags, 0, &shaderBlob, &errorBlob));
+      
+    }
+    catch (const std::exception& e)
+    {
+      std::ofstream o("exception_info.txt");
+      o << e.what() << std::endl;
+      exit(-1);
+    }
+    
+    try
+    {
+      HR_T(_device->GetDevice()->CreateVertexShader(
+          shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
+          pShader->shader.GetAddressOf()));
+    }
+    catch (const std::exception& e)
+    {
+      std::ofstream o("exception_info.txt");
+      o << e.what() << std::endl;
+      exit(-1);
+    }
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
 
     CreateInputLayoutDesc(
@@ -69,6 +92,8 @@ public:
     shaderBlob->Release();
     return pShader;
   }
+
+
   PixelShader* CompilePixelShader(const std::vector<D3D_SHADER_MACRO>& macros,
                                   LPCSTR entryPoint)
   {
@@ -85,8 +110,8 @@ public:
     shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
     std::wstring filename = L"/DX11Shader.hlsl";
-    std::wstring shaderPath =
-        Utility::convertToUTF16(ns::kShaderDir) + filename;
+    std::wstring shaderPath = L"../Library/Shader/DX11Shader.hlsl";
+        //Utility::convertToUTF16(ns::kShaderDir) + filename;
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
     HR_T(D3DCompileFromFile(shaderPath.c_str(), macros.data(),

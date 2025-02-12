@@ -8,6 +8,9 @@
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
 
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
+
 ApplyButton::ApplyButton(World* world) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
@@ -33,7 +36,9 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
 #endif // _DEBUG
 
   _applyBtn->AddOnClickHandler([=]() {
-    //_bApplyflag = true;
+    
+    SoundManager::PlaySound(SoundList::Button_Click);
+
     if (!_map->isPlacementModeOn)
     {
       _world->_canvas->HidePanel(L"InGameUI");
@@ -207,7 +212,13 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
   });
 
 
-  _applyBtn->AddOnHoveredHandler([this]() { _bHoverFlag = true; });
+  _applyBtn->AddOnHoveredHandler([this]() {
+    if (!_bHoverFlag)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverFlag = true;
+    }
+  });
 
   _applyBtn->AddOnUnHoveredHandler([this]() { _bHoverFlag = false; });
 

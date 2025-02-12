@@ -31,6 +31,7 @@ public:
 
   Vector2 GetTextureSize();
 
+  bool _transitionFlag = false;
 
 protected:
   class Sprite* _sprite{};
@@ -40,7 +41,6 @@ protected:
   float _transitionOpacity = 0.f;
   float _transitionStartOpacity = 0.f;
   float _transitionEndOpacity = 0.f;
-  bool _transitionFlag = false;
 
   bool _maskFlag = false;
   Vector2 _scale = {1.0f, 1.0f};

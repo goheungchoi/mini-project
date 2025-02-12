@@ -299,6 +299,9 @@ void Character::DisableHover() {
 
 void Character::OnHover()
 {
+  if (map->pause)
+    return;
+
   if (bHoverDisabled)
     return;
 
@@ -325,6 +328,9 @@ void Character::OnHover()
 
 void Character::OnBeginOverlap(GameObject* other) {
   GameObject::OnBeginOverlap(other);
+
+  if (map->pause)
+    return;
 
 	// Prevent invalid memory access.
 	/*if (((uint64_t)other & 0xf000000000000000) != 0)
@@ -391,6 +397,9 @@ void Character::OnAwake()
 
 void Character::Update(float dt)
 {
+  if (map->pause)
+    return;
+
   if (auto* rbComp = GetComponent<RigidbodyComponent>(); rbComp)
   {
     rbComp->debugColor = Color(1, 0, 1, 1);
@@ -524,6 +533,8 @@ void Character::Update(float dt)
 }
 
 void Character::PostUpdate(float dt) {
+  if (map->pause)
+    return;
 
   if (isActionTriggered)
   {

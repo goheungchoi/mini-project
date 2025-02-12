@@ -10,6 +10,9 @@
 #include "Contents/UI/InGameUI/InGameUI.h"
 #include "GameFramework/UI/UIAnim//UIAnim.h"
 
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
+
 PlayButton::PlayButton(World* world) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
@@ -31,25 +34,32 @@ PlayButton::PlayButton(World* world) : UIPanel(world)
 
   _playBtn = CreateUI<UIButton>(L"PlayBtn");
   _playBtn->SetSize(_playBtnImgs[0]->GetSize());
-  _playBtn->SetDebugDraw(true);
   _playBtn->SetCenterPos(_pos);
+
 #ifdef _DEBUG
   _playBtn->SetDebugDraw(true);
 #endif // _DEBUG
 
   _playBtn->AddOnHoveredHandler([this]() {
+    if (!_bHoverflag)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHoverflag = true;
+    }
     _playBtnImgs[0]->SetOpacity(0.f);
     _playBtnImgs[1]->SetOpacity(1.f);
     _playBtnImgs[2]->SetOpacity(0.f);
   });
 
   _playBtn->AddOnUnHoveredHandler([this]() {
+    _bHoverflag = false;
     _playBtnImgs[0]->SetOpacity(1.f);
     _playBtnImgs[1]->SetOpacity(0.f);
     _playBtnImgs[2]->SetOpacity(0.f);
   });
 
   _playBtn->AddOnClickHandler([this]() {
+    SoundManager::PlaySound(SoundList::Button_Start);
     if (!_map->isPlacementModeOn)
     {
       _playBtn->Deactivate();

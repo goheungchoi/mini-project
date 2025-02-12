@@ -9,6 +9,9 @@
 #include "Contents/Levels/GameLevel.h"
 #include "Contents/UI/DialogUI/ResultDialogUI.h"
 
+#include "Contents/SoundList/SoundList.h"
+#include "SoundSystem/SoundManager.h"
+
 GunfireButton::GunfireButton(World* world) : UIPanel(world)
 {
   _map = _world->FindGameObjectByType<Map>();
@@ -46,11 +49,19 @@ GunfireButton::GunfireButton(World* world) : UIPanel(world)
   _gunfireBtn->SetDebugDraw(true);
 #endif
 
-  _gunfireBtn->AddOnHoveredHandler([this]() { _bHover = true; });
+  _gunfireBtn->AddOnHoveredHandler([this]() {
+    if (!_bHover)
+    {
+      SoundManager::PlaySound(SoundList::Button_Hover);
+      _bHover = true;
+    }
+  });
 
   _gunfireBtn->AddOnUnHoveredHandler([this]() { _bHover = false; });
 
   _gunfireBtn->AddOnClickHandler([this]() {
+    SoundManager::PlaySound(SoundList::Button_Click);
+
     if (!_bGunFireUseFlag)
     {
       _bGunFireUseFlag = true;
@@ -66,15 +77,19 @@ void GunfireButton::Update(float dt)
 {
   __super::Update(dt);
 
-
-
   _cursor = _world->_canvas->GetPanel<UICursor>(L"Cursor");
 
   // 커서 상태 업데이트
   if (_cursor)
   {
-    _cursor->SetCursorType(_map->isAssassinationMode ? CursorType::SKILL
-                                                     : CursorType::DEFAULT);
+    if (_map->isAssassinationMode)
+    {
+      _cursor->SetCursorType(CursorType::SKILL);
+    }
+    else
+    {
+      _cursor->SetCursorType(CursorType::DEFAULT);
+    }
   }
 
   UpdateButtonState();
@@ -98,8 +113,13 @@ void GunfireButton::Update(float dt)
 // 상태 관리 헬퍼 함수
 void GunfireButton::UpdateButtonState()
 {
-  const bool activeCondition = _map->isAssassinationMode || _bGunFireUseFlag ||
-                               _map->assassinationTarget;
+  static bool activeCondition{false};
+
+  if (!_map->isActionTriggered)
+  {
+    activeCondition = _map->isAssassinationMode || _bGunFireUseFlag ||
+                      _map->assassinationTarget;
+  }
 
   if (activeCondition)
   {

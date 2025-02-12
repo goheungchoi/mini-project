@@ -25,6 +25,7 @@ public:
 	virtual void CleanupLevel() override;
 
   class AudioDramaUI* _audioDrama;
+  class TutorialUI* _tutorialUI;
 
 protected:
   virtual void CreateMap();

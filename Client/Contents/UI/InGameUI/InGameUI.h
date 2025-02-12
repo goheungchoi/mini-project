@@ -8,7 +8,6 @@ public:
   virtual ~InGameUI();
 
   void Update(float dt) override;
-  void SetBGM();
 
 public:
   class UIImage* _gradientIMG{nullptr};
@@ -27,12 +26,16 @@ public:
   Vector2 animPos{-600, 300};
   const Vector2 GoalPos{70, 300};
 
+  const float delayTime{1.f};
+  float delayElapsedTime{0.f};
+
+  bool isActionStarted{false};
+
 private:
   const Vector2 DefaultPos{-600, 300};
-  const float animSpeed = 1000.0f;
+  const float animSpeed = 5000.0f;
   float elapsedTime = 0.0f;
-  const float stopTime = 1.0f;
+  const float stopTime = 2.0f;
 
   int levelIdx = 0;
-  int prevLevelIdx = 0;
 };
