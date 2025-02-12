@@ -96,6 +96,15 @@ public:
   Character* characterIndicator{nullptr};
   GameObject* tempInactiveIndicator{nullptr};
 
+  // Rotate the map back
+  bool bRotateBack{false};
+  bool bRotating{false};
+  const float rotationTime{1.f};
+  float rotationElapsedTime{0.f};
+  float lastMapAngle{0.f};
+
+  bool bStartAction{false};
+
 public:
   Map(World* world);
   ~Map();
