@@ -15,14 +15,14 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
   _retryBtnImgs[0] = CreateUI<UIImage>(L"RetryBtnImg_Act");
   _retryBtnImgs[1] = CreateUI<UIImage>(L"RetryBtnImg_Hover");
 
-  _retryBtnImgs[0]->SetSprite("2D\\UI\\UI_Retry_Act.png", {1600, 100});
-  _retryBtnImgs[1]->SetSprite("2D\\UI\\UI_Retry_Hover.png", {1600, 100});
+  _retryBtnImgs[0]->SetSprite("2D\\UI\\UI_Retry_Act.png", {1580, 140});
+  _retryBtnImgs[1]->SetSprite("2D\\UI\\UI_Retry_Hover.png", {1580, 140});
   _retryBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
 
   // Button
   _retryBtn = CreateUI<UIButton>(L"RetryBtn");
   _retryBtn->SetSize(_retryBtnImgs[0]->GetSize());
-  _retryBtn->SetCenterPos({1600, 100});
+  _retryBtn->SetCenterPos({1580, 140});
 #ifdef _DEBUG
   _retryBtn->SetDebugDraw(true);
 #endif // _DEBUG

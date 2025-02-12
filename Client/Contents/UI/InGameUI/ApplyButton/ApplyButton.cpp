@@ -14,13 +14,13 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
   _applyBtnImgs[0] = CreateUI<UIImage>(L"ApplyBtnImg_Act");
   _applyBtnImgs[1] = CreateUI<UIImage>(L"ApplyBtnImg_Hover");
 
-  _applyBtnImgs[0]->SetSprite("2D\\UI\\UI_Confirm_Act.png", {1800, 100});
-  _applyBtnImgs[1]->SetSprite("2D\\UI\\UI_Confirm_Hover.png", {1800, 100});
+  _applyBtnImgs[0]->SetSprite("2D\\UI\\UI_Confirm_Act.png", {1780, 140});
+  _applyBtnImgs[1]->SetSprite("2D\\UI\\UI_Confirm_Hover.png", {1780, 140});
   _applyBtnImgs[1]->SetStatus(EStatus::EStatus_Inactive);
 
   _applyBtn = CreateUI<UIButton>(L"ApplyBtn");
   _applyBtn->SetSize(_applyBtnImgs[0]->GetSize());
-  _applyBtn->SetCenterPos({1800, 100});
+  _applyBtn->SetCenterPos({1780, 140});
 #ifdef _DEBUG
   _applyBtn->SetDebugDraw(true);
 #endif // _DEBUG

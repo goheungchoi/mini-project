@@ -37,8 +37,8 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _cursor->SetCursorType(CursorType::DEFAULT);
 
   _gradientIMG = CreateUI<UIImage>(L"GradientIMG");
-  _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1475, 910});
-  _gradientIMG->SetScale({1.0f, 1.0f});
+  _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1800, 980});
+  _gradientIMG->SetScale({0.7f, 0.7f});
   SetOnActivatedEvent([=]() { _playBtn->Activate(); });
 }
 
@@ -136,7 +136,8 @@ void InGameUI::Update(float dt)
   }
 
   // Lv.5, Lv.7, Lv.8_2(9) 제외 GunfireBtn 비활성화
-  if (levelIdx == 5 || levelIdx == 6 || levelIdx == 9)
+  if (levelIdx == 5 || levelIdx == 6 || levelIdx == 9 || levelIdx == 12 ||
+      levelIdx == 13 || levelIdx == 14 || levelIdx == 15 || levelIdx == 16)
   {
     return;
   }

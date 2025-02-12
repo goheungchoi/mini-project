@@ -20,7 +20,7 @@ void Level10_1::BeginLevel()
   inGameUI->HideUI(L"SubMission");
   inGameUI->HideUI(L"SubMission_2");
   map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
-  inGameUI->_mainMission->SetText(L"모든 적 처치");
+  inGameUI->_mainMission->SetText(L"도전 모드 1");
 #endif
 }
 

@@ -99,41 +99,59 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       });
     }
   }
-
+  BrawlerDefaultImage->SetScale({0.8f, 0.8f});
+  BrawlerHoveredImage->SetScale({0.8f, 0.8f});
+  BrawlerInactiveImage->SetScale({0.8f, 0.8f});
+  BrawlerButton->SetSize(BrawlerInactiveImage->GetTextureSize() * 0.75f);
+  SlasherDefaultImage->SetScale({0.8f, 0.8f});
+  SlasherHoveredImage->SetScale({0.8f, 0.8f});
+  SlasherInactiveImage->SetScale({0.8f, 0.8f});
+  SlasherButton->SetSize(SlasherInactiveImage->GetTextureSize() * 0.75f);
+  Gunman1DefaultImage->SetScale({0.8f, 0.8f});
+  Gunman1HoveredImage->SetScale({0.8f, 0.8f});
+  Gunman1InactiveImage->SetScale({0.8f, 0.8f});
+  Gunman1Button->SetSize(Gunman1DefaultImage->GetTextureSize() * 0.75f);
+  if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3)
+  {
+    Gunman2DefaultImage->SetScale({0.8f, 0.8f});
+    Gunman2HoveredImage->SetScale({0.8f, 0.8f});
+    Gunman2InactiveImage->SetScale({0.8f, 0.8f});
+    Gunman2Button->SetSize(Gunman1DefaultImage->GetTextureSize() * 0.75f);
+  }
   if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() > 3) //4Έν
   {
 
-    BrawlerDefaultImage->SetCenterPos({1250, 925});
-    BrawlerHoveredImage->SetCenterPos({1250, 925});
-    BrawlerInactiveImage->SetCenterPos({1250, 925});
-    BrawlerButton->SetCenterPos({1250, 925});
-    SlasherDefaultImage->SetCenterPos({1430, 925});
-    SlasherHoveredImage->SetCenterPos({1430, 925});
-    SlasherInactiveImage->SetCenterPos({1430, 925});
-    SlasherButton->SetCenterPos({1430, 925});
-    Gunman1DefaultImage->SetCenterPos({1610, 925});
-    Gunman1HoveredImage->SetCenterPos({1610, 925});
-    Gunman1InactiveImage->SetCenterPos({1610, 925});
-    Gunman1Button->SetCenterPos({1610, 925});
-    Gunman2DefaultImage->SetCenterPos({1790, 925});
-    Gunman2HoveredImage->SetCenterPos({1790, 925});
-    Gunman2InactiveImage->SetCenterPos({1790, 925});
-    Gunman2Button->SetCenterPos({1790, 925});
+    BrawlerDefaultImage->SetCenterPos({1350, 940});
+    BrawlerHoveredImage->SetCenterPos({1350, 940});
+    BrawlerInactiveImage->SetCenterPos({1350, 940});
+    BrawlerButton->SetCenterPos({1350, 940});
+    SlasherDefaultImage->SetCenterPos({1500, 940});
+    SlasherHoveredImage->SetCenterPos({1500, 940});
+    SlasherInactiveImage->SetCenterPos({1500, 940});
+    SlasherButton->SetCenterPos({1500, 940});
+    Gunman1DefaultImage->SetCenterPos({1650, 940});
+    Gunman1HoveredImage->SetCenterPos({1650, 940});
+    Gunman1InactiveImage->SetCenterPos({1650, 940});
+    Gunman1Button->SetCenterPos({1650, 940});
+    Gunman2DefaultImage->SetCenterPos({1800, 940});
+    Gunman2HoveredImage->SetCenterPos({1800, 940});
+    Gunman2InactiveImage->SetCenterPos({1800, 940});
+    Gunman2Button->SetCenterPos({1800, 940});
   }
   else
   {
-    BrawlerDefaultImage->SetCenterPos({1430, 925});
-    BrawlerHoveredImage->SetCenterPos({1430, 925});
-    BrawlerInactiveImage->SetCenterPos({1430, 925});
-    BrawlerButton->SetCenterPos({1430, 925});
-    SlasherDefaultImage->SetCenterPos({1610, 925});
-    SlasherHoveredImage->SetCenterPos({1610, 925});
-    SlasherInactiveImage->SetCenterPos({1610, 925});
-    SlasherButton->SetCenterPos({1610, 925});
-    Gunman1DefaultImage->SetCenterPos({1790, 925});
-    Gunman1HoveredImage->SetCenterPos({1790, 925});
-    Gunman1InactiveImage->SetCenterPos({1790, 925});
-    Gunman1Button->SetCenterPos({1790, 925});
+    BrawlerDefaultImage->SetCenterPos({1500, 940});
+    BrawlerHoveredImage->SetCenterPos({1500, 940});
+    BrawlerInactiveImage->SetCenterPos({1500, 940});
+    BrawlerButton->SetCenterPos({1500, 940});
+    SlasherDefaultImage->SetCenterPos({1650, 940});
+    SlasherHoveredImage->SetCenterPos({1650, 940});
+    SlasherInactiveImage->SetCenterPos({1650, 940});
+    SlasherButton->SetCenterPos({1650, 940});
+    Gunman1DefaultImage->SetCenterPos({1800, 940});
+    Gunman1HoveredImage->SetCenterPos({1800, 940});
+    Gunman1InactiveImage->SetCenterPos({1800, 940});
+    Gunman1Button->SetCenterPos({1800, 940});
   }
   SetOnActivatedEvent([=]() {
 

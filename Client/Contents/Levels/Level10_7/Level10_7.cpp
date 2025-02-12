@@ -16,11 +16,10 @@ void Level10_7::BeginLevel()
 {
   __super::BeginLevel();
 #ifdef USED2D
-  inGameUI->HideUI(L"GunfireBtn");
   inGameUI->HideUI(L"SubMission");
   inGameUI->HideUI(L"SubMission_2");
   map->OnDeleteCharacter = [=]() { inGameUI->_agentStorage->ResetAgent(); };
-  inGameUI->_mainMission->SetText(L"모든 적 처치");
+  inGameUI->_mainMission->SetText(L"도전 모드 7");
 #endif
 }
 
