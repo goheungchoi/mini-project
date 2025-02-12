@@ -3,6 +3,9 @@
 #include "../Device.h"
 #include "Core/Common.h"
 #include "Shared/Config/Config.h"
+
+#include <fstream>
+
 struct VertexShader
 {
   ComPtr<ID3D11VertexShader> shader;
@@ -44,12 +47,34 @@ public:
     std::wstring filename = L"/DX11Shader.hlsl";
     std::wstring shaderPath =
         Utility::convertToUTF16(ns::kShaderDir) + filename;
-    HR_T(D3DCompileFromFile(shaderPath.c_str(), macros.data(),
-                            D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint,
-                            "vs_5_0", shaderFlags, 0, &shaderBlob, &errorBlob));
-    HR_T(_device->GetDevice()->CreateVertexShader(
-        shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
-        pShader->shader.GetAddressOf()));
+
+    try
+    {
+      HR_T(D3DCompileFromFile(
+          shaderPath.c_str(), macros.data(), D3D_COMPILE_STANDARD_FILE_INCLUDE,
+          entryPoint, "vs_5_0", shaderFlags, 0, &shaderBlob, &errorBlob));
+      
+    }
+    catch (const std::exception& e)
+    {
+      std::ofstream o("exception_info.txt");
+      o << e.what() << std::endl;
+      exit(-1);
+    }
+    
+    try
+    {
+      HR_T(_device->GetDevice()->CreateVertexShader(
+          shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
+          pShader->shader.GetAddressOf()));
+    }
+    catch (const std::exception& e)
+    {
+      std::ofstream o("exception_info.txt");
+      o << e.what() << std::endl;
+      exit(-1);
+    }
+
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
 
     CreateInputLayoutDesc(
