@@ -1,5 +1,6 @@
 #include "RetryButton.h"
 #include "Contents/GameObjects/Map/Map.h"
+#include "Contents/Levels/GameLevel.h"
 #include "GameFramework/UI/Canvas/Canvas.h"
 #include "GameFramework/UI/UIButton/UIButton.h"
 #include "GameFramework/UI/UIImage/UIImage.h"
@@ -32,30 +33,39 @@ RetryButton::RetryButton(World* world) : UIPanel(world)
 
   _retryBtn->AddOnClickHandler([this]() {
     SoundManager::PlaySound(SoundList::Button_Click);
-    //_world->_canvas->GetPanel<InGameUI>(L"InGameUI")->once = true;
+    int levelIdx =
+        static_cast<GameLevel*>(_world->GetCurrentLevel())->GetStageIdx();
+    bool IsGunfireAvailableStage =
+        (levelIdx == 5 || levelIdx == 6 || levelIdx == 9 || levelIdx == 12 ||
+         levelIdx == 13 || levelIdx == 14 || levelIdx == 15 || levelIdx == 16);
+
 	  _map->ResetGame();
-      
-    // GunfireButton 활성화
-      auto* gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
-          ->GetUI<GunfireButton>(L"GunfireBtn");
 
-    if (gunfireBtn)
+    if (IsGunfireAvailableStage)
     {
-      if (gunfireBtn->_bGunFireUseFlag == true)
+
+      // GunfireButton 활성화
+      auto* gunfireBtn = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
+                             ->GetUI<GunfireButton>(L"GunfireBtn");
+
+      if (gunfireBtn)
       {
-        gunfireBtn->_bGunFireUseFlag = false;
+        if (gunfireBtn->_bGunFireUseFlag == true)
+        {
+          gunfireBtn->_bGunFireUseFlag = false;
+        }
+
+        for (const auto& [childName, child] : gunfireBtn->uiMap)
+        {
+          child->Activate();
+        }
+
+        gunfireBtn->GetUI<UIAnim>(L"ElizaAnim")->Deactivate();
       }
 
-      for (const auto& [childName, child] : gunfireBtn->uiMap)
-      {
-        child->Activate();
-      }
-
-     gunfireBtn->GetUI<UIAnim>(L"ElizaAnim")->Deactivate();
-
+      _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->ShowUI(L"GunfireBtn");
     }
 
-    _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->ShowUI(L"GunfireBtn");
 
     // AgentStorage 활성화
     auto* agentStorage = _world->_canvas->GetPanel<InGameUI>(L"InGameUI")
