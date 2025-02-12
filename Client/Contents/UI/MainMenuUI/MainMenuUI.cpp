@@ -90,7 +90,8 @@ MainMenuUI::MainMenuUI(World* world) : UIPanel(world)
   });
 
   _challengeBtn->AddOnClickHandler([this]() {
-
+    _world->PrepareChangeLevel("Level10_1");
+    _world->CommitLevelChange();
   });
 
 
