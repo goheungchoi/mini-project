@@ -226,6 +226,8 @@
 		<ClInclude Include="Contents\Levels\ChallengeMode\ChallengeMode.h" />
 		<ClCompile Include="Contents\Levels\DialogLevel\DialogLevel.cpp" />
 		<ClInclude Include="Contents\Levels\DialogLevel\DialogLevel.h" />
+		<ClCompile Include="Contents\Levels\EndingCredit\EndingCredit.cpp" />
+		<ClInclude Include="Contents\Levels\EndingCredit\EndingCredit.h" />
 		<ClCompile Include="Contents\Levels\GameLevel.cpp" />
 		<ClInclude Include="Contents\Levels\GameLevel.h" />
 		<ClCompile Include="Contents\Levels\Level10_1\Level10_1.cpp" />
@@ -269,6 +271,8 @@
 		<ClInclude Include="Contents\UI\AudioDramaUI\AudioDramaUI.h" />
 		<ClCompile Include="Contents\UI\ChallengeModeUI\ChallengeModeUI.cpp" />
 		<ClInclude Include="Contents\UI\ChallengeModeUI\ChallengeModeUI.h" />
+		<ClCompile Include="Contents\UI\CreditUI\CreditUI.cpp" />
+		<ClInclude Include="Contents\UI\CreditUI\CreditUI.h" />
 		<ClCompile Include="Contents\UI\DialogUI\DialogUI.cpp" />
 		<ClInclude Include="Contents\UI\DialogUI\DialogUI.h" />
 		<ClCompile Include="Contents\UI\DialogUI\ResultDialogUI.cpp" />

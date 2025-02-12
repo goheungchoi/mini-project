@@ -38,6 +38,8 @@ public:
   std::unordered_map<std::string, Level*> _levelMap;
 
   std::atomic<bool> bOkayToChangeLevel = ATOMIC_VAR_INIT(true);
+
+  std::atomic<bool> bCommitLevelCalled = ATOMIC_VAR_INIT(false);
   std::atomic<bool> bChangingLevel = ATOMIC_VAR_INIT(false);
 
   std::unordered_map<std::string, std::atomic<bool>> _levelReadyFlagMap;
