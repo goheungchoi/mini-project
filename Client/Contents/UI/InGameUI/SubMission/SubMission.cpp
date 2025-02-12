@@ -139,3 +139,9 @@ void SubMission::SetText(std::wstring text)
   _selectTxt->SetDebugDraw(false);
 #endif // _DEBUG
 }
+
+void SubMission::SetOpacity(float opacity)
+{
+  _selectTxt->SetOpacity(opacity);
+  _subMissionTxt->SetOpacity(opacity);
+}

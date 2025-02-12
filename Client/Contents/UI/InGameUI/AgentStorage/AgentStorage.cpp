@@ -16,6 +16,7 @@ AgentStorage::AgentStorage(World* world) : UIPanel(world)
       BrawlerHoveredImage = CreateUI<UIImage>(L"BrawlerHoveredImage");
       BrawlerInactiveImage = CreateUI<UIImage>(L"BrawlerInactiveImage");
       BrawlerButton = CreateUI<UIButton>(L"BrawlerButton");
+
       BrawlerDefaultImage->SetSprite("2D\\UI\\UI_Storage_Act_Fist.png");
       BrawlerHoveredImage->SetSprite("2D\\UI\\UI_Storage_Hover_Fist.png");
       BrawlerInactiveImage->SetSprite("2D\\UI\\UI_Storage_Deact_Fist.png");

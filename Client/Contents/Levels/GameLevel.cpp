@@ -190,9 +190,14 @@ void GameLevel::BeginLevel()
 #endif // USED2D
 }
 
-void GameLevel::CleanupLevel()
+void GameLevel::DestroyLevel()
 {
   transitionUI->FadeOut(2.f);
+  Level::DestroyLevel();
+}
+
+void GameLevel::CleanupLevel()
+{
 
 //  #ifdef USED2D
 //  Resource2DManager::GetInstance()->UnloadSprite("2D\\UI\\gradient.png");

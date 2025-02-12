@@ -254,9 +254,9 @@ void DialogUI::SetStageDialogIndex()
   if (StageIdx >= 7)
   {
     if (_prevBattleResult == eBattleResult::CivilDeadWin)
-      scriptfile.open(rootpath + _csvlist[7]);
-    else
       scriptfile.open(rootpath + _csvlist[6]);
+    else
+      scriptfile.open(rootpath + _csvlist[7]);
   }
   else
     scriptfile.open(rootpath + _csvlist[StageIdx - 1]);

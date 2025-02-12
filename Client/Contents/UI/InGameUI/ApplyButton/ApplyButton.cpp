@@ -54,6 +54,16 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
             static_cast<GameLevel*>(world->GetCurrentLevel())
                 ->SetBattleResult(eBattleResult::AllyDeadWin);
         }
+        else if (world->GetCurrentLevel()->name == "Level8")
+        {
+          world->_canvas->GetPanel<ResultDialogUI>(L"ResultDialogUI")
+              ->bIsElizaDead = true;
+        }
+        else if (world->GetCurrentLevel()->name == "Level8_2")
+        {
+          
+        }
+
         else
         {
           if (_map->GetNumEnemies() != _map->GetNumDeadEnemies())
@@ -100,6 +110,11 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
           }
         }
 
+        //cheat code
+        if (perfectwinflag)
+          static_cast<GameLevel*>(_world->GetCurrentLevel())
+              ->SetBattleResult(eBattleResult::PerfectWin);
+
         if (static_cast<GameLevel*>(world->GetCurrentLevel())
                 ->GetBattleResult() != eBattleResult::PerfectWin)
         {
@@ -107,24 +122,26 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
         }
         else
         {
+
+
           if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() ==
               8)
           {
             _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
                 8;
             _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
-            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")
-                ->Activate();
+            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->PlayFlag =
+                true;
           }
-          if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() ==
+          else if (static_cast<GameLevel*>(_world->_currentLevel)->GetStageIdx() ==
               9)
           {
             // 오디오 드라마 엔딩에서 바로 시작하는거 고치기
             _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->stageidx =
                 9;
+            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")->PlayFlag =
+                true;
             _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
-            _world->_canvas->GetPanel<AudioDramaUI>(L"AudioDramaUI")
-                ->Activate();
           }
           else
           {
@@ -139,8 +156,8 @@ ApplyButton::ApplyButton(World* world) : UIPanel(world)
             world->CommitLevelChange();
           }
         }
-      }
 
+      }
       _bHoverFlag = false;
     }
   });

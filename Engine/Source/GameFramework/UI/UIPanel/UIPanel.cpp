@@ -1,6 +1,12 @@
 #include "GameFramework/UI/UIPanel/UIPanel.h"
 
-UIPanel::UIPanel(class World* world) : UIElement(world) {}
+UIPanel::UIPanel(class World* world) : UIElement(world)
+{
+  for (auto ui : uiList)
+  {
+    ui->Activate();
+  }
+}
 
 UIPanel::~UIPanel()
 {
@@ -24,11 +30,11 @@ void UIPanel::BeginLevel()
 
 void UIPanel::Update(float dt)
 {
-  if (GetStatus() == EStatus_Active)
+  if (GetStatus() == EStatus_Active )
   {
     for (auto ui : uiList)
     {
-      if (ui->GetStatus() == EStatus_Active)
+      if (ui->GetStatus() == EStatus_Active )
       {
         ui->Update(dt);
       }
@@ -38,11 +44,11 @@ void UIPanel::Update(float dt)
 
 void UIPanel::Render()
 {
-  if (GetStatus() == EStatus_Active)
+  if (GetStatus() == EStatus_Active )
   {
     for (auto ui : uiList)
     {
-      if (ui->GetStatus() == EStatus_Active)
+      if (ui->GetStatus() == EStatus_Active )
       {
         ui->Render();
       }

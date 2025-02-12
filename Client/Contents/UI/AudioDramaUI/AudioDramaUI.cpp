@@ -17,7 +17,6 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
   _Background->SetOpacity(1.f);
   _Background->SetCenterPos({960, 540});
 
-
   _AudioScript = CreateUI<UIText>(L"AudioScript");
   _AudioScript->SetSize({1920, 500});
   _AudioScript->SetCenterPos({960, 540});
@@ -30,18 +29,21 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
 
   OnActivated = [=]() {
     _elapsedTimer = 0;
+    _Background->FadeIn(2.f);
     _AudioScript->Activate();
-    _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
+    //_world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Deactivate();
   };
   OnDeactivated = [=]() {
-
     if (isEnding1 || isEnding2)
     {
       world->PrepareChangeLevel("Main Menu");
       world->CommitLevelChange();
     }
-    else 
+    else
+    {
+    _Background->SetOpacity(0.f);
     _world->_canvas->GetPanel<InGameUI>(L"InGameUI")->Activate();
+    }
   };
   _scripts.resize(5);
   _scripts[0].push_back({L"명령 떨어지기 전까지 멋대로 움직이지 마, 제이미."});
@@ -76,18 +78,24 @@ AudioDramaUI::AudioDramaUI(class World* world):UIPanel(world)
 void AudioDramaUI::Update(float dt)
 {
   UIPanel::Update(dt);
-
-  RunStage(dt);
-  if (INPUT.IsKeyPress(MouseState::LB))
-    Skip();
-
-  if (_elapsedTimer>= _totalTime)
+  if (PlayFlag)
   {
-    _Background->FadeOut(1.f);
-  }
+    _Background->SetOpacity(1.f);
+    RunStage(dt);
+    if (INPUT.IsKeyPress(Key::Escape))
+      Skip();
 
-  if (_elapsedTimer>= _totalTime+1.f)
-    Deactivate();
+    if (_elapsedTimer >= _totalTime)
+    {
+      _Background->FadeOut(1.f);
+    }
+
+    if (_elapsedTimer >= _totalTime + 1.f)
+      Deactivate();
+  }
+  else
+    _Background->SetOpacity(0.f);
+
 
 }
 
@@ -173,6 +181,7 @@ void AudioDramaUI::EndingStage1(float dt)
     PrintText(3, 2, dt, 3.82);
   if (_elapsedTimer >= 19.08)
     PrintText(3, 3, dt, 5.17);
+
 }
 void AudioDramaUI::EndingStage2(float dt)
 {

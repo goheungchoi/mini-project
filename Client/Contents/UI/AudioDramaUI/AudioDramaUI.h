@@ -26,6 +26,10 @@ public:
 
   int stageidx = 1;
 
+
+  bool PlayFlag = true;
+
+
 private:
   bool isEnding1 = false;
   bool isEnding2 = false;

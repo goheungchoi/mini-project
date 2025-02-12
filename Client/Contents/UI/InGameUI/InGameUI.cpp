@@ -39,7 +39,7 @@ InGameUI::InGameUI(World* world) : UIPanel(world)
   _gradientIMG = CreateUI<UIImage>(L"GradientIMG");
   _gradientIMG->SetSprite("2D\\UI\\gradient.png", {1475, 910});
   _gradientIMG->SetScale({1.0f, 1.0f});
-  SetOnActivatedEvent([=]() { _playBtn->Activate(); });
+  //SetOnActivatedEvent([=]() { _playBtn->Activate(); });
 }
 
 InGameUI::~InGameUI() {}
@@ -47,6 +47,10 @@ InGameUI::~InGameUI() {}
 void InGameUI::Update(float dt)
 {
   __super::Update(dt);
+  //_agentStorage->SetStatus(EStatus_Active);
+  //_mainMission->SetStatus(EStatus_Active);
+  //_subMission[0]->SetStatus(EStatus_Active);
+
 
   /*if (INPUT.IsKeyDown(Key::F1))
   {
@@ -59,7 +63,8 @@ void InGameUI::Update(float dt)
         ->SetBattleResult(eBattleResult::CivilDeadWin);
   if (INPUT.IsKeyPress(Key::F3))
     static_cast<GameLevel*>(_world->GetCurrentLevel())
-        ->SetBattleResult(eBattleResult::AllyDeadWin);
+        ->SetBattleResult(eBattleResult::AllyDead
+        Win);
   if (INPUT.IsKeyPress(Key::F4))
     static_cast<GameLevel*>(_world->GetCurrentLevel())
         ->SetBattleResult(eBattleResult::BothDeadWin);
@@ -69,7 +74,8 @@ void InGameUI::Update(float dt)
   if (INPUT.IsKeyPress(Key::F6))
     static_cast<GameLevel*>(_world->GetCurrentLevel())
         ->SetBattleResult(eBattleResult::Lose);*/
-
+  if (INPUT.IsKeyPress(Key::P))
+    _applyBtn->perfectwinflag = true;
 
   // ElizaAnim 이 Active상태이면 위치 움직임
   UIAnim* _elizaAnim = _gunfireBtn->GetUI<UIAnim>(L"ElizaAnim");
@@ -143,18 +149,6 @@ void InGameUI::Update(float dt)
   else
   {
     _gunfireBtn->Deactivate();
-  }
-
-  // AudioDramaUI, ResultDialogUI
-  for (auto& [name, UIPanel] : _world->_canvas->panelMap)
-  {
-    if (name == L"AudioDramaUI")
-    {
-      if (UIPanel->GetStatus() == EStatus_Active)
-      {
-        this->Deactivate();
-      }
-    }
   }
  
 }

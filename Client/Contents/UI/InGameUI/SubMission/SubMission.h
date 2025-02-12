@@ -11,6 +11,7 @@ public:
 
 public:
   void SetText(std::wstring text);
+  void SetOpacity(float opacity);
 
 private:
   class UIImage* _subMissionImg{nullptr};
