@@ -94,7 +94,7 @@ public:
     // **Shader Compile**
     HRESULT hr = D3DCompileFromFile(
         shaderPath.c_str(), macros.data(), D3D_COMPILE_STANDARD_FILE_INCLUDE,
-        entryPoint, "vs_5_0", shaderFlags, 0, &shaderBlob, &errorBlob);
+        entryPoint, "vs_4_0", shaderFlags, 0, &shaderBlob, &errorBlob);
 
     if (FAILED(hr))
     {
@@ -168,7 +168,7 @@ public:
     ID3DBlob* shaderBlob = nullptr;
     ID3DBlob* errorBlob = nullptr;
     HR_T(D3DCompileFromFile(shaderPath.c_str(), macros.data(),
-        D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "ps_5_0", shaderFlags, 0,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, "ps_4_0", shaderFlags, 0,
         &shaderBlob, &errorBlob));
     HR_T(_device->GetDevice()->CreatePixelShader(
         shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr,
