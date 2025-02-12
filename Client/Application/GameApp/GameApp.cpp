@@ -1,5 +1,6 @@
 #include "GameApp.h"
 
+#include "Contents/GameObjects/GameManager/GameManager.h"
 #include "Core/Input/InputSystem.h"
 #include "Core/Time/TimeSystem.h"
 #include "ResourceManager/ResourceManager.h"
@@ -205,6 +206,7 @@ void GameApp::Update(float dt)
 
   if (INPUT.IsKeyDown(Key::PageUp))
   {
+    GameManager::endingflag = false;
     _world->PrepareChangeLevel(mainMenuLevel->name);
     _world->CommitLevelChange();
   }

@@ -508,26 +508,7 @@ void World::ProcessInput(float dt)
     _phyjixWorld->LeftClick();
   }
 
-
-    if (INPUT.IsKeyPress(Key::F12))
-
-    {
-      SoundManager::StopSound(SoundList::Background_Pub_Ambient);
-      SoundManager::StopSound(SoundList::Background_Pub);
-      SoundManager::StopSound(SoundList::Background_ConferenceHall_Ambient);
-      SoundManager::StopSound(SoundList::Background_ConferenceHall);
-      SoundManager::StopSound(SoundList::Background_Storage_Ambient);
-      SoundManager::StopSound(SoundList::Background_Storage);
-      SoundManager::StopSound(SoundList::Background_Dialog);
-      SoundManager::StopSound(SoundList::AudioDrama_Stage_01);
-      SoundManager::StopSound(SoundList::AudioDrama_Stage_04);
-      SoundManager::StopSound(SoundList::AudioDrama_Stage_07);
-      SoundManager::StopSound(SoundList::AudioDrama_BadEnding);
-      SoundManager::StopSound(SoundList::AudioDrama_GoodEnding);
-      PrepareChangeLevel("Main Menu");
-      CommitLevelChange();
-  }
-  else if (INPUT.IsKeyPress(Key::F1))
+  if (INPUT.IsKeyPress(Key::F1))
   {
     SoundManager::StopSound(SoundList::Background_Pub_Ambient);
     SoundManager::StopSound(SoundList::Background_Pub);
